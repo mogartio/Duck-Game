@@ -1,0 +1,5 @@
+https://book-of-gehn.github.io/articles/2019/10/23/Constant-Rate-Loop.html
+
+https://lazyfoo.net/tutorials/SDL/
+
+https://gameprogrammingpatterns.com/contents.html
