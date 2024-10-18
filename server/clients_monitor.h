@@ -17,7 +17,7 @@ public:
 
     void add(Client& client);
     void remove(Client& client);
-    // void removeAll();
+    void remove_dead_clients();
 };
 
 #endif // CLIENTS_MONITOR_H

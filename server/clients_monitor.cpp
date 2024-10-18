@@ -12,3 +12,13 @@ void ClientsMonitor::remove(Client& client) {
     clients.remove(client);
 }
 
+void ClientsMonitor::remove_dead_clients() {
+    std::lock_guard<std::mutex> lock(m);
+    clients.remove_if([](Client& client) {
+        if (!client.is_alive()) {
+            client.stop();
+            return true;
+        }
+        return false;
+    });
+}
