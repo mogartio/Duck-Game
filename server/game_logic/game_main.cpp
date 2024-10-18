@@ -1,15 +1,17 @@
 #include <vector>
 #include "stage.h"
+#include "csv_writer.h"
 #include "player.h"
 
 int main (int argc, char *argv[]) {
     std::vector<Player> players;
     int x = 30;
-    int y = 37;
+    int y = 36;
     Coordinate coordinate(x, y);
     Player player(coordinate);
     players.push_back(player);
-    Stage stage(players); 
+    CSVWriter::write_map("main_map.csv");
+    Stage stage(players,"main_map.csv");
     return 0;
 }
 
