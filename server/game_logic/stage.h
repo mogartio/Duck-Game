@@ -16,8 +16,8 @@ private:
 
 public:
     Stage(std::vector<Player>&, const std::string&);
-    void draw_initial_state();
     void add_players_to_stage();
+    void delete_player_from_stage(Player&);
 };
 
 #endif 

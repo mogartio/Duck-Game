@@ -42,7 +42,7 @@ public:
             std::string value;
             int current_column = 0;
             while(std::getline(ss, value, ',')){
-                Coordinate current_position(current_row, current_column);
+                Coordinate current_position(current_column, current_row);
                 map.set(current_position, std::stoi(value));
                 current_column ++;
             }

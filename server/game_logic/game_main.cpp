@@ -12,6 +12,7 @@ int main (int argc, char *argv[]) {
     players.push_back(player);
     CSVWriter::write_map("main_map.csv");
     Stage stage(players,"main_map.csv");
+    stage.delete_player_from_stage(player);
     return 0;
 }
 

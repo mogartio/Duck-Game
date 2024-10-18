@@ -23,10 +23,21 @@ void Stage::add_players_to_stage(){
         int y = position.y;
         for (int i=0; i < PLAYER_SIZE; i++){
             for (int j=0; j < PLAYER_SIZE; j++){
-                Coordinate current(y+i, x+j);
+                Coordinate current(x+i, y+j);
                 map.set(current, player.id);
             }
         }
     }
 }
 
+void Stage::delete_player_from_stage(Player& player){
+    Coordinate p_position = player.get_position();
+    for (int i=0; i < PLAYER_SIZE; i++){
+        for (int j=0; j < PLAYER_SIZE; j++){
+            Coordinate aux(p_position.x + j, p_position.y + i);
+            map.set(aux, BACKGROUND);
+        }
+    }
+    std::cout << std::endl;
+    map.print();
+}
