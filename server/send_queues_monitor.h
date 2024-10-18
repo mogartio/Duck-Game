@@ -14,7 +14,7 @@ public:
     SendQueuesMonitor();
     void add(Queue<std::string>* queue);
     void remove(Queue<std::string>* queue);
-    // void removeAll();
+    void remove_all();
 };
 
 #endif // SEND_QUEUES_MONITOR_H
