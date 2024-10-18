@@ -34,7 +34,7 @@ public:
         return !(position.x < matrix.size() && position.x >= 0 
                  && position.y < matrix[0].size() && position.y >= 0);
     }
-
+    
     void print(){
         for (int i=0; i < rows; i++){
             std::stringstream stream;

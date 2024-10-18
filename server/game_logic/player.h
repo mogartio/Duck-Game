@@ -8,6 +8,7 @@ public:
     int id;
     Coordinate get_position();
     Player(Coordinate&);
+    void set_position(Coordinate);
 };
 
 #endif
