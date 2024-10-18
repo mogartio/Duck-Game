@@ -39,7 +39,11 @@ public:
         for (int i=0; i < rows; i++){
             std::stringstream stream;
             for (int j=0; j < columns; j++){
-                stream << "|" << matrix[j][i];
+                if (matrix[j][i] == 2) {
+                    stream << "\033[31m" << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
+                } else {
+                    stream << "|" << matrix[j][i];  // Imprimir el valor normalmente
+                }
             }
             std::cout << stream.str() << std::endl; 
         }

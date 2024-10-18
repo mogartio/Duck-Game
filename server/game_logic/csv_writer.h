@@ -14,6 +14,10 @@ public:
         file << ROW_NUMBER << "," << COLUMN_NUMBER << std::endl; //Mapas de distintos tamanios
         for (int i=0; i < ROW_NUMBER; i ++){
             for (int j=0; j < COLUMN_NUMBER; j++){
+                if (j == 20){
+                    file << FLOOR << ",";
+                    continue;
+                }
                 if ((i == 40 || i ==  41) && j > 10 && j < 40){
                     file << FLOOR << ",";
                     continue;

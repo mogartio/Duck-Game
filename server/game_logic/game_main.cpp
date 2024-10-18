@@ -5,7 +5,7 @@
 #define LEFT "l"
 int main (int argc, char *argv[]) {
     std::vector<Player> players;
-    int x = 47;
+    int x = 30;
     int y = 36;
     Coordinate coordinate(x, y);
     Player player(coordinate);
@@ -16,6 +16,7 @@ int main (int argc, char *argv[]) {
         std::string command;
         std::cin >> command;
         stage.move_player(player, command);
+        stage.print();
     }
     return 0;
 }

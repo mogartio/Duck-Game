@@ -15,11 +15,14 @@ private:
     void printStage();
     void draw_player(Player&, Coordinate);
     bool is_valid_position(Player&, Coordinate);
+    Coordinate move_player_horizontal(Player&, int);
+    bool player_is_falling(Player&);
 public:
     Stage(std::vector<Player>&, const std::string&);
     void add_players_to_stage();
     void delete_player_from_stage(Player&);
     void move_player(Player&, const std::string&);
+    void print();
 };
 
 #endif 
