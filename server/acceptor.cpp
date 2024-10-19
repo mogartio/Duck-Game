@@ -5,13 +5,14 @@ Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv
 
 void Acceptor::run() {
     try {
+        int id = 0;
         while (_keep_running) {
             Socket new_client = srv.accept();
 
             Queue<std::string>* new_send_queue = new Queue<std::string>(Q_MAX_SIZE);
             send_queues.add(new_send_queue);
 
-            Client client(std::move(new_client), *new_send_queue, recv_queue);
+            Client* client = new Client(std::move(new_client), *new_send_queue, recv_queue, id++);
             clients.add(client);
 
             reap_dead_clients();

@@ -22,7 +22,7 @@ private:
 public:
     Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor& send_queues);
 
-    void stop();
+    void stop() override;
     void shutdown();
 };
 
