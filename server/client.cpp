@@ -1,33 +1,36 @@
 #include "client.h"
 
-#include <utility>
-
-Client::Client(Socket&& skt,Queue<std::string>& receiver_queue, const u_int& id_client)
-    : socket(std::move(skt)), is_dead(false), receiver(socket,receiver_queue, is_dead), sender(socket,is_dead, id_client) {
-    // Iniciamos los hilos
-    receiver.start();
-    sender.start();
+Client::Client(Socket&& client_skt, Queue<std::string>& send_queue, Queue<std::string>& recv_queue, int id): 
+    client_skt(std::move(client_skt)), 
+    send_queue(send_queue), 
+    recv_queue(recv_queue), 
+    id(id), 
+    protocol(this->client_skt),
+    receiver(recv_queue, protocol),
+    sender(send_queue, protocol) {
 }
 
-void Client::kill() {
-    // Le decimos a los hilos que murio el cliente
-    is_dead = true;
-    // Cerramos los medios de comunicacion para que los hilos terminen
-    socket.shutdown(2);
-    // Cerramos el socket
-    socket.close();
-    // Cerramos la cola del sender para que termine de esperar mensajes
-    sender.close();
-    // El receiver no lo podemos cerrar porque es global
-    // y ademas de que el gameloop lo esta consumiendo constantemente
-    // por lo que no sera necesario cerrarlo ya que el hilo terminara
+void Client::start_client() {
+    try {
+        receiver.start();
+        // sender.start();
+    } catch(const std::exception& e) {
+        std::cout << "Error al iniciar el cliente: " << e.what() << std::endl;
+    }
+}
 
-    // Esperamos a que los hilos terminen
+void Client::stop() {
+    receiver.stop();
     receiver.join();
+    sender.stop();
     sender.join();
 }
 
-bool Client::isDead() const {
-    // Si el socket esta cerrado, el cliente esta muerto
-    return is_dead;
+bool Client::is_alive() {
+    return receiver.is_alive() && sender.is_alive();
+}
+
+// operador de comparacion para poder comparar clientes
+bool Client::operator==(const Client& other) const {
+    return id == other.id;
 }
