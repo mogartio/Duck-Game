@@ -8,12 +8,13 @@ Client::Client(Socket&& client_skt, Queue<std::string>& send_queue, Queue<std::s
     protocol(this->client_skt),
     receiver(recv_queue, protocol),
     sender(send_queue, protocol) {
+    start_client();
 }
 
 void Client::start_client() {
     try {
         receiver.start();
-        // sender.start();
+        sender.start();
     } catch(const std::exception& e) {
         std::cout << "Error al iniciar el cliente: " << e.what() << std::endl;
     }

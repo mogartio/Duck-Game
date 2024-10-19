@@ -11,7 +11,15 @@ void Server::run() {
     read_input_t.start();
 
     while(read_input_t.is_alive()) {
-        std::cout << "Server running??" << std::endl;
+        std::list<std::string> msgs;
+        std::string msg;
+        while(recv_queue.try_pop(msg)) {
+            msgs.push_back(msg);
+        }
+        for (auto& msg : msgs) {
+            std::cout << "Received message: " << msg << std::endl;
+        } 
+        send_queues.broadcast(msgs);
     }
 
     acceptor.stop();
