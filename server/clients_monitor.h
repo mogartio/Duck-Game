@@ -10,13 +10,13 @@
 class ClientsMonitor {
 private:
     std::mutex m;
-    std::list<Client> clients;
+    std::list<Client*> clients;
 
 public:
     ClientsMonitor();
 
-    void add(Client& client);
-    void remove(Client& client);
+    void add(Client* client);
+    void remove(Client* client);
     void remove_dead_clients();
     void remove_all();
 };
