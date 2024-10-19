@@ -55,15 +55,16 @@ void Stage::move_player(Player& player,const std::string& direction){
     } else if (direction.compare("d") == 0) {
         new_position = move_player_horizontal(player, 1);
     } else if (direction.compare("w") == 0){
-        return;
+        player.jump();
     }
-    player.set_position(player.get_position());
     delete_player_from_stage(player);
     if (player_is_falling(player)){
         player.fall();
+    } else {
+        player.stop_fall();
     }
     player.set_position(new_position);
-    draw_player(player, new_position);
+    draw_player(player, player.get_position());
 }
 
 Coordinate Stage::move_player_horizontal(Player& player, int offset){
@@ -75,8 +76,11 @@ Coordinate Stage::move_player_horizontal(Player& player, int offset){
     return initial_pos;
 }
 bool Stage::player_is_falling(Player& player){
+    if (player.currently_jumping()){
+        return false;
+    }
     Coordinate current_position = player.get_position();
-    Coordinate duck_feet(current_position.x, current_position.y + PLAYER_SIZE + 1);
+    Coordinate duck_feet(current_position.x, current_position.y + PLAYER_SIZE);
     for (int i=0; i < PLAYER_SIZE; i ++){
         Coordinate aux(duck_feet.x + i, duck_feet.y);
         if (map.out_of_range(aux)){
