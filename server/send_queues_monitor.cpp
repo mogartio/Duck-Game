@@ -19,3 +19,12 @@ void SendQueuesMonitor::remove_all() {
     }
     send_queues.clear();
 }
+
+void SendQueuesMonitor::broadcast(const std::list<std::string>& msgs) {
+    std::lock_guard<std::mutex> lock(m);
+    for (const auto& msg : msgs) {
+        for (Queue<std::string>* queue : send_queues) {
+            queue->push(msg);
+        }
+    }
+}

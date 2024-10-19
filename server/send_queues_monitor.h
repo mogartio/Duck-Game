@@ -14,6 +14,7 @@ public:
     SendQueuesMonitor();
     void add(Queue<std::string>* queue);
     void remove(Queue<std::string>* queue);
+    void broadcast(const std::list<std::string>& msgs);
     void remove_all();
 };
 
