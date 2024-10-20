@@ -32,15 +32,15 @@ MensajeLobby MensajeLobby::crearMensajeSalirDeLobby() {
     return mensaje;
 }
 
-u_int8_t MensajeLobby::getTipo() {
+u_int8_t MensajeLobby::getTipo() const {
     return tipo;
 }
 
-u_int8_t MensajeLobby::getIdLobby() {
+u_int8_t MensajeLobby::getIdLobby() const {
     return idLobby;
 }
 
-u_int8_t MensajeLobby::getIdCliente() {
+u_int8_t MensajeLobby::getIdCliente() const {
     return idCliente;
 }
 
@@ -48,7 +48,7 @@ void MensajeLobby::setIdCliente(u_int8_t idCliente) {
     this->idCliente = idCliente;
 }
 
-std::list<DescripcionLobby> MensajeLobby::getLobbys() {
+std::list<DescripcionLobby> MensajeLobby::getLobbys() const {
     return lobbys;
 }
 

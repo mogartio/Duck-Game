@@ -14,6 +14,5 @@ public:
      * Destructor del mensaje del lobby
      */
     ~DescripcionLobby()=default;
-
 };
 #endif

@@ -64,17 +64,17 @@ public:
     /*
      * Devuelve el tipo de mensaje
      */
-    u_int8_t getTipo();
+    u_int8_t getTipo() const;
 
     /*
      * Devuelve el id del lobby
      */
-    uint8_t getIdLobby();
+    uint8_t getIdLobby() const;
 
     /*
      * Devuelve el id del cliente
      */
-    uint8_t getIdCliente();
+    uint8_t getIdCliente() const;
 
     /*
      * Setea el id del cliente
@@ -84,7 +84,7 @@ public:
     /*
      * Devuelve la lista de lobbys
      */
-    std::list<DescripcionLobby> getLobbys();
+    std::list<DescripcionLobby> getLobbys() const;
 
     // ------------------ Validaciones -----------------------
     /* PARA CHEQUEAR
