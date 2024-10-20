@@ -9,18 +9,18 @@
 #include "send_queues_monitor.h"
 
 class Acceptor : public Thread {
-private: 
+private:
     Socket srv;
     ClientsMonitor& clients;
     Queue<std::string>& recv_queue;
-    SendQueuesMonitor& send_queues;
+    SendQueuesMonitor<std::string>& send_queues;
 
     void run() override;
     void reap_dead_clients();
 
     const int Q_MAX_SIZE = 100;
 public:
-    Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor& send_queues);
+    Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor<std::string>& send_queues);
 
     void stop() override;
     void shutdown();

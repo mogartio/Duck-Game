@@ -6,15 +6,16 @@
 #include <list>
 #include "../common/queue.h"
 
+template<typename T>
 class SendQueuesMonitor {
 private:
     std::mutex m;
-    std::list<Queue<std::string>*> send_queues;
+    std::list<Queue<T>*> send_queues;
 public:
     SendQueuesMonitor();
-    void add(Queue<std::string>* queue);
-    void remove(Queue<std::string>* queue);
-    void broadcast(const std::list<std::string>& msgs);
+    void add(Queue<T>* queue);
+    void remove(Queue<T>* queue);
+    void broadcast(const std::list<T>& msgs);
     void remove_all();
 };
 

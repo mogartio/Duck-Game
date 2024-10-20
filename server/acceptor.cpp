@@ -1,7 +1,7 @@
 #include "acceptor.h"
 #include <sys/socket.h>
 
-Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor& send_queues) 
+Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor<std::string>& send_queues)
     : srv(std::move(srv)), clients(clients), recv_queue(recv_queue), send_queues(send_queues) {}
 
 void Acceptor::run() {
