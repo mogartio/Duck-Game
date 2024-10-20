@@ -1,12 +1,13 @@
 #ifndef MENSAJELOBBY_H
 #define MENSAJELOBBY_H
-#include "descripcion-lobby.h"
 #include <list>
+
+#include "descripcion-lobby.h"
 
 
 class MensajeLobby {
 public:
-    enum tipoMensaje{
+    enum tipoMensaje {
         LOBBYS_DISPONIBLES = 0x01,
         CREAR_LOBBY = 0x02,
         UNIRSE_A_LOBBY = 0x03,
@@ -104,7 +105,6 @@ public:
     /*
      * Destructor del mensaje del lobby
      */
-    ~MensajeLobby()=default;
-
+    ~MensajeLobby() = default;
 };
 #endif

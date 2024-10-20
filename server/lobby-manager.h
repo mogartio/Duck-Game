@@ -4,13 +4,13 @@
 
 #include <list>
 
-#include "./../common/thread.h"
-#include "./../common/queue.h"
 #include "./../common/mensaje-lobby.h"
-#include "lobby.h"
-#include "clients_monitor.h"
-#include "send_queues_monitor.h"
+#include "./../common/queue.h"
+#include "./../common/thread.h"
 
+#include "clients_monitor.h"
+#include "lobby.h"
+#include "send_queues_monitor.h"
 
 
 class LobbyManager: public Thread {
@@ -45,7 +45,8 @@ public:
     /*
      * Constructor del manejador de lobbys
      */
-    LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue, SendQueuesMonitor<MensajeLobby>& send_queues);
+    LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue,
+                 SendQueuesMonitor<MensajeLobby>& send_queues);
 
     /*
      * Implementamos el método `run`

@@ -1,11 +1,11 @@
 #include "lobby.h"
 
-Lobby::Lobby(Client* client, u_int8_t& idlobby) : jugadores(), id_lobby(idlobby) {
+Lobby::Lobby(Client* client, u_int8_t& idlobby): jugadores(), id_lobby(idlobby) {
     jugadores.push_back(client);
 }
 
 void Lobby::lobby_empty() {
-    if (jugadores.size() == EMPTY_PLAYERS){
+    if (jugadores.size() == EMPTY_PLAYERS) {
         throw std::runtime_error("Lobby vacio");
     }
 }
@@ -35,18 +35,14 @@ void Lobby::closeLobby() {
     jugadores.clear();
 }
 
-bool Lobby::is_empty() const {
-    return jugadores.size() == EMPTY_PLAYERS;
-}
+bool Lobby::is_empty() const { return jugadores.size() == EMPTY_PLAYERS; }
 
-u_int8_t Lobby::getId() const {
-    return id_lobby;
-}
+u_int8_t Lobby::getId() const { return id_lobby; }
 
 DescripcionLobby Lobby::getDescription() const {
     DescripcionLobby desc;
     desc.idLobby = id_lobby;
     desc.cantidadJugadores = jugadores.size();
-    desc.nombreLobby = "Lobby " + std::to_string(id_lobby); // nombre generico por ahora
+    desc.nombreLobby = "Lobby " + std::to_string(id_lobby);  // nombre generico por ahora
     return desc;
 }

@@ -13,6 +13,6 @@ public:
     /*
      * Destructor del mensaje del lobby
      */
-    ~DescripcionLobby()=default;
+    ~DescripcionLobby() = default;
 };
 #endif

@@ -1,6 +1,6 @@
 #include "server.h"
 
-Server::Server(const char* port) : srv(port){}
+Server::Server(const char* port): srv(port) {}
 
 void Server::run() {
     SendQueuesMonitor<std::string> send_queues_dummy;

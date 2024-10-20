@@ -25,7 +25,7 @@ void ClientsMonitor::remove_dead_clients() {
 
 void ClientsMonitor::remove_all() {
     std::lock_guard<std::mutex> lock(m);
-    for (Client* client : clients) {
+    for (Client* client: clients) {
         client->stop();
     }
     clients.clear();

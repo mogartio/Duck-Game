@@ -16,6 +16,7 @@ private:
      * Lanza SocketError en caso de que el socket se haya cerrado al enviar o recibir datos.
      */
     void chk_closed_andif_fail(const char error_ms[]) const;
+
 protected:
     // ------------------- Atributos -------------------
 

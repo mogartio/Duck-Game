@@ -3,8 +3,10 @@
 
 
 #include <list>
-#include "client.h"
+
 #include "./../common/descripcion-lobby.h"
+
+#include "client.h"
 #define MAX_PLAYERS 2
 #define EMPTY_PLAYERS 0
 
@@ -21,7 +23,7 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(Client* client,u_int8_t& id_lobby);
+    explicit Lobby(Client* client, u_int8_t& id_lobby);
 
     /*
      * Metodo que agrega un jugador al lobby
@@ -46,7 +48,7 @@ public:
     /*
      * Metodo que devuelve si el lobby esta vacio
      */
-    bool is_empty() const ;
+    bool is_empty() const;
 
     /*
      * Metodo que devuelve el id del lobby

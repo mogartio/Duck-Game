@@ -1,16 +1,17 @@
 #ifndef PROTOCOLOLOBBYS_H
 #define PROTOCOLOLOBBYS_H
 
-#include "protocolo-common.h"
 #include "mensaje-lobby.h"
+#include "protocolo-common.h"
 
-class ProtocoloLobbys : public ProtocoloCommon {
+class ProtocoloLobbys: public ProtocoloCommon {
 private:
     // ------------------- Atributos -------------------
     // ------------------- Métodos privados -------------------
     void sendMensajeLobbysDisponibles(MensajeLobby& mensaje);
 
     void sendMensajeUnirseALobby(MensajeLobby& mensaje);
+
 public:
     // ------------------- Constructores -------------------
     /*

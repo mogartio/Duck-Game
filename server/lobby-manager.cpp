@@ -1,24 +1,22 @@
 #include "lobby-manager.h"
 
-LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue, SendQueuesMonitor<MensajeLobby>& send_queues) :
-    clients(clients),
-    recv_queue(recv_queue),
-    send_queues(send_queues),
-    keep_running(true) {}
+LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue,
+                           SendQueuesMonitor<MensajeLobby>& send_queues):
+        clients(clients), recv_queue(recv_queue), send_queues(send_queues), keep_running(true) {}
 
 void LobbyManager::crearLobby(uint8_t& idCliente) {
     // Crear lobby
-    //lobbys_disponibles.emplace_back(clients.getClient(idCliente));
+    // lobbys_disponibles.emplace_back(clients.getClient(idCliente));
 }
 
 void LobbyManager::unirseALobby(uint8_t& idLobby, uint8_t& idCliente) {
     // Unirse a lobby
-    //lobbys_disponibles[idLobby].agregarCliente(clients.getClient(idCliente));
+    // lobbys_disponibles[idLobby].agregarCliente(clients.getClient(idCliente));
 }
 
 void LobbyManager::iniciarPartida(uint8_t& idLobby) {
     // Iniciar partida
-    for (auto& lobby : lobbys_disponibles) {
+    for (auto& lobby: lobbys_disponibles) {
         if (lobby.getId() == idLobby) {
             lobby.startGame();
             return;
@@ -28,9 +26,9 @@ void LobbyManager::iniciarPartida(uint8_t& idLobby) {
 
 void LobbyManager::salirDeLobby(uint8_t& idCliente, uint8_t& idLobby) {
     // Salir de lobby
-    for (auto& lobby : lobbys_disponibles) {
+    for (auto& lobby: lobbys_disponibles) {
         if (lobby.getId() == idLobby) {
-            //lobby.removePlayer(clients.getClient(idCliente));
+            // lobby.removePlayer(clients.getClient(idCliente));
             return;
         }
     }
@@ -38,7 +36,7 @@ void LobbyManager::salirDeLobby(uint8_t& idCliente, uint8_t& idLobby) {
 
 void LobbyManager::enviarLobbysDisponibles() {
     std::list<DescripcionLobby> lobbys;
-    for (auto& lobby : lobbys_disponibles) {
+    for (auto& lobby: lobbys_disponibles) {
         lobbys.push_back(lobby.getDescription());
     }
     // Enviar lobbys disponibles
@@ -59,7 +57,7 @@ void LobbyManager::enviarLobbysDisponibles() {
 }
 
 void LobbyManager::killLobbys() {
-    for (auto& lobby : lobbys_disponibles) {
+    for (auto& lobby: lobbys_disponibles) {
         lobby.closeLobby();
     }
     lobbys_disponibles.clear();
@@ -93,7 +91,7 @@ void LobbyManager::analizarMensaje(MensajeLobby& msg) {
 
 void LobbyManager::run() {
     try {
-        while(keep_running) {
+        while (keep_running) {
             MensajeLobby msg = recv_queue.pop();
             // Procesar mensajes aca
             analizarMensaje(msg);
@@ -115,6 +113,4 @@ void LobbyManager::kill() {
     recv_queue.close();
 }
 
-LobbyManager::~LobbyManager() {
-    killLobbys();
-}
+LobbyManager::~LobbyManager() { killLobbys(); }

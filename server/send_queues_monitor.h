@@ -2,15 +2,17 @@
 #define SEND_QUEUES_MONITOR_H
 
 
-#include <mutex>
 #include <list>
+#include <mutex>
+
 #include "../common/queue.h"
 
-template<typename T>
+template <typename T>
 class SendQueuesMonitor {
 private:
     std::mutex m;
     std::list<Queue<T>*> send_queues;
+
 public:
     SendQueuesMonitor();
     void add(Queue<T>* queue);
@@ -19,4 +21,4 @@ public:
     void remove_all();
 };
 
-#endif // SEND_QUEUES_MONITOR_H
+#endif  // SEND_QUEUES_MONITOR_H
