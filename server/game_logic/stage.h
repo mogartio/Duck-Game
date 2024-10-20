@@ -14,13 +14,13 @@ private:
     Map map;
     void printStage();
 public:
-    void draw_player(Player&);
-    bool is_valid_position(Player&, Coordinate);
+    // Son virtuales para poder mockear la clase mas facilmente
+    virtual void draw_player(Player&);
+    virtual bool is_valid_position(Player&, Coordinate);
     Stage(const std::string&);
-    void delete_player_from_stage(Player&);
-    void move_player(Player&, const std::string&);
-    void print();
-    bool should_fall(Player&);
+    virtual void delete_player_from_stage(Player&);
+    virtual void print();
+    virtual bool should_fall(Player&);
 };
 
 #endif 
