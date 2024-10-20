@@ -1,33 +1,33 @@
 #include "lobby.h"
 
+//estos events los voy a definir cuando empiece a armar el front
+//son constantes globales
 void Lobby::run() {
 
     while(!play){
 
         //pseudocodigo que explica como funciona lobby
-        /*
         auto mensaje = queueFrontSender.pop();
-        swtich(mensaje) {
+        switch(mensaje[0]) {
         case PLAY_EVENT:
             play = true;
             break;
 
         case VIEW_LOBBIES_EVENT:
-            queueSender.push();
-            lobbies = queueReciver.pop();
+            LobbyAction msj(1, NULL, NULL);
+            queueSender.push(&msj);
+            auto lobbies = queueReciver.pop();
             queueFrontReciver.push(lobbies);
             break;
         
-        case CREATE_LOBBY_ONE_LOCAL_PLAYER_EVENT:
-            queueSender.push();
-            lobby_created = queueReciver.pop();
-            if (lobby_created) {
-                queueFrontReciver(ok?);
-            }
+        case CHOOSE_LOBBY_EVENT:
+            LobbyAction msj(2, mensaje[1], mensaje[2]);
+            queueSender.push(&msj);
             break;
-        
-        case CREATE_LOBBY_TOW_LOCAL_PLAYER_EVENT:
-            queueSender.push();
+
+        case CREATE_LOBBY_ONE_LOCAL_PLAYER_EVENT:
+            LobbyAction msj(3, mensaje[1]);
+            queueSender.push(&msj);
             lobby_created = queueReciver.pop();
             if (lobby_created) {
                 queueFrontReciver(ok?);
@@ -35,19 +35,21 @@ void Lobby::run() {
             break;
 
         case CUSTOMIZE_PLAYER_EVENT:
-            queueSender.push(colores?);
-            colors = queueReciver.pop();
+            CustomizePlayer msj(true, NULL, NULL);
+            queueSender.push(&msj);
+            auto colors = queueReciver.pop();
             queueFrontReciver.push(colors);
             break;
 
         case PLAYER_CUSTOMIZED_EVENT:
-            queueSender.push(nombre y color);
+            CustomizePlayer msj(false, mensaje[1], mensaje[2]);
+            queueSender.push(&msj);
             break;
 
         default:
             break;
         }
-        */
+
     }
     
 

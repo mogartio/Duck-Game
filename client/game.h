@@ -2,28 +2,32 @@
 #define GAME_H
 
 #include "../common/queue.h"
+#include "../common/queuesStructs/clientInfo.cpp"
 
 class Game {
 private:
 
-    Queue<std::string>& queueSender;
+    Queue<ClientInfo*>& queueSender;
     Queue<std::string>& queueReciver;
     Queue<std::string>& queueFrontSender;
     Queue<std::string>& queueFrontReciver;
+
+    bool playing;
 
 public:
     // ------------------- Constructores -------------------
     /*
      * Constructor del Juego
      */
-    explicit Game(Queue<std::string>& queueSender, 
+    explicit Game(Queue<ClientInfo*>& queueSender, 
                    Queue<std::string>& queueReciver, 
                    Queue<std::string>& queueFrontSender,
                    Queue<std::string>& queueFrontReciver):
                    queueSender(queueSender),
                    queueReciver(queueReciver),
                    queueFrontSender(queueFrontSender),
-                   queueFrontReciver(queueFrontReciver) {}
+                   queueFrontReciver(queueFrontReciver),
+                   playing(true) {}
     
     // ------------------- Metodos -------------------
     /*

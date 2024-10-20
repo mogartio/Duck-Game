@@ -4,12 +4,13 @@
 #include "../common/socket.h"
 #include "../common/thread.h"
 #include "../common/queue.h"
+#include "../common/queuesStructs/clientInfo.cpp"
 
 class Sender: public Thread {
 private:
     Socket& skt;
 
-    Queue<std::string>& queue;
+    Queue<ClientInfo*>& queue;
 
     std::atomic<bool> is_dead;
 
@@ -20,7 +21,8 @@ public:
     /*
      * Constructor del receiver con el socket y la cola de mensajes
      */
-    explicit Sender(Socket& skt, Queue<std::string>& queue): skt(skt), queue(queue), is_dead(false) {}
+    explicit Sender(Socket& skt, Queue<ClientInfo*>& queue): 
+                    skt(skt), queue(queue), is_dead(false) {}
 
     // ------------------- Metodos -------------------
 

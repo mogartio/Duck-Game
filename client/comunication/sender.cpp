@@ -5,7 +5,7 @@ void Sender::run() {
         // Creo el protocolo del cliente
         //ClientProtocol protocolo(skt);
         // Mientras la comunicacion no este muerta
-        while ((!is_dead)&&_keep_running) {
+        while (_keep_running) {
             // Popeo el mensaje de la cola o me quedo esperando
             auto messaje = queue.pop();
             // Envio el mensaje al cliente a traves del protocolo

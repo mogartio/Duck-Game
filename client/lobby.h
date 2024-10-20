@@ -2,11 +2,12 @@
 #define LOBBY_H
 
 #include "../common/queue.h"
+#include "../common/queuesStructs/clientInfo.cpp"
 
 class Lobby {
 private:
 
-    Queue<std::string>& queueSender;
+    Queue<ClientInfo*>& queueSender;
     Queue<std::string>& queueReciver;
     Queue<std::string>& queueFrontSender;
     Queue<std::string>& queueFrontReciver;
@@ -18,7 +19,7 @@ public:
     /*
      * Constructor del Lobby
      */
-    explicit Lobby(Queue<std::string>& queueSender, 
+    explicit Lobby(Queue<ClientInfo*>& queueSender, 
                    Queue<std::string>& queueReciver, 
                    Queue<std::string>& queueFrontSender,
                    Queue<std::string>& queueFrontReciver):

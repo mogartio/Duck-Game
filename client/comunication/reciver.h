@@ -4,6 +4,7 @@
 #include "../common/socket.h"
 #include "../common/queue.h"
 #include "../common/thread.h"
+#include "../common/queuesStructs/clientInfo.cpp"
 
 class Reciver: public Thread {
 private:
