@@ -12,6 +12,10 @@ private:
 
     void sendMensajeUnirseALobby(MensajeLobby& mensaje);
 
+    MensajeLobby recvMensajeLobbysDisponibles();
+
+    MensajeLobby recvMensajeUnirseALobby();
+
 public:
     // ------------------- Constructores -------------------
     /*
