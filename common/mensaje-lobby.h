@@ -100,7 +100,7 @@ public:
 
     */
 
-    // ------------------ Desabilitamos -----------------------
+    // ------------------ Destructor -----------------------
     /*
      * Destructor del mensaje del lobby
      */
