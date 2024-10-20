@@ -1,9 +1,34 @@
 #ifndef PROTOCOLOLOBBYS_H
 #define PROTOCOLOLOBBYS_H
 
+#include "protocolo-common.h"
+#include "mensaje-lobby.h"
 
-class ProtocoloLobbys {
+class ProtocoloLobbys : public ProtocoloCommon {
+private:
+    // ------------------- Atributos -------------------
+    // ------------------- Métodos privados -------------------
+    void sendMensajeLobbysDisponibles(MensajeLobby& mensaje);
+
+    void sendMensajeUnirseALobby(MensajeLobby& mensaje);
 public:
+    // ------------------- Constructores -------------------
+    /*
+     * Constructor del protocolo
+     */
+    explicit ProtocoloLobbys(Socket& socket);
+
+    // ------------------- Métodos públicos -------------------
+    /*
+     * Envia un mensaje de lobbys a través del socket.
+     */
+    void sendMensajeLobbys(MensajeLobby& mensaje);
+
+    /*
+     * Recibe un mensaje de lobbys a través del socket.
+     */
+    MensajeLobby recvMensajeLobbys();
+
     // ------------------- Restricciones -------------------
     /*
      * Deshabilitamos el constructor por copia y operador asignación por copia
