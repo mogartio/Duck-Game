@@ -44,7 +44,8 @@ void LobbyManager::enviarLobbysDisponibles() {
         lobbys.push_back(lobby.getDescription());
     }
     // Enviar lobbys disponibles
-    ServerMensajeLobby msg = ServerMensajeLobby::mensajeLobbysDisponibles(lobbys);
+    u_int8_t tipoDeMensaje = MensajeLobby::LOBBYS_DISPONIBLES;
+    ServerMensajeLobby msg(tipoDeMensaje, lobbys);
 
     // esto se podria mejorar
     std::list<ServerMensajeLobby> msgs;

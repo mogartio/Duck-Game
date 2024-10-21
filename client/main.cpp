@@ -14,5 +14,5 @@ int main(int argc, char const* argv[]) {
 
     Client client(hostname, port);
 
-    return client.run();
+    return 0;
 }
