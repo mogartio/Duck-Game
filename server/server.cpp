@@ -1,31 +1,28 @@
 #include "server.h"
 
-Server::Server(const std::string& port): skt_server(port.c_str()) {}
+Server::Server(const char* port) : srv(port), clients(), recv_queue(), send_queues() {}
 
-int Server::run() {
-    try {
-        // Creamos un aceptador que aceptará a los clientes
-        // a través del socket `skt`.
-        Aceptador aceptador_de_clientes(skt_server);
-        // Iniciamos el aceptador para que acepte a los clientes
-        aceptador_de_clientes.start();
-        // Esperamos a que el usuario quiera salir
-        std::string exit_comand;
-        while (true) {
-            std::cin >> exit_comand;  // esta accion es bloqueante
-            if (exit_comand == "q") {
-                skt_server.shutdown(2);  // cerramos la comunicacion del socket completamente para
-                                         // que el aceptador termine
-                skt_server.close();      // cerramos el socket
-                break;
-            }
+void Server::run() {
+    // pongo a correr el acceptor
+    Acceptor acceptor(std::move(srv), clients, recv_queue, send_queues);
+    acceptor.start();
+    // pongo a correr el thread que lee input (TEMPORAL)
+    ReadInput read_input_t;
+    read_input_t.start();
+    std::cout << "Server levantado" << std::endl;
+    while(read_input_t.is_alive()) {
+        std::list<std::string> msgs;
+        std::string msg;
+        while(recv_queue.try_pop(msg)) {
+            msgs.push_back(msg);
         }
-        // Esperamos a que el aceptador termine
-        aceptador_de_clientes.join();
-    } catch (...) {
-        // Error desconocido
-        std::cerr << "Error desconocido en el server" << std::endl;
-        return -1;
+        for (auto& msg : msgs) {
+            std::cout << "Received message: " << msg << std::endl;
+        } 
+        send_queues.broadcast(msgs);
     }
-    return 0;
+
+    acceptor.stop();
+    acceptor.join();
+    read_input_t.join();
 }

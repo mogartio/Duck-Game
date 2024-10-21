@@ -55,6 +55,7 @@
         "typeinfo": "cpp",
         "sstream": "cpp",
         "list": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "set": "cpp"
     }
 }
