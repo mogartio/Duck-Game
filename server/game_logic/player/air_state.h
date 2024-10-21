@@ -5,20 +5,20 @@
 #define NORMAL_FALLING_SPEED 2
 #define TOTAL_JUMPS 3
 
-class Player; // Declaracion adelantada para no tener dependencia circularl
+class PlayerPosition; // Declaracion adelantada para no tener dependencia circularl
 
 class AirState{
     public:
         virtual int get_offset() = 0;
-        virtual void jump(Player&) = 0;
-        virtual void update(bool, Player&) = 0;
+        virtual void jump(PlayerPosition&) = 0;
+        virtual void update(bool, PlayerPosition&) = 0;
     };
 
 class Grounded : public AirState{
     public:
         virtual int get_offset() override;
-        virtual void jump(Player& player) override;
-        virtual void update(bool, Player&) override;
+        virtual void jump(PlayerPosition& player) override;
+        virtual void update(bool, PlayerPosition&) override;
     };
 
 class Falling : public AirState{
@@ -27,8 +27,8 @@ class Falling : public AirState{
     public:
         Falling(): falling_speed(INITIAL_FALLING_SPEED) {}
         virtual int get_offset() override;
-        virtual void jump(Player&) override;
-        virtual void update(bool, Player&) override;
+        virtual void jump(PlayerPosition&) override;
+        virtual void update(bool, PlayerPosition&) override;
     };
 
 class Jumping : public AirState{
@@ -38,8 +38,8 @@ class Jumping : public AirState{
     public:
         Jumping(): jumps_left(TOTAL_JUMPS), keeps_jumping(true) {}
         virtual int get_offset() override;
-        virtual void jump(Player&) override;
-        virtual void update(bool, Player&) override;
+        virtual void jump(PlayerPosition&) override;
+        virtual void update(bool, PlayerPosition&) override;
 };
 
 #endif

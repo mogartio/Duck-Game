@@ -3,8 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "air_state.h"
-#include "player.h"
+#include "player/player.h"
 #define FLOOR 1
 #define BACKGROUND 0
 #define PLAYER_SIZE 3 // actualmente los patos son cuadrados de 2X2
@@ -19,6 +18,7 @@ Stage::Stage(const std::string& file_name): map(0,0){
 void Stage::print(){
     map.print();
 }
+
 void Stage::draw_player(Player& player){
     Coordinate init_position = player.get_position();
     int x = init_position.x;
@@ -27,7 +27,7 @@ void Stage::draw_player(Player& player){
         for (int j=0; j < PLAYER_SIZE; j++){
             Coordinate current(x+i, y+j);
             player.occupy(current);
-            map.set(current, player.id);
+            map.set(current, player.get_id());
         }
     }
 }
@@ -37,11 +37,10 @@ void Stage::delete_player_from_stage(Player& player){
     for (auto& coordinate : occupied){
         map.set(coordinate, BACKGROUND);
     }
-    player.free_occupied();
 }
 
-bool Stage::should_fall(Player& player){
-    Coordinate current_position = player.get_position();
+bool Stage::should_fall(PlayerPosition& player_position){
+    Coordinate current_position = player_position.get_position();
     Coordinate duck_feet(current_position.x, current_position.y + PLAYER_SIZE);
     for (int i=0; i < PLAYER_SIZE; i ++){
         Coordinate aux(duck_feet.x + i, duck_feet.y);
@@ -52,7 +51,7 @@ bool Stage::should_fall(Player& player){
     return true;
 }
 
-bool Stage::is_valid_position(Player& player, Coordinate position){
+bool Stage::is_valid_position(Coordinate position, int color){
     for (int i=0; i < PLAYER_SIZE; i++){
         for (int j=0; j < PLAYER_SIZE; j++){
             Coordinate aux(position.x + j, position.y + i);
@@ -60,7 +59,7 @@ bool Stage::is_valid_position(Player& player, Coordinate position){
                 return false;
             }
             int value = map.get(aux);
-            if (value != BACKGROUND && value != player.id){
+            if (value != BACKGROUND && value != color){
                 return false;
             }
         }

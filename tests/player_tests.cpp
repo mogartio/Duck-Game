@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "../server/game_logic/stage.h"
-#include "../server/game_logic/player.h"
+#include "../server/game_logic/player/player.h"
 using ::testing::Return;
 #define INITIAL_X 10
 #define INITIAL_Y 9
@@ -38,13 +38,11 @@ TEST_F(PlayerTest, PlayerMovesHorizontallyGrounded){
     std::string left = "a";
     for (int i=0; i < 5; i++){
         player.move(right);
-        player.set_state(std::make_unique<Grounded>());
         ASSERT_EQ(player.get_position().x, INITIAL_X + i + 1) << "No se mueve a la derecha";
         ASSERT_EQ(player.get_position().y, INITIAL_Y) << "Se mueve verticalmente cuando deberia hacerlo solo a la derecha";
     }
     for (int i=0; i < 5; i++){
         player.move(left);
-        player.set_state(std::make_unique<Grounded>());
         ASSERT_EQ(player.get_position().x, INITIAL_X - i + 4) << "No se mueve a la izquierda";
         ASSERT_EQ(player.get_position().y, INITIAL_Y) << "Se mueve verticalmente cuando deberia hacerlo solo a la derecha";
     }
