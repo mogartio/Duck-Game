@@ -4,7 +4,7 @@
 #include <vector>
 #include "../../../common/coordinate.h"
 #include "air_state.h"
-#include "../stage.h"
+#include "../map/stage.h"
 class Player;
 class PlayerPosition{
 private:
@@ -28,3 +28,4 @@ public:
 };
 
 #endif
+

@@ -1,0 +1,7 @@
+CMakeFiles
+_deps
+build
+CMakeCache.txt
+server/game_logic/player.o
+server/game_logic/game
+tests/test

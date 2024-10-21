@@ -6,7 +6,7 @@
 #include "../../../common/coordinate.h"
 #include "air_state.h"
 #include "player_position.h"
-#include "../stage.h"
+#include "../map/stage.h"
 
 class Player{
 private:

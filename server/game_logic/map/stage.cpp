@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "player/player.h"
+#include "../player/player.h"
 #define FLOOR 1
 #define BACKGROUND 0
 #define PLAYER_SIZE 3 // actualmente los patos son cuadrados de 2X2

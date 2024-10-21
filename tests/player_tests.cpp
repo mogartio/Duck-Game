@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "../server/game_logic/stage.h"
+#include "../server/game_logic/map/stage.h"
 #include "../server/game_logic/player/player.h"
 using ::testing::Return;
 #define INITIAL_X 10

@@ -2,7 +2,7 @@
 #include <ostream>
 #include <vector>
 #include <sstream>
-#include "../../common/coordinate.h"
+#include "../../../common/coordinate.h"
 #ifndef MAP_H
 #define MAP_H
 
