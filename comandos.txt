@@ -8,6 +8,6 @@ make -f MakefileThreads wrapsocks=1  //para compilar simulando errores de red
 
 ./compare_outputs.sh ./casos ./salidas
 
-pre-commit run --hook-stage manual --files ./*_src/*.cpp
+pre-commit run --hook-stage manual --files ./*/*.cpp
 
-pre-commit run --hook-stage manual --files ./*_src/*.h
+pre-commit run --hook-stage manual --files ./*/*.h
