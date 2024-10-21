@@ -1,8 +1,12 @@
 #include "acceptor.h"
+
+#include <utility>
+
 #include <sys/socket.h>
 
-Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue, SendQueuesMonitor<std::string>& send_queues) 
-    : srv(std::move(srv)), clients(clients), recv_queue(recv_queue), send_queues(send_queues) {}
+Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue,
+                   SendQueuesMonitor<std::string>& send_queues):
+        srv(std::move(srv)), clients(clients), recv_queue(recv_queue), send_queues(send_queues) {}
 
 void Acceptor::run() {
     try {
@@ -15,7 +19,7 @@ void Acceptor::run() {
 
             Client* client = new Client(std::move(new_skt), *new_send_queue, recv_queue, id++);
             clients.add(client);
-            
+
             reap_dead_clients();
         }
     } catch (const std::exception& e) {
@@ -23,9 +27,7 @@ void Acceptor::run() {
     }
 }
 
-void Acceptor::reap_dead_clients() {
-    clients.remove_dead_clients();
-}
+void Acceptor::reap_dead_clients() { clients.remove_dead_clients(); }
 
 void Acceptor::stop() {
     srv.shutdown(SHUT_RDWR);

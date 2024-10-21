@@ -2,6 +2,7 @@
 #define PROTOCOLOLOBBYS_H
 
 #include "./../common/protocolo-common.h"
+
 #include "mensaje-lobby.h"
 
 class ProtocoloLobbysServer: public ProtocoloCommon {
