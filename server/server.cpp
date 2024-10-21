@@ -9,7 +9,7 @@ void Server::run() {
     // pongo a correr el thread que lee input (TEMPORAL)
     ReadInput read_input_t;
     read_input_t.start();
-
+    std::cout << "Server levantado" << std::endl;
     while(read_input_t.is_alive()) {
         std::list<std::string> msgs;
         std::string msg;

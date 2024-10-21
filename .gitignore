@@ -11,4 +11,3 @@ CTestTestfile.cmake
 *.txt
 
 build/
-*.png

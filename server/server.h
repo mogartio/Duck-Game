@@ -15,7 +15,7 @@ private:
     Socket srv;
     ClientsMonitor clients;
     Queue<std::string> recv_queue; // Pongo std::string pero va a cambiar segun el protocolo
-    SendQueuesMonitor send_queues;
+    SendQueuesMonitor<std::string> send_queues;
 public:
     explicit Server(const char* port);
     void run();

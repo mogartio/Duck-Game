@@ -1,9 +1,7 @@
 #include "sender.h"
 
-Sender::Sender(Queue<std::string>& send_queue, Protocol& protocol) :
-    send_queue(send_queue),
-    protocol(protocol) 
-    {}
+Sender::Sender(Queue<std::string>& send_queue, Protocol& protocol):
+        send_queue(send_queue), protocol(protocol) {}
 
 void Sender::run() {
     while (_keep_running) {

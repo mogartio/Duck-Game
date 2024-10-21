@@ -1,10 +1,12 @@
 #ifndef CLIENTS_MONITOR_H
 #define CLIENTS_MONITOR_H
 
-#include <mutex>
 #include <list>
+#include <mutex>
 #include <string>
+
 #include "../common/queue.h"
+
 #include "client.h"
 
 class ClientsMonitor {
@@ -21,4 +23,4 @@ public:
     void remove_all();
 };
 
-#endif // CLIENTS_MONITOR_H
+#endif  // CLIENTS_MONITOR_H
