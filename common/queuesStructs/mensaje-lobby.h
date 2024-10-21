@@ -23,26 +23,47 @@ public:
     };
 
 protected:
+    // ------------------ Atributos ----------------------
     u_int8_t tipoMensaje;
+
+    u_int8_t idLobby;
+
+    std::list<DescripcionLobby> lobbys;
+
+    //------------------ Métodos privados -----------------------
+    /*
+     * Lanza una excepcion si el tipo de mensaje no es valido
+     */
+    void validarTipoMensaje(u_int8_t& tipoMensaje) const;
 
 public:
     // ------------------ Constructor -----------------------
-    /*
-     * Constructor del mensaje del lobby
-     */
-    explicit MensajeLobby(genericType causa,u_int8_t tipoMensaje);
 
-    // ------------------ Destructor -----------------------
-    /*
-     * Destructor del mensaje del lobby
-     */
-    ~MensajeLobby() = default;
+    explicit MensajeLobby(u_int8_t& tipoMensaje);
+
+    explicit MensajeLobby(u_int8_t& tipoMensaje,u_int8_t& idLobby);
+
+    explicit MensajeLobby(u_int8_t& tipoMensaje,std::list<DescripcionLobby>& lobbys);
 
     // ------------------ Getters -----------------------
     /*
      * Devuelve el tipo de mensaje del lobby
      */
     u_int8_t getTipoMensaje() const;
+    /*
+     * Devuelve la lista de lobbys
+     */
+    std::list<DescripcionLobby> getLobbys() const;
 
+    /*
+     * Devuelve el id del lobby
+     */
+    u_int8_t getIdLobby() const;
+
+    // ------------------ Destructor -----------------------
+    /*
+     * Destructor del mensaje del lobby
+     */
+    ~MensajeLobby() = default;
 };
 #endif

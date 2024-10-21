@@ -2,7 +2,7 @@
 
 Mensaje::Mensaje(Mensaje::genericType header) : header(header) {}
 
-Mensaje::genericType Mensaje::getHeader() const {
+Mensaje::genericType Mensaje::getTipeHeader() const {
     return header;
 }
 
