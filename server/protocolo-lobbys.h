@@ -6,6 +6,7 @@
 
 class ProtocoloLobbysServer: public ProtocoloCommon {
 private:
+    u_int8_t idCliente;
     // ------------------- Atributos -------------------
     // ------------------- Métodos privados server -------------------
 
@@ -18,7 +19,7 @@ public:
     /*
      * Constructor del protocolo
      */
-    explicit ProtocoloLobbysServer(Socket& socket);
+    explicit ProtocoloLobbysServer(Socket& socket, u_int8_t& idCliente);
 
     // ------------------- Métodos públicos -------------------
     /*
@@ -29,7 +30,7 @@ public:
     /*
      * Recibe un mensaje de lobbys a través del socket.
      */
-    //MensajeLobby recvMensajeLobbys(); implementar aca la idea del cliente
+    ServerMensajeLobby recvMensajeLobbys();
 
     // ------------------- Restricciones -------------------
     /*

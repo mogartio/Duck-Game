@@ -7,18 +7,15 @@
 class ServerMensajeLobby : public MensajeLobby {
 protected:
     // ------------------ Atributos ----------------------
-
     u_int8_t idCliente;
 
 public:
-    // ------------------ Constructor lado server -----------------------
-    /*
-     * Constructor del mensaje del lobby
-     */
-    ServerMensajeLobby(u_int8_t tipoMensaje, u_int8_t idCliente);
+    // ------------------ Constructor -----------------------
+    explicit ServerMensajeLobby(u_int8_t& tipoMensaje);
 
-    // ------------------ Constructor lado client -----------------------
+    explicit ServerMensajeLobby(u_int8_t& tipoMensaje,u_int8_t& idLobby);
 
+    explicit ServerMensajeLobby(u_int8_t& tipoMensaje,std::list<DescripcionLobby>& lobbys);
     // ------------------ Getters -----------------------
     /*
      * Devuelve el id del cliente
