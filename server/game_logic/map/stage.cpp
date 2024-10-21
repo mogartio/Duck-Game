@@ -6,7 +6,10 @@
 #include "../player/player.h"
 #define FLOOR 1
 #define BACKGROUND 0
-#define PLAYER_SIZE 3 // actualmente los patos son cuadrados de 2X2
+#define PLAYER_SIZE 3
+#define LEFT "a"
+#define RIGHT "d"
+#define UP "w"
 #include "csv_reader.h"
 #include "stage.h"
 
@@ -65,4 +68,23 @@ bool Stage::is_valid_position(Coordinate position, int color){
         }
     }
     return true;
+}
+
+// direction es un versor del eje x. es decir es 1 o -1
+void Stage::ray_trace(int& direction, int reach, Coordinate& gun_position){
+    int direction_handler = direction; // para usar el mismo loop sea la direccion 1 o -1
+    for (int i=0; i < reach; i ++){
+        Coordinate bullet_position(gun_position.x + direction + i * direction_handler, gun_position.y);
+        int next_tile = map.get(bullet_position);
+        if (next_tile == -1){
+            return;
+        }
+        if (next_tile == BACKGROUND) {
+            map.set(bullet_position, 3);
+        /*} else if(next_tile == PLAYER){
+            kill(player); */
+        } else if (next_tile == FLOOR) {
+            return;
+        }
+    }
 }

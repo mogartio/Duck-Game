@@ -21,6 +21,7 @@ public:
     virtual void delete_player_from_stage(Player&);
     virtual void print();
     virtual bool should_fall(PlayerPosition&);
+    virtual void ray_trace(int&, int, Coordinate&);
 };
 
 #endif 

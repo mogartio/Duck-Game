@@ -13,10 +13,9 @@ private:
     Player& player;
     std::unique_ptr<AirState> air_state;
     Stage& stage;
+    int facing_direction; //para disparar
     void move_horizontally(int);
     void move_vertically(int);
-    void move_up(int);
-    void move_down(int);
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);
     void set_state(std::unique_ptr<AirState>);
@@ -25,6 +24,7 @@ public:
     void occupy(Coordinate&);
     void free_occupied();
     std::vector<Coordinate> get_occupied();
+    int get_facing_direction();
 };
 
 #endif

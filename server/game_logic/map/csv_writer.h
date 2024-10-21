@@ -18,7 +18,7 @@ public:
                     file << FLOOR << ",";
                     continue;
                 }
-                if ((i == 40 || i ==  41) && j > 10 && j < 40){
+                if ((i == 40) && j > 10 && j < 40){
                     file << FLOOR << ",";
                     continue;
                 }

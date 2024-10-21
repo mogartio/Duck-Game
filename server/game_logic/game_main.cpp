@@ -1,6 +1,6 @@
 #include <vector>
-#include "stage.h"
-#include "csv_writer.h"
+#include "map/stage.h"
+#include "map/csv_writer.h"
 #include "player/player.h"
 int main (int argc, char *argv[]) {
     CSVWriter::write_map("main_map.csv");
@@ -14,7 +14,7 @@ int main (int argc, char *argv[]) {
         stage.delete_player_from_stage(player); //Borro su dibujo viejo
         std::string command;
         std::cin >> command;
-        player.move(command);
+        player.take_action(command);
         stage.draw_player(player);
         stage.print();
     }
