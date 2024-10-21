@@ -3,7 +3,7 @@
 ProtocoloLobbysServer::ProtocoloLobbysServer(Socket &socket) : ProtocoloCommon(socket) {}
 
 void ProtocoloLobbysServer::sendMensajeLobbysDisponibles(ServerMensajeLobby &mensaje) {
-    if (mensaje.getCausa() != ServerMensajeLobby::LOBBYS_DISPONIBLES){
+    if (static_cast<int>(mensaje.getCausa()) != static_cast<int>(ServerMensajeLobby::LOBBYS_DISPONIBLES)){
         return;
     }
     u_int8_t cantidadLobbys = mensaje.getLobbys().size();
