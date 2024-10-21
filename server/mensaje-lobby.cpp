@@ -18,3 +18,15 @@ ServerMensajeLobby ServerMensajeLobby::error() {
     u_int8_t error = ERROR;
     return ServerMensajeLobby(LOBBYMESSAGE, error);
 }
+
+std::list<DescripcionLobby> ServerMensajeLobby::getLobbys() {
+    return lobbys;
+}
+
+u_int8_t ServerMensajeLobby::getIdCliente() {
+    return idCliente;
+}
+
+u_int8_t ServerMensajeLobby::getIdLobby() {
+    return idLobby;
+}
