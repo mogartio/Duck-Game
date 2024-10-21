@@ -1,7 +1,7 @@
 #ifndef SERVERMENSAJELOBBY_H
 #define SERVERMENSAJELOBBY_H
 
-#include "./../common/mensaje-lobby.h"
+#include "./../common/queuesStructs/mensaje-lobby.h"
 
 
 class ServerMensajeLobby : public MensajeLobby {

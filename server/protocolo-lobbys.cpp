@@ -3,7 +3,7 @@
 ProtocoloLobbysServer::ProtocoloLobbysServer(Socket &socket) : ProtocoloCommon(socket) {}
 
 void ProtocoloLobbysServer::sendMensajeLobbysDisponibles(ServerMensajeLobby &mensaje) {
-    if (static_cast<int>(mensaje.getCausa()) != static_cast<int>(ServerMensajeLobby::LOBBYS_DISPONIBLES)){
+    if (static_cast<int>(mensaje.getTipeHeader()) != static_cast<int>(ServerMensajeLobby::LOBBYS_DISPONIBLES)){
         return;
     }
     u_int8_t cantidadLobbys = mensaje.getLobbys().size();
@@ -16,12 +16,11 @@ void ProtocoloLobbysServer::sendMensajeLobbysDisponibles(ServerMensajeLobby &men
 }
 
 void ProtocoloLobbysServer::sendMensajeLobbys(ServerMensajeLobby &mensaje) {
-    u_int8_t causa = mensaje.getCausa();
+    u_int8_t causa = mensaje.getTipeHeader();
     send_u_int8_t(causa);
 
     u_int8_t tipoMensaje = mensaje.getTipoMensaje();
     send_u_int8_t(tipoMensaje);
 
     sendMensajeLobbysDisponibles(mensaje);
-
 }
