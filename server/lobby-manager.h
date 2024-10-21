@@ -4,7 +4,7 @@
 
 #include <list>
 
-#include "./../common/mensaje-lobby.h"
+#include "mensaje-lobby.h"
 #include "./../common/queue.h"
 #include "./../common/thread.h"
 
@@ -19,9 +19,9 @@ private:
 
     ClientsMonitor& clients;
 
-    Queue<MensajeLobby>& recv_queue;
+    Queue<ServerMensajeLobby>& recv_queue;
 
-    SendQueuesMonitor<MensajeLobby>& send_queues;
+    SendQueuesMonitor<ServerMensajeLobby>& send_queues;
 
     std::atomic<bool> keep_running;
 
@@ -39,14 +39,14 @@ private:
 
     void cleanLobbys();
 
-    void analizarMensaje(MensajeLobby& msg);
+    void analizarMensaje(ServerMensajeLobby& msg);
 
 public:
     /*
      * Constructor del manejador de lobbys
      */
-    LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue,
-                 SendQueuesMonitor<MensajeLobby>& send_queues);
+    LobbyManager(ClientsMonitor& clients, Queue<ServerMensajeLobby>& recv_queue,
+                 SendQueuesMonitor<ServerMensajeLobby>& send_queues);
 
     /*
      * Implementamos el método `run`

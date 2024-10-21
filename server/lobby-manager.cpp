@@ -1,7 +1,7 @@
 #include "lobby-manager.h"
 
-LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<MensajeLobby>& recv_queue,
-                           SendQueuesMonitor<MensajeLobby>& send_queues):
+LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<ServerMensajeLobby>& recv_queue,
+                           SendQueuesMonitor<ServerMensajeLobby>& send_queues):
         clients(clients), recv_queue(recv_queue), send_queues(send_queues), keep_running(true) {}
 
 void LobbyManager::crearLobby(uint8_t& idCliente) {
@@ -40,10 +40,10 @@ void LobbyManager::enviarLobbysDisponibles() {
         lobbys.push_back(lobby.getDescription());
     }
     // Enviar lobbys disponibles
-    MensajeLobby msg = MensajeLobby::crearMensajeLobbysDisponibles(lobbys);
+    ServerMensajeLobby msg = ServerMensajeLobby::mensajeLobbysDisponibles(lobbys);
 
     // esto se podria mejorar
-    std::list<MensajeLobby> msgs;
+    std::list<ServerMensajeLobby> msgs;
     msgs.push_back(msg);
 
     // mando a los clientes
@@ -67,10 +67,10 @@ void LobbyManager::cleanLobbys() {
     lobbys_disponibles.remove_if([](Lobby& lobby) { return lobby.is_empty(); });
 }
 
-void LobbyManager::analizarMensaje(MensajeLobby& msg) {
+void LobbyManager::analizarMensaje(ServerMensajeLobby& msg) {
     u_int8_t idCliente = msg.getIdCliente();
     u_int8_t idLobby = msg.getIdLobby();
-    switch (msg.getTipo()) {
+    switch (msg.getTipoMensaje()) {
         case MensajeLobby::CREAR_LOBBY:
             crearLobby(idCliente);
             break;
@@ -83,7 +83,7 @@ void LobbyManager::analizarMensaje(MensajeLobby& msg) {
         case MensajeLobby::SALIR_DE_LOBBY:
             salirDeLobby(idCliente, idLobby);
             break;
-        case MensajeLobby::LOBBYS_DISPONIBLES:
+        case MensajeLobby::VER_LOBBYS:
             enviarLobbysDisponibles();
             break;
     }
@@ -92,7 +92,7 @@ void LobbyManager::analizarMensaje(MensajeLobby& msg) {
 void LobbyManager::run() {
     try {
         while (keep_running) {
-            MensajeLobby msg = recv_queue.pop();
+            ServerMensajeLobby msg = recv_queue.pop();
             // Procesar mensajes aca
             analizarMensaje(msg);
 
