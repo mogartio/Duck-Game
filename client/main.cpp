@@ -1,26 +1,17 @@
-#include "common/foo.h"
-#include "protocol.h"
-#include "common/socket.h"
+#include "client.h"
 #include <iostream>
-#include <exception>
 
-int main(int argc, char** argv) {
-    if (argc != 3) {
-        std::cerr << "Uso: " << argv[0] << " <host> <puerto>\n";
-        return 1;
-    }
-    Socket skt(argv[1], argv[2]);
-    Protocol protocol(skt);
+int main(int argc, char const* argv[]) {
 
-    while(true) {
-        std::string input;
-        std::cout << "Ingrese un mensaje: ";
-        std::getline(std::cin, input);
-        protocol.sendString(input);
-        
-        std::string str = protocol.receiveString();
-        std::cout << "\nReceived: " << str << std::endl; 
+	if (argc != 3) {
+        std::cerr << "Bad number of arguments in client side\n";
+        return -1;
     }
-    return 0;
-	
+
+	const std::string hostname = argv[1];
+	const std::string port = argv[2];
+
+	Client client(hostname, port);
+
+	return client.run();
 }
