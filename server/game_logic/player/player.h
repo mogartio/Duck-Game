@@ -20,7 +20,7 @@ public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
-    Player(Coordinate&, Stage&);
+    Player(Coordinate&, Stage&, int);
     void die();
     void occupy(Coordinate&);
     void take_action(std::string& );

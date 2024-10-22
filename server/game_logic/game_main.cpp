@@ -5,20 +5,20 @@
 int main (int argc, char *argv[]) {
     CSVWriter::write_map("main_map.csv");
     Stage stage("main_map.csv");
-    int x = 30;
-    int y = 36;
-    Coordinate coordinate(x, y);
-    Player player(coordinate, stage);
-    stage.draw_player(player);
+    Coordinate coordinate_a(30, 36);
+    Coordinate coordinate_b(20, 36);
+    Player player_a(coordinate_a, stage, 2);
+    Player player_b(coordinate_b, stage, 3);
+    stage.draw_player(player_a);
     while (true){
-        stage.delete_player_from_stage(player); //Borro su dibujo viejo
         std::string command;
         std::cin >> command;
-        player.take_action(command);
-        stage.draw_player(player);
+        stage.delete_player_from_stage(player_a); //Borro su dibujo viejo
+        player_a.take_action(command);
+        stage.draw_player(player_a);
+        //stage.delete_player_from_stage(player_b); //Borro su dibujo viejo
+        //stage.draw_player(player_b);
         stage.print();
     }
     return 0;
 }
-
-//g++ game_main.cpp stage.cpp player.cpp -o game
