@@ -1,5 +1,6 @@
 #ifndef RECEIVER_H
 #define RECEIVER_H
+#include <string>
 
 #include "../common/queue.h"
 #include "../common/socket.h"
@@ -18,5 +19,4 @@ public:
     explicit Receiver(Queue<std::string>& recv_queue, Protocol& protocol);
     void kill();
 };
-
 #endif  // RECEIVER_H

@@ -9,6 +9,7 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "../common/socket.h"
@@ -18,7 +19,7 @@ protected:
     Socket skt;
 
 public:
-    Protocol(Socket& skt): skt(std::move(skt)) {}
+    explicit Protocol(Socket& skt): skt(std::move(skt)) {}
 
     void sendString(const std::string& str) {
         bool was_closed = false;

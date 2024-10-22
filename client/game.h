@@ -1,12 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
+#include <string>
 
 #include "../common/queue.h"
 #include "../common/queuesStructs/clientInfo.cpp"
 
 class Game {
 private:
-
     Queue<ClientInfo*>& queueSender;
     Queue<std::string>& queueReciver;
     Queue<std::string>& queueFrontSender;
@@ -19,16 +19,14 @@ public:
     /*
      * Constructor del Juego
      */
-    explicit Game(Queue<ClientInfo*>& queueSender, 
-                   Queue<std::string>& queueReciver, 
-                   Queue<std::string>& queueFrontSender,
-                   Queue<std::string>& queueFrontReciver):
-                   queueSender(queueSender),
-                   queueReciver(queueReciver),
-                   queueFrontSender(queueFrontSender),
-                   queueFrontReciver(queueFrontReciver),
-                   playing(true) {}
-    
+    explicit Game(Queue<ClientInfo*>& queueSender, Queue<std::string>& queueReciver,
+                  Queue<std::string>& queueFrontSender, Queue<std::string>& queueFrontReciver):
+            queueSender(queueSender),
+            queueReciver(queueReciver),
+            queueFrontSender(queueFrontSender),
+            queueFrontReciver(queueFrontReciver),
+            playing(true) {}
+
     // ------------------- Metodos -------------------
     /*
      * El metodo play se encarga de correr el juego
@@ -49,9 +47,6 @@ public:
     Game& operator=(Game&&) = delete;
 
     ~Game() = default;
-
 };
 
 #endif
-
-

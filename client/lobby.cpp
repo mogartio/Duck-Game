@@ -1,12 +1,12 @@
 #include "lobby.h"
 
-//estos events los voy a definir cuando empiece a armar el front
-//son constantes globales
+// estos events los voy a definir cuando empiece a armar el front
+// son constantes globales
 void Lobby::run() {
 
-    while(!play){
+    while (!play) {
 
-        //pseudocodigo que explica como funciona lobby
+        // pseudocodigo que explica como funciona lobby
         auto mensaje = queueFrontSender.pop();
         // switch(mensaje[0]) {
         // case PLAY_EVENT:
@@ -19,7 +19,7 @@ void Lobby::run() {
         //     auto lobbies = queueReciver.pop();
         //     queueFrontReciver.push(lobbies);
         //     break;
-        
+
         // case CHOOSE_LOBBY_EVENT:
         //     LobbyAction msj(2, mensaje[1], mensaje[2]);
         //     queueSender.push(&msj);
@@ -49,10 +49,5 @@ void Lobby::run() {
         // default:
         //     break;
         // }
-
     }
-    
-
 }
-
-

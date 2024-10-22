@@ -2,15 +2,16 @@
 #define SEND_QUEUES_MONITOR_H
 
 #include <list>
-#include <mutex>
 #include <map>
+#include <mutex>
+
 #include "../common/queue.h"
 
 template <typename T>
 class SendQueuesMonitor {
 private:
     std::mutex m;
-    std::map<int, Queue<T>*> send_queues_map; // <client_id, send_queue>
+    std::map<int, Queue<T>*> send_queues_map;  // <client_id, send_queue>
 public:
     SendQueuesMonitor();
     void add(Queue<T>* queue, const int& client_id);
@@ -53,5 +54,4 @@ void SendQueuesMonitor<T>::send_to_client(const T& msg, const int& client_id) {
     std::lock_guard<std::mutex> lock(m);
     send_queues_map[client_id]->push(msg);
 }
-
 #endif  // SEND_QUEUES_MONITOR_H

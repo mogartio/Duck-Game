@@ -8,34 +8,35 @@ target_sources(server_exe  # Use the correct target name
     PRIVATE
     # .cpp files
     ${COMMON_SOURCES}  # Include all .cpp files from common
-    server.cpp
-    acceptor.cpp 
-    client.cpp 
+    acceptor.cpp
+    client.cpp
     clients_monitor.cpp
+    lobby-manager.cpp
+    lobby.cpp
     main.cpp
+    mensaje-lobby.cpp
+    protocolo-lobbys.cpp
     receiver.cpp
     sender.cpp
-    lobby-manager.cpp
-    mensaje-lobby.cpp  # Ensure this line is present
-    protocolo-lobbys.cpp
-    lobby.cpp
+    server.cpp
+
 
     PUBLIC
     # .h files
     ${COMMON_HEADERS}  # Include all .h files from common
-    server.h
     acceptor.h
     client.h
     clients_monitor.h
-    send_queues_monitor.h
-    read_input.h 
-    protocol.h
-    receiver.h
-    sender.h
     lobby-manager.h
+    lobby.h
     mensaje-lobby.h
     protocolo-lobbys.h
-    lobby.h
+    protocol.h
+    read_input.h
+    receiver.h
+    send_queues_monitor.h
+    sender.h
+    server.h
 )
 
 # Include the common directory for headers

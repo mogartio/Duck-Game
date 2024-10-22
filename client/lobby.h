@@ -1,35 +1,33 @@
 #ifndef LOBBY_H
 #define LOBBY_H
+#include <string>
 
 #include "../common/queue.h"
 #include "../common/queuesStructs/clientInfo.cpp"
 
 class Lobby {
 private:
-
     Queue<ClientInfo*>& queueSender;
     Queue<std::string>& queueReciver;
     Queue<std::string>& queueFrontSender;
     Queue<std::string>& queueFrontReciver;
 
     bool play;
-public:
 
+public:
     // ------------------- Constructores -------------------
     /*
      * Constructor del Lobby
      */
-    explicit Lobby(Queue<ClientInfo*>& queueSender, 
-                   Queue<std::string>& queueReciver, 
-                   Queue<std::string>& queueFrontSender,
-                   Queue<std::string>& queueFrontReciver):
-                   queueSender(queueSender),
-                   queueReciver(queueReciver),
-                   queueFrontSender(queueFrontSender),
-                   queueFrontReciver(queueFrontReciver), 
-                   play(false) {}
+    explicit Lobby(Queue<ClientInfo*>& queueSender, Queue<std::string>& queueReciver,
+                   Queue<std::string>& queueFrontSender, Queue<std::string>& queueFrontReciver):
+            queueSender(queueSender),
+            queueReciver(queueReciver),
+            queueFrontSender(queueFrontSender),
+            queueFrontReciver(queueFrontReciver),
+            play(false) {}
 
-    
+
     // ------------------- Metodos -------------------
     /*
      * El metodo run se encarga de correr el juego
@@ -50,12 +48,7 @@ public:
     Lobby& operator=(Lobby&&) = delete;
 
     ~Lobby() = default;
-
-
 };
 
 
 #endif
-
-
-

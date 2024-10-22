@@ -5,13 +5,14 @@ LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<ServerMensajeLobby>& r
         clients(clients), recv_queue(recv_queue), send_queues(send_queues), keep_running(true) {}
 
 void LobbyManager::crearLobby(uint8_t& idCliente) {
-    std::cout << "Client id: " << (int) idCliente << " created a lobby" << std::endl;
+    std::cout << "Client id: " << (int)idCliente << " created a lobby" << std::endl;
     // Crear lobby
     // lobbys_disponibles.emplace_back(clients.getClient(idCliente));
 }
 
 void LobbyManager::unirseALobby(uint8_t& idLobby, uint8_t& idCliente) {
-    std::cout << "Client id: " << (int) idCliente << " joined lobby id: " << (int) idLobby << std::endl;
+    std::cout << "Client id: " << (int)idCliente << " joined lobby id: " << (int)idLobby
+              << std::endl;
     // Unirse a lobby
     // lobbys_disponibles[idLobby].agregarCliente(clients.getClient(idCliente));
 }
@@ -27,7 +28,7 @@ void LobbyManager::iniciarPartida(uint8_t& idLobby) {
 }
 
 void LobbyManager::salirDeLobby(uint8_t& idCliente, uint8_t& idLobby) {
-    std::cout << "Client id: " << (int) idCliente << " left lobby id: " << (int) idLobby << std::endl;
+    std::cout << "Client id: " << (int)idCliente << " left lobby id: " << (int)idLobby << std::endl;
     // Salir de lobby
     for (auto& lobby: lobbys_disponibles) {
         if (lobby.getId() == idLobby) {
@@ -43,7 +44,8 @@ void LobbyManager::enviarLobbysDisponibles() {
         lobbys.push_back(lobby.getDescription());
     }
     // Enviar lobbys disponibles
-    ServerMensajeLobby msg = ServerMensajeLobby::mensajeLobbysDisponibles(lobbys);
+    u_int8_t tipoDeMensaje = MensajeLobby::LOBBYS_DISPONIBLES;
+    ServerMensajeLobby msg(tipoDeMensaje, lobbys);
 
     // esto se podria mejorar
     std::list<ServerMensajeLobby> msgs;

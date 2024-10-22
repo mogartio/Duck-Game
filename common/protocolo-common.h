@@ -1,5 +1,6 @@
 #ifndef PROTOCOLOCOMMON_H
 #define PROTOCOLOCOMMON_H
+#include <string>
 
 #include "socket.h"
 #include "socket_error.h"

@@ -1,9 +1,9 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "../common/socket.h"
-
 #include <string>
+
+#include "../common/socket.h"
 
 class Client {
 private:
@@ -14,8 +14,8 @@ public:
     /*
      * Constructor del cliente
      */
-    explicit Client(const std::string& hostname, const std::string& port): 
-                                skt_client(hostname.c_str(), port.c_str()) {}
+    explicit Client(const std::string& hostname, const std::string& port):
+            skt_client(hostname.c_str(), port.c_str()) {}
 
     // ------------------- Metodos -------------------
     /*

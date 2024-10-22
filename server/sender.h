@@ -1,5 +1,6 @@
 #ifndef SENDER_H
 #define SENDER_H
+#include <string>
 
 #include "../common/queue.h"
 #include "../common/thread.h"
@@ -17,5 +18,4 @@ public:
     Sender(Queue<std::string>& send_queue, Protocol& protocol);
     void kill();
 };
-
 #endif  // SENDER_H

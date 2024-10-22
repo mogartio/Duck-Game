@@ -13,19 +13,19 @@ public:
 
 protected:
     // El tipo de mensaje que se quiere enviar
-    genericType causa;
+    genericType header;
 public:
     // ------------------ Constructor -----------------------
     /*
      * Constructor del mensaje
      */
-    explicit Mensaje(genericType causa);
+    explicit Mensaje(genericType header);
 
     // ------------------ Getters -----------------------
     /*
      * Devuelve el tipo de mensaje
      */
-    genericType getCausa() const;
+    genericType getTipeHeader() const;
 
     // ------------------ Destructor -----------------------
     /*

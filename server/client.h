@@ -1,5 +1,6 @@
 #ifndef CLIENT_H
 #define CLIENT_H
+#include <string>
 
 #include "../common/queue.h"
 #include "../common/socket.h"

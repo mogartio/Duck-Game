@@ -23,5 +23,4 @@ public:
 
     bool is_alive() const override { return _keep_running.load(); }
 };
-
 #endif
