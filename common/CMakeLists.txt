@@ -1,7 +1,7 @@
 target_sources(common
     PRIVATE
     # .cpp files
-    queuesStructs/clientInfo.cpp
+    # queuesStructs/clientInfo.cpp
     queuesStructs/mensaje.cpp
     queuesStructs/mensaje-lobby.cpp
     liberror.cpp
