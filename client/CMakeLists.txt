@@ -13,7 +13,7 @@ target_sources(client_exe  # Use the correct target name
     PUBLIC
     # .h files
     ${COMMON_HEADERS}  # Include all .h files from common
-    protocol.h  # Include only protocol.h from the client directory
+      # Include only protocol.h from the client directory
 )
 
 # Include the common directory for headers

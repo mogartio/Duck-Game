@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "client.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -8,11 +7,6 @@ int main(int argc, char const* argv[]) {
         std::cerr << "Bad number of arguments in client side\n";
         return -1;
     }
-
-    const std::string hostname = argv[1];
-    const std::string port = argv[2];
-
-    Client client(hostname, port);
-
+    std::cout << argv[1] << " " << argv[2] << std::endl;
     return 0;
 }
