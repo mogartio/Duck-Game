@@ -2,7 +2,7 @@
 #define SERVERMENSAJELOBBY_H
 #include <list>
 
-#include "./../common/queuesStructs/mensaje-lobby.h"
+#include "./../common/messages/mensaje-lobby.h"
 
 
 class ServerMensajeLobby: public MensajeLobby {
