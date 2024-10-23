@@ -21,4 +21,10 @@ public:
     virtual void shoot(int) override;
 };
 
+//WIP
+class Grenade : public Weapon {
+public:
+    Grenade(Player&, Stage&);
+};
+
 #endif
