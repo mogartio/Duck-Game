@@ -2,11 +2,11 @@
 #define RECEIVER_H
 #include <string>
 
-#include "../common/queue.h"
-#include "../common/socket/socket.h"
-#include "../common/thread.h"
+#include "queue.h"
+#include "socket/socket.h"
+#include "thread.h"
 
-#include "protocol.h"
+#include "../server/protocol.h"
 
 class Receiver: public Thread {
 private:

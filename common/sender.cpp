@@ -1,4 +1,4 @@
-#include "sender.h"
+#include "../common/sender.h"
 
 Sender::Sender(Queue<std::string>& send_queue, Protocol& protocol):
         send_queue(send_queue), protocol(protocol) {}

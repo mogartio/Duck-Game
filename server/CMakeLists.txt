@@ -16,8 +16,6 @@ target_sources(server_exe  # Use the correct target name
     main.cpp
     mensaje-lobby.cpp
     protocolo-lobbys.cpp
-    receiver.cpp
-    sender.cpp
     server.cpp
 
 
@@ -33,9 +31,7 @@ target_sources(server_exe  # Use the correct target name
     protocolo-lobbys.h
     protocol.h
     read_input.h
-    receiver.h
     send_queues_monitor.h
-    sender.h
     server.h
 )
 

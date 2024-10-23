@@ -2,10 +2,10 @@
 #define SENDER_H
 #include <string>
 
-#include "../common/queue.h"
-#include "../common/thread.h"
+#include "queue.h"
+#include "thread.h"
 
-#include "protocol.h"
+#include "../server/protocol.h"
 
 class Sender: public Thread {
 private:

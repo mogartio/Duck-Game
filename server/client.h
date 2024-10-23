@@ -7,8 +7,8 @@
 #include "../common/thread.h"
 
 #include "protocol.h"
-#include "receiver.h"
-#include "sender.h"
+#include "../common/receiver.h"
+#include "../common/sender.h"
 
 class Client {
 private:

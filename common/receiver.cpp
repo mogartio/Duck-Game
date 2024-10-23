@@ -1,4 +1,4 @@
-#include "receiver.h"
+#include "../common/receiver.h"
 
 Receiver::Receiver(Queue<std::string>& recv_queue, Protocol& protocol):
         recv_queue(recv_queue), protocol(protocol) {}

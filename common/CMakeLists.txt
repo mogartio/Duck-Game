@@ -8,7 +8,9 @@ target_sources(common
     socket/resolver.cpp
     socket/resolvererror.cpp
     socket/socket.cpp
-
+    receiver.cpp
+    sender.cpp 
+    protocolo-common.cpp
 
     PUBLIC
     # .h files
@@ -23,4 +25,7 @@ target_sources(common
     socket/socket.h
     socket/socket_error.h
     thread.h
+    receiver.h
+    sender.h
+    protocolo-common.h
     )
