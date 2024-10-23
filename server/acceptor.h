@@ -18,6 +18,7 @@ private:
     SendQueuesMonitor<std::string>& send_queues;
 
     void run() override;
+    
     void reap_dead_clients();
 
     const int Q_MAX_SIZE = 100;
@@ -27,6 +28,8 @@ public:
              SendQueuesMonitor<std::string>& send_queues);
 
     void stop() override;
+    
     void shutdown();
+
 };
 #endif

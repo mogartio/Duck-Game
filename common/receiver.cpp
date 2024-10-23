@@ -6,8 +6,9 @@ Receiver::Receiver(Queue<std::string>* recv_queue, Protocol* protocol):
 void Receiver::run() {
     while (_keep_running) {
         try {
-            // std::string msg = protocol.receiveString();
-            // recv_queue.push(msg);
+            uint16_t size = protocol->recv_uint16_t();
+            std::string msg = protocol->recv_string(size);
+            recv_queue->push(msg);
         } catch (const std::exception& e) {
             _keep_running = false;
         }

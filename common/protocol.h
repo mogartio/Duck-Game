@@ -17,7 +17,7 @@ private:
      */
     void chk_closed_andif_fail(const char error_ms[]) const;
 
-protected:
+public:
     bool was_closed;
     /*
      * Envia un uint8_t a través del socket.
@@ -49,7 +49,6 @@ protected:
      */
     std::string recv_string(uint16_t& size);
 
-public:
     /*
     * Constructor de la clase Protocolo.
     */

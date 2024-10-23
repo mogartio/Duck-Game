@@ -1,5 +1,6 @@
 #include <iostream>
-
+#include "../common/socket/socket.h"
+#include "../common/protocol.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -7,6 +8,22 @@ int main(int argc, char const* argv[]) {
         std::cerr << "Bad number of arguments in client side\n";
         return -1;
     }
-    std::cout << argv[1] << " " << argv[2] << std::endl;
+    Socket skt(argv[1], argv[2]);
+    Protocol protocol(skt);
+
+    std::string input;
+    while (input != "q") {
+        std::getline(std::cin, input);
+        uint16_t input_size = static_cast<uint16_t>(input.size());
+
+        protocol.send_uint16_t(input_size);
+        protocol.send_string(input);
+
+        std::cout << "Sent: " << input << std::endl;
+
+        std::string msg = protocol.recv_string(input_size);
+        std::cout << "Received: " << msg << std::endl;
+    }
+
     return 0;
 }
