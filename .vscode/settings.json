@@ -55,6 +55,18 @@
         "typeinfo": "cpp",
         "sstream": "cpp",
         "list": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "set": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "format": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "span": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp"
     }
 }
