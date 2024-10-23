@@ -5,7 +5,7 @@
 #include "queue.h"
 #include "thread.h"
 
-#include "../server/protocol.h"
+#include "protocol.h"
 
 class Sender: public Thread {
 private:

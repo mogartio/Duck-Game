@@ -7,7 +7,7 @@
 
 class ProtocoloLobbysServer: public Protocol {
 private:
-    u_int8_t idCliente;
+    uint8_t idCliente;
     // ------------------- Atributos -------------------
     // ------------------- Métodos privados server -------------------
 

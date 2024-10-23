@@ -29,7 +29,6 @@ target_sources(server_exe  # Use the correct target name
     lobby.h
     mensaje-lobby.h
     protocolo-lobbys.h
-    protocol.h
     read_input.h
     send_queues_monitor.h
     server.h

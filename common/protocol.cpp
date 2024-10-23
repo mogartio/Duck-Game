@@ -38,8 +38,7 @@ void Protocol::send_string(std::string& data) {
     chk_closed_andif_fail("send string");
 }
 
-std::string Protocol::recv_string(uint16_t& size) {
-    uint16_t msg_size = recv_uint16_t();
+std::string Protocol::recv_string(uint16_t& msg_size) {
     std::vector<char> msg(msg_size);
     skt.recvall(msg.data(), msg_size, &was_closed);
     chk_closed_andif_fail("recv string");

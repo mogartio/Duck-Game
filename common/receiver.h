@@ -6,7 +6,7 @@
 #include "socket/socket.h"
 #include "thread.h"
 
-#include "../server/protocol.h"
+#include "protocol.h"
 
 class Receiver: public Thread {
 private:

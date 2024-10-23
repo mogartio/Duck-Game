@@ -4,13 +4,12 @@ target_sources(common
     messages/mensaje.cpp
     messages/mensaje-lobby.cpp
     socket/liberror.cpp
-    protocolo-common.cpp
+    protocol.cpp
     socket/resolver.cpp
     socket/resolvererror.cpp
     socket/socket.cpp
     receiver.cpp
     sender.cpp 
-    protocolo-common.cpp
 
     PUBLIC
     # .h files
@@ -18,7 +17,7 @@ target_sources(common
     messages/mensaje.h
     messages/mensaje-lobby.h
     socket/liberror.h
-    protocolo-common.h
+    protocol.h
     queue.h
     socket/resolver.h
     socket/resolvererror.h
@@ -27,5 +26,4 @@ target_sources(common
     thread.h
     receiver.h
     sender.h
-    protocolo-common.h
     )
