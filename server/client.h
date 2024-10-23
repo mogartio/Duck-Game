@@ -13,8 +13,8 @@
 class Client {
 private:
     Socket client_skt;
-    Queue<std::string>& send_queue;
-    Queue<std::string>& recv_queue;
+    Queue<std::string>* send_queue;
+    Queue<std::string>* recv_queue;
     int id;  // a chequear, para la funcionalidad futura
     Protocol protocol;
     Receiver receiver;
@@ -23,9 +23,9 @@ private:
     void start_client();
 
 public:
-    Client(Socket&& client_skt, Queue<std::string>& send_queue, Queue<std::string>& recv_queue,
+    Client(Socket&& client_skt, Queue<std::string>* send_queue, Queue<std::string>* recv_queue,
            int id);
-    bool operator==(const Client& other) const;
+    bool operator==(const Client* other) const;
 
     void stop();
     bool is_alive();

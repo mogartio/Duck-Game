@@ -60,6 +60,7 @@ public:
     */
     Protocol(const Protocol&) = delete;
     Protocol& operator=(const Protocol&) = delete;
+
 };
 
 #endif 

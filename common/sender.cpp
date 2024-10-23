@@ -1,6 +1,6 @@
 #include "../common/sender.h"
 
-Sender::Sender(Queue<std::string>& send_queue, Protocol& protocol):
+Sender::Sender(Queue<std::string>* send_queue, Protocol* protocol):
         send_queue(send_queue), protocol(protocol) {}
 
 void Sender::run() {
@@ -15,6 +15,14 @@ void Sender::run() {
 }
 
 void Sender::kill() {
-    send_queue.close();
+    send_queue->close();
     _keep_running = false;
+}
+
+void Sender::update_send_queue(Queue<std::string>* new_send_queue) {
+    send_queue = new_send_queue;
+}
+
+void Sender::update_protocol(Protocol* new_protocol) {
+    protocol = new_protocol;
 }
