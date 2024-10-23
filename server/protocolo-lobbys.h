@@ -1,11 +1,11 @@
 #ifndef PROTOCOLOLOBBYS_H
 #define PROTOCOLOLOBBYS_H
 
-#include "./../common/protocolo-common.h"
+#include "./common/protocol.h"
 
 #include "mensaje-lobby.h"
 
-class ProtocoloLobbysServer: public ProtocoloCommon {
+class ProtocoloLobbysServer: public Protocol {
 private:
     u_int8_t idCliente;
     // ------------------- Atributos -------------------
