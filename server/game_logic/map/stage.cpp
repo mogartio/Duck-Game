@@ -1,6 +1,5 @@
 #include <algorithm>
-#include <iostream>
-#include <sstream>
+#include <memory>
 #include <string>
 #include <vector>
 #include "../player/player.h"
@@ -12,6 +11,7 @@
 #define UP "w"
 #include "csv_reader.h"
 #include "stage.h"
+#include "../player/projectile.h"
 
 Stage::Stage(const std::string& file_name): map(0,0){
     CSVReader reader(file_name);
@@ -20,6 +20,32 @@ Stage::Stage(const std::string& file_name): map(0,0){
 
 void Stage::print(){
     map.print();
+}
+
+void Stage::add_projectile(std::unique_ptr<Projectile>&& projectile) {
+    projectiles.push_back(std::move(projectile));
+}
+
+void Stage::remove_projectile(std::unique_ptr<Projectile>& projectile){
+    std::vector<std::unique_ptr<Projectile>>::iterator position_to_delete = 
+        std::find(projectiles.begin(), projectiles.end(), projectile); // itera el vector buscando en que posicion esta projectile
+    if (position_to_delete != projectiles.end()){ // si se encontro borrar, sino se encontro... no
+        projectiles.erase(position_to_delete);
+    }
+}
+
+void Stage::update(){
+    for (auto& c : coordinates_to_delete){
+        map.set(c, BACKGROUND);
+    }
+    coordinates_to_delete.clear();
+    for (auto& projectile : projectiles){
+        ray_trace(projectile);
+        if (projectile == nullptr){
+            return;
+        }
+        projectile->move();
+    }
 }
 
 void Stage::draw_player(Player& player){
@@ -71,19 +97,25 @@ bool Stage::is_valid_position(Coordinate position, int color){
 }
 
 // direction es un versor del eje x. es decir es 1 o -1
-void Stage::ray_trace(int& direction, int reach, Coordinate& gun_position){
+void Stage::ray_trace(std::unique_ptr<Projectile>& projectile){
+    int direction = projectile->get_direction();
+    int reach = projectile->get_speed(); // cuanto tiene que moverse en un tick
+    Coordinate initial_position = projectile->get_position();
     int direction_handler = direction; // para usar el mismo loop sea la direccion 1 o -1
     for (int i=0; i < reach; i ++){
-        Coordinate bullet_position(gun_position.x + direction + i * direction_handler, gun_position.y);
+        Coordinate bullet_position(initial_position.x + direction + i * direction_handler, initial_position.y);
         int next_tile = map.get(bullet_position);
         if (next_tile == -1){
+            remove_projectile(projectile);
             return;
         }
         if (next_tile == BACKGROUND) {
             map.set(bullet_position, 3);
+            coordinates_to_delete.push_back(bullet_position);
         /*} else if(next_tile == PLAYER){
             kill(player); */
         } else if (next_tile == FLOOR) {
+            remove_projectile(projectile);
             return;
         }
     }

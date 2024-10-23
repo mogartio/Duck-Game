@@ -18,6 +18,7 @@ int main (int argc, char *argv[]) {
         stage.draw_player(player_a);
         //stage.delete_player_from_stage(player_b); //Borro su dibujo viejo
         //stage.draw_player(player_b);
+        stage.update();
         stage.print();
     }
     return 0;
