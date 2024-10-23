@@ -2,8 +2,8 @@
 #define PROTOCOLOCOMMON_H
 #include <string>
 
-#include "socket.h"
-#include "socket_error.h"
+#include "socket/socket.h"
+#include "socket/socket_error.h"
 
 class ProtocoloCommon {
 private:

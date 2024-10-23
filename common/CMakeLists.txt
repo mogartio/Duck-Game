@@ -3,11 +3,11 @@ target_sources(common
     # .cpp files
     messages/mensaje.cpp
     messages/mensaje-lobby.cpp
-    liberror.cpp
+    socket/liberror.cpp
     protocolo-common.cpp
-    resolver.cpp
-    resolvererror.cpp
-    socket.cpp
+    socket/resolver.cpp
+    socket/resolvererror.cpp
+    socket/socket.cpp
 
 
     PUBLIC
@@ -15,12 +15,12 @@ target_sources(common
     messages/descripcion-lobby.h
     messages/mensaje.h
     messages/mensaje-lobby.h
-    liberror.h
+    socket/liberror.h
     protocolo-common.h
     queue.h
-    resolver.h
-    resolvererror.h
-    socket.h
-    socket_error.h
+    socket/resolver.h
+    socket/resolvererror.h
+    socket/socket.h
+    socket/socket_error.h
     thread.h
     )

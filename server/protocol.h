@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-#include "../common/socket.h"
+#include "../common/socket/socket.h"
 
 class Protocol {
 protected:
