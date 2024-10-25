@@ -5,25 +5,26 @@
 #include "../common/queue.h"
 #include "../common/socket/socket.h"
 #include "../common/thread.h"
+#include "../common/messages/server_handler.h"
 
-#include "protocol.h"
-#include "../common/receiver.h"
-#include "../common/sender.h"
+#include "receiver.h"
+#include "sender.h"
+#include "lobby_manager_protocol.h"
 
 class Client {
 private:
     Socket client_skt;
-    Queue<std::string>* send_queue;
-    Queue<std::string>* recv_queue;
+    Queue<GenericMsg<ServerHandler>*>* send_queue;
+    Queue<GenericMsg<ServerHandler>*>* recv_queue;
     int id;  // a chequear, para la funcionalidad futura
-    Protocol protocol;
+    LobbyManagerProtocol protocol;
     Receiver receiver;
     Sender sender;
 
     void start_client();
 
 public:
-    Client(Socket&& client_skt, Queue<std::string>* send_queue, Queue<std::string>* recv_queue,
+    Client(Socket&& client_skt, Queue<GenericMsg<ServerHandler>*>* send_queue, Queue<GenericMsg<ServerHandler>*>* recv_queue,
            int id);
     bool operator==(const Client* other) const;
 

@@ -1,7 +1,7 @@
 #include "client.h"
 
 #include <utility>
-Client::Client(Socket&& client_skt, Queue<std::string>* send_queue, Queue<std::string>* recv_queue,
+Client::Client(Socket&& client_skt, Queue<GenericMsg<ServerHandler>*>* send_queue, Queue<GenericMsg<ServerHandler>*>* recv_queue,
                int id):
         client_skt(std::move(client_skt)),
         send_queue(send_queue),

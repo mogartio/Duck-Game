@@ -11,13 +11,10 @@ target_sources(server_exe  # Use the correct target name
     acceptor.cpp
     client.cpp
     clients_monitor.cpp
-    lobby-manager.cpp
-    lobby.cpp
     main.cpp
-    mensaje-lobby.cpp
-    protocolo-lobbys.cpp
     server.cpp
-
+    receiver.cpp 
+    sender.cpp
 
     PUBLIC
     # .h files
@@ -25,13 +22,12 @@ target_sources(server_exe  # Use the correct target name
     acceptor.h
     client.h
     clients_monitor.h
-    lobby-manager.h
-    lobby.h
-    mensaje-lobby.h
-    protocolo-lobbys.h
     read_input.h
     send_queues_monitor.h
+    lobby_manager_protocol.h
     server.h
+    receiver.h
+    sender.h
 )
 
 # Include the common directory for headers

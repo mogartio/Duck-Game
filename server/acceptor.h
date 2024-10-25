@@ -5,6 +5,7 @@
 #include "../common/queue.h"
 #include "../common/socket/socket.h"
 #include "../common/thread.h"
+#include "../common/messages/generic_msg.h"
 
 #include "client.h"
 #include "clients_monitor.h"
@@ -14,8 +15,8 @@ class Acceptor: public Thread {
 private:
     Socket srv;
     ClientsMonitor& clients;
-    Queue<std::string>& recv_queue;
-    SendQueuesMonitor<std::string>& send_queues;
+    Queue<GenericMsg<ServerHandler>*>& recv_queue;
+    SendQueuesMonitor<GenericMsg<ServerHandler>*>& send_queues;
 
     void run() override;
     
@@ -24,12 +25,13 @@ private:
     const int Q_MAX_SIZE = 100;
 
 public:
-    Acceptor(Socket srv, ClientsMonitor& clients, Queue<std::string>& recv_queue,
-             SendQueuesMonitor<std::string>& send_queues);
+    Acceptor(Socket srv, ClientsMonitor& clients, Queue<GenericMsg<ServerHandler>*>& recv_queue,
+             SendQueuesMonitor<GenericMsg<ServerHandler>*>& send_queues);
 
     void stop() override;
     
     void shutdown();
 
 };
+
 #endif

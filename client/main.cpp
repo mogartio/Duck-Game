@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../common/socket/socket.h"
 #include "../common/protocol.h"
+#include "../common/messages/server_handler.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -9,20 +10,20 @@ int main(int argc, char const* argv[]) {
         return -1;
     }
     Socket skt(argv[1], argv[2]);
-    Protocol protocol(skt);
+    //Protocol<ServerHandler> protocol(skt);
 
     std::string input;
     while (input != "q") {
-        std::getline(std::cin, input);
-        uint16_t input_size = static_cast<uint16_t>(input.size());
+        // std::getline(std::cin, input);
+        // uint16_t input_size = static_cast<uint16_t>(input.size());
 
-        protocol.send_uint16_t(input_size);
-        protocol.send_string(input);
+        // protocol.send_uint16_t(input_size);
+        // protocol.send_string(input);
 
-        std::cout << "Sent: " << input << std::endl;
+        // std::cout << "Sent: " << input << std::endl;
 
-        std::string msg = protocol.recv_string(input_size);
-        std::cout << "Received: " << msg << std::endl;
+        // std::string msg = protocol.recv_string(input_size);
+        // std::cout << "Received: " << msg << std::endl;
     }
 
     return 0;

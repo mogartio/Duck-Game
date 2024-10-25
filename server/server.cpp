@@ -3,7 +3,9 @@
 #include <list>
 #include <utility>
 
-Server::Server(const char* port): srv(port), clients(), recv_queue(), send_queues() {}
+Server::Server(const char* port): srv(port), clients(), recv_queue(100), send_queues() {
+    
+}
 
 void Server::run() {
     // pongo a correr el acceptor
@@ -13,9 +15,10 @@ void Server::run() {
     ReadInput read_input_t;
     read_input_t.start();
     std::cout << "Server levantado" << std::endl;
+    
     while (read_input_t.is_alive()) {
-        std::list<std::string> msgs;
-        std::string msg;
+        std::list<GenericMsg<ServerHandler>*> msgs;
+        GenericMsg<ServerHandler>* msg;
         while (recv_queue.try_pop(msg)) {
             msgs.push_back(msg);
         }
