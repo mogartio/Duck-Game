@@ -1,4 +1,3 @@
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 
@@ -45,12 +44,15 @@ void OnePlayer::run() {
     // TODO: A chequear los flags
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
-    // -------------------- Map --------------------
     Map map(rend, queueRecive);
 
-    //int speed = 200; // Velocidad de movimiento del objeto
+    const Uint32 frame_rate = 1000 / 60; // 60 FPS
+    Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
 
     while (_keep_running) {
+        Uint32 current_time = SDL_GetTicks();
+        Uint32 elapsed_time = current_time - last_frame_time;
+
         SDL_Event event;
 
         // Procesa los eventos en la cola
@@ -79,7 +81,6 @@ void OnePlayer::run() {
                     break;
 
                 case SDL_KEYUP: // Evento de tecla soltada
-                    // Detiene el movimiento cuando se sueltan las teclas
                     switch (event.key.keysym.scancode) {
                         // case SDL_SCANCODE_W: // Tecla W
                         case SDL_SCANCODE_S: // Tecla S
@@ -100,22 +101,25 @@ void OnePlayer::run() {
             }
         }
 
+        // Actualiza Jugadores y armas
         int msj;
         bool poped = queueRecive.try_pop(msj);
 
         if (poped) {
-            //calculo el defasaje y me fijo si actualizo o salto directamente al sig
             map.updatePosition(msj, msj, msj);
             map.updateImage(msj, std::to_string(msj));
         }
 
         // Renderiza los objetos en la ventana
-        SDL_RenderClear(rend); // Limpia la pantalla
-        map.fill();
-        SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+        if (elapsed_time >= frame_rate) {
+            SDL_RenderClear(rend); // Limpia la pantalla
+            map.fill();
+            SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+            last_frame_time = current_time;
+        }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
-        SDL_Delay(1000 / 60); // Espera para mantener 60 FPS
+        SDL_Delay(frame_rate - (SDL_GetTicks() - current_time));
     }
 
     // Libera de recursos
