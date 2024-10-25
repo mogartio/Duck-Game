@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <vector>
@@ -44,7 +45,6 @@ void Stage::update(){
         if (projectile == nullptr){
             return;
         }
-        projectile->move();
     }
 }
 
@@ -97,20 +97,26 @@ bool Stage::is_valid_position(Coordinate position, int color){
 }
 
 // direction es un versor del eje x. es decir es 1 o -1
+// se llama ray_trace pero ya no lo es
 void Stage::ray_trace(std::unique_ptr<Projectile>& projectile){
-    int direction = projectile->get_direction();
+    int direction = projectile->get_x_direction();
+    double deviation_angle = projectile->get_deviation_angle();
     int reach = projectile->get_speed(); // cuanto tiene que moverse en un tick
     Coordinate initial_position = projectile->get_position();
     int direction_handler = direction; // para usar el mismo loop sea la direccion 1 o -1
     for (int i=0; i < reach; i ++){
-        Coordinate bullet_position(initial_position.x + direction + i * direction_handler, initial_position.y);
+        // Probablemente sea pegarse un tiro en el pie usar trigonometria. no me pude resistir
+        Coordinate bullet_position(round(initial_position.x + (( i) * sin(deviation_angle)) * direction_handler),
+                                   round(initial_position.y + (i) * cos(deviation_angle))); 
+        std::cout << bullet_position.x << bullet_position.y << std::endl ;
         int next_tile = map.get(bullet_position);
         if (next_tile == -1){
             remove_projectile(projectile);
             return;
         }
-        if (next_tile == BACKGROUND) {
+        if (next_tile == BACKGROUND && i == reach - 1) {
             map.set(bullet_position, 3);
+            projectile->move(bullet_position);
             coordinates_to_delete.push_back(bullet_position);
         /*} else if(next_tile == PLAYER){
             kill(player); */

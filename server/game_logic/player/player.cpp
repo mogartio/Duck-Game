@@ -5,7 +5,7 @@
 #include "weapon.h"
 
 Player::Player(Coordinate& initial_position, Stage& stage, int id): position(initial_position, *this, stage), id(id), is_alive(true),
-stage(stage), weapon(std::move(std::make_unique<CowboyGun>(*this, stage))){}
+stage(stage), weapon(std::move(std::make_unique<Magnum>(*this, stage))){}
 
 Coordinate Player::get_position() { return position.get_position(); }
 
