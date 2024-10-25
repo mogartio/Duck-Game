@@ -1,14 +1,29 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17
-SDL_FLAGS = `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_ttf
+# Nombre del ejecutable
+TARGET = game
 
-TARGET = prueba
+# Compilador
+CC = g++
+
+# Archivos fuente
 SRC = prueba.cpp
 
-all: $(TARGET)
+# Flags de compilación
+CFLAGS = -Wall -g
 
+# Librerías de SDL2 y SDL2_image
+LDFLAGS = -lSDL2 -lSDL2_image
+
+# Directorios de inclusión (si es necesario)
+INCLUDE =
+
+# Regla para compilar y enlazar el programa
 $(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(SDL_FLAGS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(TARGET) $(SRC) $(LDFLAGS)
 
+# Regla para limpiar los archivos generados
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGET) *.o
+
+# Regla para ejecutar el programa
+run: $(TARGET)
+	./$(TARGET)

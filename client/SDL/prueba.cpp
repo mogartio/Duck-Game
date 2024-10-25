@@ -22,17 +22,17 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags); // Crea el renderizador asociado a la ventana
 
     // Carga la imagen de fondo
-    SDL_Surface* backgroundSurface = IMG_Load("fondo"); // Asegúrate de usar el camino correcto a tu imagen
+    SDL_Surface* backgroundSurface = IMG_Load("img_src/background/day.png"); // Asegúrate de usar el camino correcto a tu imagen
     SDL_Texture* backgroundTex = SDL_CreateTextureFromSurface(rend, backgroundSurface);
     SDL_FreeSurface(backgroundSurface); // Libera la superficie una vez que la textura está creada
 
     // Carga una imagen desde un archivo y la convierte en una superficie
-    SDL_Surface* surface = IMG_Load("cuadrado"); // Asegúrate de que el archivo "cuadrado" esté en la misma carpeta
+    SDL_Surface* surface = IMG_Load("img_src/ducks/grey/standing.png"); // Asegúrate de que el archivo "cuadrado" esté en la misma carpeta
     SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface); // Crea una textura a partir de la superficie
     SDL_FreeSurface(surface); // Libera la superficie original, ya no se necesita
 
     // Carga una imagen desde un archivo y la convierte en una superficie
-    SDL_Surface* surface2 = IMG_Load("cuadrado2"); // Asegúrate de que el archivo "cuadrado2" esté en la misma carpeta
+    SDL_Surface* surface2 = IMG_Load("img_src/ducks/white/standing.png"); // Asegúrate de que el archivo "cuadrado2" esté en la misma carpeta
     SDL_Texture* tex2 = SDL_CreateTextureFromSurface(rend, surface2); // Crea una textura a partir de la superficie
     SDL_FreeSurface(surface2); // Libera la superficie original, ya no se necesita
 
