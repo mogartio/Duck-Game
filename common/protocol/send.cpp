@@ -16,50 +16,50 @@ void SendCient::sendHeaders(const GenericMsg& msg) {
 
 Send::Send(Socket& socket): SendServer(socket), SendCient(socket) {}
 
-void SendServer::send(const ExampleMsg& msg) {
+void SendServer::sendServer(const ExampleMsg& msg) {
     sendHeaders(msg);
     std::string data = msg.getData();
     send_string(data);
 }
 
-void SendServer::send(const LobbyListMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const LobbyListMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const JoinedLobbyMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const JoinedLobbyMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const ServerErrorMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const ServerErrorMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const MapInfoMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const MapInfoMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const PlayerInfoMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const PlayerInfoMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const FinishGameMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const FinishGameMsg& msg) { sendHeaders(msg); }
 
-void SendServer::send(const WinnerMsg& msg) { sendHeaders(msg); }
+void SendServer::sendServer(const WinnerMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const CustomizedPlayerInfoMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const CustomizedPlayerInfoMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const ViewLobbiesMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const ViewLobbiesMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const ChooseLobbyMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const ChooseLobbyMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const CreateLobbyMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const CreateLobbyMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const StartGameMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const StartGameMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const GoBackMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const GoBackMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const PickupDropItemMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const PickupDropItemMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const StartMoveLeftMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const StartMoveLeftMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const StopMoveLeftMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const StopMoveLeftMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const StartMoveRightMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const StartMoveRightMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const StopMoveRightMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const StopMoveRightMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const JumpMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const JumpMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const PlayDeadMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const PlayDeadMsg& msg) { sendHeaders(msg); }
 
-void SendCient::send(const ShootMsg& msg) { sendHeaders(msg); }
+void SendCient::sendClient(const ShootMsg& msg) { sendHeaders(msg); }
