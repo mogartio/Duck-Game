@@ -1,12 +1,27 @@
 #ifndef GENERIC_MSG_H
 #define GENERIC_MSG_H
 
-template<typename HandlerType>
+#include <cstdint>
+
+#include "./../protocol/send.h"
 
 class GenericMsg {
 public:
-    virtual void accept(HandlerType& handler) = 0;
+    enum typeMsg : uint8_t {
+        CUSTOMIZED_PLAYER_INFO = 0x01,
+
+    };
+
+private:
+    typeMsg first_header;
+
+protected:
+    GenericMsg(uint8_t first_header);
+
+public:
+    virtual void accept_send(Send& protocol) = 0;
+    virtual GenericMsg accept_recv(Send& protocol);
     virtual ~GenericMsg() = default;
 };
 
-#endif 
+#endif

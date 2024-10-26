@@ -1,91 +1,61 @@
-#ifndef CLIENT_GENERIC_MSG_H
-#define CLIENT_GENERIC_MSG_H
+#ifndef CLIENT_MSG_H
+#define CLIENT_MSG_H
 
 #include "generic_msg.h"
-#include "client_handler.h"
 
-class CustomizedPlayerInfoMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class CustomizedPlayerInfoMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class ViewLobbiesMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class ViewLobbiesMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class ChooseLobbyMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class ChooseLobbyMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class CreateLobbyMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class CreateLobbyMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class StartGameMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class StartGameMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class GoBackMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class GoBackMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class PickupDropItemMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class PickupDropItemMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class StartMoveLeftMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class StartMoveLeftMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class StopMoveLeftMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class StopMoveLeftMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class StartMoveRightMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class StartMoveRightMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class StopMoveRightMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class StopMoveRightMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class JumpMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class JumpMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class PlayDeadMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class PlayDeadMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class ShootMsg : public GenericMsg<ClientHandler> {
-    void accept(ClientHandler& handler) override {
-        handler.handle(*this);
-    }
+class ShootMsg: public GenericMsg {
+    virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
-
-#endif // CLIENT_GENERIC_MSG_H
+#endif  // CLIENT_GENERIC_MSG_H
