@@ -8,6 +8,8 @@ target_sources(common
     protocol/protocol-socket.cpp
     protocol/send.cpp
     messages/server_generic_msg.cpp
+    messages/client_generic_msg.cpp
+    messages/generic_msg.cpp
 
     PUBLIC
     # .h files
@@ -23,5 +25,4 @@ target_sources(common
     messages/client_generic_msg.h
     messages/server_generic_msg.h
     messages/generic_msg.h
-
     )

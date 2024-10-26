@@ -7,6 +7,9 @@
 #include "protocol-socket.h"
 
 class SendServer: public ProtocolSocket {
+private:
+    void sendHeaders(const GenericMsg& msg);
+
 public:
     SendServer(Socket& socket): ProtocolSocket(socket) {}
     void send(const ExampleMsg& msg);
@@ -20,6 +23,9 @@ public:
 };
 
 class SendCient: public ProtocolSocket {
+private:
+    void sendHeaders(const GenericMsg& msg);
+
 public:
     SendCient(Socket& socket): ProtocolSocket(socket) {}
     void send(const CustomizedPlayerInfoMsg& msg);
@@ -40,7 +46,7 @@ public:
 
 class Send: public SendServer, public SendCient {
 public:
-    Send(Socket& socket): SendServer(socket), SendCient(socket) {}
+    Send(Socket& socket);
     ~Send() = default;
 };
 #endif  // PROTOCOLOS_SEND_H

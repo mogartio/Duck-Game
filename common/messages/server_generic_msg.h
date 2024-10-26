@@ -5,43 +5,57 @@
 
 #include "generic_msg.h"
 
-class ExampleMsg: public GenericMsg {
+class ExampleMsg: public LobbyMsg {
 private:
     std::string data;
 
 public:
-    // ExampleMsg(std::string data) : data(data) {}
+    ExampleMsg(std::string& data);
 
     std::string getData() const;
 
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class LobbyListMsg: public GenericMsg {
+class LobbyListMsg: public LobbyMsg {
+public:
+    LobbyListMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class JoinedLobbyMsg: public GenericMsg {
+class JoinedLobbyMsg: public LobbyMsg {
+public:
+    JoinedLobbyMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class ServerErrorMsg: public GenericMsg {
+class ServerErrorMsg: public ResponseServerMsg {
+public:
+    ServerErrorMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class MapInfoMsg: public GenericMsg {
+class MapInfoMsg: public CustomizedMsg {
+public:
+    MapInfoMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class PlayerInfoMsg: public GenericMsg {
+class PlayerInfoMsg: public GameMsg {
+public:
+    PlayerInfoMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class FinishGameMsg: public GenericMsg {
+class FinishGameMsg: public GameMsg {
+public:
+    FinishGameMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 
-class WinnerMsg: public GenericMsg {
+class WinnerMsg: public GameMsg {
+public:
+    WinnerMsg();
     virtual void accept_send(Send& protocol) override { protocol.send(*this); }
 };
 #endif  // SERVER_GENERIC_MSG_H
