@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "./../protocol/send.h"
+class SendProtocol;
 
 class GenericMsg {
 protected:
@@ -21,8 +21,8 @@ protected:
     GenericMsg(typeMsg first_header);
 
 public:
-    virtual void accept_send(Send& protocol) = 0;
-    // virtual GenericMsg accept_recv(Send& protocol);
+    virtual void accept_send(SendProtocol& visitor) = 0;
+    // virtual GenericMsg accept_recv(Protocol& protocol);
     virtual uint8_t get_second_header() const;
 
     uint8_t get_first_header() const;

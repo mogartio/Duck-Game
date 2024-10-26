@@ -6,47 +6,34 @@
 
 #include "protocol-socket.h"
 
-class SendServer: public ProtocolSocket {
+class SendProtocol: public ProtocolSocket {
 private:
     void sendHeaders(const GenericMsg& msg);
 
 public:
-    SendServer(Socket& socket): ProtocolSocket(socket) {}
-    void sendServer(const ExampleMsg& msg);
-    void sendServer(const LobbyListMsg& msg);
-    void sendServer(const JoinedLobbyMsg& msg);
-    void sendServer(const ServerErrorMsg& msg);
-    void sendServer(const MapInfoMsg& msg);
-    void sendServer(const PlayerInfoMsg& msg);
-    void sendServer(const FinishGameMsg& msg);
-    void sendServer(const WinnerMsg& msg);
-};
+    SendProtocol(Socket& socket): ProtocolSocket(socket) {}
+    void send(const ExampleMsg& msg);
+    void send(const LobbyListMsg& msg);
+    void send(const JoinedLobbyMsg& msg);
+    void send(const ServerErrorMsg& msg);
+    void send(const MapInfoMsg& msg);
+    void send(const PlayerInfoMsg& msg);
+    void send(const FinishGameMsg& msg);
+    void send(const WinnerMsg& msg);
 
-class SendCient: public ProtocolSocket {
-private:
-    void sendHeaders(const GenericMsg& msg);
-
-public:
-    SendCient(Socket& socket): ProtocolSocket(socket) {}
-    void sendClient(const CustomizedPlayerInfoMsg& msg);
-    void sendClient(const ViewLobbiesMsg& msg);
-    void sendClient(const ChooseLobbyMsg& msg);
-    void sendClient(const CreateLobbyMsg& msg);
-    void sendClient(const StartGameMsg& msg);
-    void sendClient(const GoBackMsg& msg);
-    void sendClient(const PickupDropItemMsg& msg);
-    void sendClient(const StartMoveLeftMsg& msg);
-    void sendClient(const StopMoveLeftMsg& msg);
-    void sendClient(const StartMoveRightMsg& msg);
-    void sendClient(const StopMoveRightMsg& msg);
-    void sendClient(const JumpMsg& msg);
-    void sendClient(const PlayDeadMsg& msg);
-    void sendClient(const ShootMsg& msg);
-};
-
-class Send: public SendServer, public SendCient {
-public:
-    Send(Socket& socket);
-    ~Send() = default;
+    void send(const CustomizedPlayerInfoMsg& msg);
+    void send(const ViewLobbiesMsg& msg);
+    void send(const ChooseLobbyMsg& msg);
+    void send(const CreateLobbyMsg& msg);
+    void send(const StartGameMsg& msg);
+    void send(const GoBackMsg& msg);
+    void send(const PickupDropItemMsg& msg);
+    void send(const StartMoveLeftMsg& msg);
+    void send(const StopMoveLeftMsg& msg);
+    void send(const StartMoveRightMsg& msg);
+    void send(const StopMoveRightMsg& msg);
+    void send(const JumpMsg& msg);
+    void send(const PlayDeadMsg& msg);
+    void send(const ShootMsg& msg);
 };
 #endif  // PROTOCOLOS_SEND_H

@@ -1,7 +1,6 @@
 #include <iostream>
-#include "../common/socket/socket.h"
-#include "../common/protocol.h"
-#include "../common/messages/server_handler.h"
+
+#include "../common/protocol/send.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -10,7 +9,7 @@ int main(int argc, char const* argv[]) {
         return -1;
     }
     Socket skt(argv[1], argv[2]);
-    //Protocol<ServerHandler> protocol(skt);
+    // Protocol<ServerHandler> protocol(skt);
 
     std::string input;
     while (input != "q") {
