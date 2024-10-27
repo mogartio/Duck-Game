@@ -6,7 +6,7 @@
 #include "generic_msg.h"
 
 class ResponseServerMsg: public GenericMsg {
-protected:
+public:
     enum responseType : uint8_t {
         EVERYTHING_WENT_WELL = 0x01,
         SOMETHING_WAS_WRONG = 0x02,

@@ -4,7 +4,7 @@
 #include "generic_msg.h"
 
 class GameMsg: public GenericMsg {
-protected:
+public:
     enum gameType : uint8_t {
         // HAY QUE CAMBIAR ESTO
         PLAYER_INFO = 0x00,

@@ -1,18 +1,59 @@
 #ifndef CLIENT_PROTOCOL_H
 #define CLIENT_PROTOCOL_H
 
-#include "../common/messages/generic_msg.h"
+#include <functional>
+#include <map>
+
 #include "../common/messages/handler.h"
 #include "../common/protocolo-common.h"
 
 class ClientProtocol: public ProtocoloCommon, public Handler {
-public:
-    explicit ClientProtocol(Socket& skt): ProtocoloCommon(skt) {}
+private:
+    std::map<GenericMsg::typeMsg, std::map<uint8_t, std::function<void(GenericMsg*)>>>
+            recv_handlers;
 
-    void send(GenericMsg* msg) { msg->accept_send(*this); }
+public:
+    explicit ClientProtocol(Socket& skt);
+
+    void send(GenericMsg* msg);
+
+    GenericMsg* receive();
 
     using Handler::handle_recv;
     using Handler::handle_send;
+
+    // RESPONSE SERVER MESSAGES
+    virtual void handle_recv(EverythingOkey* msg) override;
+    virtual void handle_recv(SomethingWrong* msg) override;
+
+    // LOBBY MESSAGES
+    virtual void handle_send(const ExampleMsg& msg) override;
+    virtual void handle_send(const ViewLobbiesMsg& msg) override;
+    virtual void handle_send(const JoinedLobbyMsg& msg) override;
+    virtual void handle_send(const CreateLobbyMsg& msg) override;
+    virtual void handle_send(const ExitMsg& msg) override;
+    virtual void handle_send(const StartGameMsg& msg) override;
+
+
+    virtual void handle_recv(ExampleMsg* msg) override;
+    virtual void handle_recv(LobbyListMsg* msg) override;
+
+    // CUSTOMIZED MESSAGES
+    virtual void handle_send(const CustomizedPlayerInfoMsg& msg);
+
+    // GAME MESSAGES
+    virtual void handle_send(const PickupDropItemMsg& msg);
+    virtual void handle_send(const StartMoveLeftMsg& msg);
+    virtual void handle_send(const StopMoveLeftMsg& msg);
+    virtual void handle_send(const StartMoveRightMsg& msg);
+    virtual void handle_send(const StopMoveRightMsg& msg);
+    virtual void handle_send(const JumpMsg& msg);
+    virtual void handle_send(const PlayDeadMsg& msg);
+    virtual void handle_send(const ShootMsg& msg);
+
+    virtual void handle_recv(const PlayerInfoMsg* msg);
+    virtual void handle_recv(const FinishGameMsg* msg);
+    virtual void handle_recv(const WinnerMsg* msg);
 
     /*
     ESTO LO GUARDO DE EJEMPLO QUE TENEMOS QUE HACER PARA EL RESTO DE LOS MENSAJES

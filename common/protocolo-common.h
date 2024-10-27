@@ -2,6 +2,7 @@
 #define PROTOCOLOCOMMON_H
 #include <string>
 
+#include "./messages/handler.h"
 #include "./socket/socket.h"
 #include "./socket/socket_error.h"
 

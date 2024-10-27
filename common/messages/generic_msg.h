@@ -27,7 +27,6 @@ private:
 public:
     explicit GenericMsg(typeMsg first_header);
 
-    virtual void print_data() = 0;
     virtual void accept_send(Handler& handler) = 0;
     // virtual void accept_recv(Handler& handler) = 0;
     virtual uint8_t get_second_header() const = 0;

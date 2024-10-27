@@ -6,7 +6,7 @@
 #include "generic_msg.h"
 
 class CustomizedMsg: public GenericMsg {
-protected:
+public:
     enum customizedType : uint8_t {
         CUSTOMIZER_PLAYER = 0x01,
         SELECT_MAP = 0x02,

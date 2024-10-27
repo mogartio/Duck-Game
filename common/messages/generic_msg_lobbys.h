@@ -6,7 +6,7 @@
 #include "generic_msg.h"
 
 class LobbyMsg: public GenericMsg {
-protected:
+public:
     enum lobbyType : uint8_t {
         EXAMPLE = 0x00,
         VIEW_LOBBIES = 0x01,
