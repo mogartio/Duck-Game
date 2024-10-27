@@ -12,9 +12,13 @@ Image::Image(SDL_Renderer* rend, std::string img) : rend(rend) {
 void Image::fill(bool background) {
     if (background) {
         SDL_RenderCopy(rend, imgTex, NULL, NULL); // Dibuja
-    } else {
+    } else { 
         SDL_RenderCopy(rend, imgTex, NULL, &dest); // Dibuja
     }
+}
+
+void Image::fill(SDL_RendererFlip flip) {
+    SDL_RenderCopyEx(rend, imgTex, NULL, &dest, 0, NULL, flip); // Dibuja
 }
 
 void Image::queryTexture() {
@@ -29,13 +33,6 @@ void Image::defineSize(int height, int width) {
 void Image::position(int x, int y) {
     dest.x = x;
     dest.y = y;
-}
-
-void Image::updateImage(std::string img) {
-    SDL_Surface* imgSurface = IMG_Load(img.c_str());
-    SDL_Texture* imgTex = SDL_CreateTextureFromSurface(rend, imgSurface);
-    this->imgTex = imgTex;
-    SDL_FreeSurface(imgSurface); // Libera la superficie una vez que la textura está creada
 }
 
 Image::~Image() {
