@@ -1,16 +1,22 @@
 #ifndef PROTOCOLOCOMMON_H
 #define PROTOCOLOCOMMON_H
+#include <functional>
+#include <map>
 #include <string>
 
+#include "./messages/generic_msg.cpp"
+#include "./messages/generic_msg.h"
 #include "./messages/handler.h"
 #include "./socket/socket.h"
 #include "./socket/socket_error.h"
 
-class ProtocoloCommon {
+class ProtocoloCommon: public Handler {
 private:
     // ------------------- Atributos -------------------
 
     Socket& socket;
+
+    std::map<GenericMsg::MsgTypeHeader, std::function<GenericMsg*()>> recv_handlers;
 
     // ------------------- Métodos privados -------------------
 
@@ -18,6 +24,8 @@ private:
      * Lanza SocketError en caso de que el socket se haya cerrado al enviar o recibir datos.
      */
     void chk_closed_andif_fail(const char error_ms[]) const;
+
+    void sendCabecera(const GenericMsg& msg);
 
 protected:
     // ------------------- Atributos -------------------
@@ -57,6 +65,12 @@ protected:
     std::string recv_string();
 
 public:
+    // ------------------- Métodos públicos -------------------
+
+    void send(GenericMsg* msg);
+
+    GenericMsg* receive();
+
     // ------------------- Constructor -------------------
     /*
      * Constructor del protocolo
