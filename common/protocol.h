@@ -9,7 +9,6 @@
 #include <arpa/inet.h>
 #include <vector>
 
-template <typename HandlerType>
 class Protocol {
 private:
     Socket& skt;
@@ -93,8 +92,8 @@ public:
     /*
     * Metodos virtuales puros de la clase Protocolo.
     */
-   virtual void send(GenericMsg<HandlerType>* data) = 0;
-   virtual GenericMsg<HandlerType>* receive() = 0;
+   virtual void send(GenericMsg* data) = 0;
+   virtual GenericMsg* receive() = 0;
 
     /*
     * Destructor de la clase Protocolo.
