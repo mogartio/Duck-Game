@@ -18,9 +18,6 @@ target_sources(common
     socket/socket.h
     socket/socket_error.h
     thread.h
-    messages/client_generic_msg.h 
-    messages/server_generic_msg.h
-    messages/client_handler.h 
-    messages/server_handler.h
+    messages/handler.h
     messages/generic_msg.h
     )

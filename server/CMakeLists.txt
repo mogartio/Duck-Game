@@ -24,7 +24,7 @@ target_sources(server_exe  # Use the correct target name
     clients_monitor.h
     read_input.h
     send_queues_monitor.h
-    lobby_manager_protocol.h
+    server_protocol.h
     server.h
     receiver.h
     sender.h
