@@ -71,6 +71,9 @@ public:
     virtual void handle_recv(GameEndedMsg& msg);
     virtual void handle_recv(WinnerMsg& msg);
     // in-game from server
+
+
+    virtual ~Handler() = default;
 };
 
 #endif 
