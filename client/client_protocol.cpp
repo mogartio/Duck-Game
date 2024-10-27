@@ -65,3 +65,29 @@ void ClientProtocol::handle_recv(ExampleMsg* msg) {
     std::string data = recv_string();
     msg = new ExampleMsg(data);
 }
+
+void ClientProtocol::handle_recv(LobbyListMsg* msg) { msg = new LobbyListMsg(); }
+
+void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const PickupDropItemMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const StartMoveLeftMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const StopMoveLeftMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const StartMoveRightMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const StopMoveRightMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const JumpMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const PlayDeadMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const ShootMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_recv(const PlayerInfoMsg* msg) { msg = new PlayerInfoMsg(); }
+
+void ClientProtocol::handle_recv(const FinishGameMsg* msg) { msg = new FinishGameMsg(); }
+
+void ClientProtocol::handle_recv(const WinnerMsg* msg) { msg = new WinnerMsg(); }
