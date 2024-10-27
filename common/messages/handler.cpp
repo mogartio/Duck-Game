@@ -1,92 +1,43 @@
 #include "handler.h"
 
-// SEND
-void Handler::handle_send(const EverythingOkey& msg) { (void)msg; }
+void Handler::handle_send(CustomizedPlayerInfoMsg& msg) { (void) msg; }
+void Handler::handle_send(ViewLobbiesMsg& msg) { (void) msg; }
+void Handler::handle_send(ChooseLobbyMsg& msg) { (void) msg; }
+void Handler::handle_send(CreateLobbyMsg& msg) { (void) msg; }
+void Handler::handle_send(GoBackMsg& msg) { (void) msg; }
+void Handler::handle_send(ExitFromLobbyMsg& msg) { (void) msg; }
+void Handler::handle_send(StartGameMsg& msg) { (void) msg; }
+void Handler::handle_send(PickupDropMsg& msg) { (void) msg; }
+void Handler::handle_send(MoveLeftMsg& msg) { (void) msg; }
+void Handler::handle_send(MoveRightMsg& msg) { (void) msg; }
+void Handler::handle_send(JumpMsg& msg) { (void) msg; }
+void Handler::handle_send(PlayDeadMsg& msg) { (void) msg; }
+void Handler::handle_send(ShootMsg& msg) { (void) msg; }
+void Handler::handle_send(SendLobbiesListMsg& msg) { (void) msg; }
+void Handler::handle_send(EverythingOkMsg& msg) { (void) msg; }
+void Handler::handle_send(ErrorMsg& msg) { (void) msg; }
+void Handler::handle_send(SendMapMsg& msg) { (void) msg; }
+void Handler::handle_send(GameEndedMsg& msg) { (void) msg; }
+void Handler::handle_send(WinnerMsg& msg) { (void) msg; }
 
-void Handler::handle_send(const SomethingWrong& msg) { (void)msg; }
-
-void Handler::handle_send(const ExampleMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const ViewLobbiesMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const LobbyListMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const JoinedLobbyMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const CreateLobbyMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const ExitMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const StartGameMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const CustomizedPlayerInfoMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const MapInfoMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const PickupDropItemMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const StartMoveLeftMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const StopMoveLeftMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const StartMoveRightMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const StopMoveRightMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const JumpMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const PlayDeadMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const ShootMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const PlayerInfoMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const FinishGameMsg& msg) { (void)msg; }
-
-void Handler::handle_send(const WinnerMsg& msg) { (void)msg; }
+void Handler::handle_recv(CustomizedPlayerInfoMsg& msg) { (void) msg; }
+void Handler::handle_recv(ViewLobbiesMsg& msg) { (void) msg; }
+void Handler::handle_recv(ChooseLobbyMsg& msg) { (void) msg; }
+void Handler::handle_recv(CreateLobbyMsg& msg) { (void) msg; }
+void Handler::handle_recv(GoBackMsg& msg) { (void) msg; }
+void Handler::handle_recv(ExitFromLobbyMsg& msg) { (void) msg; }
+void Handler::handle_recv(StartGameMsg& msg) { (void) msg; }
+void Handler::handle_recv(PickupDropMsg& msg) { (void) msg; }
+void Handler::handle_recv(MoveLeftMsg& msg) { (void) msg; }
+void Handler::handle_recv(MoveRightMsg& msg) { (void) msg; }
+void Handler::handle_recv(JumpMsg& msg) { (void) msg; }
+void Handler::handle_recv(PlayDeadMsg& msg) { (void) msg; }
+void Handler::handle_recv(ShootMsg& msg) { (void) msg; }
+void Handler::handle_recv(SendLobbiesListMsg& msg) { (void) msg; }
+void Handler::handle_recv(EverythingOkMsg& msg) { (void) msg; }
+void Handler::handle_recv(ErrorMsg& msg) { (void) msg; }
+void Handler::handle_recv(SendMapMsg& msg) { (void) msg; }
+void Handler::handle_recv(GameEndedMsg& msg) { (void) msg; }
+void Handler::handle_recv(WinnerMsg& msg) { (void) msg; }
 
 
-// RECV
-void Handler::handle_recv(const EverythingOkey* msg) { (void)msg; }
-
-void Handler::handle_recv(const SomethingWrong* msg) { (void)msg; }
-
-void Handler::handle_recv(const ExampleMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const ViewLobbiesMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const LobbyListMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const JoinedLobbyMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const CreateLobbyMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const ExitMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const StartGameMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const CustomizedPlayerInfoMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const MapInfoMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const PickupDropItemMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const StartMoveLeftMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const StopMoveLeftMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const StartMoveRightMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const StopMoveRightMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const JumpMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const PlayDeadMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const ShootMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const PlayerInfoMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const FinishGameMsg* msg) { (void)msg; }
-
-void Handler::handle_recv(const WinnerMsg* msg) { (void)msg; }

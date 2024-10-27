@@ -1,95 +1,75 @@
-#ifndef HANDLE_H
-#define HANDLE_H
+#ifndef HANDLER_H
+#define HANDLER_H
 
-class EverythingOkey;
-class SomethingWrong;
-class ExampleMsg;
-class ViewLobbiesMsg;
-class LobbyListMsg;
-class JoinedLobbyMsg;
-class CreateLobbyMsg;
-class ExitMsg;
-class StartGameMsg;
 class CustomizedPlayerInfoMsg;
-class MapInfoMsg;
-class PickupDropItemMsg;
-class StartMoveLeftMsg;
-class StopMoveLeftMsg;
-class StartMoveRightMsg;
-class StopMoveRightMsg;
+class ViewLobbiesMsg;
+class ChooseLobbyMsg;
+class CreateLobbyMsg;
+class GoBackMsg;
+class ExitFromLobbyMsg;
+class StartGameMsg;
+class PickupDropMsg;
+class MoveLeftMsg;
+class MoveRightMsg;
 class JumpMsg;
 class PlayDeadMsg;
 class ShootMsg;
-class PlayerInfoMsg;
-class FinishGameMsg;
+class SendLobbiesListMsg;
+class EverythingOkMsg;
+class ErrorMsg;
+class SendMapMsg;
+class GameEndedMsg;
 class WinnerMsg;
 
-
 class Handler {
-public:
-    // SEND
-    // Response server
-    virtual void handle_send(const EverythingOkey& msg);
-    virtual void handle_send(const SomethingWrong& msg);
+    // from client
+    virtual void handle_send(CustomizedPlayerInfoMsg& msg);
+    virtual void handle_send(ViewLobbiesMsg& msg);
+    virtual void handle_send(ChooseLobbyMsg& msg);
+    virtual void handle_send(CreateLobbyMsg& msg);
+    virtual void handle_send(GoBackMsg& msg);
+    virtual void handle_send(ExitFromLobbyMsg& msg);
+    virtual void handle_send(StartGameMsg& msg);
+    // in-game commands
+    virtual void handle_send(PickupDropMsg& msg);
+    virtual void handle_send(MoveLeftMsg& msg);
+    virtual void handle_send(MoveRightMsg& msg);
+    virtual void handle_send(JumpMsg& msg);
+    virtual void handle_send(PlayDeadMsg& msg);
+    virtual void handle_send(ShootMsg& msg);
+    // from server
+    virtual void handle_send(SendLobbiesListMsg& msg);
+    virtual void handle_send(EverythingOkMsg& msg);
+    virtual void handle_send(ErrorMsg& msg);
+    virtual void handle_send(SendMapMsg& msg);
+    virtual void handle_send(GameEndedMsg& msg);
+    virtual void handle_send(WinnerMsg& msg);
+    // in-game from server
+    // ... 
 
-    // Lobby messages
-    virtual void handle_send(const ExampleMsg& msg);
-    virtual void handle_send(const ViewLobbiesMsg& msg);
-    virtual void handle_send(const LobbyListMsg& msg);
-    virtual void handle_send(const JoinedLobbyMsg& msg);
-    virtual void handle_send(const CreateLobbyMsg& msg);
-    virtual void handle_send(const ExitMsg& msg);
-    virtual void handle_send(const StartGameMsg& msg);
-
-    // Customized messages
-    virtual void handle_send(const CustomizedPlayerInfoMsg& msg);
-    virtual void handle_send(const MapInfoMsg& msg);
-
-    // Game messages
-    virtual void handle_send(const PickupDropItemMsg& msg);
-    virtual void handle_send(const StartMoveLeftMsg& msg);
-    virtual void handle_send(const StopMoveLeftMsg& msg);
-    virtual void handle_send(const StartMoveRightMsg& msg);
-    virtual void handle_send(const StopMoveRightMsg& msg);
-    virtual void handle_send(const JumpMsg& msg);
-    virtual void handle_send(const PlayDeadMsg& msg);
-    virtual void handle_send(const ShootMsg& msg);
-    virtual void handle_send(const PlayerInfoMsg& msg);
-    virtual void handle_send(const FinishGameMsg& msg);
-    virtual void handle_send(const WinnerMsg& msg);
-
-    // RECV
-    // Response server
-    virtual void handle_recv(const EverythingOkey* msg);
-    virtual void handle_recv(const SomethingWrong* msg);
-
-    // Lobby messages
-    virtual void handle_recv(const ExampleMsg* msg);
-    virtual void handle_recv(const ViewLobbiesMsg* msg);
-    virtual void handle_recv(const LobbyListMsg* msg);
-    virtual void handle_recv(const JoinedLobbyMsg* msg);
-    virtual void handle_recv(const CreateLobbyMsg* msg);
-    virtual void handle_recv(const ExitMsg* msg);
-    virtual void handle_recv(const StartGameMsg* msg);
-
-    // Customized messages
-    virtual void handle_recv(const CustomizedPlayerInfoMsg* msg);
-    virtual void handle_recv(const MapInfoMsg* msg);
-
-    // Game messages
-    virtual void handle_recv(const PickupDropItemMsg* msg);
-    virtual void handle_recv(const StartMoveLeftMsg* msg);
-    virtual void handle_recv(const StopMoveLeftMsg* msg);
-    virtual void handle_recv(const StartMoveRightMsg* msg);
-    virtual void handle_recv(const StopMoveRightMsg* msg);
-    virtual void handle_recv(const JumpMsg* msg);
-    virtual void handle_recv(const PlayDeadMsg* msg);
-    virtual void handle_recv(const ShootMsg* msg);
-    virtual void handle_recv(const PlayerInfoMsg* msg);
-    virtual void handle_recv(const FinishGameMsg* msg);
-    virtual void handle_recv(const WinnerMsg* msg);
-
-    virtual ~Handler() = default;
+    // from client 
+    virtual void handle_recv(CustomizedPlayerInfoMsg& msg);
+    virtual void handle_recv(ViewLobbiesMsg& msg);
+    virtual void handle_recv(ChooseLobbyMsg& msg);
+    virtual void handle_recv(CreateLobbyMsg& msg);
+    virtual void handle_recv(GoBackMsg& msg);
+    virtual void handle_recv(ExitFromLobbyMsg& msg);
+    virtual void handle_recv(StartGameMsg& msg);
+    // in-game commands
+    virtual void handle_recv(PickupDropMsg& msg);
+    virtual void handle_recv(MoveLeftMsg& msg);
+    virtual void handle_recv(MoveRightMsg& msg);
+    virtual void handle_recv(JumpMsg& msg);
+    virtual void handle_recv(PlayDeadMsg& msg);
+    virtual void handle_recv(ShootMsg& msg);
+    // from server
+    virtual void handle_recv(SendLobbiesListMsg& msg);
+    virtual void handle_recv(EverythingOkMsg& msg);
+    virtual void handle_recv(ErrorMsg& msg);
+    virtual void handle_recv(SendMapMsg& msg);
+    virtual void handle_recv(GameEndedMsg& msg);
+    virtual void handle_recv(WinnerMsg& msg);
+    // in-game from server
 };
 
-#endif  // HANDLE_H
+#endif 

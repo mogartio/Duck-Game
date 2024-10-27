@@ -12,7 +12,7 @@ class GenericMsg {
 public:
 
     enum MsgTypeHeader : uint8_t {
-        CUSTOMIZED_PLAYER_INFO_MSG = 0,
+        CUSTOMIZED_PLAYER_INFO_MSG = 1,
         VIEW_LOBBIES_MSG,
         CHOOSE_LOBBY_MSG,
         CREATE_LOBBY_MSG,
