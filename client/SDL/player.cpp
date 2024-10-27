@@ -30,7 +30,7 @@ void Player::chooseColor(Color color) {
 
 void Player::checkWingHashmap(WingState wingState) {
     if (wings.find(wingState) == wings.end()) {
-        wingType = file + "wing/" + to_string(wingState);
+        wingType = file + to_string(wingState);
         wings[wingState] = Image(rend, wingType);
     }
 
@@ -38,6 +38,8 @@ void Player::checkWingHashmap(WingState wingState) {
 }
 
 void Player::updateWing(int x, int y) {
+
+    // Actualiza imagen del ala
     if (state == SLOW_FALL) {
         if (flapup) {
             checkWingHashmap(FLAPUP);
@@ -54,6 +56,7 @@ void Player::updateWing(int x, int y) {
         }
     }
 
+    // Actualiza posicion del ala
     if (flip = SDL_FLIP_HORIZONTAL) {
         wing->position(x + 1.7*OFFSETX, y);
     } else {
@@ -91,6 +94,7 @@ void Player::defineSize(int height, int width) {
 void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
 
+    // Agrego el estado al hashmap si no existe 
     if (ducks.find(state) == ducks.end()) { 
         if (!walk1) {
             action = file + to_string(state, false);
@@ -100,6 +104,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
         ducks[state] = Image(rend, action);
     }
 
+    // Actualizo la imagen del pato y su posicion
     *duck = ducks[state];
     duck->position(x, y);
     
@@ -107,23 +112,29 @@ void Player::update(int x, int y, DuckState state, Side side) {
         flip = SDL_FLIP_HORIZONTAL;
     }
 
+    // Actualizo la image del ala y su posicion
     updateWing(x, y);
 }
 
 void Player::fill() {
+    // Dinujo el cuerpo del pato
     duck->fill(flip);
-    if (weaponON) {
-        //weapon.fill();
+
+    // Dibujo el arma que tiene el pato
+    if (weaponON && (state != SLOW_FALL)) {
+        //weapon.fill(flip);
     }
 
+    // Dibujo el ala del pato
     if (state != PLAY_DEAD) {
         wing->fill(flip);
     }
 }
 
 void Player::weapon() {
-    if (weaponON) {
+    if (weaponON) { // Dropeo
         weaponON = false;
+        // Actualizo pos del arma cuando la suelto
         /* y suelto el arma que tenia */
     } else {
         weaponON = true;

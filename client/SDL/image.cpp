@@ -10,9 +10,9 @@ Image::Image(SDL_Renderer* rend, std::string img) : rend(rend) {
 }
 
 void Image::fill(bool background) {
-    if (background) {
+    if (background) { // Dibuja el fondo
         SDL_RenderCopy(rend, imgTex, NULL, NULL); // Dibuja
-    } else { 
+    } else { // Dibuja los tiles y las armas que no pertenecen a ningun pato
         SDL_RenderCopy(rend, imgTex, NULL, &dest); // Dibuja
     }
 }
@@ -36,6 +36,6 @@ void Image::position(int x, int y) {
 }
 
 Image::~Image() {
-    SDL_DestroyTexture(imgTex); // Libera la textura del fondo
+    SDL_DestroyTexture(imgTex); // Libera la textura
 }
 

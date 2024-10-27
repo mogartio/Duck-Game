@@ -2,6 +2,7 @@
 #include <SDL2/SDL_timer.h>
 
 #include "image.h"
+#include "map.h"
 #include "frontOnePlaye.h"
 
 #define TILES_TO_PIXELS 10
@@ -20,7 +21,7 @@ enum Front_event {
 OnePlayer::OnePlayer(Queue<Front_event>& queueSend, Queue<int>& queueRecive): 
                     queueSend(queueSend), queueRecive(queueRecive) {}
 
-void OnePlayer::run() {
+void OnePlayer::play() {
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("Error initializing SDL: %s\n", SDL_GetError());
@@ -49,7 +50,9 @@ void OnePlayer::run() {
     const Uint32 frame_rate = 1000 / 60; // 60 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
 
-    while (_keep_running) {
+    bool close = false;
+
+    while (!close) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
 
@@ -59,7 +62,7 @@ void OnePlayer::run() {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT: 
-                    _keep_running = false;
+                    close = true;
                     break;
                 case SDL_KEYDOWN: // Evento de tecla presionada
                     switch (event.key.keysym.scancode) {
@@ -101,13 +104,13 @@ void OnePlayer::run() {
             }
         }
 
-        // Actualiza Jugadores y armas
+        // DEBERIA fijarme si popeo de a uno o varios de una
         int msj;
         bool poped = queueRecive.try_pop(msj);
 
+        // Actualiza Jugadores y armas
         if (poped) {
-            map.updatePosition(msj, msj, msj);
-            map.updateImage(msj, std::to_string(msj));
+            /* map.update()*/
         }
 
         // Renderiza los objetos en la ventana

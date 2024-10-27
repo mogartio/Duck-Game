@@ -40,10 +40,13 @@ public:
     // Actualiza la posicion y la imagen
     void update(int x, int y, DuckState newState, Side side);
 
+    // Dibuja el jugador
     void fill();
 
+    // Agarra o suelta un arma
     void weapon(/*tipo de arma*/);
 
+    // Dispara el arma
     void shoot();
 
 };

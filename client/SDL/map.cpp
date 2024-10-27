@@ -16,7 +16,9 @@ void Map::makeMap(int w, int h) {
         queueRecive.try_pop(pos);
         switch (pos) {
             case 1:
-                //aca determino qu tipo de tile es para conseguir el string q necesito
+                // DEFINIR que tamaño tienen los tiles
+
+                //aca determino que tipo de tile es para conseguir el string q necesito
                 tile = Image(rend, "img_src/tiles/dayTiles/middle.png");
                 tile.queryTexture();
                 tile.defineSize(35, 35);
@@ -24,7 +26,9 @@ void Map::makeMap(int w, int h) {
                 tiles.push_back(tile);
                 break;
             case 2:
-                //aca determino qu tipo de tile es para conseguir el string q necesito
+                // Necesito un sistema que si vuelve a aparecer el num 2 a 3 tiles de distancia de la actual lo saltee
+
+                //aca determino que color es para conseguir el string q necesito
                 player = Player(rend, players.size());
                 player.defineSize(50, 50);
                 //player.update(pos.x, pos.y, info.state, info.side);
@@ -43,11 +47,19 @@ void Map::update(int player, int x, int y, DuckState state, Side side) {
     players[player].update(x, y, state, side);
 }
 
-void Map::fill() {
+void Map::fill() { // Dibuja de atras para adelante
     (*background).fill(true);
+
     for (Image tile: tiles) {
         tile.fill();
     }
+
+    /*
+    for (Weapon weapon: weapons) {
+        weapon.fill();
+    }
+    */
+
     for (Player player: players) {
         player.fill();
     }

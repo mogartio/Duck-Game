@@ -22,27 +22,26 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags); // Crea el renderizador asociado a la ventana
 
     // Carga la imagen de fondo
-    SDL_Surface* backgroundSurface = IMG_Load("img_src/background/day.png"); // Asegúrate de usar el camino correcto a tu imagen
-    SDL_Texture* backgroundTex = SDL_CreateTextureFromSurface(rend, backgroundSurface);
+    SDL_Surface* backgroundSurface = IMG_Load("img_src/background/day.png");
+    SDL_Texture* backgroundTex = SDL_CreateTextureFromSurface(rend, backgroundSurface);  // Crea una textura a partir de la superficie
     SDL_FreeSurface(backgroundSurface); // Libera la superficie una vez que la textura está creada
 
     // Carga una imagen desde un archivo y la convierte en una superficie
-    SDL_Surface* surface = IMG_Load("img_src/ducks/grey/standing.png"); // Asegúrate de que el archivo "cuadrado" esté en la misma carpeta
-    SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface); // Crea una textura a partir de la superficie
-    SDL_FreeSurface(surface); // Libera la superficie original, ya no se necesita
+    SDL_Surface* surface = IMG_Load("img_src/ducks/grey/standing.png");
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(rend, surface);
+    SDL_FreeSurface(surface);
 
-    SDL_Surface* grayWing = IMG_Load("img_src/ducks/grey/wing/normal.png"); // Asegúrate de que el archivo "cuadrado" esté en la misma carpeta
-    SDL_Texture* texGrayWing = SDL_CreateTextureFromSurface(rend, grayWing); // Crea una textura a partir de la superficie
-    SDL_FreeSurface(grayWing); // Libera la superficie original, ya no se necesita
+    SDL_Surface* grayWing = IMG_Load("img_src/ducks/grey/wing/normal.png"); 
+    SDL_Texture* texGrayWing = SDL_CreateTextureFromSurface(rend, grayWing); 
+    SDL_FreeSurface(grayWing); 
 
-    // Carga una imagen desde un archivo y la convierte en una superficie
-    SDL_Surface* surface2 = IMG_Load("img_src/ducks/white/standing.png"); // Asegúrate de que el archivo "cuadrado2" esté en la misma carpeta
-    SDL_Texture* tex2 = SDL_CreateTextureFromSurface(rend, surface2); // Crea una textura a partir de la superficie
-    SDL_FreeSurface(surface2); // Libera la superficie original, ya no se necesita
+    SDL_Surface* surface2 = IMG_Load("img_src/ducks/white/standing.png");
+    SDL_Texture* tex2 = SDL_CreateTextureFromSurface(rend, surface2); 
+    SDL_FreeSurface(surface2); 
 
-    SDL_Surface* whiteWing = IMG_Load("img_src/ducks/white/wing/normal.png"); // Asegúrate de que el archivo "cuadrado" esté en la misma carpeta
-    SDL_Texture* texWhiteWing = SDL_CreateTextureFromSurface(rend, whiteWing); // Crea una textura a partir de la superficie
-    SDL_FreeSurface(whiteWing); // Libera la superficie original, ya no se necesita
+    SDL_Surface* whiteWing = IMG_Load("img_src/ducks/white/wing/normal.png"); 
+    SDL_Texture* texWhiteWing = SDL_CreateTextureFromSurface(rend, whiteWing); 
+    SDL_FreeSurface(whiteWing); 
 
 
     // Crea un rectángulo para controlar la posición y el tamaño de la textura
@@ -90,8 +89,14 @@ int main(int argc, char* argv[]) {
 
     int offsetX = 10;
 
+    const Uint32 frame_rate = 1000 / 40; // 40 FPS
+    Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
+
     // Bucle principal del programa
     while (!close) {
+        Uint32 current_time = SDL_GetTicks();
+        Uint32 elapsed_time = current_time - last_frame_time;
+
         SDL_Event event; // Estructura para manejar eventos
 
         // Procesa los eventos en la cola
@@ -212,29 +217,31 @@ int main(int argc, char* argv[]) {
         if (destWing2.y + destWing2.h > window_height) destWing2.y = window_height - destWing2.h;
         if (destWing2.y < 0) destWing2.y = 0;
 
-        // Renderiza el objeto en la ventana
-        SDL_RenderClear(rend); // Limpia la pantalla
-        SDL_RenderCopy(rend, backgroundTex, NULL, NULL); // Dibuja la textura de fondo
-        SDL_RenderCopyEx(rend, tex, NULL, &dest, 0, NULL, flip1);
-        SDL_RenderCopyEx(rend, texGrayWing, NULL, &destWing, 0, NULL, flip1);
-        SDL_RenderCopyEx(rend, tex2, NULL, &dest2, 0, NULL, flip2);
-        SDL_RenderCopyEx(rend, texWhiteWing, NULL, &destWing2, 0, NULL, flip2);
-        SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+        if (elapsed_time >= frame_rate) {
+            // Renderiza el objeto en la ventana
+            SDL_RenderClear(rend); // Limpia la pantalla
+            SDL_RenderCopy(rend, backgroundTex, NULL, NULL); // Dibuja
+            SDL_RenderCopyEx(rend, tex, NULL, &dest, 0, NULL, flip1);
+            SDL_RenderCopyEx(rend, texGrayWing, NULL, &destWing, 0, NULL, flip1);
+            SDL_RenderCopyEx(rend, tex2, NULL, &dest2, 0, NULL, flip2);
+            SDL_RenderCopyEx(rend, texWhiteWing, NULL, &destWing2, 0, NULL, flip2);
+            SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+        }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
-        SDL_Delay(1000 / 60); // Espera para mantener 60 FPS
+        SDL_Delay(frame_rate - (SDL_GetTicks() - current_time));
     }
 
     // Limpieza de recursos
-    SDL_DestroyTexture(tex); // Libera la textura
+    SDL_DestroyTexture(tex);
     SDL_DestroyTexture(texGrayWing);
     SDL_DestroyTexture(tex2);
     SDL_DestroyTexture(texWhiteWing);
-    SDL_DestroyTexture(backgroundTex); // Libera la textura del fondo
-    SDL_DestroyRenderer(rend); // Libera el renderizador
-    SDL_DestroyWindow(win); // Libera la ventana
+    SDL_DestroyTexture(backgroundTex); 
+    SDL_DestroyRenderer(rend); 
+    SDL_DestroyWindow(win);
     SDL_Quit(); // Finaliza SDL
 
-    return 0; // Termina el programa correctamente
+    return 0;
 }
 
