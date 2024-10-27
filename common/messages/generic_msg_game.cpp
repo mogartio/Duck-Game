@@ -1,30 +1,10 @@
-#include "client_generic_msg.h"
+#include "generic_msg_game.h"
 
 #include "./../protocol/send.h"
 
-CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(): CustomizedMsg(PLAYER_INFO) {}
+GameMsg::GameMsg(gameType second_header): GenericMsg(GAME_MESSAGE), second_header(second_header) {}
 
-void CustomizedPlayerInfoMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
-
-ViewLobbiesMsg::ViewLobbiesMsg(): LobbyMsg(VIEW_LOBBIES) {}
-
-void ViewLobbiesMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
-
-CreateLobbyMsg::CreateLobbyMsg(): LobbyMsg(CREATE_LOBBY) {}
-
-void CreateLobbyMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
-
-ChooseLobbyMsg::ChooseLobbyMsg(): LobbyMsg(CHOOSE_LOBBY) {}
-
-void ChooseLobbyMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
-
-StartGameMsg::StartGameMsg(): LobbyMsg(START_GAME) {}
-
-void StartGameMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
-
-GoBackMsg::GoBackMsg(): LobbyMsg(GO_BACK) {}
-
-void GoBackMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
+uint8_t GameMsg::get_second_header() const { return second_header; }
 
 PickupDropItemMsg::PickupDropItemMsg(): GameMsg(PICKUP_DROP_ITEM) {}
 
@@ -57,3 +37,15 @@ void PlayDeadMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
 ShootMsg::ShootMsg(): GameMsg(SHOOT) {}
 
 void ShootMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
+
+PlayerInfoMsg::PlayerInfoMsg(): GameMsg(PLAYER_INFO) {}
+
+void PlayerInfoMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
+
+FinishGameMsg::FinishGameMsg(): GameMsg(FINISH_GAME) {}
+
+void FinishGameMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }
+
+WinnerMsg::WinnerMsg(): GameMsg(WINNER) {}
+
+void WinnerMsg::accept_send(SendProtocol& protocol) { protocol.send(*this); }

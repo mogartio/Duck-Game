@@ -7,9 +7,11 @@ target_sources(common
     socket/socket.cpp
     protocol/protocol-socket.cpp
     protocol/send.cpp
-    messages/server_generic_msg.cpp
-    messages/client_generic_msg.cpp
     messages/generic_msg.cpp
+    messages/generic_msg_responseser.cpp
+    messages/generic_msg_lobbys.cpp
+    messages/generic_msg_game.cpp
+    messages/generic_msg_customizer.cpp
 
     PUBLIC
     # .h files
@@ -22,7 +24,9 @@ target_sources(common
     thread.h
     protocol/send.h
     protocol/protocol-socket.h
-    messages/client_generic_msg.h
-    messages/server_generic_msg.h
     messages/generic_msg.h
+    messages/generic_msg_responseser.h
+    messages/generic_msg_lobbys.h
+    messages/generic_msg_game.h
+    messages/generic_msg_customizer.h
     )
