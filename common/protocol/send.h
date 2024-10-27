@@ -1,39 +1,49 @@
 #ifndef PROTOCOLOS_SEND_H
 #define PROTOCOLOS_SEND_H
 
-#include "./../messages/client_generic_msg.h"
-#include "./../messages/server_generic_msg.h"
+#include "./../messages/generic_msg_customizer.h"
+#include "./../messages/generic_msg_game.h"
+#include "./../messages/generic_msg_lobbys.h"
+#include "./../messages/generic_msg_responseser.h"
 
 #include "protocol-socket.h"
 
 class SendProtocol: public ProtocolSocket {
-private:
+protected:
     void sendHeaders(const GenericMsg& msg);
 
 public:
-    SendProtocol(Socket& socket): ProtocolSocket(socket) {}
-    void send(const ExampleMsg& msg);
-    void send(const LobbyListMsg& msg);
-    void send(const JoinedLobbyMsg& msg);
-    void send(const ServerErrorMsg& msg);
-    void send(const MapInfoMsg& msg);
-    void send(const PlayerInfoMsg& msg);
-    void send(const FinishGameMsg& msg);
-    void send(const WinnerMsg& msg);
+    explicit SendProtocol(Socket& socket);
+    // Response server
+    virtual void send(const EverythingOkey& msg);
+    virtual void send(const SomethingWrong& msg);
 
-    void send(const CustomizedPlayerInfoMsg& msg);
-    void send(const ViewLobbiesMsg& msg);
-    void send(const ChooseLobbyMsg& msg);
-    void send(const CreateLobbyMsg& msg);
-    void send(const StartGameMsg& msg);
-    void send(const GoBackMsg& msg);
-    void send(const PickupDropItemMsg& msg);
-    void send(const StartMoveLeftMsg& msg);
-    void send(const StopMoveLeftMsg& msg);
-    void send(const StartMoveRightMsg& msg);
-    void send(const StopMoveRightMsg& msg);
-    void send(const JumpMsg& msg);
-    void send(const PlayDeadMsg& msg);
-    void send(const ShootMsg& msg);
+    // Lobby messages
+    virtual void send(const ExampleMsg& msg);
+    virtual void send(const ViewLobbiesMsg& msg);
+    virtual void send(const LobbyListMsg& msg);
+    virtual void send(const JoinedLobbyMsg& msg);
+    virtual void send(const CreateLobbyMsg& msg);
+    virtual void send(const ExitMsg& msg);
+    virtual void send(const StartGameMsg& msg);
+
+    // Customized messages
+    virtual void send(const CustomizedPlayerInfoMsg& msg);
+    virtual void send(const MapInfoMsg& msg);
+
+    // Game messages
+    virtual void send(const PickupDropItemMsg& msg);
+    virtual void send(const StartMoveLeftMsg& msg);
+    virtual void send(const StopMoveLeftMsg& msg);
+    virtual void send(const StartMoveRightMsg& msg);
+    virtual void send(const StopMoveRightMsg& msg);
+    virtual void send(const JumpMsg& msg);
+    virtual void send(const PlayDeadMsg& msg);
+    virtual void send(const ShootMsg& msg);
+    virtual void send(const PlayerInfoMsg& msg);
+    virtual void send(const FinishGameMsg& msg);
+    virtual void send(const WinnerMsg& msg);
+
+    virtual ~SendProtocol() = default;
 };
 #endif  // PROTOCOLOS_SEND_H
