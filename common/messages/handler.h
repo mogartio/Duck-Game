@@ -1,10 +1,6 @@
 #ifndef HANDLE_H
 #define HANDLE_H
 
-#include "generic_msg_customizer.h"
-#include "generic_msg_game.h"
-#include "generic_msg_lobbys.h"
-#include "generic_msg_responseser.h"
 
 class Handler {
 public:
