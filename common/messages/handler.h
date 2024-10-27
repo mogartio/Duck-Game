@@ -22,6 +22,7 @@ class GameEndedMsg;
 class WinnerMsg;
 
 class Handler {
+public:
     // from client
     virtual void handle_send(CustomizedPlayerInfoMsg& msg);
     virtual void handle_send(ViewLobbiesMsg& msg);
