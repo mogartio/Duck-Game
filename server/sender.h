@@ -6,17 +6,17 @@
 #include "../common/thread.h"
 #include "./../common/messages/generic_msg.h"
 
-#include "protocol.h"
+#include "server_protocol.h"
 
 class Sender: public Thread {
 private:
     Queue<GenericMsg*>* send_queue;  // tiene que ser un puntero para poder cambiar la referencia
-    Protocol* protocol;
+    ServerProtocol* protocol;
 
     void run() override;
 
 public:
-    Sender(Queue<GenericMsg*>* send_queue, Protocol* protocol);
+    Sender(Queue<GenericMsg*>* send_queue, ServerProtocol* protocol);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.
@@ -32,6 +32,6 @@ public:
     /*
      * Actualiza la referencia al protocolo.
      */
-    void update_protocol(Protocol* protocol);
+    void update_protocol(ServerProtocol* protocol);
 };
 #endif  // SENDER_H

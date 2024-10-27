@@ -8,6 +8,7 @@ private:
     std::string player_name;
     uint8_t header;
 public:
+    CustomizedPlayerInfoMsg() : color(0), player_name(""), header(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG) {}
     CustomizedPlayerInfoMsg(uint8_t color, std::string player_name) : color(color), player_name(player_name), header(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG) {}
 
     void accept_send(Handler& handler) {

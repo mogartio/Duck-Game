@@ -1,6 +1,6 @@
 #include "sender.h"
 
-Sender::Sender(Queue<GenericMsg*>* send_queue, Protocol* protocol):
+Sender::Sender(Queue<GenericMsg*>* send_queue, ServerProtocol* protocol):
         send_queue(send_queue), protocol(protocol) {}
 
 void Sender::run() {
@@ -22,4 +22,4 @@ void Sender::kill() {
 
 void Sender::update_send_queue(Queue<GenericMsg*>* new_send_queue) { send_queue = new_send_queue; }
 
-void Sender::update_protocol(Protocol* new_protocol) { protocol = new_protocol; }
+void Sender::update_protocol(ServerProtocol* new_protocol) { protocol = new_protocol; }

@@ -6,17 +6,17 @@
 #include "../common/thread.h"
 #include "./../common/messages/generic_msg.h"
 
-#include "protocol.h"
+#include "server_protocol.h"
 
 class Receiver: public Thread {
 private:
     Queue<GenericMsg*>* recv_queue;
-    Protocol* protocol;
+    ServerProtocol* protocol;
 
     void run() override;
 
 public:
-    explicit Receiver(Queue<GenericMsg*>* recv_queue, Protocol* protocol);
+    explicit Receiver(Queue<GenericMsg*>* recv_queue, ServerProtocol* protocol);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.
@@ -31,6 +31,6 @@ public:
     /*
      * Actualiza la referencia al protocolo.
      */
-    void update_protocol(Protocol* protocol);
+    void update_protocol(ServerProtocol* protocol);
 };
 #endif  // RECEIVER_H

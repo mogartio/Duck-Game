@@ -2,6 +2,7 @@
 #define PROTOCOLOCOMMON_H
 #include <string>
 
+#include "./messages/handler.h"
 #include "./socket/socket.h"
 #include "./socket/socket_error.h"
 
@@ -53,7 +54,7 @@ protected:
     /*
      * Recibe un string a través del socket.
      */
-    std::string recv_string(u_int16_t& size);
+    std::string recv_string();
 
 public:
     // ------------------- Constructor -------------------
