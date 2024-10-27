@@ -1,10 +1,29 @@
 #ifndef HANDLE_H
 #define HANDLE_H
 
-#include "generic_msg_customizer.h"
-#include "generic_msg_game.h"
-#include "generic_msg_lobbys.h"
-#include "generic_msg_responseser.h"
+class EverythingOkey;
+class SomethingWrong;
+class ExampleMsg;
+class ViewLobbiesMsg;
+class LobbyListMsg;
+class JoinedLobbyMsg;
+class CreateLobbyMsg;
+class ExitMsg;
+class StartGameMsg;
+class CustomizedPlayerInfoMsg;
+class MapInfoMsg;
+class PickupDropItemMsg;
+class StartMoveLeftMsg;
+class StopMoveLeftMsg;
+class StartMoveRightMsg;
+class StopMoveRightMsg;
+class JumpMsg;
+class PlayDeadMsg;
+class ShootMsg;
+class PlayerInfoMsg;
+class FinishGameMsg;
+class WinnerMsg;
+
 
 class Handler {
 public:

@@ -10,28 +10,39 @@ class Handler;
 
 class GenericMsg {
 public:
-    const static uint8_t SERVER_EXAMPLE_MSG1_H = 0x01;
-    const static uint8_t CLIENT_EXAMPLE_MSG1_H = 0x02;
-    const static uint8_t CLIENT_EXAMPLE_MSG2_H = 0x03;
 
-    enum typeMsg : uint8_t {
-        RESPONSE_SERVER = 0x00,
-        LOBBY_MESSAGE = 0x01,
-        CUSTOMIZED_INFO = 0x02,
-        GAME_MESSAGE = 0x03,
+    enum MsgTypeHeader : uint8_t {
+        CUSTOMIZED_PLAYER_INFO_MSG = 0,
+        VIEW_LOBBIES_MSG,
+        CHOOSE_LOBBY_MSG,
+        CREATE_LOBBY_MSG,
+        GO_BACK_MSG,
+        EXIT_FROM_LOBBY_MSG,
+        START_GAME_MSG,
+        PICKUP_DROP_MSG,
+        MOVE_LEFT_MSG,
+        MOVE_RIGHT_MSG,
+        JUMP_MSG,
+        PLAY_DEAD_MSG,
+        SHOOT_MSG,
+        SEND_LOBBIES_LIST_MSG,
+        EVERYTHING_OK_MSG,
+        ERROR_MSG,
+        SEND_MAP_MSG,
+        GAME_ENDED_MSG,
+        WINNER_MSG
     };
 
 private:
-    typeMsg first_header;
+    MsgTypeHeader header;
 
 public:
-    explicit GenericMsg(typeMsg first_header);
+    explicit GenericMsg();
 
-    virtual void print_data() = 0;
     virtual void accept_send(Handler& handler) = 0;
-    // virtual void accept_recv(Handler& handler) = 0;
-    virtual uint8_t get_second_header() const = 0;
-    uint8_t get_first_header() const;
+    virtual void accept_recv(Handler& handler) = 0;
+    uint8_t get_header() const;
+
     virtual ~GenericMsg() = default;
 };
 #endif
