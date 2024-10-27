@@ -4,6 +4,8 @@
 #include "handler.h"
 #include <vector>
 #include <cstdint>
+#include <string>
+#include <iostream>
 
 class GenericMsg {
 public:

@@ -6,6 +6,7 @@ target_sources(common
     socket/resolver.cpp
     socket/resolvererror.cpp
     socket/socket.cpp
+    protocol.cpp
 
     PUBLIC
     # .h files
