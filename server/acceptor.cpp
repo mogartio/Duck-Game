@@ -1,11 +1,8 @@
 #include "acceptor.h"
 
-#include <utility>
 
-#include <sys/socket.h>
-
-Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<GenericMsg<ServerHandler>*>& recv_queue,
-                   SendQueuesMonitor<GenericMsg<ServerHandler>*>& send_queues) :
+Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<GenericMsg*>& recv_queue,
+                   SendQueuesMonitor<GenericMsg*>& send_queues) :
         srv(std::move(srv)), clients(clients), recv_queue(recv_queue), send_queues(send_queues) {}
 
 
@@ -15,7 +12,7 @@ void Acceptor::run() {
         while (_keep_running) {
             Socket new_skt = srv.accept();
 
-            Queue<GenericMsg<ServerHandler>*>* new_send_queue = new Queue<GenericMsg<ServerHandler>*>(Q_MAX_SIZE);
+            Queue<GenericMsg*>* new_send_queue = new Queue<GenericMsg*>(Q_MAX_SIZE);
             send_queues.add(new_send_queue, id);
 
             Client* client = new Client(std::move(new_skt), new_send_queue, &recv_queue, id++);

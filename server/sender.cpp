@@ -1,12 +1,12 @@
 #include "sender.h"
 
-Sender::Sender(Queue<GenericMsg<ServerHandler>*>* send_queue, Protocol<ServerHandler>* protocol):
+Sender::Sender(Queue<GenericMsg*>* send_queue, Protocol* protocol):
         send_queue(send_queue), protocol(protocol) {}
 
 void Sender::run() {
     while (_keep_running) {
         try {
-            GenericMsg<ServerHandler>* msg = send_queue->pop();
+            GenericMsg* msg = send_queue->pop();
             protocol->send(msg);
         } catch (const std::exception& e) {
             _keep_running = false;
@@ -19,10 +19,10 @@ void Sender::kill() {
     _keep_running = false;
 }
 
-void Sender::update_send_queue(Queue<GenericMsg<ServerHandler>*>* new_send_queue) {
+void Sender::update_send_queue(Queue<GenericMsg*>* new_send_queue) {
     send_queue = new_send_queue;
 }
 
-void Sender::update_protocol(Protocol<ServerHandler>* new_protocol) {
+void Sender::update_protocol(Protocol* new_protocol) {
     protocol = new_protocol;
 }

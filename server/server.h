@@ -16,8 +16,8 @@ class Server {
 private:
     Socket srv;
     ClientsMonitor clients;
-    Queue<GenericMsg<ServerHandler>*> recv_queue;  
-    SendQueuesMonitor<GenericMsg<ServerHandler>*> send_queues;
+    Queue<GenericMsg*> recv_queue;  
+    SendQueuesMonitor<GenericMsg*> send_queues;
 
 public:
     explicit Server(const char* port);
