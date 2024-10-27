@@ -1,5 +1,7 @@
 #include "client_protocol.h"
 
+#include <string>
+
 ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {
     recv_handlers[GenericMsg::typeMsg::RESPONSE_SERVER] = {
             {ResponseServerMsg::responseType::EVERYTHING_WENT_WELL,
@@ -32,4 +34,34 @@ GenericMsg* ClientProtocol::receive() {
     return msg;
 }
 
+void ClientProtocol::sendCabecera(const GenericMsg& msg) {
+    uint8_t first_header = msg.get_first_header();
+    uint8_t second_header = msg.get_second_header();
+    send_u_int8_t(first_header);
+    send_u_int8_t(second_header);
+}
+
 void ClientProtocol::handle_recv(EverythingOkey* msg) { msg = new EverythingOkey(); }
+
+void ClientProtocol::handle_recv(SomethingWrong* msg) { msg = new SomethingWrong(); }
+
+void ClientProtocol::handle_send(const ExampleMsg& msg) {
+    sendCabecera(msg);
+    std::string data = msg.getData();
+    send_string(data);
+}
+
+void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const JoinedLobbyMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const ExitMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_send(const StartGameMsg& msg) { sendCabecera(msg); }
+
+void ClientProtocol::handle_recv(ExampleMsg* msg) {
+    std::string data = recv_string();
+    msg = new ExampleMsg(data);
+}

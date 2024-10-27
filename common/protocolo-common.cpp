@@ -36,11 +36,14 @@ u_int16_t ProtocoloCommon::recv_u_int16_t() {
 }
 
 void ProtocoloCommon::send_string(std::string& data) {
+    u_int16_t size = data.size();
+    send_u_int16_t(size);
     socket.sendall(data.data(), data.size(), &was_closed);
     chk_closed_andif_fail("send string");
 }
 
-std::string ProtocoloCommon::recv_string(u_int16_t& size) {
+std::string ProtocoloCommon::recv_string() {
+    u_int16_t size = recv_u_int16_t();
     std::string data(size, 0);
     socket.recvall(data.data(), size, &was_closed);
     chk_closed_andif_fail("recv string");

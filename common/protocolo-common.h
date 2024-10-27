@@ -54,7 +54,7 @@ protected:
     /*
      * Recibe un string a través del socket.
      */
-    std::string recv_string(u_int16_t& size);
+    std::string recv_string();
 
 public:
     // ------------------- Constructor -------------------

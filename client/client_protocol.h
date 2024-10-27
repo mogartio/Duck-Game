@@ -12,6 +12,8 @@ private:
     std::map<GenericMsg::typeMsg, std::map<uint8_t, std::function<void(GenericMsg*)>>>
             recv_handlers;
 
+    void sendCabecera(const GenericMsg& msg);
+
 public:
     explicit ClientProtocol(Socket& skt);
 
