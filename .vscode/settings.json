@@ -68,6 +68,11 @@
         "span": "cpp",
         "cinttypes": "cpp",
         "variant": "cpp",
-        "socket": "cpp"
+        "socket": "cpp",
+        "buffer": "cpp",
+        "executor": "cpp",
+        "io_context": "cpp",
+        "netfwd": "cpp",
+        "future": "cpp"
     }
 }

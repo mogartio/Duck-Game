@@ -11,7 +11,6 @@ target_sources(common
     messages/generic_msg_lobbys.cpp
     messages/generic_msg_game.cpp
     messages/generic_msg_customizer.cpp
-    messages/handler.cpp
 
     PUBLIC
     # .h files
