@@ -9,8 +9,8 @@ uint8_t CustomizedMsg::get_second_header() const { return second_header; }
 
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(): CustomizedMsg(CUSTOMIZER_PLAYER) {}
 
-void CustomizedPlayerInfoMsg::accept_send(Handler& protocol) { protocol.send(*this); }
+void CustomizedPlayerInfoMsg::accept_send(Handler& protocol) { protocol.handle_send(*this); }
 
 MapInfoMsg::MapInfoMsg(): CustomizedMsg(EDIT_MAP) {}
 
-void MapInfoMsg::accept_send(Handler& protocol) { protocol.send(*this); }
+void MapInfoMsg::accept_send(Handler& protocol) { protocol.handle_send(*this); }

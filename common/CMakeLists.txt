@@ -5,13 +5,13 @@ target_sources(common
     socket/resolver.cpp
     socket/resolvererror.cpp
     socket/socket.cpp
-    protocol/protocol-socket.cpp
-    protocol/send.cpp
+    protocolo-common.cpp
     messages/generic_msg.cpp
     messages/generic_msg_responseser.cpp
     messages/generic_msg_lobbys.cpp
     messages/generic_msg_game.cpp
     messages/generic_msg_customizer.cpp
+    messages/handler.cpp
 
     PUBLIC
     # .h files
@@ -22,11 +22,12 @@ target_sources(common
     socket/socket.h
     socket/socket_error.h
     thread.h
-    protocol/send.h
-    protocol/protocol-socket.h
+    protocolo-common.h
     messages/generic_msg.h
     messages/generic_msg_responseser.h
     messages/generic_msg_lobbys.h
     messages/generic_msg_game.h
     messages/generic_msg_customizer.h
+    messages/descripcion-lobby.h
+    messages/handler.h
     )

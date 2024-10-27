@@ -10,8 +10,8 @@ uint8_t ResponseServerMsg::get_second_header() const { return second_header; }
 
 EverythingOkey::EverythingOkey(): ResponseServerMsg(EVERYTHING_WENT_WELL) {}
 
-void EverythingOkey::accept_send(Handler& protocol) { protocol.send(*this); }
+void EverythingOkey::accept_send(Handler& protocol) { protocol.handle_send(*this); }
 
 SomethingWrong::SomethingWrong(): ResponseServerMsg(SOMETHING_WAS_WRONG) {}
 
-void SomethingWrong::accept_send(Handler& protocol) { protocol.send(*this); }
+void SomethingWrong::accept_send(Handler& protocol) { protocol.handle_send(*this); }

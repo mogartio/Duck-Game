@@ -67,6 +67,7 @@
         "iomanip": "cpp",
         "span": "cpp",
         "cinttypes": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "socket": "cpp"
     }
 }
