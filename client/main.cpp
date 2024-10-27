@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include "../common/socket/socket.h"
-
 #include "client_protocol.h"
 
 int main(int argc, char const* argv[]) {
