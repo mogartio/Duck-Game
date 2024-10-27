@@ -17,14 +17,13 @@ void Server::run() {
     std::cout << "Server levantado" << std::endl;
     
     while (read_input_t.is_alive()) {
-        std::list<GenericMsg<ServerHandler>*> msgs;
-        GenericMsg<ServerHandler>* msg;
+        std::list<GenericMsg*> msgs;
+        GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
             msgs.push_back(msg);
         }
-        for (auto& msg: msgs) {
-            std::cout << "Received message: " << msg << std::endl;
-        }
+        ServerExampleMsg1* msg1 = new ServerExampleMsg1("HOLAAA");
+        msgs.push_back(msg1);
         send_queues.broadcast(msgs);
     }
 

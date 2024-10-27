@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../common/socket/socket.h"
-#include "../common/protocol.h"
-#include "../common/messages/server_handler.h"
+#include "client_protocol.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -9,21 +8,25 @@ int main(int argc, char const* argv[]) {
         std::cerr << "Bad number of arguments in client side\n";
         return -1;
     }
+
     Socket skt(argv[1], argv[2]);
-    //Protocol<ServerHandler> protocol(skt);
+    ClientProtocol protocol(skt);
 
     std::string input;
+
     while (input != "q") {
-        // std::getline(std::cin, input);
-        // uint16_t input_size = static_cast<uint16_t>(input.size());
-
-        // protocol.send_uint16_t(input_size);
-        // protocol.send_string(input);
-
-        // std::cout << "Sent: " << input << std::endl;
-
-        // std::string msg = protocol.recv_string(input_size);
-        // std::cout << "Received: " << msg << std::endl;
+        std::cin >> input;
+        if (input == "1") {
+            ClientExampleMsg1 msg("Hello world");
+            protocol.send(&msg);
+            std::cout << "Sent message: " << "Hello world" << std::endl;
+        } else if (input == "2") {
+            ClientExampleMsg2 msg(42);
+            protocol.send(&msg);
+            std::cout << "Sent message: " << 42 << std::endl;
+        }
+        GenericMsg* msg = protocol.receive();
+        msg->print_data();
     }
 
     return 0;
