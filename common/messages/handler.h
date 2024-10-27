@@ -41,34 +41,34 @@ public:
 
     // RECV
     // Response server
-    virtual void handle_recv(const EverythingOkey& msg);
-    virtual void handle_recv(const SomethingWrong& msg);
+    virtual void handle_recv(const EverythingOkey* msg);
+    virtual void handle_recv(const SomethingWrong* msg);
 
     // Lobby messages
-    virtual void handle_recv(const ExampleMsg& msg);
-    virtual void handle_recv(const ViewLobbiesMsg& msg);
-    virtual void handle_recv(const LobbyListMsg& msg);
-    virtual void handle_recv(const JoinedLobbyMsg& msg);
-    virtual void handle_recv(const CreateLobbyMsg& msg);
-    virtual void handle_recv(const ExitMsg& msg);
-    virtual void handle_recv(const StartGameMsg& msg);
+    virtual void handle_recv(const ExampleMsg* msg);
+    virtual void handle_recv(const ViewLobbiesMsg* msg);
+    virtual void handle_recv(const LobbyListMsg* msg);
+    virtual void handle_recv(const JoinedLobbyMsg* msg);
+    virtual void handle_recv(const CreateLobbyMsg* msg);
+    virtual void handle_recv(const ExitMsg* msg);
+    virtual void handle_recv(const StartGameMsg* msg);
 
     // Customized messages
-    virtual void handle_recv(const CustomizedPlayerInfoMsg& msg);
-    virtual void handle_recv(const MapInfoMsg& msg);
+    virtual void handle_recv(const CustomizedPlayerInfoMsg* msg);
+    virtual void handle_recv(const MapInfoMsg* msg);
 
     // Game messages
-    virtual void handle_recv(const PickupDropItemMsg& msg);
-    virtual void handle_recv(const StartMoveLeftMsg& msg);
-    virtual void handle_recv(const StopMoveLeftMsg& msg);
-    virtual void handle_recv(const StartMoveRightMsg& msg);
-    virtual void handle_recv(const StopMoveRightMsg& msg);
-    virtual void handle_recv(const JumpMsg& msg);
-    virtual void handle_recv(const PlayDeadMsg& msg);
-    virtual void handle_recv(const ShootMsg& msg);
-    virtual void handle_recv(const PlayerInfoMsg& msg);
-    virtual void handle_recv(const FinishGameMsg& msg);
-    virtual void handle_recv(const WinnerMsg& msg);
+    virtual void handle_recv(const PickupDropItemMsg* msg);
+    virtual void handle_recv(const StartMoveLeftMsg* msg);
+    virtual void handle_recv(const StopMoveLeftMsg* msg);
+    virtual void handle_recv(const StartMoveRightMsg* msg);
+    virtual void handle_recv(const StopMoveRightMsg* msg);
+    virtual void handle_recv(const JumpMsg* msg);
+    virtual void handle_recv(const PlayDeadMsg* msg);
+    virtual void handle_recv(const ShootMsg* msg);
+    virtual void handle_recv(const PlayerInfoMsg* msg);
+    virtual void handle_recv(const FinishGameMsg* msg);
+    virtual void handle_recv(const WinnerMsg* msg);
 
     virtual ~Handler() = default;
 };

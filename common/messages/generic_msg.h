@@ -29,7 +29,7 @@ public:
 
     virtual void print_data() = 0;
     virtual void accept_send(Handler& handler) = 0;
-    virtual void accept_recv(Handler& handler) = 0;
+    // virtual void accept_recv(Handler& handler) = 0;
     virtual uint8_t get_second_header() const = 0;
     uint8_t get_first_header() const;
     virtual ~GenericMsg() = default;
