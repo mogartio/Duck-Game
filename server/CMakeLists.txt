@@ -11,11 +11,8 @@ target_sources(server_exe  # Use the correct target name
     acceptor.cpp
     client.cpp
     clients_monitor.cpp
-    lobby-manager.cpp
     lobby.cpp
     main.cpp
-    mensaje-lobby.cpp
-    protocolo-lobbys.cpp
     receiver.cpp
     sender.cpp
     server.cpp
@@ -27,10 +24,7 @@ target_sources(server_exe  # Use the correct target name
     acceptor.h
     client.h
     clients_monitor.h
-    lobby-manager.h
     lobby.h
-    mensaje-lobby.h
-    protocolo-lobbys.h
     protocol.h
     read_input.h
     receiver.h

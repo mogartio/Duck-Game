@@ -1,4 +1,5 @@
 #include "lobby-manager.h"
+/*
 
 LobbyManager::LobbyManager(ClientsMonitor& clients, Queue<ServerMensajeLobby>& recv_queue,
                            SendQueuesMonitor<ServerMensajeLobby>& send_queues):
@@ -53,12 +54,6 @@ void LobbyManager::enviarLobbysDisponibles() {
 
     // mando a los clientes
     send_queues.broadcast(msgs);
-
-    /*
-    LO QUE SE NECESITA ES UNA FORMA DE ACCEDER A LA QUEUE DEL CLIENT ESPECIFICO
-    ALGO DEL ESTILO:
-    send_queues.sendToClient(msg, idCliente);
-    */
 }
 
 void LobbyManager::killLobbys() {
@@ -119,3 +114,4 @@ void LobbyManager::kill() {
 }
 
 LobbyManager::~LobbyManager() { killLobbys(); }
+*/

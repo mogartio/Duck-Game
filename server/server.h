@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../common/queue.h"
-#include "../common/socket.h"
+#include "../common/socket/socket.h"
 #include "../common/thread.h"
 
 #include "acceptor.h"

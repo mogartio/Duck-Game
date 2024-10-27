@@ -7,7 +7,7 @@ void Sender::run() {
     while (_keep_running) {
         try {
             std::string msg = send_queue.pop();
-            protocol.sendString(msg);
+            // protocol.sendString(msg);
         } catch (const std::exception& e) {
             _keep_running = false;
         }

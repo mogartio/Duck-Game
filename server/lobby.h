@@ -4,7 +4,7 @@
 
 #include <list>
 
-#include "./../common/queuesStructs/descripcion-lobby.h"
+#include "./../common/messages/descripcion-lobby.h"
 
 #include "client.h"
 #define MAX_PLAYERS 2

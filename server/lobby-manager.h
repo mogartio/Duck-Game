@@ -9,19 +9,18 @@
 
 #include "clients_monitor.h"
 #include "lobby.h"
-#include "mensaje-lobby.h"
 #include "send_queues_monitor.h"
 
-
+/*
 class LobbyManager: public Thread {
 private:
     std::list<Lobby> lobbys_disponibles;
 
     ClientsMonitor& clients;
 
-    Queue<ServerMensajeLobby>& recv_queue;
+    Queue<std::string>& recv_queue;
 
-    SendQueuesMonitor<ServerMensajeLobby>& send_queues;
+    SendQueuesMonitor<std::string>& send_queues;
 
     std::atomic<bool> keep_running;
 
@@ -39,41 +38,34 @@ private:
 
     void cleanLobbys();
 
-    void analizarMensaje(ServerMensajeLobby& msg);
+    void analizarMensaje(std::string& msg);
 
 public:
-    /*
-     * Constructor del manejador de lobbys
-     */
-    LobbyManager(ClientsMonitor& clients, Queue<ServerMensajeLobby>& recv_queue,
-                 SendQueuesMonitor<ServerMensajeLobby>& send_queues);
 
-    /*
-     * Implementamos el método `run`
-     */
+    // Constructor del manejador de lobbys
+    LobbyManager(ClientsMonitor& clients, Queue<std::string>& recv_queue,
+                 SendQueuesMonitor<std::string>& send_queues);
+
+    // Implementamos el método `run`
     void run() override;
 
-    /*
-     * Método que se encarga de detener el hilo del manejador de lobbys
-     */
+
+    // Método que se encarga de detener el hilo del manejador de lobbys
     void kill();
 
-    /*
-     * Destructor del aceptador del servidor
-     */
+    // Destructor del manejador de lobbys
     ~LobbyManager();
 
     // ------------------ Desabilitamos -----------------------
-    /*
-     * Deshabilitamos el constructor por copia y operador asignación por copia
-     * */
+    // Desabilitamos el constructor por copia
     LobbyManager(const LobbyManager&) = delete;
     LobbyManager& operator=(const LobbyManager&) = delete;
 
-    /*
-     * Hacemos que la clase no sea movible.
-     * */
+
+    // Hacemos que no se pueda mover
     LobbyManager(LobbyManager&&) = delete;
     LobbyManager& operator=(LobbyManager&&) = delete;
+
 };
+*/
 #endif
