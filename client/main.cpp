@@ -9,6 +9,8 @@ int main(int argc, char const* argv[]) {
         return -1;
     }
 
+    std::cout << argv[1] << std::endl;
+
     // Socket skt(argv[1], argv[2]);
     // ClientProtocol protocol(skt);
 
