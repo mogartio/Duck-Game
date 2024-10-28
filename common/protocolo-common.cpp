@@ -2,12 +2,13 @@
 
 #include <arpa/inet.h>
 
-void ProtocoloCommon::send(GenericMsg* msg) { msg->accept_send(*this); }
+void ProtocoloCommon::send(GenericMsg* msg) { 
+    sendCabecera(*msg);
+    msg->accept_send(*this); 
+}
 
 GenericMsg* ProtocoloCommon::receive() {
     uint8_t header = recv_u_int8_t();
-    std::cout << static_cast<GenericMsg::MsgTypeHeader>(header) << std::endl;
-    std::cout << static_cast<int>(GenericMsg::MsgTypeHeader::CUSTOMIZED_PLAYER_INFO_MSG) << std::endl;
     GenericMsg* msg = recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
     msg->accept_recv(*this);
     return msg;
