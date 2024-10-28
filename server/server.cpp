@@ -13,14 +13,13 @@ void Server::run() {
     ReadInput read_input_t;
     read_input_t.start();
     std::cout << "Server levantado" << std::endl;
-
+    ErrorMsg msg1("Error en el server!!!!!!!");
     while (read_input_t.is_alive()) {
         std::list<GenericMsg*> msgs;
         GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
-            ErrorMsg msg1("Error en el server!!!!!!!");
+            msg->print_info();
             msgs.push_back(&msg1);
-            msgs.push_back(msg);
         }
         send_queues.broadcast(msgs);
     }

@@ -9,8 +9,6 @@ ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {}
 void ServerProtocol::handle_send(const EverythingOkMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
 }
 
 void ServerProtocol::handle_send(const ErrorMsg& msg) {

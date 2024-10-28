@@ -22,7 +22,7 @@ int main(int argc, char const* argv[]) {
 
         if (input == "1") {
             std::cout << "Insert a color: ";
-            uint8_t color;
+            int color;
             std::cin >> color;
             std::cout << "Insert a player name: ";
             std::string player_name;
@@ -36,7 +36,7 @@ int main(int argc, char const* argv[]) {
             std::cout << "Sent message" << std::endl;
         } else if (input == "3") {
             std::cout << "Insert a lobby id: ";
-            uint8_t lobby_id;
+            int lobby_id;
             std::cin >> lobby_id;
             ChooseLobbyMsg msg = ChooseLobbyMsg(lobby_id);
             protocol.send(&msg);
