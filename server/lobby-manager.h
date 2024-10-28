@@ -8,7 +8,7 @@
 #include "./../common/thread.h"
 
 #include "clients_monitor.h"
-#include "lobby.h"
+//#include "lobby.h"
 #include "send_queues_monitor.h"
 
 /*

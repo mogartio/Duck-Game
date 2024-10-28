@@ -2,66 +2,8 @@
 
 #include <string>
 
-ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {
-    recv_handlers[GenericMsg::typeMsg::RESPONSE_SERVER] = {
-            {ResponseServerMsg::responseType::EVERYTHING_WENT_WELL,
-             [this]() {
-                 EverythingOkey* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }},
-            {ResponseServerMsg::responseType::SOMETHING_WAS_WRONG, [this]() {
-                 SomethingWrong* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }}};
+ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {}
 
-    recv_handlers[GenericMsg::typeMsg::LOBBY_MESSAGE] = {
-            {LobbyMsg::lobbyType::EXAMPLE,
-             [this]() {
-                 ExampleMsg* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }},
-            {LobbyMsg::lobbyType::LOBBY_LIST, [this]() {
-                 LobbyListMsg* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }}};
-
-    recv_handlers[GenericMsg::typeMsg::GAME_MESSAGE] = {{GameMsg::gameType::PLAYER_INFO,
-                                                         [this]() {
-                                                             PlayerInfoMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }},
-                                                        {GameMsg::gameType::FINISH_GAME,
-                                                         [this]() {
-                                                             FinishGameMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }},
-                                                        {GameMsg::gameType::WINNER, [this]() {
-                                                             WinnerMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }}};
-}
-
-void ClientProtocol::send(GenericMsg* msg) { msg->accept_send(*this); }
-
-GenericMsg* ClientProtocol::receive() {
-    uint8_t header = recv_u_int8_t();
-    uint8_t second_header = recv_u_int8_t();
-    return recv_handlers[static_cast<GenericMsg::typeMsg>(header)][second_header]();
-}
-
-void ClientProtocol::sendCabecera(const GenericMsg& msg) {
-    uint8_t first_header = msg.get_first_header();
-    uint8_t second_header = msg.get_second_header();
-    send_u_int8_t(first_header);
-    send_u_int8_t(second_header);
-}
 
 void ClientProtocol::handle_recv(EverythingOkey** msg) { *msg = new EverythingOkey(); }
 

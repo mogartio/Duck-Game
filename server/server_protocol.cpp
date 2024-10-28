@@ -97,29 +97,13 @@ ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {
                                                          }}};
 }
 
-void ServerProtocol::sendCabecera(const GenericMsg& msg) {
-    uint8_t first_header = msg.get_first_header();
-    uint8_t second_header = msg.get_second_header();
-    send_u_int8_t(first_header);
-    send_u_int8_t(second_header);
-}
-
-void ServerProtocol::send(GenericMsg* msg) { msg->accept_send(*this); }
-
-GenericMsg* ServerProtocol::receive() {
-    uint8_t header = recv_u_int8_t();
-    uint8_t second_header = recv_u_int8_t();
-    GenericMsg* msg = map[header];
-    msg->hjanlde_recv(*this)
-    return recv_handlers[static_cast<GenericMsg::typeMsg>(header)][second_header]();
-}
 
 void ServerProtocol::handle_send(const EverythingOkey& msg) { 
     sendCabecera(msg); 
     uint16 msg_size = recv_u_int16_t();
     string str = rand
-    msg.set_data)
-    }
+    msg.set_data(str);
+}
 
 void ServerProtocol::handle_send(const SomethingWrong& msg) { sendCabecera(msg); }
 
