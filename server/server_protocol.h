@@ -9,7 +9,7 @@
 class ServerProtocol: public ProtocoloCommon {
 private:
     // ------------------- Métodos privados -------------------
-    void sendCabecera(const GenericMsg& msg);
+    void sendCabecera(const GenericMsg* msg);
 
 public:
     explicit ServerProtocol(Socket& skt);

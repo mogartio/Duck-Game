@@ -6,8 +6,8 @@
 
 ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {}
 
-void ServerProtocol::sendCabecera(const GenericMsg& msg) {
-    uint8_t header = msg.get_header();
+void ServerProtocol::sendCabecera(const GenericMsg* msg) {
+    uint8_t header = msg->get_header();
     send_u_int8_t(header);
 }
 

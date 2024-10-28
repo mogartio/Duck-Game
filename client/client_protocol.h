@@ -6,7 +6,7 @@
 class ClientProtocol: public ProtocoloCommon {
 private:
     // ------------------- metodos -------------------
-    void sendCabecera(const GenericMsg& msg);
+    void sendCabecera(const GenericMsg* msg);
 
 public:
     explicit ClientProtocol(Socket& skt);
