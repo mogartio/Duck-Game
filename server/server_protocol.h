@@ -14,32 +14,32 @@ public:
     using Handler::handle_recv;
     using Handler::handle_send;
 
-    virtual void handle_send(EverythingOkMsg& msg) override;
-    virtual void handle_send(ErrorMsg& msg) override;
+    virtual void handle_send(const EverythingOkMsg& msg) override;
+    virtual void handle_send(const ErrorMsg& msg) override;
 
     // LOBBY MESSAGES
-    virtual void handle_recv(const ViewLobbiesMsg& msg) override;
-    virtual void handle_recv(const ChooseLobbyMsg& msg) override;
-    virtual void handle_recv(const CreateLobbyMsg& msg) override;
-    virtual void handle_recv(const GoBackMsg& msg) override;
-    virtual void handle_recv(const StartGameMsg& msg) override;
+    virtual void handle_recv(ViewLobbiesMsg& msg) override;
+    virtual void handle_recv(ChooseLobbyMsg& msg) override;
+    virtual void handle_recv(CreateLobbyMsg& msg) override;
+    virtual void handle_recv(GoBackMsg& msg) override;
+    virtual void handle_recv(StartGameMsg& msg) override;
 
 
-    virtual void handle_send(SendLobbiesListMsg& msg) override;
+    virtual void handle_send(const SendLobbiesListMsg& msg) override;
 
     // CUSTOMIZED MESSAGES
-    virtual void handle_recv(const CustomizedPlayerInfoMsg& msg) override;
+    virtual void handle_recv(CustomizedPlayerInfoMsg& msg) override;
 
     // GAME MESSAGES
-    virtual void handle_recv(const PickupDropMsg& msg) override;
-    virtual void handle_recv(const MoveLeftMsg& msg) override;
-    virtual void handle_recv(const MoveRightMsg& msg) override;
-    virtual void handle_recv(const JumpMsg& msg) override;
-    virtual void handle_recv(const PlayDeadMsg& msg) override;
-    virtual void handle_recv(const ShootMsg& msg) override;
+    virtual void handle_recv(PickupDropMsg& msg) override;
+    virtual void handle_recv(MoveLeftMsg& msg) override;
+    virtual void handle_recv(MoveRightMsg& msg) override;
+    virtual void handle_recv(JumpMsg& msg) override;
+    virtual void handle_recv(PlayDeadMsg& msg) override;
+    virtual void handle_recv(ShootMsg& msg) override;
 
-    virtual void handle_send(GameEndedMsg& msg) override;
-    virtual void handle_send(WinnerMsg& msg) override;
+    virtual void handle_send(const GameEndedMsg& msg) override;
+    virtual void handle_send(const WinnerMsg& msg) override;
 };
 
 #endif  // CLIENT_PROTOCOL_H
