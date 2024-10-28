@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "client_protocol.h"
+//#include "client_protocol.h"
 
 int main(int argc, char const* argv[]) {
 
@@ -9,8 +9,8 @@ int main(int argc, char const* argv[]) {
         return -1;
     }
 
-    Socket skt(argv[1], argv[2]);
-    ClientProtocol protocol(skt);
+    // Socket skt(argv[1], argv[2]);
+    // ClientProtocol protocol(skt);
 
     std::string input;
 

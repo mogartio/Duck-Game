@@ -9,13 +9,11 @@ target_sources(client_exe  # Use the correct target name
     # .cpp files
     ${COMMON_SOURCES}  # Include all .cpp files from common
     main.cpp  # Assuming main.cpp is the entry point for the client
-    client_protocol.cpp
 
     PUBLIC
     # .h files
     ${COMMON_HEADERS}  # Include all .h files from common
       # Include only protocol.h from the client directory
-      client_protocol.h
 )
 
 # Include the common directory for headers

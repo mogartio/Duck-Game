@@ -23,7 +23,7 @@ public:
     virtual void handle_recv(CreateLobbyMsg& msg) override;
     virtual void handle_recv(GoBackMsg& msg) override;
     virtual void handle_recv(StartGameMsg& msg) override;
-
+    virtual void handle_recv(ExitFromLobbyMsg& msg) override;
 
     virtual void handle_send(const SendLobbiesListMsg& msg) override;
 
