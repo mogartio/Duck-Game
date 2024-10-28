@@ -3,10 +3,6 @@
 #include <string>
 #include <vector>
 
-void ClientProtocol::sendCabecera(const GenericMsg* msg) {
-    uint8_t header = msg->get_header();
-    send_u_int8_t(header);
-}
 
 ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {}
 
@@ -18,25 +14,30 @@ void ClientProtocol::handle_recv(ErrorMsg& msg) {
 }
 
 void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
 void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     uint8_t lobby_id = msg.get_lobby_id();
     send_u_int8_t(lobby_id);
 }
 
 void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { 
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
 void ClientProtocol::handle_send(const GoBackMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
 void ClientProtocol::handle_send(const StartGameMsg& msg) { 
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
@@ -50,7 +51,8 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
 }
 
 void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     uint8_t color = msg.get_color();
     std::string player_name = msg.get_player_name();
     send_u_int8_t(color);
@@ -58,7 +60,8 @@ void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
 }
 
 void ClientProtocol::handle_send(const PickupDropMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     uint8_t item_id = msg.get_item_id();
     std::string player_name = msg.get_player_name();
     send_u_int8_t(item_id);
@@ -66,31 +69,36 @@ void ClientProtocol::handle_send(const PickupDropMsg& msg) {
 }
 
 void ClientProtocol::handle_send(const MoveLeftMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const MoveRightMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const JumpMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const PlayDeadMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const ShootMsg& msg) {
-    sendCabecera(&msg);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
