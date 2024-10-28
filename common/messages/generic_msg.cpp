@@ -77,6 +77,10 @@ public:
     void set_lobby_id(uint8_t lobby_id) {
         this->lobby_id = lobby_id;
     }
+
+    uint8_t get_lobby_id() const {
+        return lobby_id;
+    }
 };
 
 class CreateLobbyMsg {
@@ -144,6 +148,10 @@ public:
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
     }
+
+    std::string get_player_name() const {
+        return player_name;
+    }
 };
 
 class StartGameMsg {
@@ -195,6 +203,14 @@ public:
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
     }
+
+    uint8_t get_item_id() const {
+        return item_id;
+    }
+
+    std::string get_player_name() const {
+        return player_name;
+    }
 };
 
 class MoveLeftMsg {
@@ -220,6 +236,10 @@ public:
 
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
+    }
+
+    std::string get_player_name() const {
+        return player_name;
     }
 };
 
@@ -247,6 +267,10 @@ public:
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
     }
+
+    std::string get_player_name() const {
+        return player_name;
+    }
 };
 
 class JumpMsg {
@@ -272,6 +296,10 @@ public:
 
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
+    }
+
+    std::string get_player_name() const {
+        return player_name;
     }
 };
 
@@ -299,6 +327,10 @@ public:
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
     }
+
+    std::string get_player_name() const {
+        return player_name;
+    }
 };
 
 class ShootMsg {
@@ -325,6 +357,10 @@ public:
     void set_player_name(std::string player_name) {
         this->player_name = player_name;
     }
+
+    std::string get_player_name() const {
+        return player_name;
+    }
 };
 
 class SendLobbiesListMsg {
@@ -350,6 +386,10 @@ public:
 
     void set_lobbies(std::vector<std::string> lobbies) {
         this->lobbies = lobbies;
+    }
+
+    std::vector<std::string> get_lobbies() const {
+        return lobbies;
     }
 };
 
@@ -397,6 +437,10 @@ public:
     void set_error_msg(std::string msg) {
         this->error_msg = error_msg;
     }
+
+    std::string get_error_msg() const {
+        return error_msg;
+    }
 };
 
 class SendMapMsg {
@@ -422,6 +466,10 @@ public:
 
     void set_map(std::vector<std::string> map) {
         this->map = map;
+    }
+
+    std::vector<std::string> get_map() const {
+        return map;
     }
 };
 
@@ -469,6 +517,10 @@ public:
 
     void set_winner_name(std::string winner_name) {
         this->winner_name = winner_name;
+    }
+
+    std::string get_winner_name() const {
+        return winner_name;
     }
 };
 
