@@ -12,13 +12,13 @@ void ServerProtocol::sendCabecera(const GenericMsg* msg) {
 }
 
 void ServerProtocol::handle_send(const EverythingOkMsg& msg) {
+    sendCabecera(&msg);
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 }
 
 void ServerProtocol::handle_send(const ErrorMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
+    sendCabecera(&msg);
     std::string error_msg = msg.get_error_msg();
     send_string(error_msg);
 }
@@ -42,8 +42,7 @@ void ServerProtocol::handle_recv(ExitFromLobbyMsg& msg) {
 }
 
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
+    sendCabecera(&msg);
     std::vector<std::string> lobbies = msg.get_lobbies();
     // mando el numero de lobbies
     uint8_t lobbies_size = lobbies.size();
@@ -91,9 +90,10 @@ void ServerProtocol::handle_recv(ShootMsg& msg) {
     msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_send(const GameEndedMsg& msg) { (void)msg; }
+void ServerProtocol::handle_send(const GameEndedMsg& msg) { sendCabecera(&msg); }
 
 void ServerProtocol::handle_send(const WinnerMsg& msg) {
+    sendCabecera(&msg);
     std::string player_name = msg.get_winner_name();
     send_string(player_name);
 }
