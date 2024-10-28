@@ -9,17 +9,16 @@ class GoBackMsg;
 class ExitFromLobbyMsg;
 class StartGameMsg;
 class PickupDropMsg;
-class MoveLeftMsg;
-class MoveRightMsg;
-class JumpMsg;
-class PlayDeadMsg;
-class ShootMsg;
+class StartActionMsg;
+class StopActionMsg;
 class SendLobbiesListMsg;
 class EverythingOkMsg;
 class ErrorMsg;
 class SendMapMsg;
 class GameEndedMsg;
 class WinnerMsg;
+class UpdatedPlayerInfoMsg;
+class ProjectileInfoMsg;
 
 class HandlerReceiver {
 public:
@@ -33,11 +32,8 @@ public:
     virtual void handle_recv(StartGameMsg& msg);
     // in-game commands
     virtual void handle_recv(PickupDropMsg& msg);
-    virtual void handle_recv(MoveLeftMsg& msg);
-    virtual void handle_recv(MoveRightMsg& msg);
-    virtual void handle_recv(JumpMsg& msg);
-    virtual void handle_recv(PlayDeadMsg& msg);
-    virtual void handle_recv(ShootMsg& msg);
+    virtual void handle_recv(StartActionMsg& msg);
+    virtual void handle_recv(StopActionMsg& msg);
     // from server
     virtual void handle_recv(SendLobbiesListMsg& msg);
     virtual void handle_recv(EverythingOkMsg& msg);
@@ -46,7 +42,9 @@ public:
     virtual void handle_recv(GameEndedMsg& msg);
     virtual void handle_recv(WinnerMsg& msg);
     // in-game from server
-
+    virtual void handle_recv(UpdatedPlayerInfoMsg& msg);
+    virtual void handle_recv(ProjectileInfoMsg& msg);
+   
     virtual ~HandlerReceiver() = default;
 };
 

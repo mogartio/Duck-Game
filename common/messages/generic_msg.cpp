@@ -165,115 +165,56 @@ public:
 
 };
 
-class MoveLeftMsg: public GenericMsg {
+class StartActionMsg : public GenericMsg {
 private:
+    uint8_t action_id;
     std::string player_name;
     uint8_t header;
-
-public:
-    MoveLeftMsg(): player_name(""), header(GenericMsg::MOVE_LEFT_MSG) {}
-    explicit MoveLeftMsg(std::string player_name):
-            player_name(player_name), header(GenericMsg::MOVE_LEFT_MSG) {}
+public: 
+    StartActionMsg(): action_id(0), player_name(""), header(GenericMsg::START_ACTION_MSG) {}
+    explicit StartActionMsg(uint8_t action_id, std::string player_name):
+            action_id(action_id), player_name(player_name), header(GenericMsg::START_ACTION_MSG) {}
 
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
-
+    
     uint8_t get_header() const { return header; }
+
+    void set_action_id(uint8_t action_id) { this->action_id = action_id; }
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
-    std::string get_player_name() const { return player_name; }
+    uint8_t get_action_id() const { return action_id; }
 
+    std::string get_player_name() const { return player_name; }
 };
 
-class MoveRightMsg: public GenericMsg {
+class StopActionMsg : public GenericMsg {
 private:
+    uint8_t action_id;
     std::string player_name;
     uint8_t header;
-
 public:
-    MoveRightMsg(): player_name(""), header(GenericMsg::MOVE_RIGHT_MSG) {}
-    explicit MoveRightMsg(std::string player_name):
-            player_name(player_name), header(GenericMsg::MOVE_RIGHT_MSG) {}
+    StopActionMsg(): action_id(0), player_name(""), header(GenericMsg::STOP_ACTION_MSG) {}
+    explicit StopActionMsg(uint8_t action_id, std::string player_name):
+            action_id(action_id), player_name(player_name), header(GenericMsg::STOP_ACTION_MSG) {}
 
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
-
+    
     uint8_t get_header() const { return header; }
+
+    void set_action_id(uint8_t action_id) { this->action_id = action_id; }
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
-    std::string get_player_name() const { return player_name; }
-
-};
-
-class JumpMsg: public GenericMsg {
-private:
-    std::string player_name;
-    uint8_t header;
-
-public:
-    JumpMsg(): player_name(""), header(GenericMsg::JUMP_MSG) {}
-    explicit JumpMsg(std::string player_name):
-            player_name(player_name), header(GenericMsg::JUMP_MSG) {}
-
-    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
-
-    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
-
-    uint8_t get_header() const { return header; }
-
-    void set_player_name(std::string player_name) { this->player_name = player_name; }
+    uint8_t get_action_id() const { return action_id; }
 
     std::string get_player_name() const { return player_name; }
-
 };
 
-class PlayDeadMsg: public GenericMsg {
-private:
-    std::string player_name;
-    uint8_t header;
-
-public:
-    PlayDeadMsg(): player_name(""), header(GenericMsg::PLAY_DEAD_MSG) {}
-    explicit PlayDeadMsg(std::string player_name):
-            player_name(player_name), header(GenericMsg::PLAY_DEAD_MSG) {}
-
-    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
-
-    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
-
-    uint8_t get_header() const { return header; }
-
-    void set_player_name(std::string player_name) { this->player_name = player_name; }
-
-    std::string get_player_name() const { return player_name; }
-
-};
-
-class ShootMsg: public GenericMsg {
-private:
-    std::string player_name;
-    uint8_t header;
-
-public:
-    ShootMsg(): player_name(""), header(GenericMsg::SHOOT_MSG) {}
-    explicit ShootMsg(std::string player_name):
-            player_name(player_name), header(GenericMsg::SHOOT_MSG) {}
-
-    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
-
-    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
-
-    uint8_t get_header() const { return header; }
-
-    void set_player_name(std::string player_name) { this->player_name = player_name; }
-
-    std::string get_player_name() const { return player_name; }
-
-};
 
 class SendLobbiesListMsg: public GenericMsg {
 private:
@@ -389,5 +330,61 @@ public:
     void set_winner_name(std::string winner_name) { this->winner_name = winner_name; }
 
     std::string get_winner_name() const { return winner_name; }
+
+};
+
+class UpdatedPlayerInfoMsg: public GenericMsg {
+private:
+    std::string player_name;
+    std::pair<uint8_t, uint8_t> position;
+    uint8_t state;
+    uint8_t facing_direction;
+public:
+    UpdatedPlayerInfoMsg(): player_name(""), position(), state(0), facing_direction(0) {}
+    explicit UpdatedPlayerInfoMsg(std::string player_name, std::pair<uint8_t, uint8_t> position, uint8_t state, uint8_t facing_direction):
+            player_name(player_name), position(position), state(state), facing_direction(facing_direction) {}
+    
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
+
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
+
+    std::string get_player_name() const { return player_name; }
+
+    std::pair<uint8_t, uint8_t> get_position() const { return position; }
+
+    uint8_t get_state() const { return state; }
+
+    uint8_t get_facing_direction() const { return facing_direction; }
+
+    void set_player_name(std::string player_name) { this->player_name = player_name; }
+
+    void set_position(uint8_t x, uint8_t y) { this->position = std::make_pair(x, y); }
+
+    void set_state(uint8_t state) { this->state = state; }
+
+    void set_facing_direction(uint8_t facing_direction) { this->facing_direction = facing_direction; }
+
+};
+
+class ProjectileInfoMsg: public GenericMsg {
+private:
+    std::vector<std::pair<uint8_t, uint8_t>> projectile_trail;
+    std::pair<uint8_t, uint8_t> projectile_final_position;
+public:
+    ProjectileInfoMsg(): projectile_trail(), projectile_final_position() {}
+    explicit ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>> projectile_trail, std::pair<uint8_t, uint8_t> projectile_final_position):
+            projectile_trail(projectile_trail), projectile_final_position(projectile_final_position) {}
+    
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
+
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
+
+    std::vector<std::pair<uint8_t, uint8_t>> get_projectile_trail() const { return projectile_trail; }
+
+    std::pair<uint8_t, uint8_t> get_projectile_final_position() const { return projectile_final_position; }
+
+    void set_projectile_trail(std::vector<std::pair<uint8_t, uint8_t>> projectile_trail) { this->projectile_trail = projectile_trail; }
+
+    void set_projectile_final_position(uint8_t x, uint8_t y) { this->projectile_final_position = std::make_pair(x, y); }    
 
 };

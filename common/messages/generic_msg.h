@@ -20,17 +20,24 @@ public:
         EXIT_FROM_LOBBY_MSG = 0x06,
         START_GAME_MSG = 0x07,
         PICKUP_DROP_MSG = 0x08,
-        MOVE_LEFT_MSG = 0x09,
-        MOVE_RIGHT_MSG = 0x0A,
-        JUMP_MSG = 0x0B,
-        PLAY_DEAD_MSG = 0x0C,
-        SHOOT_MSG = 0x0D,
-        SEND_LOBBIES_LIST_MSG = 0x0E,
-        EVERYTHING_OK_MSG = 0x0F,
-        ERROR_MSG = 0x10,
-        SEND_MAP_MSG = 0x11,
-        GAME_ENDED_MSG = 0x12,
-        WINNER_MSG = 0x13,
+        START_ACTION_MSG = 0x08,
+        STOP_ACTION_MSG = 0x09,
+        SEND_LOBBIES_LIST_MSG = 0x0A,
+        EVERYTHING_OK_MSG = 0x0B,
+        ERROR_MSG = 0x0C,
+        SEND_MAP_MSG = 0x0D,
+        GAME_ENDED_MSG = 0x0E,
+        WINNER_MSG = 0x0F,
+        UPDATED_PLAYER_INFO_MSG = 0x10,
+        PROJECTILE_INFO_MSG = 0x11,
+    };
+
+    enum ActionId : uint8_t {
+        MOVE_LEFT = 0x01,
+        MOVE_RIGHT = 0x02,
+        JUMP = 0x03,
+        SHOOT = 0x04,
+        PLAY_DEAD = 0x05,
     };
 
 private:
@@ -47,3 +54,4 @@ public:
 
 
 #endif
+
