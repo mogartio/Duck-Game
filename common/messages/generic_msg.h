@@ -37,12 +37,14 @@ private:
     MsgTypeHeader header;
 
 public:
-    explicit GenericMsg();
+    explicit GenericMsg() {};
 
     virtual void accept_send(Handler& handler) = 0;
     virtual void accept_recv(Handler& handler) = 0;
-    uint8_t get_header() const;
+    uint8_t get_header() const { return header; };
 
     virtual ~GenericMsg() = default;
 };
+
+
 #endif
