@@ -2,21 +2,13 @@
 
 #include <arpa/inet.h>
 
-void ProtocoloCommon::send(GenericMsg* msg) { 
-    sendCabecera(*msg);
-    msg->accept_send(*this); 
-}
+void ProtocoloCommon::send(GenericMsg* msg) { msg->accept_send(*this); }
 
 GenericMsg* ProtocoloCommon::receive() {
     uint8_t header = recv_u_int8_t();
     GenericMsg* msg = recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
     msg->accept_recv(*this);
     return msg;
-}
-
-void ProtocoloCommon::sendCabecera(const GenericMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
 }
 
 ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(false) {

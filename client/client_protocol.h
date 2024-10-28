@@ -4,6 +4,10 @@
 #include "../common/protocolo-common.h"
 
 class ClientProtocol: public ProtocoloCommon {
+private:
+    // ------------------- metodos -------------------
+    void sendCabecera(const GenericMsg& msg);
+
 public:
     explicit ClientProtocol(Socket& skt);
 

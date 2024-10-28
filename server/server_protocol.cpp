@@ -1,9 +1,15 @@
 #include "server_protocol.h"
 
-#include <string>
 #include <cstdint>
+#include <string>
+#include <vector>
 
 ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {}
+
+void ServerProtocol::sendCabecera(const GenericMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+}
 
 void ServerProtocol::handle_send(const EverythingOkMsg& msg) {
     uint8_t header = msg.get_header();
@@ -17,18 +23,18 @@ void ServerProtocol::handle_send(const ErrorMsg& msg) {
     send_string(error_msg);
 }
 
-void ServerProtocol::handle_recv(ViewLobbiesMsg& msg) { (void) msg; }
+void ServerProtocol::handle_recv(ViewLobbiesMsg& msg) { (void)msg; }
 
 void ServerProtocol::handle_recv(ChooseLobbyMsg& msg) {
     uint8_t lobby_id = recv_u_int8_t();
     msg.set_lobby_id(lobby_id);
 }
 
-void ServerProtocol::handle_recv(CreateLobbyMsg& msg) { (void) msg; }
+void ServerProtocol::handle_recv(CreateLobbyMsg& msg) { (void)msg; }
 
-void ServerProtocol::handle_recv(GoBackMsg& msg) { (void) msg; }
+void ServerProtocol::handle_recv(GoBackMsg& msg) { (void)msg; }
 
-void ServerProtocol::handle_recv(StartGameMsg& msg) { (void) msg; }
+void ServerProtocol::handle_recv(StartGameMsg& msg) { (void)msg; }
 
 void ServerProtocol::handle_recv(ExitFromLobbyMsg& msg) {
     std::string player_name = recv_string();
@@ -85,7 +91,7 @@ void ServerProtocol::handle_recv(ShootMsg& msg) {
     msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_send(const GameEndedMsg& msg) { (void) msg; }
+void ServerProtocol::handle_send(const GameEndedMsg& msg) { (void)msg; }
 
 void ServerProtocol::handle_send(const WinnerMsg& msg) {
     std::string player_name = msg.get_winner_name();

@@ -26,8 +26,6 @@ private:
      */
     void chk_closed_andif_fail(const char error_ms[]) const;
 
-    void sendCabecera(const GenericMsg& msg);
-
 protected:
     // ------------------- Atributos -------------------
 
