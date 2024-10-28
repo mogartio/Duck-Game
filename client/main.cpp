@@ -43,9 +43,7 @@ int main(int argc, char const* argv[]) {
             std::cout << "Sent message" << std::endl;
         }
         GenericMsg* msg = protocol.receive();
-        if (msg != nullptr) {
-            msg->print_info();
-        }
+        std::cout << "Received message with header: " << (int)msg->get_header() << std::endl;
     }
 
     return 0;

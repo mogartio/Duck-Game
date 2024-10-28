@@ -18,7 +18,7 @@ void Server::run() {
         std::list<GenericMsg*> msgs;
         GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
-            msg->print_info();
+            std::cout << "Received message with header: " << (int)msg->get_header() << std::endl;
             msgs.push_back(&msg1);
         }
         send_queues.broadcast(msgs);

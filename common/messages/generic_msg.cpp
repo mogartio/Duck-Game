@@ -32,11 +32,6 @@ public:
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
-    void print_info() const override {
-        std::cout << "      Color: " << (int)color << std::endl;
-        std::cout << "      Player name: " << player_name << std::endl;
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
-    }
 };
 
 class ViewLobbiesMsg: public GenericMsg {
@@ -52,10 +47,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { 
-        std::cout << "      View lobbies message" << std::endl;
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
-    }
 };
 
 class ChooseLobbyMsg: public GenericMsg {
@@ -78,10 +69,6 @@ public:
 
     uint8_t get_lobby_id() const { return lobby_id; }
 
-    void print_info() const override {
-        std::cout << "      Lobby id: " << (int)lobby_id << std::endl;
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
-    }
 };
 
 class CreateLobbyMsg: public GenericMsg {
@@ -97,10 +84,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { 
-        std::cout << "      Create lobby message" << std::endl; 
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
-    }
 };
 
 class GoBackMsg: public GenericMsg {
@@ -116,10 +99,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { 
-        std::cout << "      Go back message" << std::endl;
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
-    }
 };
 
 class ExitFromLobbyMsg: public GenericMsg {
@@ -142,7 +121,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class StartGameMsg: public GenericMsg {
@@ -158,7 +136,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      Start game message" << std::endl; }
 };
 
 class PickupDropMsg: public GenericMsg {
@@ -186,10 +163,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override {
-        std::cout << "      Item id: " << (int)item_id << std::endl;
-        std::cout << "      Player name: " << player_name << std::endl;
-    }
 };
 
 class MoveLeftMsg: public GenericMsg {
@@ -212,7 +185,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class MoveRightMsg: public GenericMsg {
@@ -235,7 +207,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class JumpMsg: public GenericMsg {
@@ -258,7 +229,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class PlayDeadMsg: public GenericMsg {
@@ -281,7 +251,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class ShootMsg: public GenericMsg {
@@ -304,7 +273,6 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class SendLobbiesListMsg: public GenericMsg {
@@ -327,12 +295,6 @@ public:
 
     std::vector<std::string> get_lobbies() const { return lobbies; }
 
-    void print_info() const override {
-        std::cout << "      Lobbies list:" << std::endl;
-        for (const std::string& lobby : lobbies) {
-            std::cout << "        " << lobby << std::endl;
-        }
-    }
 };
 
 class EverythingOkMsg: public GenericMsg {
@@ -348,7 +310,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      Everything ok message" << std::endl; }
 };
 
 class ErrorMsg: public GenericMsg {
@@ -370,10 +331,6 @@ public:
 
     std::string get_error_msg() const { return error_msg; }
 
-    void print_info() const override { 
-        std::cout << "      Error message: " << error_msg << std::endl; 
-        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;    
-    }
 };
 
 class SendMapMsg: public GenericMsg {
@@ -395,12 +352,6 @@ public:
 
     std::vector<std::string> get_map() const { return map; }
 
-    void print_info() const override {
-        std::cout << "      Map:" << std::endl;
-        for (const std::string& row : map) {
-            std::cout << "        " << row << std::endl;
-        }
-    }
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -416,7 +367,6 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      Game ended message" << std::endl; }
 };
 
 class WinnerMsg: public GenericMsg {
@@ -440,5 +390,4 @@ public:
 
     std::string get_winner_name() const { return winner_name; }
 
-    void print_info() const override { std::cout << "      Winner name: " << winner_name << std::endl; }
 };
