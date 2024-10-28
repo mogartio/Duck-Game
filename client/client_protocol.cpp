@@ -68,38 +68,21 @@ void ClientProtocol::handle_send(const PickupDropMsg& msg) {
     send_string(player_name);
 }
 
-void ClientProtocol::handle_send(const MoveLeftMsg& msg) {
+void ClientProtocol::handle_send(const StartActionMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    uint8_t action_id = msg.get_action_id();
     std::string player_name = msg.get_player_name();
+    send_u_int8_t(action_id);
     send_string(player_name);
 }
 
-void ClientProtocol::handle_send(const MoveRightMsg& msg) {
+void ClientProtocol::handle_send(const StopActionMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    uint8_t action_id = msg.get_action_id();
     std::string player_name = msg.get_player_name();
-    send_string(player_name);
-}
-
-void ClientProtocol::handle_send(const JumpMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
-    std::string player_name = msg.get_player_name();
-    send_string(player_name);
-}
-
-void ClientProtocol::handle_send(const PlayDeadMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
-    std::string player_name = msg.get_player_name();
-    send_string(player_name);
-}
-
-void ClientProtocol::handle_send(const ShootMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
-    std::string player_name = msg.get_player_name();
+    send_u_int8_t(action_id);
     send_string(player_name);
 }
 

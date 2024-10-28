@@ -44,7 +44,10 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     uint8_t lobbies_size = lobbies.size();
     send_u_int8_t(lobbies_size);
     // mando los nombres de los lobbies
-    // HAY QUE TERMINAR DE DEFINIRLO
+    for (int i = 0; i < lobbies_size; i++) {
+        send_string(lobbies[i]);
+        // lobbies[i].get_amount_of_players();
+    }
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
@@ -61,27 +64,16 @@ void ServerProtocol::handle_recv(PickupDropMsg& msg) {
     msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_recv(MoveLeftMsg& msg) {
+void ServerProtocol::handle_recv(StartActionMsg& msg) {
+    uint8_t action_id = recv_u_int8_t();
+    msg.set_action_id(action_id);
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_recv(MoveRightMsg& msg) {
-    std::string player_name = recv_string();
-    msg.set_player_name(player_name);
-}
-
-void ServerProtocol::handle_recv(JumpMsg& msg) {
-    std::string player_name = recv_string();
-    msg.set_player_name(player_name);
-}
-
-void ServerProtocol::handle_recv(PlayDeadMsg& msg) {
-    std::string player_name = recv_string();
-    msg.set_player_name(player_name);
-}
-
-void ServerProtocol::handle_recv(ShootMsg& msg) {
+void ServerProtocol::handle_recv(StopActionMsg& msg) {
+    uint8_t action_id = recv_u_int8_t();
+    msg.set_action_id(action_id);
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
 }

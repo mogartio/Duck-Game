@@ -28,15 +28,10 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
                           [this]() { return new StartGameMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG,
                           [this]() { return new PickupDropMsg(); });
-    recv_handlers.emplace(GenericMsg::MsgTypeHeader::MOVE_LEFT_MSG,
-                          [this]() { return new MoveLeftMsg(); });
-    recv_handlers.emplace(GenericMsg::MsgTypeHeader::MOVE_RIGHT_MSG,
-                          [this]() { return new MoveRightMsg(); });
-    recv_handlers.emplace(GenericMsg::MsgTypeHeader::JUMP_MSG, [this]() { return new JumpMsg(); });
-    recv_handlers.emplace(GenericMsg::MsgTypeHeader::PLAY_DEAD_MSG,
-                          [this]() { return new PlayDeadMsg(); });
-    recv_handlers.emplace(GenericMsg::MsgTypeHeader::SHOOT_MSG,
-                          [this]() { return new ShootMsg(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::START_ACTION_MSG,
+                            [this]() { return new StartActionMsg(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::STOP_ACTION_MSG,
+                            [this]() { return new StopActionMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG,
                           [this]() { return new SendLobbiesListMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG,
@@ -49,6 +44,10 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
                           [this]() { return new GameEndedMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::WINNER_MSG,
                           [this]() { return new WinnerMsg(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG,
+                            [this]() { return new UpdatedPlayerInfoMsg(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG,
+                            [this]() { return new ProjectileInfoMsg(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {
