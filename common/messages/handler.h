@@ -24,27 +24,27 @@ class WinnerMsg;
 class Handler {
 public:
     // from client
-    virtual void handle_send(CustomizedPlayerInfoMsg& msg);
-    virtual void handle_send(ViewLobbiesMsg& msg);
-    virtual void handle_send(ChooseLobbyMsg& msg);
-    virtual void handle_send(CreateLobbyMsg& msg);
-    virtual void handle_send(GoBackMsg& msg);
-    virtual void handle_send(ExitFromLobbyMsg& msg);
-    virtual void handle_send(StartGameMsg& msg);
+    virtual void handle_send(const CustomizedPlayerInfoMsg& msg);
+    virtual void handle_send(const ViewLobbiesMsg& msg);
+    virtual void handle_send(const ChooseLobbyMsg& msg);
+    virtual void handle_send(const CreateLobbyMsg& msg);
+    virtual void handle_send(const GoBackMsg& msg);
+    virtual void handle_send(const ExitFromLobbyMsg& msg);
+    virtual void handle_send(const StartGameMsg& msg);
     // in-game commands
-    virtual void handle_send(PickupDropMsg& msg);
-    virtual void handle_send(MoveLeftMsg& msg);
-    virtual void handle_send(MoveRightMsg& msg);
-    virtual void handle_send(JumpMsg& msg);
-    virtual void handle_send(PlayDeadMsg& msg);
-    virtual void handle_send(ShootMsg& msg);
+    virtual void handle_send(const PickupDropMsg& msg);
+    virtual void handle_send(const MoveLeftMsg& msg);
+    virtual void handle_send(const MoveRightMsg& msg);
+    virtual void handle_send(const JumpMsg& msg);
+    virtual void handle_send(const PlayDeadMsg& msg);
+    virtual void handle_send(const ShootMsg& msg);
     // from server
-    virtual void handle_send(SendLobbiesListMsg& msg);
-    virtual void handle_send(EverythingOkMsg& msg);
-    virtual void handle_send(ErrorMsg& msg);
-    virtual void handle_send(SendMapMsg& msg);
-    virtual void handle_send(GameEndedMsg& msg);
-    virtual void handle_send(WinnerMsg& msg);
+    virtual void handle_send(const SendLobbiesListMsg& msg);
+    virtual void handle_send(const EverythingOkMsg& msg);
+    virtual void handle_send(const ErrorMsg& msg);
+    virtual void handle_send(const SendMapMsg& msg);
+    virtual void handle_send(const GameEndedMsg& msg);
+    virtual void handle_send(const WinnerMsg& msg);
     // in-game from server
     // ... 
 
