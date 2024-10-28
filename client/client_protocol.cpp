@@ -1,57 +1,82 @@
 #include "client_protocol.h"
 
 #include <string>
+#include <vector>
 
 ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {}
 
+void ClientProtocol::handle_recv(EverythingOkMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_recv(EverythingOkey** msg) { *msg = new EverythingOkey(); }
-
-void ClientProtocol::handle_recv(SomethingWrong** msg) { *msg = new SomethingWrong(); }
-
-void ClientProtocol::handle_send(const ExampleMsg& msg) {
-    sendCabecera(msg);
-    std::string data = msg.getData();
-    send_string(data);
+void ClientProtocol::handle_recv(ErrorMsg& msg) {
+    std::string error_msg = recv_string();
+    msg.set_error_msg(error_msg);
 }
 
-void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_send(const JoinedLobbyMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const ExitMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const StartGameMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_recv(ExampleMsg** msg) {
-    std::string data = recv_string();
-    *msg = new ExampleMsg(data);
+void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
+    uint8_t lobby_id = msg.get_lobby_id();
+    send_u_int8_t(lobby_id);
 }
 
-void ClientProtocol::handle_recv(LobbyListMsg** msg) { *msg = new LobbyListMsg(); }
+void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const GoBackMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_send(const PickupDropItemMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const StartGameMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_send(const StartMoveLeftMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
+    uint8_t lobbies_size = recv_u_int8_t();
+    std::vector<std::string> lobbies;
+    for (int i = 0; i < lobbies_size; i++) {
+        std::string lobby_name = recv_string();
+        lobbies.push_back(lobby_name);
+    }
+    msg.set_lobbies(lobbies);
+}
 
-void ClientProtocol::handle_send(const StopMoveLeftMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
+    uint8_t color = msg.get_color();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(color);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StartMoveRightMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const PickupDropMsg& msg) {
+    uint8_t item_id = msg.get_item_id();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(item_id);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StopMoveRightMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const MoveLeftMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const JumpMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const MoveRightMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const PlayDeadMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const JumpMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const ShootMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const PlayDeadMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_recv(PlayerInfoMsg** msg) { *msg = new PlayerInfoMsg(); }
+void ClientProtocol::handle_send(const ShootMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_recv(FinishGameMsg** msg) { *msg = new FinishGameMsg(); }
+void ClientProtocol::handle_recv(GameEndedMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_recv(WinnerMsg** msg) { *msg = new WinnerMsg(); }
+void ClientProtocol::handle_recv(WinnerMsg& msg) {
+    std::string winner_name = recv_string();
+    msg.set_winner_name(winner_name);
+}
