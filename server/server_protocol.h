@@ -7,10 +7,6 @@
 #include "../common/protocolo-common.h"
 
 class ServerProtocol: public ProtocoloCommon {
-private:
-    // ------------------- Métodos privados -------------------
-    void sendCabecera(const GenericMsg* msg);
-
 public:
     explicit ServerProtocol(Socket& skt);
 
