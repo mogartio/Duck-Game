@@ -8,6 +8,7 @@ GenericMsg* ProtocoloCommon::receive() {
     uint8_t header = recv_u_int8_t();
     GenericMsg* msg = recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
     msg->accept_recv(*this);
+    return msg;
 }
 
 void ProtocoloCommon::sendCabecera(const GenericMsg& msg) {
