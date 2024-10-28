@@ -42,7 +42,7 @@ public:
     virtual void accept_send(HandlerSender& handler) = 0;
     virtual void accept_recv(HandlerReceiver& handler) = 0;
     uint8_t get_header() const { return header; }
-
+    virtual void print_info() const = 0;
     virtual ~GenericMsg() = default;
 };
 

@@ -30,6 +30,11 @@ public:
     void set_color(uint8_t color) { this->color = color; }
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
+
+    void print_info() const override {
+        std::cout << "      Color: " << (int)color << std::endl;
+        std::cout << "      Player name: " << player_name << std::endl;
+    }
 };
 
 class ViewLobbiesMsg: public GenericMsg {
@@ -44,6 +49,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      View lobbies message" << std::endl; }
 };
 
 class ChooseLobbyMsg: public GenericMsg {
@@ -65,6 +72,10 @@ public:
     void set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id; }
 
     uint8_t get_lobby_id() const { return lobby_id; }
+
+    void print_info() const override {
+        std::cout << "      Lobby id: " << (int)lobby_id << std::endl;
+    }
 };
 
 class CreateLobbyMsg: public GenericMsg {
@@ -79,6 +90,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      Create lobby message" << std::endl; }
 };
 
 class GoBackMsg: public GenericMsg {
@@ -93,6 +106,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      Go back message" << std::endl; }
 };
 
 class ExitFromLobbyMsg: public GenericMsg {
@@ -114,6 +129,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class StartGameMsg: public GenericMsg {
@@ -128,6 +145,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      Start game message" << std::endl; }
 };
 
 class PickupDropMsg: public GenericMsg {
@@ -154,6 +173,11 @@ public:
     uint8_t get_item_id() const { return item_id; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override {
+        std::cout << "      Item id: " << (int)item_id << std::endl;
+        std::cout << "      Player name: " << player_name << std::endl;
+    }
 };
 
 class MoveLeftMsg: public GenericMsg {
@@ -175,6 +199,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class MoveRightMsg: public GenericMsg {
@@ -196,6 +222,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class JumpMsg: public GenericMsg {
@@ -217,6 +245,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class PlayDeadMsg: public GenericMsg {
@@ -238,6 +268,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class ShootMsg: public GenericMsg {
@@ -259,6 +291,8 @@ public:
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
     std::string get_player_name() const { return player_name; }
+
+    void print_info() const override { std::cout << "      Player name: " << player_name << std::endl; }
 };
 
 class SendLobbiesListMsg: public GenericMsg {
@@ -280,6 +314,13 @@ public:
     void set_lobbies(std::vector<std::string> lobbies) { this->lobbies = lobbies; }
 
     std::vector<std::string> get_lobbies() const { return lobbies; }
+
+    void print_info() const override {
+        std::cout << "      Lobbies list:" << std::endl;
+        for (const std::string& lobby : lobbies) {
+            std::cout << "        " << lobby << std::endl;
+        }
+    }
 };
 
 class EverythingOkMsg: public GenericMsg {
@@ -294,6 +335,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      Everything ok message" << std::endl; }
 };
 
 class ErrorMsg: public GenericMsg {
@@ -314,6 +357,8 @@ public:
     void set_error_msg(std::string error_msg) { this->error_msg = error_msg; }
 
     std::string get_error_msg() const { return error_msg; }
+
+    void print_info() const override { std::cout << "      Error message: " << error_msg << std::endl; }
 };
 
 class SendMapMsg: public GenericMsg {
@@ -334,6 +379,13 @@ public:
     void set_map(std::vector<std::string> map) { this->map = map; }
 
     std::vector<std::string> get_map() const { return map; }
+
+    void print_info() const override {
+        std::cout << "      Map:" << std::endl;
+        for (const std::string& row : map) {
+            std::cout << "        " << row << std::endl;
+        }
+    }
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -348,6 +400,8 @@ public:
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
+
+    void print_info() const override { std::cout << "      Game ended message" << std::endl; }
 };
 
 class WinnerMsg: public GenericMsg {
@@ -370,4 +424,6 @@ public:
     void set_winner_name(std::string winner_name) { this->winner_name = winner_name; }
 
     std::string get_winner_name() const { return winner_name; }
+
+    void print_info() const override { std::cout << "      Winner name: " << winner_name << std::endl; }
 };
