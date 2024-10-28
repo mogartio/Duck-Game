@@ -2,6 +2,7 @@
 
 #include "handler_recv.h"
 #include "handler_send.h"
+#include <iomanip>
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
@@ -34,6 +35,7 @@ public:
     void print_info() const override {
         std::cout << "      Color: " << (int)color << std::endl;
         std::cout << "      Player name: " << player_name << std::endl;
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
     }
 };
 
@@ -50,7 +52,10 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      View lobbies message" << std::endl; }
+    void print_info() const override { 
+        std::cout << "      View lobbies message" << std::endl;
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
+    }
 };
 
 class ChooseLobbyMsg: public GenericMsg {
@@ -75,6 +80,7 @@ public:
 
     void print_info() const override {
         std::cout << "      Lobby id: " << (int)lobby_id << std::endl;
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
     }
 };
 
@@ -91,7 +97,10 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      Create lobby message" << std::endl; }
+    void print_info() const override { 
+        std::cout << "      Create lobby message" << std::endl; 
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
+    }
 };
 
 class GoBackMsg: public GenericMsg {
@@ -107,7 +116,10 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void print_info() const override { std::cout << "      Go back message" << std::endl; }
+    void print_info() const override { 
+        std::cout << "      Go back message" << std::endl;
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;
+    }
 };
 
 class ExitFromLobbyMsg: public GenericMsg {
@@ -358,7 +370,10 @@ public:
 
     std::string get_error_msg() const { return error_msg; }
 
-    void print_info() const override { std::cout << "      Error message: " << error_msg << std::endl; }
+    void print_info() const override { 
+        std::cout << "      Error message: " << error_msg << std::endl; 
+        std::cout  << "0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(header)<< std::endl;    
+    }
 };
 
 class SendMapMsg: public GenericMsg {
