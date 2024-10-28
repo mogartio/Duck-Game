@@ -7,8 +7,7 @@ void Sender::run() {
     while (_keep_running) {
         try {
             GenericMsg* msg = send_queue->pop();
-            (void)msg;
-            // protocol->send(msg);
+            protocol->send(msg);
         } catch (const std::exception& e) {
             _keep_running = false;
         }
