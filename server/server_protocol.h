@@ -31,11 +31,8 @@ public:
 
     // GAME MESSAGES
     virtual void handle_recv(PickupDropMsg& msg) override;
-    virtual void handle_recv(MoveLeftMsg& msg) override;
-    virtual void handle_recv(MoveRightMsg& msg) override;
-    virtual void handle_recv(JumpMsg& msg) override;
-    virtual void handle_recv(PlayDeadMsg& msg) override;
-    virtual void handle_recv(ShootMsg& msg) override;
+    virtual void handle_recv(StartActionMsg& msg) override;
+    virtual void handle_recv(StopActionMsg& msg) override;
 
     virtual void handle_send(const GameEndedMsg& msg) override;
     virtual void handle_send(const WinnerMsg& msg) override;
