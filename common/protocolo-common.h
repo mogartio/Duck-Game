@@ -6,11 +6,12 @@
 
 #include "./messages/generic_msg.cpp"
 #include "./messages/generic_msg.h"
-#include "./messages/handler.h"
+#include "./messages/handler_recv.h"
+#include "./messages/handler_send.h"
 #include "./socket/socket.h"
 #include "./socket/socket_error.h"
 
-class ProtocoloCommon: public Handler {
+class ProtocoloCommon: public HandlerSender, public HandlerReceiver {
 private:
     // ------------------- Atributos -------------------
 

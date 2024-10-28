@@ -1,6 +1,7 @@
 #include "generic_msg.h"
 
-#include "handler.h"
+#include "handler_recv.h"
+#include "handler_send.h"
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
@@ -16,9 +17,9 @@ public:
             player_name(player_name),
             header(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_color() const { return color; }
 
@@ -38,9 +39,9 @@ private:
 public:
     ViewLobbiesMsg(): header(GenericMsg::VIEW_LOBBIES_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -55,9 +56,9 @@ public:
     explicit ChooseLobbyMsg(uint8_t lobby_id):
             lobby_id(lobby_id), header(GenericMsg::CHOOSE_LOBBY_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -73,9 +74,9 @@ private:
 public:
     CreateLobbyMsg(): header(GenericMsg::CREATE_LOBBY_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -87,9 +88,9 @@ private:
 public:
     GoBackMsg(): header(GenericMsg::GO_BACK_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -104,9 +105,9 @@ public:
     explicit ExitFromLobbyMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::EXIT_FROM_LOBBY_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -122,9 +123,9 @@ private:
 public:
     StartGameMsg(): header(GenericMsg::START_GAME_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -140,9 +141,9 @@ public:
     explicit PickupDropMsg(uint8_t item_id, std::string player_name):
             item_id(item_id), player_name(player_name), header(GenericMsg::PICKUP_DROP_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -165,9 +166,9 @@ public:
     explicit MoveLeftMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::MOVE_LEFT_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -186,9 +187,9 @@ public:
     explicit MoveRightMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::MOVE_RIGHT_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -207,9 +208,9 @@ public:
     explicit JumpMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::JUMP_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -228,9 +229,9 @@ public:
     explicit PlayDeadMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::PLAY_DEAD_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -249,9 +250,9 @@ public:
     explicit ShootMsg(std::string player_name):
             player_name(player_name), header(GenericMsg::SHOOT_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -270,9 +271,9 @@ public:
     explicit SendLobbiesListMsg(std::vector<std::string> lobbies):
             lobbies(lobbies), header(GenericMsg::SEND_LOBBIES_LIST_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -288,9 +289,9 @@ private:
 public:
     EverythingOkMsg(): header(GenericMsg::EVERYTHING_OK_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -304,9 +305,9 @@ public:
     ErrorMsg(): error_msg(""), header(GenericMsg::ERROR_MSG) {}
     explicit ErrorMsg(std::string error_msg): error_msg(error_msg), header(GenericMsg::ERROR_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -324,9 +325,9 @@ public:
     SendMapMsg(): header(GenericMsg::SEND_MAP_MSG) {}
     explicit SendMapMsg(std::vector<std::string> map): map(map), header(GenericMsg::SEND_MAP_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 
@@ -342,9 +343,9 @@ private:
 public:
     GameEndedMsg(): header(GenericMsg::GAME_ENDED_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 };
@@ -360,9 +361,9 @@ public:
     explicit WinnerMsg(std::string winner_name):
             winner_name(winner_name), header(GenericMsg::WINNER_MSG) {}
 
-    void accept_send(Handler& handler) override { handler.handle_send(*this); }
+    void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
-    void accept_recv(Handler& handler) override { handler.handle_recv(*this); }
+    void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
     uint8_t get_header() const { return header; }
 

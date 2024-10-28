@@ -1,15 +1,14 @@
 #ifndef CLIENT_PROTOCOL_H
 #define CLIENT_PROTOCOL_H
 
-#include "../common/messages/handler.h"
 #include "../common/protocolo-common.h"
 
 class ClientProtocol: public ProtocoloCommon {
 public:
     explicit ClientProtocol(Socket& skt);
 
-    using Handler::handle_recv;
-    using Handler::handle_send;
+    using ProtocoloCommon::handle_recv;
+    using ProtocoloCommon::handle_send;
 
     // RESPONSE SERVER MESSAGES
     virtual void handle_recv(EverythingOkMsg& msg) override;

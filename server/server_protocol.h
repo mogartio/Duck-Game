@@ -4,15 +4,14 @@
 #include <functional>
 #include <map>
 
-#include "../common/messages/handler.h"
 #include "../common/protocolo-common.h"
 
 class ServerProtocol: public ProtocoloCommon {
 public:
     explicit ServerProtocol(Socket& skt);
 
-    using Handler::handle_recv;
-    using Handler::handle_send;
+    using ProtocoloCommon::handle_recv;
+    using ProtocoloCommon::handle_send;
 
     virtual void handle_send(const EverythingOkMsg& msg) override;
     virtual void handle_send(const ErrorMsg& msg) override;

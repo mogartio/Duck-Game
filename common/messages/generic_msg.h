@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 
-class Handler;
+class HandlerSender;
+class HandlerReceiver;
 
 class GenericMsg {
 public:
-
     enum MsgTypeHeader : uint8_t {
         CUSTOMIZED_PLAYER_INFO_MSG = 1,
         VIEW_LOBBIES_MSG,
@@ -37,11 +37,11 @@ private:
     MsgTypeHeader header;
 
 public:
-    explicit GenericMsg() {};
+    GenericMsg() {}
 
-    virtual void accept_send(Handler& handler) = 0;
-    virtual void accept_recv(Handler& handler) = 0;
-    uint8_t get_header() const { return header; };
+    virtual void accept_send(HandlerSender& handler) = 0;
+    virtual void accept_recv(HandlerReceiver& handler) = 0;
+    uint8_t get_header() const { return header; }
 
     virtual ~GenericMsg() = default;
 };

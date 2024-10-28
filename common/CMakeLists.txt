@@ -7,7 +7,8 @@ target_sources(common
     socket/socket.cpp
     protocolo-common.cpp
     messages/generic_msg.cpp
-    messages/handler.cpp
+    messages/handler_send.cpp
+    messages/handler_recv.cpp
 
     PUBLIC
     # .h files
@@ -20,5 +21,6 @@ target_sources(common
     thread.h
     protocolo-common.h
     messages/generic_msg.h
-    messages/handler.h
+    messages/handler_send.h
+    messages/handler_recv.h
     )
