@@ -1,11 +1,16 @@
 #include "player.h"
-#include <algorithm>
+
 #include <cstdlib>
 #include <memory>
+
 #include "weapon.h"
 
-Player::Player(Coordinate& initial_position, Stage& stage, int id): position(initial_position, *this, stage), id(id), is_alive(true),
-stage(stage), weapon(std::move(std::make_unique<Magnum>(*this, stage))){}
+Player::Player(Coordinate& initial_position, Stage& stage, int id):
+        position(initial_position, *this, stage),
+        id(id),
+        is_alive(true),
+        stage(stage),
+        weapon(std::move(std::make_unique<Magnum>(*this, stage))) {}
 
 Coordinate Player::get_position() { return position.get_position(); }
 
@@ -15,19 +20,43 @@ void Player::occupy(Coordinate& coordinate) { position.occupy(coordinate); }
 
 std::vector<Coordinate> Player::get_occupied() { return position.get_occupied(); }
 
-void Player::take_action(std::string& command){
-    if (command.compare("x") == 0){
-        shoot();
+void Player::add_action(std::string& command) {
+    if (current_actions.count(command) == 1) {
+        remove_action(command);
         return;
     }
-    move(command);
+    current_actions.insert(command);
 }
 
-void Player::move(std::string& direction){ position.move(direction); }
-
-void Player::shoot(){ 
-    weapon->shoot(position.get_facing_direction());
+void Player::remove_action(std::string& command) {
+    current_actions.erase(command);
+    if (command.compare("w") == 0) {
+        position.released_w();
+    }
 }
 
-void Player::die(){ is_alive = false;}
+void Player::execute(std::string& command) {
+    if (command.compare("x") == 0) {
+        shoot();
+        // TODO: ver si mantuvo apretado el boton
+        return;
+    }
+}
 
+void Player::update() {
+    std::set<std::string> moving_commands;  // comandos que te emocionan son...
+    for (std::string command: current_actions) {
+        execute(command);
+        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0) {
+            moving_commands.insert(command);  // TODO: que feo que te quedo esto anda a dormir
+                                              // Probablemente deberias usar un diccionario
+        }
+    }
+    move(moving_commands);
+}
+
+void Player::move(std::set<std::string>& directions) { position.move(directions); }
+
+void Player::shoot() { weapon->shoot(position.get_facing_direction()); }
+
+void Player::die() { is_alive = false; }
