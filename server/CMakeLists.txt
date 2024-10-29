@@ -14,8 +14,7 @@ target_sources(server_exe  # Use the correct target name
     main.cpp
     server_protocol.cpp
     server.cpp
-    receiver.cpp
-    sender.cpp
+
 
     PUBLIC
     # .h files
@@ -27,8 +26,7 @@ target_sources(server_exe  # Use the correct target name
     read_input.h
     send_queues_monitor.h
     server.h
-    receiver.h
-    sender.h
+
 )
 
 # Include the common directory for headers

@@ -9,7 +9,8 @@ target_sources(common
     messages/generic_msg.cpp
     messages/handler_send.cpp
     messages/handler_recv.cpp
-
+    receiver.cpp
+    sender.cpp
     PUBLIC
     # .h files
     socket/liberror.h
@@ -23,4 +24,6 @@ target_sources(common
     messages/generic_msg.h
     messages/handler_send.h
     messages/handler_recv.h
+    receiver.h
+    sender.h
     )
