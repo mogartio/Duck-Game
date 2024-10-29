@@ -1,7 +1,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "../map/stage.h"
-#define RIGHT 1
 
 class Weapon {
 protected:

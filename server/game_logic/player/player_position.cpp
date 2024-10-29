@@ -15,7 +15,7 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
         player(player),
         stage(stage),
         facing_direction(AIM_RIGHT),
-        is_aiming_up(false) {
+        aiming_up(false) {
     air_state = std::move(std::make_unique<Grounded>());
 }
 
@@ -32,7 +32,7 @@ void PlayerPosition::move(std::set<std::string>& directions) {
         } else if (direction.compare(JUMP) == 0) {
             air_state->jump(*this);
         } else if (direction.compare(UP) == 0) {
-            is_aiming_up = true;
+            aiming_up = true;
         } else {
             continue;
         }
@@ -42,6 +42,9 @@ void PlayerPosition::move(std::set<std::string>& directions) {
     move_vertically(air_state->get_offset());
     air_state->update(stage.should_fall(*this), *this);
 }
+void PlayerPosition::stop_aiming_up() { aiming_up = false; }
+
+bool PlayerPosition::is_aiming_up() { return aiming_up; }
 
 void PlayerPosition::move_horizontally(int offset) {
     Coordinate current(position.x + offset, position.y);

@@ -30,8 +30,11 @@ void Player::add_action(std::string& command) {
 
 void Player::remove_action(std::string& command) {
     current_actions.erase(command);
-    if (command.compare("w") == 0) {
+    if (command.compare(" ") == 0) {  // TODO: fix
         position.released_w();
+    }
+    if (command.compare("w") == 0) {
+        position.stop_aiming_up();
     }
 }
 
@@ -47,7 +50,8 @@ void Player::update() {
     std::set<std::string> moving_commands;  // comandos que te emocionan son...
     for (std::string command: current_actions) {
         execute(command);
-        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0) {
+        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0 ||
+            command.compare(" ") == 0) {
             moving_commands.insert(command);  // TODO: emprolijar
         }
     }
@@ -56,6 +60,6 @@ void Player::update() {
 
 void Player::move(std::set<std::string>& movements) { position.move(movements); }
 
-void Player::shoot() { weapon->shoot(position.get_facing_direction(), false); }
+void Player::shoot() { weapon->shoot(position.get_facing_direction(), position.is_aiming_up()); }
 
 void Player::die() { is_alive = false; }

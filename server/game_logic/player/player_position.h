@@ -19,7 +19,7 @@ private:
     int facing_direction;  // para disparar
     void move_horizontally(int);
     void move_vertically(int);
-    bool is_aiming_up;
+    bool aiming_up;
 
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);
@@ -31,6 +31,8 @@ public:
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
     void released_w();
+    bool is_aiming_up();
+    void stop_aiming_up();
 };
 
 #endif
