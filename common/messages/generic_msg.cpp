@@ -31,7 +31,6 @@ public:
     void set_color(uint8_t color) { this->color = color; }
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
-
 };
 
 class ViewLobbiesMsg: public GenericMsg {
@@ -276,12 +275,15 @@ public:
 
 class SendMapMsg: public GenericMsg {
 private:
-    std::vector<std::string> map;  // le puse string pero no se que va
+    std::vector<uint16_t> map;  // le puse string pero no se que va
+    uint16_t filas; 
+    uint16_t columnas;
     uint8_t header;
 
 public:
-    SendMapMsg(): header(GenericMsg::SEND_MAP_MSG) {}
-    explicit SendMapMsg(std::vector<std::string> map): map(map), header(GenericMsg::SEND_MAP_MSG) {}
+    SendMapMsg(): filas(0), columnas(0), header(GenericMsg::SEND_MAP_MSG) {}
+    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas):
+            map(map), filas(filas), columnas(columnas), header(GenericMsg::SEND_MAP_MSG) {}
 
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
@@ -289,9 +291,18 @@ public:
 
     uint8_t get_header() const { return header; }
 
-    void set_map(std::vector<std::string> map) { this->map = map; }
+    void set_map(std::vector<uint16_t> map) { this->map = map; }
 
-    std::vector<std::string> get_map() const { return map; }
+    std::vector<uint16_t> get_map() const { return map; }
+
+    void set_filas(uint16_t filas) { this->filas = filas; }
+
+    void set_columnas(uint16_t columnas) { this->columnas = columnas; }
+
+    uint16_t get_filas() const { return filas; }
+
+    uint16_t get_columnas() const { return columnas; }
+
 
 };
 
@@ -331,18 +342,20 @@ public:
 
     std::string get_winner_name() const { return winner_name; }
 
+
 };
 
 class UpdatedPlayerInfoMsg: public GenericMsg {
 private:
     std::string player_name;
-    std::pair<uint8_t, uint8_t> position;
+    std::pair<uint16_t, uint16_t> position;
     uint8_t state;
     uint8_t facing_direction;
+    uint8_t header;
 public:
-    UpdatedPlayerInfoMsg(): player_name(""), position(), state(0), facing_direction(0) {}
-    explicit UpdatedPlayerInfoMsg(std::string player_name, std::pair<uint8_t, uint8_t> position, uint8_t state, uint8_t facing_direction):
-            player_name(player_name), position(position), state(state), facing_direction(facing_direction) {}
+    UpdatedPlayerInfoMsg(): player_name(""), position(), state(0), facing_direction(0), header(GenericMsg::UPDATED_PLAYER_INFO_MSG) {}
+    explicit UpdatedPlayerInfoMsg(std::string player_name, std::pair<uint16_t, uint16_t> position, uint8_t state, uint8_t facing_direction):
+            player_name(player_name), position(position), state(state), facing_direction(facing_direction), header(GenericMsg::UPDATED_PLAYER_INFO_MSG) {}
     
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
@@ -351,6 +364,8 @@ public:
     std::string get_player_name() const { return player_name; }
 
     std::pair<uint8_t, uint8_t> get_position() const { return position; }
+
+    uint8_t get_header() const { return header; }
 
     uint8_t get_state() const { return state; }
 
@@ -364,27 +379,31 @@ public:
 
     void set_facing_direction(uint8_t facing_direction) { this->facing_direction = facing_direction; }
 
+
 };
 
 class ProjectileInfoMsg: public GenericMsg {
 private:
-    std::vector<std::pair<uint8_t, uint8_t>> projectile_trail;
-    std::pair<uint8_t, uint8_t> projectile_final_position;
+    std::vector<std::pair<uint16_t, uint16_t>> projectile_trail;
+    std::pair<uint16_t, uint16_t> projectile_final_position;
+    uint8_t header;
 public:
-    ProjectileInfoMsg(): projectile_trail(), projectile_final_position() {}
-    explicit ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>> projectile_trail, std::pair<uint8_t, uint8_t> projectile_final_position):
-            projectile_trail(projectile_trail), projectile_final_position(projectile_final_position) {}
-    
+    ProjectileInfoMsg(): projectile_trail(), projectile_final_position(), header(GenericMsg::PROJECTILE_INFO_MSG) {}
+    explicit ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail, std::pair<uint16_t, uint16_t> projectile_final_position):
+            projectile_trail(projectile_trail), projectile_final_position(projectile_final_position), header(GenericMsg::PROJECTILE_INFO_MSG) {}
+
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    std::vector<std::pair<uint8_t, uint8_t>> get_projectile_trail() const { return projectile_trail; }
+    std::vector<std::pair<uint16_t, uint16_t>> get_projectile_trail() const { return projectile_trail; }
 
-    std::pair<uint8_t, uint8_t> get_projectile_final_position() const { return projectile_final_position; }
+    std::pair<uint16_t, uint16_t> get_final_position() const { return projectile_final_position; }
 
-    void set_projectile_trail(std::vector<std::pair<uint8_t, uint8_t>> projectile_trail) { this->projectile_trail = projectile_trail; }
+    void set_projectile_trail(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail) { this->projectile_trail = projectile_trail; }
 
-    void set_projectile_final_position(uint8_t x, uint8_t y) { this->projectile_final_position = std::make_pair(x, y); }    
+    void set_projectile_final_position(uint16_t x, uint16_t y) { this->projectile_final_position = std::make_pair(x, y); }    
+
+    uint8_t get_header() const { return header; }
 
 };

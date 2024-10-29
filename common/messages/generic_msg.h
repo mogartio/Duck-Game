@@ -40,6 +40,11 @@ public:
         PLAY_DEAD = 0x05,
     };
 
+    enum FacingDirection : uint8_t {
+        RIGHT = 0x01,
+        LEFT = 0x03,
+    };
+
 private:
     MsgTypeHeader header;
 
