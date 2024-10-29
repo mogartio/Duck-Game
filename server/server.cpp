@@ -12,14 +12,12 @@ void Server::run() {
     // pongo a correr el thread que lee input (TEMPORAL)
     ReadInput read_input_t;
     read_input_t.start();
-    std::cout << "Server levantado" << std::endl;
-    ErrorMsg msg1("Error en el server!!!!!!!");
     while (read_input_t.is_alive()) {
         std::list<GenericMsg*> msgs;
         GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
-            std::cout << "Received message with header: " << (int)msg->get_header() << std::endl;
-            msgs.push_back(&msg1);
+            // std::cout << "\n" << "Mensaje del cliente recibido: " << std::endl;
+            // msg->print_info();
         }
         send_queues.broadcast(msgs);
     }

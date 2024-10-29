@@ -94,14 +94,44 @@ void ClientProtocol::handle_recv(WinnerMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(SendMapMsg& msg) {
-    uint8_t filas = recv_u_int8_t();
+    uint16_t filas = recv_u_int8_t();
     msg.set_filas(filas);
-    uint8_t columnas = recv_u_int8_t();
+    uint16_t columnas = recv_u_int8_t();
     msg.set_columnas(columnas);
-    std::vector<uint8_t> map;
+    std::vector<uint16_t> map;
     for (int i = 0; i < filas; i++) {
-        uint8_t tile = recv_u_int8_t();
+        uint16_t tile = recv_u_int8_t();
         map.push_back(tile);
     }
-    msg.set_map(map);
+    
+}
+
+void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
+    // recibo la cantidad de posiciones que tiene el trail
+    uint16_t trail_size = recv_u_int16_t();
+    // recibo las posiciones del trail
+    std::vector<std::pair<uint16_t, uint16_t>> trail;
+    for (int i = 0; i < trail_size; i++) {
+        uint16_t x = recv_u_int16_t();
+        uint16_t y = recv_u_int16_t();
+        trail.push_back(std::make_pair(x, y));
+    }
+    // recibo la posicion final
+    uint16_t x = recv_u_int16_t();
+    uint16_t y = recv_u_int16_t();
+    // seteo los valores en el mensaje
+    msg.set_projectile_trail(trail);
+    msg.set_projectile_final_position(x, y);
+}
+
+void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
+    std::string player_name = recv_string();
+    uint16_t x = recv_u_int16_t();
+    uint16_t y = recv_u_int16_t();
+    uint8_t state = recv_u_int8_t();
+    uint8_t facing_direction = recv_u_int8_t();
+    msg.set_player_name(player_name);
+    msg.set_position(x, y);
+    msg.set_state(state);
+    msg.set_facing_direction(facing_direction);
 }

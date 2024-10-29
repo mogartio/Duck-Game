@@ -51,17 +51,17 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
 }
 
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
+    uint16_t header = msg.get_header();
+    send_u_int16_t(header);
     // mando filas y columnas 
-    uint8_t filas = msg.get_filas();
-    send_u_int8_t(filas);
-    uint8_t columnas = msg.get_columnas();
-    send_u_int8_t(columnas);
+    uint16_t filas = msg.get_filas();
+    send_u_int16_t(filas);
+    uint16_t columnas = msg.get_columnas();
+    send_u_int16_t(columnas);
     // mando el mapa
-    std::vector<uint8_t> map = msg.get_map();
-    for (int i = 0; i < map.size(); i++) {
-        send_u_int8_t(map[i]);
+    std::vector<uint16_t> map = msg.get_map();
+    for (size_t i = 0; i < map.size(); i++) {
+        send_u_int16_t(map[i]);
     }
 }
 
@@ -103,4 +103,37 @@ void ServerProtocol::handle_send(const WinnerMsg& msg) {
     send_u_int8_t(header);
     std::string player_name = msg.get_winner_name();
     send_string(player_name);
+}
+
+void ServerProtocol::handle_send(const ProjectileInfoMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    // recibo las posiciones de los proyectiles y la posicion final
+    std::vector<std::pair<uint16_t, uint16_t>> trail = msg.get_projectile_trail();
+    std::pair<uint16_t, uint16_t> final_position = msg.get_final_position();
+    // mando la cantidad de posiciones
+    uint16_t trail_size = trail.size();
+    send_u_int16_t(trail_size);
+    // mando las posiciones
+    for (size_t i = 0; i < trail.size(); i++) {
+        send_u_int16_t(trail[i].first);
+        send_u_int16_t(trail[i].second);
+    }
+    // mando la posicion final
+    send_u_int16_t(final_position.first);
+    send_u_int16_t(final_position.second);
+}
+
+void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+    std::pair<uint16_t, uint16_t> position = msg.get_position();
+    send_u_int16_t(position.first);
+    send_u_int16_t(position.second);
+    uint8_t state = msg.get_state();
+    send_u_int8_t(state);
+    uint8_t facing_direction = msg.get_facing_direction();
+    send_u_int8_t(facing_direction);
 }

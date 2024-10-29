@@ -38,5 +38,7 @@ public:
 
     virtual void handle_recv(GameEndedMsg& msg) override;
     virtual void handle_recv(WinnerMsg& msg) override;
+    virtual void handle_recv(ProjectileInfoMsg& msg) override;
+    virtual void handle_recv(UpdatedPlayerInfoMsg& msg) override;
 };
 #endif  // CLIENT_PROTOCOL_H

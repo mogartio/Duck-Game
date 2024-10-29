@@ -37,6 +37,10 @@ public:
 
     virtual void handle_send(const GameEndedMsg& msg) override;
     virtual void handle_send(const WinnerMsg& msg) override;
+
+    virtual void handle_send(const ProjectileInfoMsg& msg) override;
+    virtual void handle_send(const UpdatedPlayerInfoMsg& msg) override;
+
 };
 
 #endif  // CLIENT_PROTOCOL_H
