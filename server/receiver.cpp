@@ -8,7 +8,6 @@ void Receiver::run() {
         try {
             GenericMsg* msg = protocol->receive();
             recv_queue->push(msg);
-            std::cout << "Se pusheo algo a la recv_queue" << std::endl;
         } catch (const std::exception& e) {
             _keep_running = false;
         }

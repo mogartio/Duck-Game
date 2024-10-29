@@ -19,31 +19,6 @@ int main(int argc, char const* argv[]) {
 
     while (input != "q") {
         std::cin >> input;
-
-        if (input == "1") {
-            std::cout << "Insert a color: ";
-            int color;
-            std::cin >> color;
-            std::cout << "Insert a player name: ";
-            std::string player_name;
-            std::cin >> player_name;
-            CustomizedPlayerInfoMsg msg(color, player_name);
-            protocol.send(&msg);
-            std::cout << "Sent message" << std::endl;
-        } else if (input == "2") {
-            ViewLobbiesMsg msg = ViewLobbiesMsg();
-            protocol.send(&msg);
-            std::cout << "Sent message" << std::endl;
-        } else if (input == "3") {
-            std::cout << "Insert a lobby id: ";
-            int lobby_id;
-            std::cin >> lobby_id;
-            ChooseLobbyMsg msg = ChooseLobbyMsg(lobby_id);
-            protocol.send(&msg);
-            std::cout << "Sent message" << std::endl;
-        }
-        GenericMsg* msg = protocol.receive();
-        std::cout << "Received message with header: " << (int)msg->get_header() << std::endl;
     }
 
     return 0;
