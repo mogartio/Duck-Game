@@ -19,6 +19,7 @@ private:
     int facing_direction;  // para disparar
     void move_horizontally(int);
     void move_vertically(int);
+    bool is_aiming_up;
 
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);

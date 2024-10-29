@@ -56,6 +56,6 @@ void Player::update() {
 
 void Player::move(std::set<std::string>& movements) { position.move(movements); }
 
-void Player::shoot() { weapon->shoot(position.get_facing_direction()); }
+void Player::shoot() { weapon->shoot(position.get_facing_direction(), false); }
 
 void Player::die() { is_alive = false; }

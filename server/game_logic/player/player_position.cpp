@@ -6,11 +6,16 @@
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
+#define JUMP " "
 #define AIM_LEFT -1
 #define AIM_RIGHT 1
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
-        position(initial_coordinates), player(player), stage(stage), facing_direction(AIM_RIGHT) {
+        position(initial_coordinates),
+        player(player),
+        stage(stage),
+        facing_direction(AIM_RIGHT),
+        is_aiming_up(false) {
     air_state = std::move(std::make_unique<Grounded>());
 }
 
@@ -24,8 +29,10 @@ void PlayerPosition::move(std::set<std::string>& directions) {
             facing_direction = AIM_RIGHT;
             x_offset = 1;
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
-        } else if (direction.compare(UP) == 0) {
+        } else if (direction.compare(JUMP) == 0) {
             air_state->jump(*this);
+        } else if (direction.compare(UP) == 0) {
+            is_aiming_up = true;
         } else {
             continue;
         }
