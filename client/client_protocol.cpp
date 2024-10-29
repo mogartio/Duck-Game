@@ -92,3 +92,16 @@ void ClientProtocol::handle_recv(WinnerMsg& msg) {
     std::string winner_name = recv_string();
     msg.set_winner_name(winner_name);
 }
+
+void ClientProtocol::handle_recv(SendMapMsg& msg) {
+    uint8_t filas = recv_u_int8_t();
+    msg.set_filas(filas);
+    uint8_t columnas = recv_u_int8_t();
+    msg.set_columnas(columnas);
+    std::vector<uint8_t> map;
+    for (int i = 0; i < filas; i++) {
+        uint8_t tile = recv_u_int8_t();
+        map.push_back(tile);
+    }
+    msg.set_map(map);
+}

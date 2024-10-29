@@ -50,6 +50,21 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     }
 }
 
+void ServerProtocol::handle_send(const SendMapMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    // mando filas y columnas 
+    uint8_t filas = msg.get_filas();
+    send_u_int8_t(filas);
+    uint8_t columnas = msg.get_columnas();
+    send_u_int8_t(columnas);
+    // mando el mapa
+    std::vector<uint8_t> map = msg.get_map();
+    for (int i = 0; i < map.size(); i++) {
+        send_u_int8_t(map[i]);
+    }
+}
+
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
     uint8_t color = recv_u_int8_t();
     msg.set_color(color);

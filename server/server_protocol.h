@@ -25,6 +25,7 @@ public:
     virtual void handle_recv(ExitFromLobbyMsg& msg) override;
 
     virtual void handle_send(const SendLobbiesListMsg& msg) override;
+    virtual void handle_send(const SendMapMsg& msg) override;
 
     // CUSTOMIZED MESSAGES
     virtual void handle_recv(CustomizedPlayerInfoMsg& msg) override;
