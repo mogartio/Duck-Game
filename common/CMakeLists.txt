@@ -7,10 +7,8 @@ target_sources(common
     socket/socket.cpp
     protocolo-common.cpp
     messages/generic_msg.cpp
-    messages/generic_msg_responseser.cpp
-    messages/generic_msg_lobbys.cpp
-    messages/generic_msg_game.cpp
-    messages/generic_msg_customizer.cpp
+    messages/handler_send.cpp
+    messages/handler_recv.cpp
 
     PUBLIC
     # .h files
@@ -23,10 +21,6 @@ target_sources(common
     thread.h
     protocolo-common.h
     messages/generic_msg.h
-    messages/generic_msg_responseser.h
-    messages/generic_msg_lobbys.h
-    messages/generic_msg_game.h
-    messages/generic_msg_customizer.h
-    messages/descripcion-lobby.h
-    messages/handler.h
+    messages/handler_send.h
+    messages/handler_recv.h
     )

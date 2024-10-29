@@ -1,115 +1,137 @@
 #include "client_protocol.h"
 
 #include <string>
+#include <vector>
 
-ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {
-    recv_handlers[GenericMsg::typeMsg::RESPONSE_SERVER] = {
-            {ResponseServerMsg::responseType::EVERYTHING_WENT_WELL,
-             [this]() {
-                 EverythingOkey* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }},
-            {ResponseServerMsg::responseType::SOMETHING_WAS_WRONG, [this]() {
-                 SomethingWrong* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }}};
 
-    recv_handlers[GenericMsg::typeMsg::LOBBY_MESSAGE] = {
-            {LobbyMsg::lobbyType::EXAMPLE,
-             [this]() {
-                 ExampleMsg* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }},
-            {LobbyMsg::lobbyType::LOBBY_LIST, [this]() {
-                 LobbyListMsg* msg;
-                 this->handle_recv(&msg);
-                 return msg;
-             }}};
+ClientProtocol::ClientProtocol(Socket& skt): ProtocoloCommon(skt) {}
 
-    recv_handlers[GenericMsg::typeMsg::GAME_MESSAGE] = {{GameMsg::gameType::PLAYER_INFO,
-                                                         [this]() {
-                                                             PlayerInfoMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }},
-                                                        {GameMsg::gameType::FINISH_GAME,
-                                                         [this]() {
-                                                             FinishGameMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }},
-                                                        {GameMsg::gameType::WINNER, [this]() {
-                                                             WinnerMsg* msg;
-                                                             this->handle_recv(&msg);
-                                                             return msg;
-                                                         }}};
+void ClientProtocol::handle_recv(EverythingOkMsg& msg) { (void)msg; }
+
+void ClientProtocol::handle_recv(ErrorMsg& msg) {
+    std::string error_msg = recv_string();
+    msg.set_error_msg(error_msg);
 }
 
-void ClientProtocol::send(GenericMsg* msg) { msg->accept_send(*this); }
-
-GenericMsg* ClientProtocol::receive() {
-    uint8_t header = recv_u_int8_t();
-    uint8_t second_header = recv_u_int8_t();
-    return recv_handlers[static_cast<GenericMsg::typeMsg>(header)][second_header]();
+void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
-void ClientProtocol::sendCabecera(const GenericMsg& msg) {
-    uint8_t first_header = msg.get_first_header();
-    uint8_t second_header = msg.get_second_header();
-    send_u_int8_t(first_header);
-    send_u_int8_t(second_header);
+void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t lobby_id = msg.get_lobby_id();
+    send_u_int8_t(lobby_id);
 }
 
-void ClientProtocol::handle_recv(EverythingOkey** msg) { *msg = new EverythingOkey(); }
-
-void ClientProtocol::handle_recv(SomethingWrong** msg) { *msg = new SomethingWrong(); }
-
-void ClientProtocol::handle_send(const ExampleMsg& msg) {
-    sendCabecera(msg);
-    std::string data = msg.getData();
-    send_string(data);
+void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { 
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
-void ClientProtocol::handle_send(const ViewLobbiesMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const JoinedLobbyMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const ExitMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_send(const StartGameMsg& msg) { sendCabecera(msg); }
-
-void ClientProtocol::handle_recv(ExampleMsg** msg) {
-    std::string data = recv_string();
-    *msg = new ExampleMsg(data);
+void ClientProtocol::handle_send(const GoBackMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
 }
 
-void ClientProtocol::handle_recv(LobbyListMsg** msg) { *msg = new LobbyListMsg(); }
+void ClientProtocol::handle_send(const StartGameMsg& msg) { 
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+}
 
-void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
+    uint8_t lobbies_size = recv_u_int8_t();
+    std::vector<std::string> lobbies;
+    for (int i = 0; i < lobbies_size; i++) {
+        std::string lobby_name = recv_string();
+        lobbies.push_back(lobby_name);
+    }
+    msg.set_lobbies(lobbies);
+}
 
-void ClientProtocol::handle_send(const PickupDropItemMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t color = msg.get_color();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(color);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StartMoveLeftMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const PickupDropMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t item_id = msg.get_item_id();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(item_id);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StopMoveLeftMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const StartActionMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t action_id = msg.get_action_id();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(action_id);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StartMoveRightMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_send(const StopActionMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t action_id = msg.get_action_id();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(action_id);
+    send_string(player_name);
+}
 
-void ClientProtocol::handle_send(const StopMoveRightMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(GameEndedMsg& msg) { (void)msg; }
 
-void ClientProtocol::handle_send(const JumpMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(WinnerMsg& msg) {
+    std::string winner_name = recv_string();
+    msg.set_winner_name(winner_name);
+}
 
-void ClientProtocol::handle_send(const PlayDeadMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(SendMapMsg& msg) {
+    uint16_t filas = recv_u_int8_t();
+    msg.set_filas(filas);
+    uint16_t columnas = recv_u_int8_t();
+    msg.set_columnas(columnas);
+    std::vector<uint16_t> map;
+    for (int i = 0; i < filas; i++) {
+        uint16_t tile = recv_u_int8_t();
+        map.push_back(tile);
+    }
+    
+}
 
-void ClientProtocol::handle_send(const ShootMsg& msg) { sendCabecera(msg); }
+void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
+    // recibo la cantidad de posiciones que tiene el trail
+    uint16_t trail_size = recv_u_int16_t();
+    // recibo las posiciones del trail
+    std::vector<std::pair<uint16_t, uint16_t>> trail;
+    for (int i = 0; i < trail_size; i++) {
+        uint16_t x = recv_u_int16_t();
+        uint16_t y = recv_u_int16_t();
+        trail.push_back(std::make_pair(x, y));
+    }
+    // recibo la posicion final
+    uint16_t x = recv_u_int16_t();
+    uint16_t y = recv_u_int16_t();
+    // seteo los valores en el mensaje
+    msg.set_projectile_trail(trail);
+    msg.set_projectile_final_position(x, y);
+}
 
-void ClientProtocol::handle_recv(PlayerInfoMsg** msg) { *msg = new PlayerInfoMsg(); }
-
-void ClientProtocol::handle_recv(FinishGameMsg** msg) { *msg = new FinishGameMsg(); }
-
-void ClientProtocol::handle_recv(WinnerMsg** msg) { *msg = new WinnerMsg(); }
+void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
+    std::string player_name = recv_string();
+    uint16_t x = recv_u_int16_t();
+    uint16_t y = recv_u_int16_t();
+    uint8_t state = recv_u_int8_t();
+    uint8_t facing_direction = recv_u_int8_t();
+    msg.set_player_name(player_name);
+    msg.set_position(x, y);
+    msg.set_state(state);
+    msg.set_facing_direction(facing_direction);
+}

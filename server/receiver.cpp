@@ -6,11 +6,8 @@ Receiver::Receiver(Queue<GenericMsg*>* recv_queue, ServerProtocol* protocol):
 void Receiver::run() {
     while (_keep_running) {
         try {
-            /*
             GenericMsg* msg = protocol->receive();
             recv_queue->push(msg);
-            msg->print_data();
-            */
         } catch (const std::exception& e) {
             _keep_running = false;
         }
