@@ -17,7 +17,7 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
 void PlayerPosition::move(std::set<std::string>& directions) {
     int x_offset = 0;
     for (std::string direction: directions) {
-        if (direction.compare(LEFT) == 0) {
+        if (direction.compare(LEFT) == 0) {  // si direccion es izq...
             facing_direction = AIM_LEFT;
             x_offset = -1;
         } else if (direction.compare(RIGHT) == 0) {

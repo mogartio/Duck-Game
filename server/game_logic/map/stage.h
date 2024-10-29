@@ -7,17 +7,20 @@
 #define ROW_NUMBER 50
 #define COLUMN_NUMBER 50
 #include <vector>
-#include "map.h"
+
 #include "../player/projectile.h"
 
-class Player; // Declaracion adelantada para evitar dependencia circular.
-class PlayerPosition; // Idem
-class Stage{
+#include "map.h"
+
+class Player;          // Declaracion adelantada para evitar dependencia circular.
+class PlayerPosition;  // Idem
+class Stage {
 private:
     Map map;
     void printStage();
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<Coordinate> coordinates_to_delete;
+
 public:
     // Son virtuales para poder mockear la clase mas facilmente
     virtual void draw_player(Player&);
@@ -32,5 +35,4 @@ public:
     virtual void update();
 };
 
-#endif 
-
+#endif

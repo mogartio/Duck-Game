@@ -48,14 +48,13 @@ void Player::update() {
     for (std::string command: current_actions) {
         execute(command);
         if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0) {
-            moving_commands.insert(command);  // TODO: que feo que te quedo esto anda a dormir
-                                              // Probablemente deberias usar un diccionario
+            moving_commands.insert(command);  // TODO: emprolijar
         }
     }
     move(moving_commands);
 }
 
-void Player::move(std::set<std::string>& directions) { position.move(directions); }
+void Player::move(std::set<std::string>& movements) { position.move(movements); }
 
 void Player::shoot() { weapon->shoot(position.get_facing_direction()); }
 

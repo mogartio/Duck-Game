@@ -28,9 +28,9 @@ void Stage::add_projectile(std::unique_ptr<Projectile>&& projectile) {
 }
 
 void Stage::remove_projectile(std::unique_ptr<Projectile>& projectile) {
-    std::vector<std::unique_ptr<Projectile>>::iterator position_to_delete =
-            std::find(projectiles.begin(), projectiles.end(),
-                      projectile);  // itera el vector buscando en que posicion esta projectile
+    auto position_to_delete = std::find_if(
+            projectiles.begin(), projectiles.end(),
+            [&](const std::unique_ptr<Projectile>& p) { return p.get() == projectile.get(); });
     if (position_to_delete != projectiles.end()) {  // si se encontro borrar, sino se encontro... no
         projectiles.erase(position_to_delete);
     }
@@ -40,12 +40,19 @@ void Stage::update() {
     for (auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
     }
-    coordinates_to_delete.clear();
-    for (auto& projectile: projectiles) {
-        ray_trace(projectile);
-        if (projectile == nullptr) {
-            return;
+    for (auto iterator = projectiles.begin(); iterator != projectiles.end();) {
+        int initial_projectiles = projectiles.size();
+        ray_trace(*iterator);
+        if (iterator == projectiles.end()) {
+            break;
         }
+        if (initial_projectiles != projectiles.size()) {
+            // si cambio la cantidad de elementos se borro el elemento al que
+            // el iterator apuntaba antes lo que hace que ahora el iterator
+            // apunte al siguiente elemento en la lista y no hay que cambiarlo
+            continue;
+        }
+        iterator++;
     }
 }
 
@@ -116,7 +123,7 @@ void Stage::ray_trace(std::unique_ptr<Projectile>& projectile) {
             remove_projectile(projectile);
             return;
         }
-        if (next_tile == BACKGROUND && i == reach - 1) {
+        if ((next_tile == BACKGROUND || next_tile == 3) && i == reach - 1) {
             map.set(bullet_position, 3);
             projectile->move(bullet_position);
             coordinates_to_delete.push_back(bullet_position);
