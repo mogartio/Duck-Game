@@ -21,3 +21,23 @@ int GameMain::run() {
     }
     return 0;
 }
+
+void GameMain::handle_read(const PickupDropMsg& msg) {
+    // No tengo idea que se hace con el pick up drop
+}
+
+void GameMain::handle_read(const StartActionMsg& msg) {
+    // Primero se consigue el jugador aca
+    // Despues se le agrega la accion
+    // std::string player_name = msg.get_player_name();
+    // player_a.add_action(msg.get_action_id());
+    //  aca ya tenes toda la info del mensaje
+}
+
+void GameMain::handle_read(const StopActionMsg& msg) {
+    // Primero se consigue el jugador aca
+    // Despues se le agrega la accion
+    // std::string player_name = msg.get_player_name();
+    // player_a.add_action(msg.get_action_id());
+    //  aca ya tenes toda la info del mensaje
+}
