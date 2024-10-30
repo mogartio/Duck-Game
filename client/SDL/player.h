@@ -5,16 +5,21 @@
 #include "wingState.h"
 #include "common/duckState/duckState.h"
 
+enum Color {
+    WHITE,
+    GREY,
+    ORANGE,
+    YELLOW
+};
+
 class Player {
 private:
 
     SDL_Renderer* rend;
     SDL_RendererFlip flip;
     std::string file;
-    std::string action;
-    std::string wingType;
 
-    std::unordered_map<DuckState, Image> ducks;
+    std::unordered_map<DuckState, std::vector<Image>> ducks;
     std::unordered_map<WingState, Image> wings;
 
     DuckState state;
@@ -28,8 +33,9 @@ private:
     //Weapon weapon;
 
     void chooseColor(Color color);
-    void checkWingHashmap(WingState wingState);
+    void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
+    void initialiceDuckImages(DuckState state , bool walk1);
 
 public:
     Player(SDL_Renderer* rend, Color color);
@@ -48,5 +54,7 @@ public:
 
     // Dispara el arma
     void shoot();
+
+    ~Player() = default;
 
 };

@@ -12,14 +12,14 @@ enum Front_event {
     MOVE_LEFT_STOP,
     MOVE_RIGHT_START,
     MOVE_RIGHT_STOP,
-    JUMP,
+    JUMP_EVENT,
     PLAY_DEAD_START,
     PLAY_DEAD_STOP,
     END
 };
 
-OnePlayer::OnePlayer(Queue<Front_event>& queueSend, Queue<int>& queueRecive): 
-                    queueSend(queueSend), queueRecive(queueRecive) {}
+OnePlayer::OnePlayer(Queue<Front_event>& queueSend, Queue<int>& queueRecive, std::string playerName): 
+                    queueSend(queueSend), queueRecive(queueRecive), playerName(playerName) {}
 
 void OnePlayer::play() {
 
@@ -47,14 +47,16 @@ void OnePlayer::play() {
 
     Map map(rend, queueRecive);
 
-    const Uint32 frame_rate = 1000 / 60; // 60 FPS
+    const Uint32 frame_rate = 1000 / 30; // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
 
     bool close = false;
 
+    Uint32 current_time;
+    Uint32 elapsed_time;
     while (!close) {
-        Uint32 current_time = SDL_GetTicks();
-        Uint32 elapsed_time = current_time - last_frame_time;
+        current_time = SDL_GetTicks();
+        elapsed_time = current_time - last_frame_time;
 
         SDL_Event event;
 
@@ -63,11 +65,12 @@ void OnePlayer::play() {
             switch (event.type) {
                 case SDL_QUIT: 
                     close = true;
+                    queueSend.try_push(END);
                     break;
                 case SDL_KEYDOWN: // Evento de tecla presionada
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_W: // Tecla W
-                            queueSend.try_push(JUMP);
+                            queueSend.try_push(JUMP_EVENT);
                             break;
                         case SDL_SCANCODE_S: // Tecla S
                             queueSend.try_push(PLAY_DEAD_START);
@@ -85,7 +88,6 @@ void OnePlayer::play() {
 
                 case SDL_KEYUP: // Evento de tecla soltada
                     switch (event.key.keysym.scancode) {
-                        // case SDL_SCANCODE_W: // Tecla W
                         case SDL_SCANCODE_S: // Tecla S
                             queueSend.try_push(PLAY_DEAD_STOP);
                             break;

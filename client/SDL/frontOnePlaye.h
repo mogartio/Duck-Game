@@ -7,8 +7,10 @@ private:
     Queue<Front_event>& queueSend;
     Queue<int>& queueRecive;
 
+    std::string playerName;
+
 public:
-    OnePlayer(Queue<Front_event>& queueSend, Queue<int>& queueRecive);
+    OnePlayer(Queue<Front_event>& queueSend, Queue<int>& queueRecive, std::string playerName);
 
     void play();
 };
