@@ -1,8 +1,8 @@
 #include "game_main.h"
 
 GameMain::GameMain(Queue<GenericMsg*>&): q(q) {
-    // se puede mejorar esto haciendo que capaz reciba antes el stage por referencia
-    // o capaz en el lobby cuando se elige el mapa, ahi se defina el stage antes jeje
+    // TODO: se puede mejorar esto haciendo que capaz reciba antes el stage por referencia
+    // TODO: o capaz en el lobby cuando se elige el mapa, ahi se defina el stage antes jeje
     CSVWriter::write_map("main_map.csv");
     stage = new Stage("main_map.csv");
 }

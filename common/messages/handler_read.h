@@ -20,6 +20,9 @@ class WinnerMsg;
 class UpdatedPlayerInfoMsg;
 class ProjectileInfoMsg;
 
+// TODO: esto se puede mejorar lanzando mensajes de errores si no se implementan los metodos
+// TODO: en las clases hijas ya que hasta ahora solo haciamos (void)msg
+
 class HandlerReader {
 public:
     // reader methods menu

@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-// Aca se puede directamente agregar los imports de los handlers
-// No se porque se los declara tempranamente aca????
+// TODO: Aca se puede directamente agregar los imports de los handlers
+// TODO: No se porque se los declara tempranamente aca????
 class HandlerSender;
 class HandlerReceiver;
 class HandlerReader;
