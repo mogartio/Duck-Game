@@ -1,17 +1,21 @@
 #include "game_main.h"
 
-GameMain::GameMain(Queue<GenericMsg*>& q): q(q), config(Config("config.yaml")) {
+GameMain::GameMain(Queue<GenericMsg*>&, std::string player_name1, std::string player_name2 = ""):
+        q(q) {
     // TODO: se puede mejorar esto haciendo que capaz reciba antes el stage por referencia
     // TODO: o capaz en el lobby cuando se elige el mapa, ahi se defina el stage antes jeje
     CSVWriter::write_map("main_map.csv");
     stage = new Stage("main_map.csv");
+    Coordinate coordinate_a(30, 36);  // posicion por ahora de prueba
+
+    players[player_name1] = new Player(coordinate_a, *stage, 2);
+    stage->draw_player(
+            *players["player1"]);  // aca en ves de este mensaje deberia ser el player_name1
+    (void)player_name2;  // para que no tire error de compilacion de q no se usa esa variable
 }
 
 int GameMain::run() {
-    Coordinate coordinate_a(30, 36);
-
-    Player player_a(coordinate_a, *stage, 2);
-    stage->draw_player(player_a);
+    Player& player_a = *players["player1"];
     while (true) {
         // Aca hay que try_popear de la cola de mensajes
         GenericMsg* msg;
