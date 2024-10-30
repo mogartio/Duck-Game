@@ -30,6 +30,9 @@ void Player::add_action(std::string& command) {
 
 void Player::remove_action(std::string& command) {
     current_actions.erase(command);
+    if (command.compare("j") == 0) {  // TODO: fix
+        position.released_w();
+    }
     if (command.compare("w") == 0) {
         position.released_w();
     }
@@ -47,7 +50,8 @@ void Player::update() {
     std::set<std::string> moving_commands;  // comandos que te emocionan son...
     for (std::string command: current_actions) {
         execute(command);
-        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0) {
+        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0 ||
+            command.compare("j") == 0) {
             moving_commands.insert(command);  // TODO: emprolijar
         }
     }

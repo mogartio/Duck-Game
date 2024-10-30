@@ -6,6 +6,7 @@
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
+#define JUMP "j"
 #define AIM_LEFT -1
 #define AIM_RIGHT 1
 
