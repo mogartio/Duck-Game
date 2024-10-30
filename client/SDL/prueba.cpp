@@ -27,9 +27,11 @@ int main(int argc, char* argv[]) {
     // Carga la imagen de fondo
     Image background(rend, "img_src/background/day.png");
 
+    Side side = RIGHT;
+
     Player grey(rend, GREY);
     grey.defineSize(50, 50);
-    grey.update(250, 150, DuckState::STANDING, RIGHT);
+    grey.update(250, 150, DuckState::STANDING, side);
     int destx = 250;
     int desty = 150; 
 
@@ -112,12 +114,14 @@ int main(int argc, char* argv[]) {
                             break;
                         case SDL_SCANCODE_LEFT: // Flecha izquierda
                             vel_x = -speed / 30; // Mueve hacia la izquierda
+                            side = LEFT;
                             break;
                         case SDL_SCANCODE_D: // Tecla D
                             vel_x2 = speed / 30; // Mueve hacia la derecha
                             flip2 = SDL_FLIP_NONE;
                             break;
                         case SDL_SCANCODE_RIGHT: // Flecha derecha
+                            side = RIGHT;
                             vel_x = speed / 30; // Mueve hacia la derecha
                             break;
                         default:
@@ -154,7 +158,7 @@ int main(int argc, char* argv[]) {
         // Actualiza la posición del objeto basándose en su velocidad
         destx += vel_x; // Actualiza la posición X
         desty += vel_y; // Actualiza la posición Y
-        grey.update(destx, desty, DuckState::STANDING, RIGHT);
+        grey.update(destx, desty, DuckState::STANDING, side);
 
         dest2x += vel_x2;
         dest2y += vel_y2;
@@ -174,7 +178,6 @@ int main(int argc, char* argv[]) {
             SDL_RenderClear(rend); // Limpia la pantalla
             background.fill(true);
             grey.fill();
-            //greyWing.fill(flip1);
             tex2.fill(flip2);
             whiteWing.fill(flip2);
             SDL_RenderPresent(rend); // Muestra el renderizado en la ventana

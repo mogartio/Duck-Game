@@ -127,6 +127,8 @@ void Player::update(int x, int y, DuckState state, Side side) {
     
     if (side == LEFT) {
         flip = SDL_FLIP_HORIZONTAL;
+    } else {
+        flip = SDL_FLIP_NONE;
     }
 
     // Actualizo la image del ala y su posicion
