@@ -1,10 +1,14 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <filesystem>
+#include <iostream>
 #include <map>
 #include <set>
 #include <string>
 
+#include <limits.h>
+#include <unistd.h>
 #include <yaml-cpp/yaml.h>
 
 class Config {
@@ -17,7 +21,13 @@ private:
     std::set<std::tuple<int, int>> weapon_spawn_sites;
 
 public:
-    Config(std::string file_name) {
+    Config(const std::string& file_name) {
+        // if (!std::filesystem::exists(file_name)) {
+        //     std::cout << "Error: el archivo " << file_name << " no existe." << std::endl;
+        //     return;
+        // } else {
+        //     std::cout << " existe." << std::endl;
+        // }
         YAML::Node config = YAML::LoadFile(file_name);
 
         for (const auto& item: config["weapons_reach"]) {

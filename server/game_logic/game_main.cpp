@@ -1,7 +1,7 @@
 #include "game_main.h"
 
-GameMain::GameMain(Queue<GenericMsg*>&, std::string player_name1, std::string player_name2 = ""):
-        q(q) {
+GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2):
+        q(q), config("./server/game_logic/config.yaml") {
     // TODO: se puede mejorar esto haciendo que capaz reciba antes el stage por referencia
     // TODO: o capaz en el lobby cuando se elige el mapa, ahi se defina el stage antes jeje
     CSVWriter::write_map("main_map.csv");

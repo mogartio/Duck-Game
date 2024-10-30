@@ -9,7 +9,7 @@ Server::Server(const char* port): srv(port), clients(), recv_queue(100), send_qu
 
 void Server::run() {
     Queue<GenericMsg*> q(1000);
-    GameMain game(q);
+    GameMain game(q, "juancito", "pedrito");
     game.run();
     // // pongo a correr el acceptor
     // Acceptor acceptor(std::move(srv), clients, recv_queue, send_queues);
