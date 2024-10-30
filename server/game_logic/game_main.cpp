@@ -44,17 +44,19 @@ void GameMain::handle_read(const PickupDropMsg& msg) {
 }
 
 void GameMain::handle_read(const StartActionMsg& msg) {
-    // Primero se consigue el jugador aca
-    // Despues se le agrega la accion
-    // std::string player_name = msg.get_player_name();
-    // player_a.add_action(msg.get_action_id());
-    //  aca ya tenes toda la info del mensaje
+    // Aca ya estariamos leyendo el mensaje recibido
+    // Q resulta ser un mensaje de start action
+    // aca ya tenes toda la info del mensaje
+
+    // std::string player_name = msg.get_player_name(); // aca se consigue el nombre del jugador
+    // player_a.add_action(msg.get_action_id()); // aca se consigue el id de la accion
 }
 
 void GameMain::handle_read(const StopActionMsg& msg) {
-    // Primero se consigue el jugador aca
-    // Despues se le agrega la accion
-    // std::string player_name = msg.get_player_name();
-    // player_a.add_action(msg.get_action_id());
-    //  aca ya tenes toda la info del mensaje
+    // Aca ya estariamos leyendo el mensaje recibido
+    // Q resulta ser un mensaje de stop action
+    // aca ya tenes toda la info del mensaje
+
+    // std::string player_name = msg.get_player_name(); // aca se consigue el nombre del jugador
+    // player_a.add_action(msg.get_action_id()); // aca se consigue el id de la accion
 }
