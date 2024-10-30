@@ -7,7 +7,6 @@
 
 #include "../../common/queue.h"
 // Para futuro cuando lo hagamos un hilo : #include "../../common/thread.h"
-#include "../../common/messages/generic_msg.cpp"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/messages/handler_read.h"
 #include "map/csv_writer.h"

@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 
-#include "./messages/generic_msg.cpp"
 #include "./messages/generic_msg.h"
 #include "./messages/handler_recv.h"
 #include "./messages/handler_send.h"
