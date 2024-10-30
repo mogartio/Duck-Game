@@ -2,6 +2,7 @@
 #define GAME_MAIN_H
 
 #include <iostream>
+#include <map>
 #include <string>
 
 #include "../../common/queue.h"
@@ -19,9 +20,13 @@ private:
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
     Stage* stage;
     Queue<GenericMsg*>& q;
+    std::map<std::string, Player*> players;
 
 public:
-    explicit GameMain(Queue<GenericMsg*>& q);
+    // por ahora solo recibe un jugador, pero en el futuro deberia recibir dos capaz que
+    // obligatoriamente?
+    explicit GameMain(Queue<GenericMsg*>& q, std::string player_name1,
+                      std::string player_name2 = "");
 
     int run();
 
