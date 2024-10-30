@@ -66,7 +66,7 @@ if(TALLER_SERVER)
 
     set_project_warnings(server_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
 
-    target_link_libraries(server_exe common)
+    target_link_libraries(server_exe common yaml-cpp)
 endif()
 
 if(TALLER_EDITOR)

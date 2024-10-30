@@ -20,6 +20,7 @@ private:
     void printStage();
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<Coordinate> coordinates_to_delete;
+    virtual ~Stage() = default;
 
 public:
     // Son virtuales para poder mockear la clase mas facilmente

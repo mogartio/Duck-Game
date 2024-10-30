@@ -11,3 +11,4 @@ CTestTestfile.cmake
 *.txt
 
 build/
+server/game_logic/game

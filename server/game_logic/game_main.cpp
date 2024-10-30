@@ -1,6 +1,6 @@
 #include "game_main.h"
 
-GameMain::GameMain(Queue<GenericMsg*>&): q(q) {
+GameMain::GameMain(Queue<GenericMsg*>& q): q(q), config(Config("config.yaml")) {
     // TODO: se puede mejorar esto haciendo que capaz reciba antes el stage por referencia
     // TODO: o capaz en el lobby cuando se elige el mapa, ahi se defina el stage antes jeje
     CSVWriter::write_map("main_map.csv");
@@ -39,11 +39,11 @@ int GameMain::run() {
 
 // El accept_read te mappea a estas funciones de aca abajo
 
-void GameMain::handle_read(const PickupDropMsg& msg) {
+void GameMain::handle_read(const PickupDropMsg&) {
     // No tengo idea que se hace con el pick up drop
 }
 
-void GameMain::handle_read(const StartActionMsg& msg) {
+void GameMain::handle_read(const StartActionMsg&) {
     // Aca ya estariamos leyendo el mensaje recibido
     // Q resulta ser un mensaje de start action
     // aca ya tenes toda la info del mensaje
@@ -52,7 +52,7 @@ void GameMain::handle_read(const StartActionMsg& msg) {
     // player_a.add_action(msg.get_action_id()); // aca se consigue el id de la accion
 }
 
-void GameMain::handle_read(const StopActionMsg& msg) {
+void GameMain::handle_read(const StopActionMsg&) {
     // Aca ya estariamos leyendo el mensaje recibido
     // Q resulta ser un mensaje de stop action
     // aca ya tenes toda la info del mensaje

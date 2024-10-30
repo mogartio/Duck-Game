@@ -16,6 +16,13 @@ target_sources(server_exe  # Use the correct target name
     server.cpp
     receiver.cpp
     sender.cpp
+    game_logic/game_main.cpp
+    game_logic/player/air_state.cpp
+    game_logic/player/player.cpp
+    game_logic/player/player_position.cpp
+    game_logic/player/weapon.cpp
+
+    game_logic/map/stage.cpp
 
     PUBLIC
     # .h files
@@ -29,6 +36,15 @@ target_sources(server_exe  # Use the correct target name
     server.h
     receiver.h
     sender.h
+
+    game_logic/game_main.h
+    game_logic/player/air_state.h
+    game_logic/player/player.h
+    game_logic/player/player_position.h
+    game_logic/player/weapon.h
+    game_logic/player/projectile.h
+
+    game_logic/map/stage.h
 )
 
 # Include the common directory for headers

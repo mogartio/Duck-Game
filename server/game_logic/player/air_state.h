@@ -13,6 +13,7 @@ public:
     virtual void jump(PlayerPosition&) = 0;
     virtual void stop_jumping(PlayerPosition&) {}
     virtual void update(bool, PlayerPosition&) = 0;
+    virtual ~AirState() = default;
 };
 
 class Grounded: public AirState {

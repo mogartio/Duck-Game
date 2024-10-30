@@ -13,12 +13,15 @@
 #include "map/stage.h"
 #include "player/player.h"
 
+#include "config.h"
+
 class GameMain: public HandlerReader {
 private:
     // TODO: esto se puede mejorar mas haciendo que este la lista de jugadores
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
     Stage* stage;
     Queue<GenericMsg*>& q;
+    Config config;
 
 public:
     explicit GameMain(Queue<GenericMsg*>& q);

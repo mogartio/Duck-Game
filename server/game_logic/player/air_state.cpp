@@ -17,7 +17,7 @@ void Grounded::update(bool could_fall, PlayerPosition& player) {
 void Jumping::stop_jumping(PlayerPosition& player) {
     player.set_state(std::make_unique<Falling>());
 }
-void Jumping::jump(PlayerPosition& player) { keeps_jumping = true; }
+void Jumping::jump(PlayerPosition&) { keeps_jumping = true; }
 void Jumping::update(bool could_fall, PlayerPosition& player) {
     if (!keeps_jumping) {
         jumps_left = 0;
