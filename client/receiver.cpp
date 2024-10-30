@@ -16,8 +16,3 @@ void Receiver::run() {
 
 void Receiver::kill() { _keep_running = false; }
 
-void Receiver::update_recv_queue(Queue<GenericMsg*>* new_recv_queue) {
-    recv_queue = new_recv_queue;
-}
-
-void Receiver::update_protocol(ClientProtocol* new_protocol) { protocol = new_protocol; }

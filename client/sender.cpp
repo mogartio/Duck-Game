@@ -19,6 +19,3 @@ void Sender::kill() {
     _keep_running = false;
 }
 
-void Sender::update_send_queue(Queue<GenericMsg*>* new_send_queue) { send_queue = new_send_queue; }
-
-void Sender::update_protocol(ClientProtocol* new_protocol) { protocol = new_protocol; }

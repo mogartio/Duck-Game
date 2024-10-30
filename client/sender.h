@@ -23,15 +23,5 @@ public:
      */
     void kill();
 
-    /*
-     * Actualiza la referencia a la cola de envío.
-     */
-    void update_send_queue(Queue<GenericMsg*>* new_send_queue);
-
-
-    /*
-     * Actualiza la referencia al protocolo.
-     */
-    void update_protocol(ClientProtocol* protocol);
 };
 #endif  // SENDER_H
