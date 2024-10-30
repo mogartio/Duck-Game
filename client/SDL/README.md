@@ -3,7 +3,7 @@
 - Dentro de la carpeta ../Tp-Duck-Game-7/client/SDL
 - Desde terminal:
 - make
-- ./prueba
+- ./game
 
 (Si hacen cambios les recomiendo hacer un make clean antes de volver a compilar)
 

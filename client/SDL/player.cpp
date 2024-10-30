@@ -1,7 +1,9 @@
 #include "player.h"
+
 #include <vector>
 
 #define OFFSETX 10
+#define OFFSETY 13
 
 void Player::chooseColor(Color color) {
     switch (color) {
@@ -23,15 +25,30 @@ void Player::chooseColor(Color color) {
 }
 
 void Player::initializeWingImage(WingState wingState) {
-    std::string wingType = file + to_string(wingState);
+    std::string wingType = file + wingState_to_string(wingState);
+
+    // ------ Opcion 1 -------
+    // Image w(rend, wingType);
+    // wings.emplace(wingState, std::move(w));
+
+    // ------ Opcion 2 -------
+    // wings.insert({wingState, Image(rend, wingType)});
+
+    // ------ Opcion 3 -------
     wings[wingState] = Image(rend, wingType);
 }
 
-void Player::initialiceDuckImages(DuckState state , bool walk1 = false) {
-    std::string action = file + to_string(state, walk1);
-    std::vector<Image> images = {Image(rend, action)};
-    ducks[state] = images;
+void Player::initialiceDuckImages(DuckState state) {
+    std::string action = file + duckState_to_string(state);
+    std::vector<Image> images;
+    images.emplace_back(rend, action);
+    if (state == DuckState::WALK) {
+        action = file + duckState_to_string(state, false);
+        images.emplace_back(rend, action);
+    }
+    ducks.emplace(state, std::move(images));
 }
+
 
 Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), walk1(true) {
     
@@ -39,27 +56,25 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
 
 
     // Crea el primer pato y lo agrega al hashmap
-    for (int i = STANDING; i <= PLAY_DEAD; i++) {
+    for (int i = int(DuckState::STANDING); i <= int(DuckState::PLAY_DEAD); i++) {
         DuckState duckState = static_cast<DuckState>(i);
         initialiceDuckImages(duckState);
-        if (duckState == WALK) {
-            initialiceDuckImages(duckState, true);
-        }
     }
 
-    *duck = ducks[STANDING][0];
+    duck = &ducks[DuckState::STANDING][0];
     
     // Crea el ala normal y la agrega al hashmap
-    for (int j = NORMAL; j <= FLAPDOWN; j++){
+    for (int j = int(WingState::NORMAL); j <= int(WingState::FLAPDOWN); j++){
         WingState wingState = static_cast<WingState>(j);
         initializeWingImage(wingState);
     }
 
-    *wing = wings[NORMAL];
+    wing = &wings[(WingState::NORMAL)];
 
     // -------- QueryTexture --------
     duck->queryTexture();
     wing->queryTexture();
+
 }
 
 void Player::defineSize(int height, int width) {
@@ -71,27 +86,27 @@ void Player::defineSize(int height, int width) {
 void Player::updateWing(int x, int y) {
 
     // Actualiza imagen del ala
-    if (state == SLOW_FALL) {
+    if (state == DuckState::SLOW_FALL) {
         if (flapup) {
-            *wing = wings[FLAPUP];
+            wing = &wings[(WingState::FLAPUP)];
             flapup = false;
         } else {
-            *wing = wings[FLAPDOWN];
+            wing = &wings[(WingState::FLAPDOWN)];
             flapup = true;
         }
     } else {
         if (weaponON) {
-            *wing = wings[HOLD];
+            wing = &wings[(WingState::HOLD)];
         } else {
-            *wing = wings[NORMAL];
+            wing = &wings[(WingState::NORMAL)];
         }
     }
 
     // Actualiza posicion del ala
-    if (flip = SDL_FLIP_HORIZONTAL) {
-        wing->position(x + 1.7*OFFSETX, y);
+    if (flip == SDL_FLIP_HORIZONTAL) {
+        wing->position(x + 1.7*OFFSETX, y + OFFSETY);
     } else {
-        wing->position(x + OFFSETX, y);
+        wing->position(x + OFFSETX, y + OFFSETY);
     }
 
 }
@@ -100,11 +115,11 @@ void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
 
     // Actualizo la imagen del pato y su posicion
-    if ((state == WALK) && (walk1 == false)) {
-        *duck = ducks[state][1];
+    if ((state == DuckState::WALK) && (walk1 == false)) {
+        duck = &ducks[state][1];
         walk1 = true;
     } else {
-        *duck = ducks[state][0];
+        duck = &ducks[state][0];
         walk1 = false;
     }
     
@@ -119,16 +134,16 @@ void Player::update(int x, int y, DuckState state, Side side) {
 }
 
 void Player::fill() {
-    // Dinujo el cueerpo dl pato
+    // Dibujo el cueerpo dl pato
     duck->fill(flip);
 
     // Dibujo el arma que tiene el pato
-    if (weaponON && (state != SLOW_FALL) && (state != PLAY_DEAD)) {
+    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
         //weapon.fill(flip);
     }
 
     // Dibujo el ala del pato
-    if (state != PLAY_DEAD) {
+    if (state != DuckState::PLAY_DEAD) {
         wing->fill(flip);
     }
 }

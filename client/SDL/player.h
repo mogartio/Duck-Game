@@ -1,9 +1,10 @@
 #include <string>
+#include <vector>
 #include <unordered_map>
 
 #include "image.h"
 #include "wingState.h"
-#include "common/duckState/duckState.h"
+#include "../../common/duckState/duckState.h"
 
 enum Color {
     WHITE,
@@ -35,7 +36,7 @@ private:
     void chooseColor(Color color);
     void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
-    void initialiceDuckImages(DuckState state , bool walk1);
+    void initialiceDuckImages(DuckState state);
 
 public:
     Player(SDL_Renderer* rend, Color color);
