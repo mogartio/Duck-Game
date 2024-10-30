@@ -1,7 +1,9 @@
 #include <iostream>
 
-#include "../common/socket/socket.h"
-#include "client_protocol.h"
+#include "../common/queue.h"
+#include "../common/messages/generic_msg.h"
+#include "client.h"
+#define MAX_SIZE 100
 
 int main(int argc, char const* argv[]) {
 
@@ -10,16 +12,11 @@ int main(int argc, char const* argv[]) {
         return -1;
     }
 
-    std::cout << argv[1] << std::endl;
+    Queue<GenericMsg*> send_queue(MAX_SIZE);
+    Queue<GenericMsg*> recv_queue(MAX_SIZE);
 
-    Socket skt(argv[1], argv[2]);
-    ClientProtocol protocol(skt);
-
-    std::string input;
-
-    while (input != "q") {
-        std::cin >> input;
-    }
+    Client client(argv[1], argv[2], send_queue, recv_queue);
+    client.run();
 
     return 0;
 }
