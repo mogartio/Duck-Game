@@ -10,6 +10,9 @@ int GameMain::run() {
     Player player_a(coordinate_a, stage, 2);
     stage.draw_player(player_a);
     while (true) {
+        // Aca hay que try_popear de una cola de mensajes
+        // GenericMsg msg = q.pop();
+        // msg.handle_read(*this);
         std::string command;
         std::cin >> command;
         stage.delete_player_from_stage(player_a);  // Borro su dibujo viejo
