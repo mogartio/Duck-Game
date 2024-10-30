@@ -1,10 +1,8 @@
-#include <iostream>
-#include <string>
+#include "game_main.h"
 
-#include "map/csv_writer.h"
-#include "map/stage.h"
-#include "player/player.h"
-int main(int argc, char* argv[]) {
+GameMain::GameMain() {}
+
+int GameMain::run() {
     CSVWriter::write_map("main_map.csv");
     Stage stage("main_map.csv");
     Coordinate coordinate_a(30, 36);
