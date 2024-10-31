@@ -28,11 +28,14 @@ void Player::add_action(int& command) { current_actions.insert(command); }
 
 void Player::remove_action(int& command) {
     current_actions.erase(command);
-    if (command == JUMP) {
+    if (command == JUMP) {  // esto va a terminar siendo un diccionario de funciones probablemente
         position.released_jump();
     }
     if (command == AIM_UP) {
         position.stop_aiming_up();
+    }
+    if (command == SHOOT) {
+        weapon->stop_shooting();
     }
 }
 

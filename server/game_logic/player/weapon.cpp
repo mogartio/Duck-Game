@@ -17,25 +17,27 @@ Coordinate Weapon::get_gun_position(int facing_direction) {
 CowboyGun::CowboyGun(Player& player, Stage& stage): Weapon(player, stage, 6, 20) {}
 
 void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0) {
+    if (ammo == 0 || !stopped_holding_trigger) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
     stage.add_projectile(std::move(
             std::make_unique<CowboyBullet>(gun_position, x_direction, is_aiming_up, reach)));
     ammo--;
+    stopped_holding_trigger = false;
 }
 
 Magnum::Magnum(Player& player, Stage& stage): Weapon(player, stage, 6, 20) {}
 
 void Magnum::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0) {
+    if (ammo == 0 || !stopped_holding_trigger) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
     stage.add_projectile(std::move(
             std::make_unique<MagnumBullet>(gun_position, x_direction, is_aiming_up, reach)));
     ammo--;
+    stopped_holding_trigger = false;
 }
 
 
