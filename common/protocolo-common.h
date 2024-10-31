@@ -1,15 +1,23 @@
 #ifndef PROTOCOLOCOMMON_H
 #define PROTOCOLOCOMMON_H
+#include <functional>
+#include <map>
 #include <string>
 
-#include "socket.h"
-#include "socket_error.h"
+#include "./messages/generic_msg.cpp"
+#include "./messages/generic_msg.h"
+#include "./messages/handler_recv.h"
+#include "./messages/handler_send.h"
+#include "./socket/socket.h"
+#include "./socket/socket_error.h"
 
-class ProtocoloCommon {
+class ProtocoloCommon: public HandlerSender, public HandlerReceiver {
 private:
     // ------------------- Atributos -------------------
 
     Socket& socket;
+
+    std::map<GenericMsg::MsgTypeHeader, std::function<GenericMsg*()>> recv_handlers;
 
     // ------------------- Métodos privados -------------------
 
@@ -53,9 +61,15 @@ protected:
     /*
      * Recibe un string a través del socket.
      */
-    std::string recv_string(u_int16_t& size);
+    std::string recv_string();
 
 public:
+    // ------------------- Métodos públicos -------------------
+
+    void send(GenericMsg* msg);
+
+    GenericMsg* receive();
+
     // ------------------- Constructor -------------------
     /*
      * Constructor del protocolo

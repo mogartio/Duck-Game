@@ -1,26 +1,26 @@
 target_sources(common
     PRIVATE
     # .cpp files
-    queuesStructs/mensaje.cpp
-    queuesStructs/mensaje-lobby.cpp
-    liberror.cpp
+    socket/liberror.cpp
+    socket/resolver.cpp
+    socket/resolvererror.cpp
+    socket/socket.cpp
     protocolo-common.cpp
-    resolver.cpp
-    resolvererror.cpp
-    socket.cpp
-
+    messages/generic_msg.cpp
+    messages/handler_send.cpp
+    messages/handler_recv.cpp
 
     PUBLIC
     # .h files
-    queuesStructs/descripcion-lobby.h
-    queuesStructs/mensaje.h
-    queuesStructs/mensaje-lobby.h
-    liberror.h
-    protocolo-common.h
+    socket/liberror.h
     queue.h
-    resolver.h
-    resolvererror.h
-    socket.h
-    socket_error.h
+    socket/resolver.h
+    socket/resolvererror.h
+    socket/socket.h
+    socket/socket_error.h
     thread.h
+    protocolo-common.h
+    messages/generic_msg.h
+    messages/handler_send.h
+    messages/handler_recv.h
     )
