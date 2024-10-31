@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include <vector>
+#include <iostream>
 
 #define OFFSETX 10
 #define OFFSETY 13
@@ -35,7 +36,17 @@ void Player::initializeWingImage(WingState wingState) {
     // wings.insert({wingState, Image(rend, wingType)});
 
     // ------ Opcion 3 -------
-    wings[wingState] = Image(rend, wingType);
+    // std::cout << wingType << std::endl;
+    // wings[wingState] = Image(rend, wingType);
+
+    // ------ Opcion 4 ------
+    // Image w(rend, wingType);
+    // wings.push_back(std::move(w));
+
+    // ------ Opcion 5 ------
+    std::vector<Image> images;
+    images.emplace_back(rend, wingType);
+    wings.emplace(wingState, std::move(images));
 }
 
 void Player::initialiceDuckImages(DuckState state) {
@@ -69,7 +80,7 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
         initializeWingImage(wingState);
     }
 
-    wing = &wings[(WingState::NORMAL)];
+    wing = &wings[(WingState::NORMAL)][0];
 
     // -------- QueryTexture --------
     duck->queryTexture();
@@ -88,17 +99,17 @@ void Player::updateWing(int x, int y) {
     // Actualiza imagen del ala
     if (state == DuckState::SLOW_FALL) {
         if (flapup) {
-            wing = &wings[(WingState::FLAPUP)];
+            wing = &wings[(WingState::FLAPUP)][0];
             flapup = false;
         } else {
-            wing = &wings[(WingState::FLAPDOWN)];
+            wing = &wings[(WingState::FLAPDOWN)][0];
             flapup = true;
         }
     } else {
         if (weaponON) {
-            wing = &wings[(WingState::HOLD)];
+            wing = &wings[(WingState::HOLD)][0];
         } else {
-            wing = &wings[(WingState::NORMAL)];
+            wing = &wings[(WingState::NORMAL)][0];
         }
     }
 

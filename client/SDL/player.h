@@ -20,8 +20,10 @@ private:
     SDL_RendererFlip flip;
     std::string file;
 
-    std::unordered_map<DuckState, std::vector<Image>> ducks;
-    std::unordered_map<WingState, Image> wings;
+    std::unordered_map<DuckState, std::vector<Image>> ducks; 
+    //std::unordered_map<WingState, Image> wings; //opcion 1, 2 y 3
+    //std::vector<Image> wings; // opcion 4
+    std::unordered_map<WingState, std::vector<Image>> wings; // opcion 5
 
     DuckState state;
 
