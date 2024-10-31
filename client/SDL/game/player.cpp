@@ -27,23 +27,6 @@ void Player::chooseColor(Color color) {
 
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
-
-    // ------ Opcion 1 -------
-    // Image w(rend, wingType);
-    // wings.emplace(wingState, std::move(w));
-
-    // ------ Opcion 2 -------
-    // wings.insert({wingState, Image(rend, wingType)});
-
-    // ------ Opcion 3 -------
-    // std::cout << wingType << std::endl;
-    // wings[wingState] = Image(rend, wingType);
-
-    // ------ Opcion 4 ------
-    // Image w(rend, wingType);
-    // wings.push_back(std::move(w));
-
-    // ------ Opcion 5 ------
     std::vector<Image> images;
     images.emplace_back(rend, wingType);
     wings.emplace(wingState, std::move(images));

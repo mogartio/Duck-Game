@@ -3,7 +3,7 @@
 #include <SDL2/SDL_timer.h>      // Incluye la biblioteca para manejar temporizadores
 #include <vector>
 
-#include "player.h"
+#include "game/player.h"
 
 int main(int argc, char* argv[]) {
     // Inicializa todos los subsistemas de SDL
@@ -55,8 +55,6 @@ int main(int argc, char* argv[]) {
     // Variables de control del programa
     bool close = false; // Variable para controlar si se debe cerrar la ventana
     int speed = 200; // Velocidad de movimiento del objeto
-    // int window_width = 800; // Ancho de la ventana
-    // int window_height = 600; // Alto de la ventana
 
     // Variables para controlar el movimiento en ambas direcciones
     int vel_x = 0; // Velocidad en la dirección X
@@ -84,14 +82,6 @@ int main(int argc, char* argv[]) {
             switch (event.type) {
                 case SDL_QUIT: // Evento de cerrar la ventana
                     close = true; // Establece la variable para cerrar el programa
-                    break;
-
-                case SDL_WINDOWEVENT: // Evento relacionado con la ventana
-                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                        // // Si la ventana ha sido redimensionada, actualiza sus dimensiones
-                        // window_width = event.window.data1; // Nuevo ancho
-                        // window_height = event.window.data2; // Nuevo alto
-                    }
                     break;
 
                 case SDL_KEYDOWN: // Evento de tecla presionada

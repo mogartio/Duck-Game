@@ -1,11 +1,11 @@
 # Nombre del ejecutable
-TARGET = game
+TARGET = play
 
 # Compilador
 CC = g++
 
 # Archivos fuente
-SRC = prueba.cpp player.cpp image.cpp wingState.cpp ../../common/duckState/duckState.cpp
+SRC = prueba.cpp game/player.cpp game/image.cpp game/wingState.cpp ../../common/duckState/duckState.cpp
 
 # Flags de compilación
 CFLAGS = -Wall -g

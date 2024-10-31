@@ -10,7 +10,7 @@ void Map::makeMap(int w, int h) {
     this->background = &background;
 
     Image tile(rend, "");
-    Player player(rend, 0);
+    Player player(rend, Color(0));
     for (int i = 0; i < (w*h); i++) {
         int pos;
         queueRecive.try_pop(pos);
@@ -29,7 +29,7 @@ void Map::makeMap(int w, int h) {
                 // Necesito un sistema que si vuelve a aparecer el num 2 a 3 tiles de distancia de la actual lo saltee
 
                 //aca determino que color es para conseguir el string q necesito
-                player = Player(rend, players.size());
+                player = Player(rend, Color(players.size()));
                 player.defineSize(50, 50);
                 //player.update(pos.x, pos.y, info.state, info.side);
                 players.push_back(player);

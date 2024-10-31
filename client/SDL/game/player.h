@@ -4,7 +4,7 @@
 
 #include "image.h"
 #include "wingState.h"
-#include "../../common/duckState/duckState.h"
+#include "../../../common/duckState/duckState.h"
 
 enum Color {
     WHITE,
@@ -21,9 +21,7 @@ private:
     std::string file;
 
     std::unordered_map<DuckState, std::vector<Image>> ducks; 
-    //std::unordered_map<WingState, Image> wings; //opcion 1, 2 y 3
-    //std::vector<Image> wings; // opcion 4
-    std::unordered_map<WingState, std::vector<Image>> wings; // opcion 5
+    std::unordered_map<WingState, std::vector<Image>> wings;
 
     DuckState state;
 

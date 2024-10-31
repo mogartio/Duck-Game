@@ -1,5 +1,5 @@
-#include "common/queue.h"
-#include "common/thread.h"
+#include "../../../common/queue.h"
+#include "../../../common/thread.h"
 
 class OnePlayer {
 private:

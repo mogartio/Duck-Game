@@ -8,13 +8,10 @@
 #define TILES_TO_PIXELS 10
 
 enum Front_event {
-    MOVE_LEFT_START,
-    MOVE_LEFT_STOP,
-    MOVE_RIGHT_START,
-    MOVE_RIGHT_STOP,
+    MOVE_LEFT,
+    MOVE_RIGHT,
     JUMP_EVENT,
-    PLAY_DEAD_START,
-    PLAY_DEAD_STOP,
+    PLAY_DEAD,
     END
 };
 
@@ -73,13 +70,13 @@ void OnePlayer::play() {
                             queueSend.try_push(JUMP_EVENT);
                             break;
                         case SDL_SCANCODE_S: // Tecla S
-                            queueSend.try_push(PLAY_DEAD_START);
+                            queueSend.try_push(PLAY_DEAD);
                             break;
                         case SDL_SCANCODE_A: // Tecla A
-                            queueSend.try_push(MOVE_LEFT_START);
+                            queueSend.try_push(MOVE_LEFT);
                             break;
                         case SDL_SCANCODE_D: // Tecla D
-                            queueSend.try_push(MOVE_RIGHT_START);
+                            queueSend.try_push(MOVE_RIGHT);
                             break;
                         default:
                             break; // Ignora otras teclas
@@ -89,13 +86,13 @@ void OnePlayer::play() {
                 case SDL_KEYUP: // Evento de tecla soltada
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_S: // Tecla S
-                            queueSend.try_push(PLAY_DEAD_STOP);
+                            queueSend.try_push(PLAY_DEAD);
                             break;
                         case SDL_SCANCODE_A: // Tecla A
-                            queueSend.try_push(MOVE_LEFT_STOP);
+                            queueSend.try_push(MOVE_LEFT);
                             break;                            
                         case SDL_SCANCODE_D: // Tecla D
-                            queueSend.try_push(MOVE_RIGHT_STOP);
+                            queueSend.try_push(MOVE_RIGHT);
                             break;
                         default:
                             break; // Ignora otras teclas
