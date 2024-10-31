@@ -1,7 +1,7 @@
 #include "map.h"
 #include <iostream>
 
-#define TILES_TO_PIXELS 10
+#define TILES_TO_PIXELS 30
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
@@ -33,13 +33,13 @@ void Map::makeMap(int columnas, int filas) {
                 //player.update(pos.x, pos.y, info.state, info.side);
                 players.push_back(player);
                 break;
-            case 5: //piso
-            case 6: //pared
+            // case 5: //piso
+            case 5: //pared
                 
                 // DEFINIR que tamaño tienen los tiles
 
                 //aca determino que tipo de tile es para conseguir el string q necesito
-                tile = Image(rend, "../img_src/tiles/dayTiles/middle.png");
+                tile = Image(rend, "img_src/tiles/dayTiles/middle.png");
                 tile.queryTexture();
                 tile.defineSize(35, 35);
                 tile.position(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS);

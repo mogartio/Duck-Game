@@ -44,9 +44,9 @@ void OnePlayer::play() {
     SDL_Window* win = SDL_CreateWindow("DUCK GAME",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       columnas*TILES_TO_PIXELS,                     // Ancho de la ventana
-                                       filas*TILES_TO_PIXELS,
-                                       0);                       // Alto de la ventana
+                                       800,                     // Ancho de la ventana
+                                       600,
+                                       SDL_WINDOW_RESIZABLE);                       // Alto de la ventana
                                        
 
     // Configura las opciones del renderizador (aceleración por hardware)
@@ -54,10 +54,10 @@ void OnePlayer::play() {
     Uint32 render_flags = SDL_RENDERER_ACCELERATED;
     SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
 
-    Image background(rend, "day.png");
+    Image background(rend, "img_src/background/day.png");
     Map map(rend, mapa, columnas, filas);
 
-    const Uint32 frame_rate = 1000 / 30; // 30 FPS
+    const Uint32 frame_rate = 1000 / 40; // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
 
     bool close = false;
