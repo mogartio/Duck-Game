@@ -1,7 +1,7 @@
 #include "map.h"
 #include <iostream>
 
-#define TILES_TO_PIXELS 30
+#define TILES_TO_PIXELS 10
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
@@ -9,9 +9,17 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(ren
     makeMap(w, h);
 }
 
+void Map::makeTile(int columnaActual, int filaActual, TileType tileType) {
+    std::vector<Image> images;
+    images.emplace_back(rend, "img_src/tiles/dayTiles/middle.png");
+    tiles.emplace(tileType, std::move(images));
+    tiles[tileType][0].queryTexture();
+    tiles[tileType][0].defineSize(35, 35);
+    tiles[tileType][0].position(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS);
+}
+
 void Map::makeMap(int columnas, int filas) {
     
-    Image tile(rend, "");
     Player player(rend, Color(0));
     int filaActual = 0;
     int columnaActual = 0;
@@ -39,11 +47,7 @@ void Map::makeMap(int columnas, int filas) {
                 // DEFINIR que tamaño tienen los tiles
 
                 //aca determino que tipo de tile es para conseguir el string q necesito
-                tile = Image(rend, "img_src/tiles/dayTiles/middle.png");
-                tile.queryTexture();
-                tile.defineSize(35, 35);
-                tile.position(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS);
-                tiles.push_back(tile);
+                makeTile(columnaActual, filaActual, MEDIO);
                 break;
             case 13: //caja                
             case 14: //caja rota
@@ -61,8 +65,10 @@ void Map::update(int player, int x, int y, DuckState state, Side side) {
 
 void Map::fill() { // Dibuja de atras para adelante
 
-    for (Image tile: tiles) {
-        tile.fill();
+    for (auto& [type, tileVector] : tiles) {
+        for (Image& tile : tileVector) {
+            tile.fill();
+        }
     }
 
     /*
