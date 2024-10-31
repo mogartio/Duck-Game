@@ -22,7 +22,7 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
     stage.draw_player(*players[player_name2]);
 }
 
-// OH el horror
+// OH el HORROR
 // El peor codigo que escribi en este tp hasta ahora
 // pero funciona
 // no lo toquen
@@ -80,7 +80,9 @@ void GameMain::run() {
             std::string command;
             std::getline(std::cin, command);
             GenericMsg* new_msg = create_msg(command);
-            q.push(new_msg);
+            if (new_msg != nullptr) {
+                q.push(new_msg);
+            }
         }
         GenericMsg* msg;
         bool have_command = q.try_pop(msg);
