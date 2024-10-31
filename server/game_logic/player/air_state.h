@@ -1,6 +1,8 @@
 #ifndef AIR_STATE_H
 #define AIR_STATE_H
 #include <memory>
+
+#include "../config.h"
 #define INITIAL_FALLING_SPEED 1
 #define NORMAL_FALLING_SPEED 2
 #define TOTAL_JUMPS 3
@@ -13,6 +15,7 @@ public:
     virtual void jump(PlayerPosition&) = 0;
     virtual void stop_jumping(PlayerPosition&) {}
     virtual void update(bool, PlayerPosition&) = 0;
+    virtual ~AirState() = default;
 };
 
 class Grounded: public AirState {
@@ -39,7 +42,7 @@ private:
     bool keeps_jumping;
 
 public:
-    Jumping(): jumps_left(TOTAL_JUMPS), keeps_jumping(true) {}
+    Jumping(): jumps_left(Config::get_instance()->player_jumping_height), keeps_jumping(true) {}
     virtual int get_offset() override;
     virtual void jump(PlayerPosition&) override;
     virtual void update(bool, PlayerPosition&) override;

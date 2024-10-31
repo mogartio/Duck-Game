@@ -2,10 +2,10 @@
 
 #include <string>
 
+#include "../../../common/messages/generic_msg.h"
+
 #include "player.h"
-#define LEFT "a"
-#define RIGHT "d"
-#define UP "w"
+using namespace ActionsId;
 #define AIM_LEFT -1
 #define AIM_RIGHT 1
 
@@ -14,17 +14,17 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
     air_state = std::move(std::make_unique<Grounded>());
 }
 
-void PlayerPosition::move(std::set<std::string>& directions) {
+void PlayerPosition::move(std::set<int>& directions) {
     int x_offset = 0;
-    for (std::string direction: directions) {
-        if (direction.compare(LEFT) == 0) {  // si direccion es izq...
+    for (int direction: directions) {
+        if (direction == MOVE_LEFT) {  // si direccion es izq...
             facing_direction = AIM_LEFT;
             x_offset = -1;
-        } else if (direction.compare(RIGHT) == 0) {
+        } else if (direction == MOVE_RIGHT) {
             facing_direction = AIM_RIGHT;
             x_offset = 1;
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
-        } else if (direction.compare(UP) == 0) {
+        } else if (direction == JUMP) {
             air_state->jump(*this);
         } else {
             continue;
@@ -42,7 +42,7 @@ void PlayerPosition::move_horizontally(int offset) {
         position = current;
     }
 }
-void PlayerPosition::released_w() { air_state->stop_jumping(*this); }
+void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
 void PlayerPosition::set_state(std::unique_ptr<AirState> new_state) {
     air_state = std::move(new_state);
 }
