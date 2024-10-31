@@ -31,7 +31,7 @@ void Player::remove_action(int& command) {
     if (command == JUMP) {
         position.released_jump();
     }
-    if (command.compare("w") == 0) {
+    if (command == AIM_UP) {
         position.stop_aiming_up();
     }
 }

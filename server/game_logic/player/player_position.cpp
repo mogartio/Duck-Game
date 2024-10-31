@@ -30,7 +30,7 @@ void PlayerPosition::move(std::set<int>& directions) {
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
             air_state->jump(*this);
-        } else if (direction.compare(UP) == 0) {
+        } else if (direction == AIM_UP) {
             aiming_up = true;
         } else {
             continue;
