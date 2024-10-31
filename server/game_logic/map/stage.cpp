@@ -41,7 +41,7 @@ void Stage::update() {
         map.set(c, BACKGROUND);
     }
     for (auto iterator = projectiles.begin(); iterator != projectiles.end();) {
-        int initial_projectiles = projectiles.size();
+        size_t initial_projectiles = projectiles.size();
         ray_trace(*iterator);
         if (iterator == projectiles.end()) {
             break;

@@ -23,13 +23,13 @@ private:
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);
     void set_state(std::unique_ptr<AirState>);
-    void move(std::set<std::string>&);
+    void move(std::set<int>&);
     Coordinate get_position();
     void occupy(Coordinate&);
     void free_occupied();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    void released_w();
+    void released_jump();
 };
 
 #endif
