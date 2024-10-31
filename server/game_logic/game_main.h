@@ -23,12 +23,17 @@ private:
     Stage stage;
     Queue<GenericMsg*>& q;
     std::map<std::string, Player*> players;
+    bool is_testing;
+    std::string player_name1;
+    std::string player_name2;
 
 public:
     // por ahora solo recibe un jugador, pero en el futuro deberia recibir dos capaz que
     // obligatoriamente?
-    explicit GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2);
+    explicit GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
+                      bool is_testing);
 
+    GenericMsg* create_msg(std::string command);
     void run() override;
 
     using HandlerReader::handle_read;

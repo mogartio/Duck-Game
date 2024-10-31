@@ -13,9 +13,10 @@ private:
     ClientsMonitor clients;
     Queue<GenericMsg*> recv_queue;
     SendQueuesMonitor<GenericMsg*> send_queues;
+    bool is_testing;
 
 public:
-    explicit Server(const char* port);
+    explicit Server(const char* port, bool is_testing);
     void run();
 };
 #endif

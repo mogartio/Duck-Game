@@ -52,6 +52,9 @@ public:
                 } else if (matrix[j][i] == 3) {
                     stream << "\033[33m" << "|" << matrix[j][i]
                            << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[j][i] == 4) {
+                    stream << "\033[32m" << "|" << matrix[j][i]
+                           << "\033[0m";  // Rojo para el número 2
                 } else {
                     stream << "|" << matrix[j][i];  // Imprimir el valor normalmente
                 }
