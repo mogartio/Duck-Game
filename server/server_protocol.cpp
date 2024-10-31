@@ -51,8 +51,8 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
 }
 
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
-    uint16_t header = msg.get_header();
-    send_u_int16_t(header);
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
     // mando filas y columnas 
     uint16_t filas = msg.get_filas();
     send_u_int16_t(filas);
