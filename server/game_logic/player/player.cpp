@@ -31,6 +31,9 @@ void Player::remove_action(int& command) {
     if (command == JUMP) {
         position.released_jump();
     }
+    if (command.compare("w") == 0) {
+        position.stop_aiming_up();
+    }
 }
 
 void Player::execute(int& command) {
@@ -54,6 +57,6 @@ void Player::update() {
 
 void Player::move(std::set<int>& movements) { position.move(movements); }
 
-void Player::shoot() { weapon->shoot(position.get_facing_direction()); }
+void Player::shoot() { weapon->shoot(position.get_facing_direction(), position.is_aiming_up()); }
 
 void Player::die() { is_alive = false; }

@@ -15,18 +15,22 @@ public:
     virtual void shoot(int) {}
     virtual int get_ammo() { return ammo; }
     virtual ~Weapon() = default;
+            player(player), stage(stage), ammo(ammo), reach(reach) {}
+    virtual void shoot(int, bool) {}
+    virtual int get_ammo() { return ammo; }
+    virtual Coordinate get_gun_position(int facing_direction);
 };
 
 class CowboyGun: public Weapon {
 public:
     CowboyGun(Player&, Stage&);
-    virtual void shoot(int) override;
+    virtual void shoot(int, bool) override;
 };
 
 class Magnum: public Weapon {
 public:
     Magnum(Player&, Stage&);
-    virtual void shoot(int) override;
+    virtual void shoot(int, bool) override;
 };
 
 // WIP
