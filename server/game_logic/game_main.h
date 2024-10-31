@@ -21,7 +21,6 @@ private:
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
     Stage stage;
     Queue<GenericMsg*>& q;
-    Config config;
     std::map<std::string, Player*> players;
 
 public:

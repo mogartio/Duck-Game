@@ -16,6 +16,7 @@ target_sources(server_exe  # Use the correct target name
     server.cpp
     receiver.cpp
     sender.cpp
+    game_logic/config.cpp
     game_logic/game_main.cpp
     game_logic/player/air_state.cpp
     game_logic/player/player.cpp
@@ -36,6 +37,7 @@ target_sources(server_exe  # Use the correct target name
     server.h
     receiver.h
     sender.h
+    game_logic/config.h
 
     game_logic/game_main.h
     game_logic/player/air_state.h

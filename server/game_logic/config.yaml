@@ -14,3 +14,7 @@ weapon_spawn_sites:
   - [1, 2]
   - [3, 4]
   - [5, 6]
+
+player_spawn_sites:
+  - [20, 36]
+  - [30, 36]

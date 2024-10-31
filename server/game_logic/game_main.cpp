@@ -1,13 +1,20 @@
 #include "game_main.h"
 
+#include "config.h"
+
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2):
-        stage("main_map.csv"), q(q), config("./server/game_logic/config.yaml") {
+        stage("main_map.csv"), q(q) {
     CSVWriter::write_map("main_map.csv");
-    Coordinate coordinate_a(30, 36);  // posicion por ahora de prueba
+
+    std::vector<std::tuple<int, int>> player_spawn_sites =
+            Config::get_instance()->player_spawn_sites;
+    Coordinate coordinate_a(std::get<0>(player_spawn_sites[0]), std::get<1>(player_spawn_sites[0]));
+    Coordinate coordinate_b(std::get<0>(player_spawn_sites[1]), std::get<1>(player_spawn_sites[1]));
 
     players[player_name1] = new Player(coordinate_a, stage, 2);
     stage.draw_player(*players[player_name1]);
-    (void)player_name2;  // para que no tire error de compilacion de q no se usa esa variable
+    players[player_name2] = new Player(coordinate_b, stage, 4);
+    stage.draw_player(*players[player_name2]);
 }
 
 int GameMain::run() {

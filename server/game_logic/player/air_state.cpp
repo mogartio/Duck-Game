@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "../config.h"
+
 #include "player_position.h"
 
 
@@ -43,5 +45,5 @@ void Falling::update(bool could_fall, PlayerPosition& player) {
         player.set_state(std::make_unique<Grounded>());
         return;
     }
-    falling_speed = NORMAL_FALLING_SPEED;
+    falling_speed = Config::get_instance()->player_falling_speed;
 }
