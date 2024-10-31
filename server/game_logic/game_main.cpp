@@ -24,6 +24,7 @@ int GameMain::run() {
         }
         stage.update();
         stage.print();
+        sleep(1);
     }
     return 0;
 }
