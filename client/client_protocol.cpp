@@ -94,17 +94,16 @@ void ClientProtocol::handle_recv(WinnerMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(SendMapMsg& msg) {
-    uint16_t filas = recv_u_int8_t();
+    uint16_t filas = recv_u_int16_t();
     msg.set_filas(filas);
-    uint16_t columnas = recv_u_int8_t();
+    uint16_t columnas = recv_u_int16_t();
     msg.set_columnas(columnas);
     std::vector<uint16_t> map;
-    for (int i = 0; i < filas; i++) {
-        uint16_t tile = recv_u_int8_t();
+    for (int i = 0; i < filas*columnas; i++) {
+        uint16_t tile = recv_u_int16_t();
         map.push_back(tile);
     }
     msg.set_map(map);
-    
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
