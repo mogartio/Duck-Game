@@ -103,6 +103,13 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
         uint16_t tile = recv_u_int8_t();
         map.push_back(tile);
     }
+    msg.set_map(map);
+    uint16_t x1 = recv_u_int16_t();
+    uint16_t y1 = recv_u_int16_t();
+    msg.set_player1_spawn(x1, y1);
+    uint16_t x2 = recv_u_int16_t();
+    uint16_t y2 = recv_u_int16_t();
+    msg.set_player2_spawn(x2, y2);
     
 }
 

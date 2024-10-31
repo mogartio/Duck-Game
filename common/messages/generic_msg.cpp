@@ -278,12 +278,14 @@ private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
     uint16_t filas; 
     uint16_t columnas;
+    std::pair<uint16_t, uint16_t> player1_spawn;
+    std::pair<uint16_t, uint16_t> player2_spawn;
     uint8_t header;
 
 public:
-    SendMapMsg(): filas(0), columnas(0), header(GenericMsg::SEND_MAP_MSG) {}
-    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas):
-            map(map), filas(filas), columnas(columnas), header(GenericMsg::SEND_MAP_MSG) {}
+    SendMapMsg(): map(), filas(0), columnas(0), player1_spawn(), player2_spawn(), header(GenericMsg::SEND_MAP_MSG) {}
+    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, std::pair<uint16_t, uint16_t> player1_spawn, std::pair<uint16_t, uint16_t> player2_spawn):
+            map(map), filas(filas), columnas(columnas), player1_spawn(player1_spawn), player2_spawn(player2_spawn), header(GenericMsg::SEND_MAP_MSG) {}
 
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
@@ -303,6 +305,13 @@ public:
 
     uint16_t get_columnas() const { return columnas; }
 
+    void set_player1_spawn(uint16_t x, uint16_t y) { this->player1_spawn = std::make_pair(x, y); }
+
+    void set_player2_spawn(uint16_t x, uint16_t y) { this->player2_spawn = std::make_pair(x, y); }
+
+    std::pair<uint16_t, uint16_t> get_player1_spawn() const { return player1_spawn; }
+
+    std::pair<uint16_t, uint16_t> get_player2_spawn() const { return player2_spawn; }
 
 };
 
