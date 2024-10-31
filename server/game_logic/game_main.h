@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../../common/queue.h"
+#include "../../common/thread.h"
 // Para futuro cuando lo hagamos un hilo : #include "../../common/thread.h"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/messages/handler_read.h"
@@ -15,7 +16,7 @@
 
 #include "config.h"
 
-class GameMain: public HandlerReader {
+class GameMain: public HandlerReader, public Thread {
 private:
     // TODO: esto se puede mejorar mas haciendo que este la lista de jugadores
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
@@ -26,10 +27,9 @@ private:
 public:
     // por ahora solo recibe un jugador, pero en el futuro deberia recibir dos capaz que
     // obligatoriamente?
-    explicit GameMain(Queue<GenericMsg*>& q, std::string player_name1,
-                      std::string player_name2 = "");
+    explicit GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2);
 
-    int run();
+    void run() override;
 
     using HandlerReader::handle_read;
 

@@ -17,7 +17,7 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
     stage.draw_player(*players[player_name2]);
 }
 
-int GameMain::run() {
+void GameMain::run() {
     while (true) {
         // Aca hay que try_popear de la cola de mensajes
         GenericMsg* msg;
@@ -33,7 +33,6 @@ int GameMain::run() {
         stage.print();
         sleep(1);
     }
-    return 0;
 }
 
 
