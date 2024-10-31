@@ -19,7 +19,7 @@ private:
     bool is_alive;
     Stage& stage;
     std::unique_ptr<Weapon> weapon;
-    std::set<std::string> current_actions;
+    std::set<int> current_actions;
 
 public:
     int get_id();
@@ -28,10 +28,10 @@ public:
     Player(Coordinate&, Stage&, int);
     void die();
     void occupy(Coordinate&);
-    void add_action(std::string&);
-    void remove_action(std::string&);
-    void move(std::set<std::string>&);
-    void execute(std::string&);
+    void add_action(int&);
+    void remove_action(int&);
+    void move(std::set<int>&);
+    void execute(int&);
     void shoot();
     void update();
 };

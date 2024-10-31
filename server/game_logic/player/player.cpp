@@ -3,7 +3,11 @@
 #include <cstdlib>
 #include <memory>
 
+#include "../../../common/messages/generic_msg.h"
+
 #include "weapon.h"
+
+using namespace ActionsId;
 
 Player::Player(Coordinate& initial_position, Stage& stage, int id):
         id(id),
@@ -20,26 +24,17 @@ void Player::occupy(Coordinate& coordinate) { position.occupy(coordinate); }
 
 std::vector<Coordinate> Player::get_occupied() { return position.get_occupied(); }
 
-void Player::add_action(std::string& command) {
-    if (current_actions.count(command) == 1) {
-        remove_action(command);
-        return;
-    }
-    current_actions.insert(command);
-}
+void Player::add_action(int& command) { current_actions.insert(command); }
 
-void Player::remove_action(std::string& command) {
+void Player::remove_action(int& command) {
     current_actions.erase(command);
-    if (command.compare("j") == 0) {  // TODO: fix
-        position.released_w();
-    }
-    if (command.compare("w") == 0) {
-        position.released_w();
+    if (command == JUMP) {
+        position.released_jump();
     }
 }
 
-void Player::execute(std::string& command) {
-    if (command.compare("x") == 0) {
+void Player::execute(int& command) {
+    if (command == SHOOT) {
         shoot();
         // TODO: ver si mantuvo apretado el boton
         return;
@@ -47,18 +42,17 @@ void Player::execute(std::string& command) {
 }
 
 void Player::update() {
-    std::set<std::string> moving_commands;  // comandos que te emocionan son...
-    for (std::string command: current_actions) {
+    std::set<int> moving_commands;  // comandos que te emocionan son...
+    for (int command: current_actions) {
         execute(command);
-        if (command.compare("w") == 0 || command.compare("a") == 0 || command.compare("d") == 0 ||
-            command.compare("j") == 0) {
-            moving_commands.insert(command);  // TODO: emprolijar
+        if (command == AIM_UP || command == MOVE_LEFT || command == MOVE_RIGHT || command == JUMP) {
+            moving_commands.insert(command);
         }
     }
     move(moving_commands);
 }
 
-void Player::move(std::set<std::string>& movements) { position.move(movements); }
+void Player::move(std::set<int>& movements) { position.move(movements); }
 
 void Player::shoot() { weapon->shoot(position.get_facing_direction()); }
 

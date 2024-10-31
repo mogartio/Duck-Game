@@ -19,7 +19,7 @@ class GameMain: public HandlerReader {
 private:
     // TODO: esto se puede mejorar mas haciendo que este la lista de jugadores
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
-    Stage* stage;
+    Stage stage;
     Queue<GenericMsg*>& q;
     Config config;
     std::map<std::string, Player*> players;
