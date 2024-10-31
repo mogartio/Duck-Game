@@ -1,6 +1,6 @@
 #include "receiver.h"
 
-Receiver::Receiver(Queue<GenericMsg*>* recv_queue, ServerProtocol* protocol):
+Receiver::Receiver(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol):
         recv_queue(recv_queue), protocol(protocol) {}
 
 void Receiver::run() {
@@ -16,8 +16,3 @@ void Receiver::run() {
 
 void Receiver::kill() { _keep_running = false; }
 
-void Receiver::update_recv_queue(Queue<GenericMsg*>* new_recv_queue) {
-    recv_queue = new_recv_queue;
-}
-
-void Receiver::update_protocol(ServerProtocol* new_protocol) { protocol = new_protocol; }

@@ -10,6 +10,8 @@ target_sources(common
     messages/handler_send.cpp
     messages/handler_recv.cpp
     messages/handler_read.cpp
+    receiver.cpp
+    sender.cpp
 
     PUBLIC
     # .h files
@@ -25,4 +27,6 @@ target_sources(common
     messages/handler_send.h
     messages/handler_recv.h
     messages/handler_read.h
+    receiver.h
+    sender.h
     )
