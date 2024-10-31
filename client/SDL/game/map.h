@@ -1,5 +1,4 @@
 #include "../../../common/queue.h"
-#include "image.h"
 #include "player.h"
 
 #include <list>
@@ -8,19 +7,21 @@
 class Map {
 private:
 
-    Queue<int>& queueRecive;
     SDL_Renderer* rend;
+    std::vector<uint16_t> mapa;
 
     std::list<Image> tiles;
     std::vector<Player> players;
     // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
 
-    Image* background;
-
-public:
-    Map(SDL_Renderer* rend, Queue<int>& queueRecive);
+    // Image background;
 
     void makeMap(int w, int h);
+
+public:
+    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h);
+
+    
 
     // Actualiza posicion y estado del jugador
     void update(int player, int x, int y, DuckState state, Side side);

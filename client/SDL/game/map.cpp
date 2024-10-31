@@ -1,31 +1,30 @@
 #include "map.h"
+#include <iostream>
 
-Map::Map(SDL_Renderer* rend, Queue<int>& queueRecive): rend(rend), queueRecive(queueRecive) {}
+#define TILES_TO_PIXELS 10
 
-void Map::makeMap(int w, int h) {
-    int back;
-    queueRecive.try_pop(back);
-    //aca hago que back se convierta en el string q necesito
-    Image background(rend, "img_src/background/day.png");
-    this->background = &background;
+Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(rend), mapa(mapa) {
+    // Deberia llegarme la info del fondo
 
+    makeMap(w, h);
+}
+
+void Map::makeMap(int columnas, int filas) {
+    
     Image tile(rend, "");
     Player player(rend, Color(0));
-    for (int i = 0; i < (w*h); i++) {
-        int pos;
-        queueRecive.try_pop(pos);
-        switch (pos) {
+    int filaActual = 0;
+    int columnaActual = 0;
+    for (uint16_t i: mapa) {
+        if (columnaActual%columnas == 0) {
+            filaActual++;
+        }
+        switch (i) {
             case 1:
-                // DEFINIR que tamaño tienen los tiles
-
-                //aca determino que tipo de tile es para conseguir el string q necesito
-                tile = Image(rend, "img_src/tiles/dayTiles/middle.png");
-                tile.queryTexture();
-                tile.defineSize(35, 35);
-                //tile.position(pos.x, pos.y);
-                tiles.push_back(tile);
-                break;
             case 2:
+            case 3:
+            case 4:
+                //llega jugador
                 // Necesito un sistema que si vuelve a aparecer el num 2 a 3 tiles de distancia de la actual lo saltee
 
                 //aca determino que color es para conseguir el string q necesito
@@ -34,12 +33,25 @@ void Map::makeMap(int w, int h) {
                 //player.update(pos.x, pos.y, info.state, info.side);
                 players.push_back(player);
                 break;
-            case 3:
-                //proyectiles
+            case 5: //piso
+            case 6: //pared
+                
+                // DEFINIR que tamaño tienen los tiles
+
+                //aca determino que tipo de tile es para conseguir el string q necesito
+                tile = Image(rend, "../img_src/tiles/dayTiles/middle.png");
+                tile.queryTexture();
+                tile.defineSize(35, 35);
+                tile.position(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS);
+                tiles.push_back(tile);
+                break;
+            case 13: //caja                
+            case 14: //caja rota
+                break;
             default:
                 break;
         }
-
+        columnaActual++;
     }
 }
 
@@ -48,7 +60,6 @@ void Map::update(int player, int x, int y, DuckState state, Side side) {
 }
 
 void Map::fill() { // Dibuja de atras para adelante
-    (*background).fill(true);
 
     for (Image tile: tiles) {
         tile.fill();
