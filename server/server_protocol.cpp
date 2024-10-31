@@ -63,13 +63,6 @@ void ServerProtocol::handle_send(const SendMapMsg& msg) {
     for (size_t i = 0; i < map.size(); i++) {
         send_u_int16_t(map[i]);
     }
-    // mando las posiciones de los jugadores
-    std::pair<uint16_t, uint16_t> player1_spawn = msg.get_player1_spawn();
-    send_u_int16_t(player1_spawn.first);
-    send_u_int16_t(player1_spawn.second);
-    std::pair<uint16_t, uint16_t> player2_spawn = msg.get_player2_spawn();
-    send_u_int16_t(player2_spawn.first);
-    send_u_int16_t(player2_spawn.second);
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {

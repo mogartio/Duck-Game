@@ -26,7 +26,7 @@ public:
 
     std::string get_player_name() const { return player_name; }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_color(uint8_t color) { this->color = color; }
 
@@ -44,7 +44,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -62,7 +62,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id; }
 
@@ -81,7 +81,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -96,7 +96,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -114,7 +114,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_player_name(std::string player_name) { this->player_name = player_name; }
 
@@ -133,7 +133,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -152,7 +152,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_item_id(uint8_t item_id) { this->item_id = item_id; }
 
@@ -178,7 +178,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
     
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_action_id(uint8_t action_id) { this->action_id = action_id; }
 
@@ -203,7 +203,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
     
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_action_id(uint8_t action_id) { this->action_id = action_id; }
 
@@ -229,7 +229,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_lobbies(std::vector<std::string> lobbies) { this->lobbies = lobbies; }
 
@@ -248,7 +248,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -265,7 +265,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_error_msg(std::string error_msg) { this->error_msg = error_msg; }
 
@@ -278,20 +278,18 @@ private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
     uint16_t filas; 
     uint16_t columnas;
-    std::pair<uint16_t, uint16_t> player1_spawn;
-    std::pair<uint16_t, uint16_t> player2_spawn;
     uint8_t header;
 
 public:
-    SendMapMsg(): map(), filas(0), columnas(0), player1_spawn(), player2_spawn(), header(GenericMsg::SEND_MAP_MSG) {}
+    SendMapMsg(): map(), filas(0), columnas(0), header(GenericMsg::SEND_MAP_MSG) {}
     explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, std::pair<uint16_t, uint16_t> player1_spawn, std::pair<uint16_t, uint16_t> player2_spawn):
-            map(map), filas(filas), columnas(columnas), player1_spawn(player1_spawn), player2_spawn(player2_spawn), header(GenericMsg::SEND_MAP_MSG) {}
+            map(map), filas(filas), columnas(columnas), header(GenericMsg::SEND_MAP_MSG) {}
 
     void accept_send(HandlerSender& handler) override { handler.handle_send(*this); }
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_map(std::vector<uint16_t> map) { this->map = map; }
 
@@ -304,15 +302,6 @@ public:
     uint16_t get_filas() const { return filas; }
 
     uint16_t get_columnas() const { return columnas; }
-
-    void set_player1_spawn(uint16_t x, uint16_t y) { this->player1_spawn = std::make_pair(x, y); }
-
-    void set_player2_spawn(uint16_t x, uint16_t y) { this->player2_spawn = std::make_pair(x, y); }
-
-    std::pair<uint16_t, uint16_t> get_player1_spawn() const { return player1_spawn; }
-
-    std::pair<uint16_t, uint16_t> get_player2_spawn() const { return player2_spawn; }
-
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -326,7 +315,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
 
@@ -345,7 +334,7 @@ public:
 
     void accept_recv(HandlerReceiver& handler) override { handler.handle_recv(*this); }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     void set_winner_name(std::string winner_name) { this->winner_name = winner_name; }
 
@@ -374,7 +363,7 @@ public:
 
     std::pair<uint8_t, uint8_t> get_position() const { return position; }
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
     uint8_t get_state() const { return state; }
 
@@ -413,6 +402,6 @@ public:
 
     void set_projectile_final_position(uint16_t x, uint16_t y) { this->projectile_final_position = std::make_pair(x, y); }    
 
-    uint8_t get_header() const { return header; }
+    uint8_t get_header() const override { return header; }
 
 };
