@@ -14,6 +14,20 @@
 #include "handler_recv.h"
 #include "handler_send.h"
 
+namespace ActionsId {
+
+enum ActionId : uint8_t {
+    MOVE_LEFT = 0x01,
+    MOVE_RIGHT = 0x02,
+    JUMP = 0x03,
+    SHOOT = 0x04,
+    PLAY_DEAD = 0x05,
+    AIM_UP = 0x06,
+};
+
+
+}
+
 class GenericMsg {
 public:
     enum MsgTypeHeader : uint8_t {
@@ -37,13 +51,6 @@ public:
         PROJECTILE_INFO_MSG = 0x11,
     };
 
-    enum ActionId : uint8_t {
-        MOVE_LEFT = 0x01,
-        MOVE_RIGHT = 0x02,
-        JUMP = 0x03,
-        SHOOT = 0x04,
-        PLAY_DEAD = 0x05,
-    };
 
     enum FacingDirection : uint8_t {
         RIGHT = 0x01,
