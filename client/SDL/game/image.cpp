@@ -1,12 +1,18 @@
 #include <SDL2/SDL_image.h>
 
 #include "image.h"
+#include <iostream>
 
-Image::Image(SDL_Renderer* rend, std::string img) : rend(rend) {
-    SDL_Surface* imgSurface = IMG_Load(img.c_str());
-    SDL_Texture* imgTex = SDL_CreateTextureFromSurface(rend, imgSurface);
-    this->imgTex = imgTex;
-    SDL_FreeSurface(imgSurface); // Libera la superficie una vez que la textura está creada
+Image::Image() : rend(nullptr), imgTex(nullptr) {}
+
+void Image::initialize(SDL_Renderer* rend, const std::string& img) {
+    this->rend = rend;
+    imgTex = IMG_LoadTexture(rend, img.c_str());
+    if (imgTex == nullptr) {
+        std::cout << "Error de textura de imagen ";
+        throw(SDL_GetError());
+    }
+
 }
 
 void Image::fill(bool background) {
@@ -36,6 +42,10 @@ void Image::position(int x, int y) {
 }
 
 Image::~Image() {
-    SDL_DestroyTexture(imgTex); // Libera la textura
+    if (imgTex != nullptr) {
+        SDL_DestroyTexture(imgTex); // Libera la textura
+        imgTex = nullptr;
+    }
+
 }
 

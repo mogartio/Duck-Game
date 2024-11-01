@@ -20,8 +20,8 @@ private:
     SDL_RendererFlip flip;
     std::string file;
 
-    std::unordered_map<DuckState, std::vector<Image>> ducks; 
-    std::unordered_map<WingState, std::vector<Image>> wings;
+    std::unordered_map<DuckState, std::vector<Image*>> ducks; 
+    std::vector<Image*> wings;
 
     DuckState state;
 
@@ -56,6 +56,6 @@ public:
     // Dispara el arma
     void shoot();
 
-    ~Player() = default;
+    ~Player();
 
 };

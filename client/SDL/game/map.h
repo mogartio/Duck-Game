@@ -15,19 +15,21 @@ private:
     SDL_Renderer* rend;
     std::vector<uint16_t> mapa;
 
-    std::unordered_map<TileType, std::vector<Image>> tiles;
-    // std::list<Image> tiles;
+    std::list<Image*> tiles;
     std::vector<Player> players;
+
     // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
 
-    // Image background;
+    Image background;
+
+    void makePlayer(int columnaActual, int filaActual, int color);
     void makeTile(int columnaActual, int filaActual, TileType tileType);
-    void makeMap(int w, int h);
+
 
 public:
     Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h);
 
-    
+    void makeMap(int w, int h);
 
     // Actualiza posicion y estado del jugador
     void update(int player, int x, int y, DuckState state, Side side);

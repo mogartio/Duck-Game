@@ -1,6 +1,8 @@
 #include "../../../common/queue.h"
 #include "../../../common/thread.h"
 #include "../../../common/messages/generic_msg.h"
+#include "map.h"
+#include "window.h"
 class OnePlayer {
 private:
 

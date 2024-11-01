@@ -27,19 +27,28 @@ void Player::chooseColor(Color color) {
 
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
-    std::vector<Image> images;
-    images.emplace_back(rend, wingType);
-    wings.emplace(wingState, std::move(images));
+    // Crear el objeto Image y luego inicializarlo
+    Image* image = new Image();
+    image->initialize(rend, wingType);
+    wings.push_back(image);
 }
 
 void Player::initialiceDuckImages(DuckState state) {
     std::string action = file + duckState_to_string(state);
-    std::vector<Image> images;
-    images.emplace_back(rend, action);
+    std::vector<Image*> images;
+
+    // Crear el objeto Image y luego inicializarlo
+    Image* image = new Image();
+    image->initialize(rend, action);
+    images.push_back(image);
+
     if (state == DuckState::WALK) {
         action = file + duckState_to_string(state, false);
-        images.emplace_back(rend, action);
+        Image* additionalImage = new Image();
+        additionalImage->initialize(rend, action);
+        images.push_back(additionalImage);
     }
+
     ducks.emplace(state, std::move(images));
 }
 
@@ -55,7 +64,7 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
         initialiceDuckImages(duckState);
     }
 
-    duck = &ducks[DuckState::STANDING][0];
+    duck = ducks[DuckState::STANDING][0];
     
     // Crea el ala normal y la agrega al hashmap
     for (int j = int(WingState::NORMAL); j <= int(WingState::FLAPDOWN); j++){
@@ -63,7 +72,7 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
         initializeWingImage(wingState);
     }
 
-    wing = &wings[(WingState::NORMAL)][0];
+    wing = wings[int(WingState::NORMAL)];
 
     // -------- QueryTexture --------
     duck->queryTexture();
@@ -72,8 +81,16 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
 }
 
 void Player::defineSize(int height, int width) {
-    duck->defineSize(height, width);
-    wing->defineSize(int(15*height/32), int(15*width/32));
+    for (const auto& pair : ducks) {
+        const std::vector<Image*>& patos = pair.second; // Obtener el vector de imágenes
+        for (Image* pato : patos) {
+            pato->defineSize(height, width);
+        }
+    }
+
+    for (Image* ala: wings) {
+        ala->defineSize(int(15*height/32), int(15*width/32));
+    }
     // El tamaño original de los png son del pato 32x32 y del ala 15x15
 }
 
@@ -82,17 +99,17 @@ void Player::updateWing(int x, int y) {
     // Actualiza imagen del ala
     if (state == DuckState::SLOW_FALL) {
         if (flapup) {
-            wing = &wings[(WingState::FLAPUP)][0];
+            wing = wings[int(WingState::FLAPUP)];
             flapup = false;
         } else {
-            wing = &wings[(WingState::FLAPDOWN)][0];
+            wing = wings[int(WingState::FLAPDOWN)];
             flapup = true;
         }
     } else {
         if (weaponON) {
-            wing = &wings[(WingState::HOLD)][0];
+            wing = wings[int(WingState::HOLD)];
         } else {
-            wing = &wings[(WingState::NORMAL)][0];
+            wing = wings[int(WingState::NORMAL)];
         }
     }
 
@@ -110,10 +127,10 @@ void Player::update(int x, int y, DuckState state, Side side) {
 
     // Actualizo la imagen del pato y su posicion
     if ((state == DuckState::WALK) && (walk1 == false)) {
-        duck = &ducks[state][1];
+        duck = ducks[state][1];
         walk1 = true;
     } else {
-        duck = &ducks[state][0];
+        duck = ducks[state][0];
         walk1 = false;
     }
     
@@ -167,3 +184,18 @@ void Player::shoot() {
         
     */
 }
+
+Player::~Player() {
+    for (Image* wing: wings) {
+        delete wing;
+    }
+
+    for (const auto& pair : ducks) {
+        const std::vector<Image*>& images = pair.second; // Obtener el vector de imágenes
+        for (Image* image : images) {
+            delete image;
+        }
+    }
+}
+
+

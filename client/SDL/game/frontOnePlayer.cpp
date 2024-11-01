@@ -1,9 +1,9 @@
 #include <SDL2/SDL_timer.h>
 
-#include "map.h"
+
 #include "frontOnePlaye.h"
 
-#define TILES_TO_PIXELS 30
+#define TILES_TO_PIXELS 10
 
 enum Front_event {
     MOVE_LEFT,
@@ -36,26 +36,16 @@ void OnePlayer::play() {
     //     throw("Algo anda mal! Mandaste un msj que nda que ver");
     // }
 
-    std::vector<uint16_t> mapa = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    // ------------ Codigo prueba --------------
+    std::vector<uint16_t> mapa = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0};
     uint16_t filas = 6;
     uint16_t columnas = 7;
+    // ------------------------------------------
 
-    // Crea una ventana
-    SDL_Window* win = SDL_CreateWindow("DUCK GAME",
-                                       SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED,
-                                       800,                     // Ancho de la ventana
-                                       600,
-                                       SDL_WINDOW_RESIZABLE);                       // Alto de la ventana
-                                       
+    Window win(columnas*TILES_TO_PIXELS, filas*TILES_TO_PIXELS);
 
-    // Configura las opciones del renderizador (aceleración por hardware)
-    // TODO: A chequear los flags
-    Uint32 render_flags = SDL_RENDERER_ACCELERATED;
-    SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags);
-
-    Image background(rend, "img_src/background/day.png");
-    Map map(rend, mapa, columnas, filas);
+    Map map(win.get_rend(), mapa, columnas, filas);
+    map.makeMap(columnas, filas);
 
     const Uint32 frame_rate = 1000 / 40; // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
@@ -125,21 +115,15 @@ void OnePlayer::play() {
 
         // Renderiza los objetos en la ventana
         if (elapsed_time >= frame_rate) {
-            SDL_RenderClear(rend); // Limpia la pantalla
-            background.fill(true);
+            win.clear();
             map.fill();
-            SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+            win.fill();
             last_frame_time = current_time;
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
         SDL_Delay(frame_rate - (SDL_GetTicks() - current_time));
     }
-
-    // Libera de recursos
-    SDL_DestroyRenderer(rend);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
 
 }
 

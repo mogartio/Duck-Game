@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "game/player.h"
+#include "game/window.h"
+#include <iostream>
 
 int main(int argc, char* argv[]) {
     // Inicializa todos los subsistemas de SDL
@@ -13,39 +15,33 @@ int main(int argc, char* argv[]) {
     }
 
     // Crea una ventana de 800x600 píxeles, centrada en la pantalla y redimensionable
-    SDL_Window* win = SDL_CreateWindow("GAME",
-                                       SDL_WINDOWPOS_CENTERED, // Posición X centrada
-                                       SDL_WINDOWPOS_CENTERED, // Posición Y centrada
-                                       800,                     // Ancho de la ventana
-                                       600,                     // Alto de la ventana
-                                       SDL_WINDOW_RESIZABLE);  // Permite que la ventana sea redimensionable
-
-    // Configura las opciones del renderizador (aceleración por hardware)
-    Uint32 render_flags = SDL_RENDERER_ACCELERATED;
-    SDL_Renderer* rend = SDL_CreateRenderer(win, -1, render_flags); // Crea el renderizador asociado a la ventana
+    Window win(800, 600);
 
     // Carga la imagen de fondo
-    Image background(rend, "img_src/background/day.png");
+    Image background;
+    background.initialize(win.get_rend(), "img_src/background/day.png");
 
     Side side = RIGHT;
 
-    Player grey(rend, GREY);
+    Player grey(win.get_rend(), GREY);
     grey.defineSize(50, 50);
-    grey.update(250, 150, DuckState::STANDING, side);
+    DuckState state = DuckState::STANDING;
+    grey.update(250, 150, state, side);
     int destx = 250;
     int desty = 150; 
 
     //std::vector<Image> whiteWings = {Image(rend, "img_src/ducks/grey/wing/normal.png")};
 
-
-    Image tex2(rend, "img_src/ducks/white/standing.png");
+    Image tex2;
+    tex2.initialize(win.get_rend(), "img_src/ducks/white/standing.png");
     tex2.queryTexture();
     tex2.defineSize(50, 50);
     tex2.position(250, 150);
     int dest2x = 350;
     int dest2y = 250; 
 
-    Image whiteWing(rend, "img_src/ducks/white/wing/normal.png");
+    Image whiteWing;
+    whiteWing.initialize(win.get_rend(), "img_src/ducks/white/wing/normal.png");
     whiteWing.queryTexture();
     whiteWing.defineSize(23, 23);
     whiteWing.position(250, 150);
@@ -86,6 +82,15 @@ int main(int argc, char* argv[]) {
 
                 case SDL_KEYDOWN: // Evento de tecla presionada
                     switch (event.key.keysym.scancode) {
+                        case SDL_SCANCODE_M: //agarra el arma
+                            grey.weapon();
+                            break;
+                        case SDL_SCANCODE_P:
+                            state = DuckState::PLAY_DEAD;
+                            break;
+                        case SDL_SCANCODE_O:
+                            state = DuckState::STANDING;
+                            break;
                         case SDL_SCANCODE_W: // Tecla W
                             vel_y2 = -speed / 30; // Mueve hacia arriba
                             break;
@@ -148,7 +153,7 @@ int main(int argc, char* argv[]) {
         // Actualiza la posición del objeto basándose en su velocidad
         destx += vel_x; // Actualiza la posición X
         desty += vel_y; // Actualiza la posición Y
-        grey.update(destx, desty, DuckState::STANDING, side);
+        grey.update(destx, desty, state, side);
 
         dest2x += vel_x2;
         dest2y += vel_y2;
@@ -165,12 +170,12 @@ int main(int argc, char* argv[]) {
 
         if (elapsed_time >= frame_rate) {
             // Renderiza el objeto en la ventana
-            SDL_RenderClear(rend); // Limpia la pantalla
+            win.clear();
             background.fill(true);
             grey.fill();
             tex2.fill(flip2);
             whiteWing.fill(flip2);
-            SDL_RenderPresent(rend); // Muestra el renderizado en la ventana
+            win.fill();
         }
 
         if (close) {
@@ -181,8 +186,6 @@ int main(int argc, char* argv[]) {
     }
 
     // Limpieza de recursos
-    SDL_DestroyRenderer(rend); 
-    SDL_DestroyWindow(win);
     SDL_Quit(); // Finaliza SDL
 
     return 0;

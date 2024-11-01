@@ -9,9 +9,9 @@ private:
     SDL_Rect dest;
 
 public:
-    Image() = default;
-    Image(SDL_Renderer* rend, std::string img);
+    Image();
 
+    void initialize(SDL_Renderer* rend, const std::string& img);
     // fill() para background e imagenes estaticas
     void fill(bool background = false);
     
