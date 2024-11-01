@@ -1,5 +1,6 @@
 #include "weapon.h"
 
+#include <cmath>
 #include <memory>
 
 #include "player.h"
@@ -12,12 +13,12 @@ void Weapon::start_throw() {
 }
 void Weapon::finish_throw(int x_direction, bool is_aiming_up, std::unique_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
-    double deviation_angle = 0;
+    double deviation_angle = M_PI / 2;
     if (is_aiming_up) {
-        deviation_angle = M_PI;
+        deviation_angle = 0;
     }
     stage.add_projectile(std::move(std::make_unique<ProjectileDroppedWeapon>(
-            std::move(weapon), gun_position, 10, x_direction, reach, deviation_angle)));
+            std::move(weapon), gun_position, throw_reach, x_direction, 80, deviation_angle)));
 }
 
 // aim_direction en el eje x
@@ -31,7 +32,7 @@ Coordinate Weapon::get_gun_position(int facing_direction) {
 CowboyGun::CowboyGun(Stage& stage): Weapon(stage, 6, 20) {}
 
 void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0 || !stopped_holding_trigger) {
+    if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
@@ -44,7 +45,7 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
 Magnum::Magnum(Stage& stage): Weapon(stage, 6, 20) {}
 
 void Magnum::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0 || !stopped_holding_trigger) {
+    if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);

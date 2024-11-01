@@ -123,8 +123,9 @@ void Stage::ray_trace(std::unique_ptr<Projectile>& projectile) {
             remove_projectile(projectile);
             return;
         }
-        if ((next_tile == BACKGROUND || next_tile == 3) && i == reach - 1) {
-            map.set(bullet_position, 3);
+        if ((next_tile == BACKGROUND || next_tile == projectile->get_id() || next_tile == 4) &&
+            i == reach - 1) {
+            map.set(bullet_position, projectile->get_id());
             projectile->move(bullet_position);
             coordinates_to_delete.push_back(bullet_position);
             /*} else if(next_tile == PLAYER){

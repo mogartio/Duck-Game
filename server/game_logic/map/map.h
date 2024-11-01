@@ -49,7 +49,7 @@ public:
                 } else if (matrix[j][i] == 1) {
                     stream << "\033[34m" << "|" << matrix[j][i]
                            << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 3) {
+                } else if (matrix[j][i] == 8 || matrix[j][i] == 9) {
                     stream << "\033[33m" << "|" << matrix[j][i]
                            << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 4) {

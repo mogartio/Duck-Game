@@ -14,7 +14,7 @@ public:
     void spawn_weapon() {
         auto weapon = std::make_unique<CowboyGun>(stage);
         stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       2, 1, 50, M_PI));
+                                                                       2, 1, 50, 0));
     }
 };
 

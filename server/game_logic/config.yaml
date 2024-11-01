@@ -11,9 +11,7 @@ player_jumping_height: 3
 armor_strength: 1
 
 weapon_spawn_sites:
-  - [1, 2]
-  - [3, 4]
-  - [5, 6]
+  - [30, 10]
 
 player_spawn_sites:
   - [20, 36]

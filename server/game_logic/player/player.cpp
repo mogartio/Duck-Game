@@ -42,6 +42,7 @@ void Player::remove_action(int& command) {
     if (command == THROW_WEAPON) {
         weapon->finish_throw(position.get_facing_direction(), position.is_aiming_up(),
                              std::move(weapon));
+        weapon = nullptr;
     }
 }
 
