@@ -34,6 +34,7 @@ GenericMsg* GameMain::create_msg(std::string command) {
             {"x", 0x04},
             //{"a", 0x05},
             {"w", 0x06},
+            {"t", 0x06},
     };
     if (command.size() != 3) {
         return nullptr;

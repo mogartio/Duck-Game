@@ -9,6 +9,8 @@ protected:
     Stage& stage;
     Player& player;
     bool stopped_holding_trigger;
+    bool throw_started;
+    int throw_reach;
 
 public:
     Weapon(Player& player, Stage& stage, int ammo, int reach):
@@ -17,7 +19,12 @@ public:
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}
     virtual Coordinate get_gun_position(int facing_direction);
-    virtual void stop_shooting() { stopped_holding_trigger = true; };
+    virtual void stop_shooting() { stopped_holding_trigger = true; }
+    virtual void start_throw() {
+        throw_started = true;
+        throw_reach += 3;
+    }
+    virtual void finish_throw() { stopped_holding_trigger = true; }
 };
 
 class CowboyGun: public Weapon {
@@ -32,7 +39,6 @@ public:
     virtual void shoot(int, bool) override;
 };
 
-// WIP
 class Grenade: public Weapon {
 public:
     Grenade(Player&, Stage&);

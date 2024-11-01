@@ -37,13 +37,18 @@ void Player::remove_action(int& command) {
     if (command == SHOOT) {
         weapon->stop_shooting();
     }
+    if (command == THROW_WEAPON) {
+        weapon->finish_throw();
+    }
 }
 
 void Player::execute(int& command) {
     if (command == SHOOT) {
         shoot();
-        // TODO: ver si mantuvo apretado el boton
         return;
+    }
+    if (command == THROW_WEAPON) {
+        weapon->start_throw();
     }
 }
 

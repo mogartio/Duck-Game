@@ -2,8 +2,10 @@
 #define PROJECTILE_H
 #include <cmath>
 #include <cstdlib>
+#include <memory>
 
 #include "../../../common/coordinate.h"
+class Weapon;
 
 class Projectile {
 protected:
@@ -31,6 +33,7 @@ public:
     virtual Coordinate get_position() { return position; }
     virtual ~Projectile() = default;
 };
+
 
 class CowboyBullet: public Projectile {
 public:
