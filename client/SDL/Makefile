@@ -5,7 +5,7 @@ TARGET = play
 CC = g++
 
 # Archivos fuente
-SRC = prueba.cpp game/window.cpp game/player.cpp game/image.cpp game/wingState.cpp ../../common/duckState/duckState.cpp 
+SRC = prueba2.cpp game/window.cpp game/frontOnePlayer.cpp game/map.cpp game/player.cpp game/image.cpp game/wingState.cpp ../../common/duckState/duckState.cpp 
 
 # Flags de compilación
 CFLAGS = -Wall -g

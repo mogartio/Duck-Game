@@ -16,7 +16,7 @@ private:
     std::vector<uint16_t> mapa;
 
     std::list<Image*> tiles;
-    std::vector<Player> players;
+    std::vector<Player*> players;
 
     // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
 
@@ -40,5 +40,5 @@ public:
     // Dibuja el mapa, a los jugadores y las armas
     void fill();
 
-    ~Map() = default;
+    ~Map();
 };

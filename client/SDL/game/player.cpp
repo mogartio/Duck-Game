@@ -74,21 +74,19 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
 
     wing = wings[int(WingState::NORMAL)];
 
-    // -------- QueryTexture --------
-    duck->queryTexture();
-    wing->queryTexture();
-
 }
 
 void Player::defineSize(int height, int width) {
     for (const auto& pair : ducks) {
         const std::vector<Image*>& patos = pair.second; // Obtener el vector de imágenes
         for (Image* pato : patos) {
+            pato->queryTexture();
             pato->defineSize(height, width);
         }
     }
 
     for (Image* ala: wings) {
+        ala->queryTexture();
         ala->defineSize(int(15*height/32), int(15*width/32));
     }
     // El tamaño original de los png son del pato 32x32 y del ala 15x15

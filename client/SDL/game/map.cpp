@@ -9,19 +9,20 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(ren
 }
 
 void Map::makeTile(int columnaActual, int filaActual, TileType tileType) {
-    // tiles.emplace_back(rend, "img_src/tiles/dayTiles/middle.png");
-    // Image& tile = tiles.back(); // Referencia al último elemento recién insertado
-
-    // tile.queryTexture();
-    // tile.defineSize(20, 20);
-    // tile.position(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS);
+    Image* tile = new Image();
+    tile->initialize(rend, "img_src/tiles/dayTiles/middle.png");
+    tile->queryTexture();
+    tile->defineSize(20, 20);
+    tile->position(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS);
+    tiles.push_back(tile);
 
 }
 
 void Map::makePlayer(int columnaActual, int filaActual, int color) {
-    players.emplace_back(rend, Color(color));
-    players[color].defineSize(50, 50);
-    players[color].update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
+    Player* player = new Player(rend, Color(color));
+    player->defineSize(20, 20);
+    player->update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
+    players.push_back(player);
 }
 
 bool condicion(int i, int filaActual, int columnaActual, std::vector<std::vector<int>> *matriz) {
@@ -55,11 +56,11 @@ void Map::makeMap(int columnas, int filas) {
             case 4:
                 //llega jugador
                 // Necesito un sistema que si vuelve a aparecer el num 2 a 3 tiles de distancia de la actual lo saltee
-                if (condicion(i, filaActual, columnaActual, &matriz)) {
+                // if (condicion(i, filaActual, columnaActual, &matriz)) {
 
-                }
+                // }
                 //aca determino que color es para conseguir el string q necesito}
-                matriz[filaActual][columnaActual] = i;
+                // matriz[filaActual][columnaActual] = i;
                 makePlayer(columnaActual, filaActual, i-1);
                 break;
             case 5: //piso
@@ -83,7 +84,7 @@ void Map::makeMap(int columnas, int filas) {
 }
 
 void Map::update(int player, int x, int y, DuckState state, Side side) {
-    players[player].update(x, y, state, side);
+    players[player]->update(x, y, state, side);
 }
 
 void Map::newWeapon(int x, int y) {
@@ -108,8 +109,18 @@ void Map::fill() { // Dibuja de atras para adelante
     }
     */
 
-    for (Player& player: players) {
-        player.fill();
+    for (Player* player: players) {
+        player->fill();
+    }
+}
+
+Map::~Map() {
+    for (Image* piso: tiles) {
+        delete piso;
+    }
+
+    for(Player* player: players) {
+        delete player;
     }
 }
 
