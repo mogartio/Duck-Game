@@ -26,7 +26,6 @@ public:
             reach(reach),
             distance_covered(0) {}
     virtual void move(Coordinate new_position) { position = new_position; }
-    virtual void despawn() = 0;
     virtual int get_x_direction() { return x_direction; }
     virtual int get_speed() { return speed; }
     virtual double get_deviation_angle() { return deviation_angle; }
@@ -41,7 +40,6 @@ public:
             Projectile(initial_position, x_direction, reach, 15, 0) {
         deviation_angle = M_PI / 2 + (M_PI / 2 * is_aiming_up);
     }
-    void despawn() override {}
 };
 
 class MagnumBullet: public Projectile {
@@ -50,6 +48,5 @@ public:
             Projectile(initial_position, x_direction, reach, 15, 0) {
         deviation_angle = M_PI / 1.92 + (M_PI / 2 * is_aiming_up);
     }
-    void despawn() override {}
 };
 #endif

@@ -4,17 +4,31 @@
 
 #include "player.h"
 #include "projectile.h"
+#include "projectile_dropped_weapon.h"
 // ammo, reach
+void Weapon::start_throw() {
+    throw_started = true;
+    throw_reach += 3;
+}
+void Weapon::finish_throw(int x_direction, bool is_aiming_up, std::unique_ptr<Weapon> weapon) {
+    Coordinate gun_position = get_gun_position(x_direction);
+    double deviation_angle = 0;
+    if (is_aiming_up) {
+        deviation_angle = M_PI;
+    }
+    stage.add_projectile(std::move(std::make_unique<ProjectileDroppedWeapon>(
+            std::move(weapon), gun_position, 10, x_direction, reach, deviation_angle)));
+}
 
 // aim_direction en el eje x
 Coordinate Weapon::get_gun_position(int facing_direction) {
-    Coordinate player_position = player.get_position();
+    Coordinate player_position = player->get_position();
     if (facing_direction == 1) {
         return Coordinate(player_position.x + 2, player_position.y + 1);
     }
     return Coordinate(player_position.x, player_position.y + 1);
 }
-CowboyGun::CowboyGun(Player& player, Stage& stage): Weapon(player, stage, 6, 20) {}
+CowboyGun::CowboyGun(Stage& stage): Weapon(stage, 6, 20) {}
 
 void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger) {
@@ -27,7 +41,7 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     stopped_holding_trigger = false;
 }
 
-Magnum::Magnum(Player& player, Stage& stage): Weapon(player, stage, 6, 20) {}
+Magnum::Magnum(Stage& stage): Weapon(stage, 6, 20) {}
 
 void Magnum::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger) {
