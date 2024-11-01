@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-#define OFFSETX 10
+#define OFFSETX 7
 #define OFFSETY 13
 
 void Player::chooseColor(Color color) {
@@ -87,9 +87,9 @@ void Player::defineSize(int height, int width) {
 
     for (Image* ala: wings) {
         ala->queryTexture();
-        ala->defineSize(int(15*height/32), int(15*width/32));
+        ala->defineSize(int(15*height/25), int(15*width/25));
     }
-    // El tamaño original de los png son del pato 32x32 y del ala 15x15
+    // El tamaño original de los png son del pato 24x24 y del ala 15x15
 }
 
 void Player::updateWing(int x, int y) {

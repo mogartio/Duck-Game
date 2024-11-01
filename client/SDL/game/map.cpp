@@ -20,7 +20,7 @@ void Map::makeTile(int columnaActual, int filaActual /*, TileType tileType*/) {
 
 void Map::makePlayer(int columnaActual, int filaActual, int color) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(2*TILES_TO_PIXELS, 2*TILES_TO_PIXELS);
+    player->defineSize(1*TILES_TO_PIXELS, 1*TILES_TO_PIXELS);
     player->update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
     players.push_back(player);
 }
