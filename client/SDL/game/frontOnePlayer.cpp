@@ -23,24 +23,24 @@ void OnePlayer::play() {
         return;
     }
     
-    // GenericMsg* matriz = queueRecive.pop();
-    // std::vector<uint16_t> mapa;
-    // uint16_t filas;
-    // uint16_t columnas;
-    // if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
-    //     SendMapMsg* map = dynamic_cast<SendMapMsg*>(matriz);
-    //     mapa = map->get_map();
-    //     filas = map->get_filas();
-    //     columnas = map->get_columnas();
-    // } else if (matriz == nullptr) {
-    //     throw("Algo anda mal! Mandaste un msj que nda que ver");
-    // }
+    GenericMsg* matriz = queueRecive.pop();
+    std::vector<uint16_t> mapa;
+    uint16_t filas;
+    uint16_t columnas;
+    if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
+        SendMapMsg* map = dynamic_cast<SendMapMsg*>(matriz);
+        mapa = map->get_map();
+        filas = map->get_filas();
+        columnas = map->get_columnas();
+    } else if (matriz == nullptr) {
+        throw("Algo anda mal! Mandaste un msj que nda que ver");
+    }
     std::cout << "1/4" << std::endl;
 
     // ------------ Codigo prueba --------------
-    std::vector<uint16_t> mapa = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    uint16_t filas = 6;
-    uint16_t columnas = 7;
+    // std::vector<uint16_t> mapa = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    // uint16_t filas = 6;
+    // uint16_t columnas = 7;
     // ------------------------------------------
 
     Window win(500, 500);
@@ -55,6 +55,8 @@ void OnePlayer::play() {
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
 
     bool close = false;
+    GenericMsg* msg1;
+    uint8_t id_item = 0x05; //Id del arma que sostiene el jugador
 
     while (!close) {
         Uint32 current_time = SDL_GetTicks();
@@ -71,17 +73,23 @@ void OnePlayer::play() {
                     break;
                 case SDL_KEYDOWN: // Evento de tecla presionada
                     switch (event.key.keysym.scancode) {
+                        case SDL_SCANCODE_E: // shoot
+                            msg1 = new StartActionMsg(ActionsId::SHOOT, playerName);
+                            break;
+                        case SDL_SCANCODE_F: // agarrar/soltar arma
+                            msg1 = new PickupDropMsg(id_item, playerName);
+                            break;
                         case SDL_SCANCODE_W: // Tecla W
-                            // queueSend.try_push(JUMP_EVENT);
+                            msg1 = new StartActionMsg(ActionsId::JUMP, playerName);
                             break;
                         case SDL_SCANCODE_S: // Tecla S
-                            // queueSend.try_push(PLAY_DEAD);
+                            msg1 = new StartActionMsg(ActionsId::PLAY_DEAD, playerName);
                             break;
                         case SDL_SCANCODE_A: // Tecla A
-                            // queueSend.try_push(MOVE_LEFT);
+                            msg1 = new StartActionMsg(ActionsId::MOVE_LEFT, playerName);
                             break;
                         case SDL_SCANCODE_D: // Tecla D
-                            // queueSend.try_push(MOVE_RIGHT);
+                            msg1 = new StartActionMsg(ActionsId::MOVE_RIGHT, playerName);
                             break;
                         default:
                             break; // Ignora otras teclas
@@ -91,13 +99,13 @@ void OnePlayer::play() {
                 case SDL_KEYUP: // Evento de tecla soltada
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_S: // Tecla S
-                            // queueSend.try_push(PLAY_DEAD);
+                            msg1 = new StopActionMsg(ActionsId::PLAY_DEAD, playerName);
                             break;
                         case SDL_SCANCODE_A: // Tecla A
-                            // queueSend.try_push(MOVE_LEFT);
+                            msg1 = new StopActionMsg(ActionsId::MOVE_LEFT, playerName);
                             break;                            
                         case SDL_SCANCODE_D: // Tecla D
-                            // queueSend.try_push(MOVE_RIGHT);
+                            msg1 = new StopActionMsg(ActionsId::MOVE_RIGHT, playerName);
                             break;
                         default:
                             break; // Ignora otras teclas
@@ -106,17 +114,28 @@ void OnePlayer::play() {
                 default:
                     break;
             }
+            queueSend.try_push(msg1);
         }
 
-        // DEBERIA fijarme si popeo de a uno o varios de una
-        // int msj;
-        // bool poped = queueRecive.try_pop(msj);
-
-        // Actualiza Jugadores y armas
-        // if (poped) {
-        //     /* map.update()*/
-        // }
-
+        GenericMsg* msj; 
+        bool poped = queueRecive.try_pop(msj);
+        
+        if (poped) {
+            if (msj->get_header() == GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
+                UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
+                std::string player_name = player->get_player_name();
+                std::pair<uint16_t, uint16_t> position = player->get_position();
+                uint8_t state = player->get_state();
+                uint8_t facing_direction = player->get_facing_direction();
+                map.update(player_name, position.first, position.second, DuckState(state), Side(facing_direction));
+            } else if (msj->get_header() == GenericMsg::MsgTypeHeader::GAME_ENDED_MSG) {
+                // directa de que termino la partida y de q hay que mostrar la pantalla de fin
+            }
+            //  else if (msj->get_header() == GenericMsg::MsgTypeHeader::WINNER_MSG) {
+            //     WinnerMsg* winner = dynamic_cast<WinnerMsg*>(msj);
+            //     std::string winner_name = winner->get_winner_name();
+            // }
+        }
         // Renderiza los objetos en la ventana
         if (elapsed_time >= frame_rate) {
             win.clear();

@@ -47,8 +47,13 @@ if(TALLER_CLIENT)
     add_executable(client_exe)  # Change the executable name to client_exe
 
     add_dependencies(client_exe common SDL2pp::SDL2pp)
+    
+    add_custom_command(TARGET client_exe POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/client/SDL/img_src $<TARGET_FILE_DIR:client_exe>/client/SDL/img_src)
 
     add_subdirectory(client)
+
 
     set_project_warnings(client_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
 

@@ -18,9 +18,9 @@ void Server::run() {
     WinnerMsg msg1("Candela");
     UpdatedPlayerInfoMsg msg2("Candela", std::make_pair(1, 1), 1, 1);
 
-    std::vector<uint16_t> map = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,5,0,0,0,0,0,0,0,0,0,5,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,5,5,0,0,0,0,0,0,0,0,0,0,0};
-    uint16_t fil = 8;
-    uint16_t col = 8;
+    std::vector<uint16_t> map = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    uint16_t fil = 6;
+    uint16_t col = 7;
     SendMapMsg msg3(map, fil, col);
 
 
@@ -28,9 +28,6 @@ void Server::run() {
         std::list<GenericMsg*> msgs;
         GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
-            std::cout  << "Recibi en el servidor: 0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(msg->get_header())<< std::endl;
-            msgs.push_back(&msg1);
-            msgs.push_back(&msg2);
             msgs.push_back(&msg3);
         }
         send_queues.broadcast(msgs);
