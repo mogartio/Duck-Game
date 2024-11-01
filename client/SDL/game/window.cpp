@@ -3,9 +3,9 @@
 
 Window::Window(int w, int h) {
     int errCode = SDL_CreateWindowAndRenderer(w, h, SDL_RENDERER_ACCELERATED, &win, &rend);
-    if (errCode) {
-        std::cout << "Error de creacion de window y renderer ";
-        throw(SDL_GetError());
+    if ((errCode == -1)) {
+        std::cout << "Error de creacion de window y renderer " << std::endl;
+        throw std::runtime_error(SDL_GetError());
     }
 }
 

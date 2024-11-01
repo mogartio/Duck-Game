@@ -1,26 +1,26 @@
 #include "map.h"
 #include <iostream>
 
-#define TILES_TO_PIXELS 10
+#define TILES_TO_PIXELS 50
 
-Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, int w, int h): rend(rend), mapa(mapa) {
+Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
+    std::cout << "despues del fondo" << std::endl;
 }
 
-void Map::makeTile(int columnaActual, int filaActual, TileType tileType) {
+void Map::makeTile(int columnaActual, int filaActual /*, TileType tileType*/) {
     Image* tile = new Image();
     tile->initialize(rend, "img_src/tiles/dayTiles/middle.png");
     tile->queryTexture();
-    tile->defineSize(20, 20);
+    tile->defineSize(1*TILES_TO_PIXELS, 1*TILES_TO_PIXELS);
     tile->position(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS);
     tiles.push_back(tile);
-
 }
 
 void Map::makePlayer(int columnaActual, int filaActual, int color) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(20, 20);
+    player->defineSize(2*TILES_TO_PIXELS, 2*TILES_TO_PIXELS);
     player->update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
     players.push_back(player);
 }
@@ -71,7 +71,7 @@ void Map::makeMap(int columnas, int filas) {
                 // DEFINIR que tamaño tienen los tiles
                 matriz[filaActual][columnaActual] = i;
                 //aca determino que tipo de tile es para conseguir el string q necesito
-                makeTile(columnaActual, filaActual, MEDIO);
+                makeTile(columnaActual, filaActual);
                 break;
             case 13: //caja                
             case 14: //caja rota
@@ -87,7 +87,7 @@ void Map::update(int player, int x, int y, DuckState state, Side side) {
     players[player]->update(x, y, state, side);
 }
 
-void Map::newWeapon(int x, int y) {
+void Map::newWeapon(/*int x, int y*/) {
 
 }
 

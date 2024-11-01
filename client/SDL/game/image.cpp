@@ -6,11 +6,12 @@
 Image::Image() : rend(nullptr), imgTex(nullptr) {}
 
 void Image::initialize(SDL_Renderer* rend, const std::string& img) {
+    std::cout << "entre al initialize" << std::endl;
     this->rend = rend;
     imgTex = IMG_LoadTexture(rend, img.c_str());
     if (imgTex == nullptr) {
         std::cout << "Error de textura de imagen ";
-        throw(SDL_GetError());
+        throw std::runtime_error(SDL_GetError());
     }
 
 }

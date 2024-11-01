@@ -35,17 +35,21 @@ void OnePlayer::play() {
     // } else if (matriz == nullptr) {
     //     throw("Algo anda mal! Mandaste un msj que nda que ver");
     // }
+    std::cout << "1/4" << std::endl;
 
     // ------------ Codigo prueba --------------
-    std::vector<uint16_t> mapa = {0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0};
+    std::vector<uint16_t> mapa = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     uint16_t filas = 6;
     uint16_t columnas = 7;
     // ------------------------------------------
 
-    Window win(columnas*TILES_TO_PIXELS, filas*TILES_TO_PIXELS);
+    Window win(500, 500);
+    std::cout << "2/4" << std::endl;
 
-    Map map(win.get_rend(), mapa, columnas, filas);
+    Map map(win.get_rend(), mapa);
+    std::cout << "3/4" << std::endl;
     map.makeMap(columnas, filas);
+    std::cout << "4/4" << std::endl;
 
     const Uint32 frame_rate = 1000 / 40; // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
