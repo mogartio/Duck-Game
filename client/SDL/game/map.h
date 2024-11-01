@@ -16,13 +16,13 @@ private:
     std::vector<uint16_t> mapa;
 
     std::list<Image*> tiles;
-    std::vector<Player*> players;
+    std::unordered_map<std::string, Player*> players;
 
     // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
 
     Image background;
 
-    void makePlayer(int columnaActual, int filaActual, int color);
+    void makePlayer(int columnaActual, int filaActual, int color, std::string name);
     void makeTile(int columnaActual, int filaActual /*, TileType tileType*/);
 
 
@@ -32,7 +32,7 @@ public:
     void makeMap(int w, int h);
 
     // Actualiza posicion y estado del jugador
-    void update(int player, int x, int y, DuckState state, Side side);
+    void update(std::string player, int x, int y, DuckState state, Side side);
 
     // Agrega un nuevo arma al mapa
     void newWeapon(/*int x, int y*/ /*, Weapon newWeapon*/);

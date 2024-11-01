@@ -6,7 +6,6 @@
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
-    std::cout << "despues del fondo" << std::endl;
 }
 
 void Map::makeTile(int columnaActual, int filaActual /*, TileType tileType*/) {
@@ -18,11 +17,11 @@ void Map::makeTile(int columnaActual, int filaActual /*, TileType tileType*/) {
     tiles.push_back(tile);
 }
 
-void Map::makePlayer(int columnaActual, int filaActual, int color) {
+void Map::makePlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
     player->defineSize(1*TILES_TO_PIXELS, 1*TILES_TO_PIXELS);
     player->update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
-    players.push_back(player);
+    players[name] = player;
 }
 
 bool condicion(int i, int filaActual, int columnaActual, std::vector<std::vector<int>> *matriz) {
@@ -61,7 +60,7 @@ void Map::makeMap(int columnas, int filas) {
                 // }
                 //aca determino que color es para conseguir el string q necesito}
                 // matriz[filaActual][columnaActual] = i;
-                makePlayer(columnaActual, filaActual, i-1);
+                makePlayer(columnaActual, filaActual, i-1, "A");
                 break;
             case 5: //piso
             case 6: //pared
@@ -83,7 +82,7 @@ void Map::makeMap(int columnas, int filas) {
     }
 }
 
-void Map::update(int player, int x, int y, DuckState state, Side side) {
+void Map::update(std::string player, int x, int y, DuckState state, Side side) {
     players[player]->update(x, y, state, side);
 }
 
@@ -109,8 +108,8 @@ void Map::fill() { // Dibuja de atras para adelante
     }
     */
 
-    for (Player* player: players) {
-        player->fill();
+    for (const auto& pair : players) {
+        pair.second->fill();
     }
 }
 
@@ -118,9 +117,8 @@ Map::~Map() {
     for (Image* piso: tiles) {
         delete piso;
     }
-
-    for(Player* player: players) {
-        delete player;
+    for (const auto& pair : players) {
+        delete pair.second;
     }
 }
 

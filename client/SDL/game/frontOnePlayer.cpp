@@ -35,7 +35,7 @@ void OnePlayer::play() {
     } else if (matriz == nullptr) {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
-    std::cout << "1/4" << std::endl;
+    
 
     // ------------ Codigo prueba --------------
     // std::vector<uint16_t> mapa = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -44,18 +44,17 @@ void OnePlayer::play() {
     // ------------------------------------------
 
     Window win(500, 500);
-    std::cout << "2/4" << std::endl;
-
+    
     Map map(win.get_rend(), mapa);
-    std::cout << "3/4" << std::endl;
     map.makeMap(columnas, filas);
-    std::cout << "4/4" << std::endl;
 
     const Uint32 frame_rate = 1000 / 40; // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
+    
 
     bool close = false;
     GenericMsg* msg1;
+    bool msjEnviado = true;
     uint8_t id_item = 0x05; //Id del arma que sostiene el jugador
 
     while (!close) {
@@ -75,21 +74,27 @@ void OnePlayer::play() {
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_E: // shoot
                             msg1 = new StartActionMsg(ActionsId::SHOOT, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_F: // agarrar/soltar arma
                             msg1 = new PickupDropMsg(id_item, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_W: // Tecla W
                             msg1 = new StartActionMsg(ActionsId::JUMP, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_S: // Tecla S
                             msg1 = new StartActionMsg(ActionsId::PLAY_DEAD, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_A: // Tecla A
                             msg1 = new StartActionMsg(ActionsId::MOVE_LEFT, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_D: // Tecla D
                             msg1 = new StartActionMsg(ActionsId::MOVE_RIGHT, playerName);
+                            msjEnviado = false;
                             break;
                         default:
                             break; // Ignora otras teclas
@@ -100,12 +105,15 @@ void OnePlayer::play() {
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_S: // Tecla S
                             msg1 = new StopActionMsg(ActionsId::PLAY_DEAD, playerName);
+                            msjEnviado = false;
                             break;
                         case SDL_SCANCODE_A: // Tecla A
                             msg1 = new StopActionMsg(ActionsId::MOVE_LEFT, playerName);
+                            msjEnviado = false;
                             break;                            
                         case SDL_SCANCODE_D: // Tecla D
                             msg1 = new StopActionMsg(ActionsId::MOVE_RIGHT, playerName);
+                            msjEnviado = false;
                             break;
                         default:
                             break; // Ignora otras teclas
@@ -114,7 +122,10 @@ void OnePlayer::play() {
                 default:
                     break;
             }
-            queueSend.try_push(msg1);
+            if (!msjEnviado) {
+                queueSend.try_push(msg1);
+                msjEnviado = true;
+            }
         }
 
         GenericMsg* msj; 
@@ -138,6 +149,7 @@ void OnePlayer::play() {
         }
         // Renderiza los objetos en la ventana
         if (elapsed_time >= frame_rate) {
+            
             win.clear();
             map.fill();
             win.fill();
