@@ -12,6 +12,7 @@ target_sources(common
     messages/handler_read.cpp
     receiver.cpp
     sender.cpp
+    duckState/duckState.cpp
 
     PUBLIC
     # .h files
@@ -29,4 +30,5 @@ target_sources(common
     messages/handler_read.h
     receiver.h
     sender.h
+    duckState/duckState.h
     )

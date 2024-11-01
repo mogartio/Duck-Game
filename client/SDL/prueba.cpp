@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
                             grey.weapon();
                             break;
                         case SDL_SCANCODE_P:
-                            state = DuckState::PLAY_DEAD;
+                            state = DuckState::JUMP;
                             break;
                         case SDL_SCANCODE_O:
                             state = DuckState::STANDING;

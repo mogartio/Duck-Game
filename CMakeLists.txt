@@ -54,7 +54,7 @@ if(TALLER_CLIENT)
 
     target_include_directories(client_exe PRIVATE ${libSDL2pp_SOURCE_DIR})
 
-    target_link_libraries(client_exe common SDL2pp::SDL2pp)
+    target_link_libraries(client_exe common SDL2pp::SDL2pp SDL2 SDL2_image)
 endif()
 
 if(TALLER_SERVER)
