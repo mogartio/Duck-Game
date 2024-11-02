@@ -40,22 +40,22 @@ public:
         EXIT_FROM_LOBBY_MSG = 0x06,
         START_GAME_MSG = 0x07,
         PICKUP_DROP_MSG = 0x08,
-        START_ACTION_MSG = 0x08,
-        STOP_ACTION_MSG = 0x09,
-        SEND_LOBBIES_LIST_MSG = 0x0A,
-        EVERYTHING_OK_MSG = 0x0B,
-        ERROR_MSG = 0x0C,
-        SEND_MAP_MSG = 0x0D,
-        GAME_ENDED_MSG = 0x0E,
-        WINNER_MSG = 0x0F,
-        UPDATED_PLAYER_INFO_MSG = 0x10,
-        PROJECTILE_INFO_MSG = 0x11,
+        START_ACTION_MSG = 0x09,
+        STOP_ACTION_MSG = 0x0A,
+        SEND_LOBBIES_LIST_MSG = 0x0B,
+        EVERYTHING_OK_MSG = 0x0C,
+        ERROR_MSG = 0x0D,
+        SEND_MAP_MSG = 0x0E,
+        GAME_ENDED_MSG = 0x0F,
+        WINNER_MSG = 0x10,
+        UPDATED_PLAYER_INFO_MSG = 0x11,
+        PROJECTILE_INFO_MSG = 0x12,
     };
 
 
     enum FacingDirection : uint8_t {
         RIGHT = 0x01,
-        LEFT = 0x03,
+        LEFT = 0x02,
     };
 
 private:
