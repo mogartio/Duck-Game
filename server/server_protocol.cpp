@@ -24,9 +24,14 @@ void ServerProtocol::handle_recv(ViewLobbiesMsg& msg) { (void)msg; }
 void ServerProtocol::handle_recv(ChooseLobbyMsg& msg) {
     uint8_t lobby_id = recv_u_int8_t();
     msg.set_lobby_id(lobby_id);
+    std::string player_name = recv_string();
+    msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_recv(CreateLobbyMsg& msg) { (void)msg; }
+void ServerProtocol::handle_recv(CreateLobbyMsg& msg) {
+    std::string player_name = recv_string();
+    msg.set_player_name(player_name);
+}
 
 void ServerProtocol::handle_recv(GoBackMsg& msg) { (void)msg; }
 

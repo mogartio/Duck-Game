@@ -121,6 +121,7 @@ public:
 class ChooseLobbyMsg: public GenericMsg {
 private:
     uint8_t lobby_id;
+    std::string player_name;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -131,15 +132,21 @@ public:
 
     ChooseLobbyMsg();
 
-    explicit ChooseLobbyMsg(uint8_t lobby_id);
+    explicit ChooseLobbyMsg(uint8_t lobby_id, std::string player_name);
 
     void set_lobby_id(uint8_t lobby_id);
 
     uint8_t get_lobby_id() const;
+
+    std::string get_player_name() const;
+
+    void set_player_name(std::string player_name);
 };
 
 class CreateLobbyMsg: public GenericMsg {
 private:
+    std::string player_name;
+
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -148,6 +155,12 @@ public:
     void accept_read(HandlerReader& handler) override;
 
     CreateLobbyMsg();
+
+    explicit CreateLobbyMsg(std::string player_name);
+
+    void set_player_name(std::string player_name);
+
+    std::string get_player_name() const;
 };
 
 class GoBackMsg: public GenericMsg {

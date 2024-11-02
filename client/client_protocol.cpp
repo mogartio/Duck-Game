@@ -24,11 +24,15 @@ void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
     send_u_int8_t(header);
     uint8_t lobby_id = msg.get_lobby_id();
     send_u_int8_t(lobby_id);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const CreateLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const GoBackMsg& msg) {

@@ -48,8 +48,10 @@ void ViewLobbiesMsg::accept_read(HandlerReader& handler) { handler.handle_read(*
 ChooseLobbyMsg::ChooseLobbyMsg():
         GenericMsg(GenericMsg::CHOOSE_LOBBY_MSG, GenericMsg::LOBBY_MSG), lobby_id(0) {}
 
-ChooseLobbyMsg::ChooseLobbyMsg(uint8_t lobby_id):
-        GenericMsg(GenericMsg::CHOOSE_LOBBY_MSG, GenericMsg::LOBBY_MSG), lobby_id(lobby_id) {}
+ChooseLobbyMsg::ChooseLobbyMsg(uint8_t lobby_id, std::string player_name):
+        GenericMsg(GenericMsg::CHOOSE_LOBBY_MSG, GenericMsg::LOBBY_MSG),
+        lobby_id(lobby_id),
+        player_name(player_name) {}
 
 void ChooseLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -61,13 +63,24 @@ void ChooseLobbyMsg::set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id;
 
 uint8_t ChooseLobbyMsg::get_lobby_id() const { return lobby_id; }
 
+std::string ChooseLobbyMsg::get_player_name() const { return player_name; }
+
+void ChooseLobbyMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
+
 CreateLobbyMsg::CreateLobbyMsg(): GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
+
+CreateLobbyMsg::CreateLobbyMsg(std::string player_name):
+        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name) {}
 
 void CreateLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
 void CreateLobbyMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
 
 void CreateLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+void CreateLobbyMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
+
+std::string CreateLobbyMsg::get_player_name() const { return player_name; }
 
 GoBackMsg::GoBackMsg(): GenericMsg(GenericMsg::GO_BACK_MSG, GenericMsg::LOBBY_MSG) {}
 
