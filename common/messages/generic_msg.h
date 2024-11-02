@@ -66,6 +66,7 @@ public:
 private:
     MsgTypeHeader header;
     Type type;
+    int id_client;
 
 public:
     explicit GenericMsg(MsgTypeHeader header, Type type);
@@ -75,6 +76,8 @@ public:
     virtual void accept_read(HandlerReader& handler) = 0;
     uint8_t get_header() const;
     uint8_t get_type() const;
+    int get_id_client() const;
+    void set_id_client(int id_client);
     virtual ~GenericMsg() = default;
 };
 

@@ -6,6 +6,10 @@ uint8_t GenericMsg::get_header() const { return header; }
 
 uint8_t GenericMsg::get_type() const { return type; }
 
+int GenericMsg::get_id_client() const { return id_client; }
+
+void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
+
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
