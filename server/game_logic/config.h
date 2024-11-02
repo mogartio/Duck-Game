@@ -7,6 +7,8 @@
 #include <mutex>
 #include <set>
 #include <string>
+#include <tuple>
+#include <vector>
 
 #include <limits.h>
 #include <unistd.h>
@@ -19,7 +21,7 @@ private:
     Config(const Config&) = delete;
     Config& operator=(const Config&) = delete;
     static std::mutex mutex;
-    Config(const std::string& file_name) {
+    explicit Config(const std::string& file_name) {
         YAML::Node config = YAML::LoadFile(file_name);
         for (const auto& item: config["weapons_reach"]) {
             weapons_reach[item.first.as<std::string>()] = item.second.as<int>();

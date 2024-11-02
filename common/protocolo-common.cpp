@@ -29,9 +29,9 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG,
                           [this]() { return new PickupDropMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::START_ACTION_MSG,
-                            [this]() { return new StartActionMsg(); });
+                          [this]() { return new StartActionMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::STOP_ACTION_MSG,
-                            [this]() { return new StopActionMsg(); });
+                          [this]() { return new StopActionMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG,
                           [this]() { return new SendLobbiesListMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG,
@@ -45,9 +45,9 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::WINNER_MSG,
                           [this]() { return new WinnerMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG,
-                            [this]() { return new UpdatedPlayerInfoMsg(); });
+                          [this]() { return new UpdatedPlayerInfoMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG,
-                            [this]() { return new ProjectileInfoMsg(); });
+                          [this]() { return new ProjectileInfoMsg(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {

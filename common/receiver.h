@@ -22,6 +22,5 @@ public:
      * Detiene la ejecución del hilo seteando _keep_running en false.
      */
     void kill();
-
 };
 #endif  // RECEIVER_H

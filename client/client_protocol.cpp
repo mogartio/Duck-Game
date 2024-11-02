@@ -1,6 +1,7 @@
 #include "client_protocol.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -25,7 +26,7 @@ void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
     send_u_int8_t(lobby_id);
 }
 
-void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { 
+void ClientProtocol::handle_send(const CreateLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 }
@@ -35,7 +36,7 @@ void ClientProtocol::handle_send(const GoBackMsg& msg) {
     send_u_int8_t(header);
 }
 
-void ClientProtocol::handle_send(const StartGameMsg& msg) { 
+void ClientProtocol::handle_send(const StartGameMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 }
@@ -99,7 +100,7 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
     uint16_t columnas = recv_u_int16_t();
     msg.set_columnas(columnas);
     std::vector<uint16_t> map;
-    for (int i = 0; i < filas*columnas; i++) {
+    for (int i = 0; i < filas * columnas; i++) {
         uint16_t tile = recv_u_int16_t();
         map.push_back(tile);
     }

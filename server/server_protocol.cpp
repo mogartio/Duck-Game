@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {}
@@ -53,7 +54,7 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    // mando filas y columnas 
+    // mando filas y columnas
     uint16_t filas = msg.get_filas();
     send_u_int16_t(filas);
     uint16_t columnas = msg.get_columnas();

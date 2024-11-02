@@ -15,4 +15,3 @@ void Receiver::run() {
 }
 
 void Receiver::kill() { _keep_running = false; }
-

@@ -18,4 +18,3 @@ void Sender::kill() {
     send_queue->close();
     _keep_running = false;
 }
-
