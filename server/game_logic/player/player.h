@@ -9,12 +9,15 @@
 #include "../map/stage.h"
 
 #include "air_state.h"
+#include "observer.h"
 #include "player_position.h"
+#include "subject.h"
 #include "weapon.h"
 
-class Player {
+class Player: public PlayerSubject {
 private:
     int id;
+    std::string name;
     PlayerPosition position;
     bool is_alive;
     Stage& stage;
@@ -34,6 +37,7 @@ public:
     void execute(int&);
     void shoot();
     void update();
+    void notify() override;
 };
 
 #endif

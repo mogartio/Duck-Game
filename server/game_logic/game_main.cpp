@@ -4,6 +4,7 @@
 
 #include "config.h"
 
+
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
                    bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
         stage("main_map.csv"),

@@ -5,10 +5,12 @@
 #include <memory>
 
 #include "../../../common/coordinate.h"
+
+#include "subject.h"
 class Weapon;
 class Stage;
 
-class Projectile {
+class Projectile: ProjectileSubject {
 protected:
     int speed;
     int x_direction;
@@ -37,6 +39,7 @@ public:
     virtual int get_id() { return id; }
     virtual void update() {}
     virtual bool ray_trace(Stage& stage);
+    virtual void notify() override;
 };
 
 

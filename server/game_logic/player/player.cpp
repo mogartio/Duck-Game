@@ -67,6 +67,14 @@ void Player::update() {
     move(moving_commands);
 }
 
+void Player::notify() {
+    Coordinate current_position = position.get_position();
+    for (Observer* obs: observers) {
+        obs->update(name, current_position.x, current_position.y, position.get_state(),
+                    position.get_facing_direction());
+    }
+}
+
 void Player::move(std::set<int>& movements) { position.move(movements); }
 
 void Player::shoot() { weapon->shoot(position.get_facing_direction(), position.is_aiming_up()); }

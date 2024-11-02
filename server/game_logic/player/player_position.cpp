@@ -6,8 +6,6 @@
 
 #include "player.h"
 using namespace ActionsId;
-#define AIM_LEFT -1
-#define AIM_RIGHT 1
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
         position(initial_coordinates),
@@ -52,8 +50,9 @@ void PlayerPosition::move_horizontally(int offset) {
     }
 }
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
-void PlayerPosition::set_state(std::unique_ptr<AirState> new_state) {
+void PlayerPosition::set_state(std::unique_ptr<AirState> new_state, uint8_t state_code) {
     air_state = std::move(new_state);
+    state = state_code;
 }
 
 void PlayerPosition::move_vertically(int offset) {
@@ -78,4 +77,4 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-int PlayerPosition::get_facing_direction() { return facing_direction; }
+uint8_t PlayerPosition::get_facing_direction() { return facing_direction; }

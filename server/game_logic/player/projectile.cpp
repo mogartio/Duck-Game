@@ -27,3 +27,11 @@ bool Projectile::ray_trace(Stage& stage) {
     }
     return false;
 }
+
+void Projectile::notify() {
+
+    for (Observer* obs: observers) {
+        obs->update(name, current_position.x, current_position.y, position.get_state(),
+                    position.get_facing_direction());
+    }
+}
