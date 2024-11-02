@@ -1,19 +1,17 @@
 #include "generic_msg.h"
 
-GenericMsg::GenericMsg(GenericMsg::MsgTypeHeader header): header(header) {}
+GenericMsg::GenericMsg(GenericMsg::MsgTypeHeader header, Type type): header(header), type(type) {}
 
 uint8_t GenericMsg::get_header() const { return header; }
 
-MsgType::MsgType(GenericMsg::MsgTypeHeader header, Type type): GenericMsg(header), type(type) {}
-
-uint8_t MsgType::get_type() const { return type; }
+uint8_t GenericMsg::get_type() const { return type; }
 
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
-        MsgType(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, MsgType::LOBBY_MSG),
+        GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
         player_name("") {}
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t color, std::string player_name):
-        MsgType(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, MsgType::LOBBY_MSG),
+        GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(color),
         player_name(player_name) {}
 
@@ -34,7 +32,7 @@ void CustomizedPlayerInfoMsg::set_player_name(std::string player_name) {
 }
 
 
-ViewLobbiesMsg::ViewLobbiesMsg(): MsgType(GenericMsg::VIEW_LOBBIES_MSG, MsgType::LOBBY_MSG) {}
+ViewLobbiesMsg::ViewLobbiesMsg(): GenericMsg(GenericMsg::VIEW_LOBBIES_MSG, GenericMsg::LOBBY_MSG) {}
 
 void ViewLobbiesMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -44,10 +42,10 @@ void ViewLobbiesMsg::accept_read(HandlerReader& handler) { handler.handle_read(*
 
 
 ChooseLobbyMsg::ChooseLobbyMsg():
-        MsgType(GenericMsg::CHOOSE_LOBBY_MSG, MsgType::LOBBY_MSG), lobby_id(0) {}
+        GenericMsg(GenericMsg::CHOOSE_LOBBY_MSG, GenericMsg::LOBBY_MSG), lobby_id(0) {}
 
 ChooseLobbyMsg::ChooseLobbyMsg(uint8_t lobby_id):
-        MsgType(GenericMsg::CHOOSE_LOBBY_MSG, MsgType::LOBBY_MSG), lobby_id(lobby_id) {}
+        GenericMsg(GenericMsg::CHOOSE_LOBBY_MSG, GenericMsg::LOBBY_MSG), lobby_id(lobby_id) {}
 
 void ChooseLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -59,7 +57,7 @@ void ChooseLobbyMsg::set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id;
 
 uint8_t ChooseLobbyMsg::get_lobby_id() const { return lobby_id; }
 
-CreateLobbyMsg::CreateLobbyMsg(): MsgType(GenericMsg::CREATE_LOBBY_MSG, MsgType::LOBBY_MSG) {}
+CreateLobbyMsg::CreateLobbyMsg(): GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
 void CreateLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -67,7 +65,7 @@ void CreateLobbyMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv
 
 void CreateLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-GoBackMsg::GoBackMsg(): MsgType(GenericMsg::GO_BACK_MSG, MsgType::LOBBY_MSG) {}
+GoBackMsg::GoBackMsg(): GenericMsg(GenericMsg::GO_BACK_MSG, GenericMsg::LOBBY_MSG) {}
 
 void GoBackMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -76,10 +74,11 @@ void GoBackMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*thi
 void GoBackMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
 ExitFromLobbyMsg::ExitFromLobbyMsg():
-        MsgType(GenericMsg::EXIT_FROM_LOBBY_MSG, MsgType::LOBBY_MSG), player_name("") {}
+        GenericMsg(GenericMsg::EXIT_FROM_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name("") {}
 
 ExitFromLobbyMsg::ExitFromLobbyMsg(std::string player_name):
-        MsgType(GenericMsg::EXIT_FROM_LOBBY_MSG, MsgType::LOBBY_MSG), player_name(player_name) {}
+        GenericMsg(GenericMsg::EXIT_FROM_LOBBY_MSG, GenericMsg::LOBBY_MSG),
+        player_name(player_name) {}
 
 void ExitFromLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -91,7 +90,7 @@ void ExitFromLobbyMsg::set_player_name(std::string player_name) { this->player_n
 
 std::string ExitFromLobbyMsg::get_player_name() const { return player_name; }
 
-StartGameMsg::StartGameMsg(): MsgType(GenericMsg::START_GAME_MSG, MsgType::LOBBY_MSG) {}
+StartGameMsg::StartGameMsg(): GenericMsg(GenericMsg::START_GAME_MSG, GenericMsg::LOBBY_MSG) {}
 
 void StartGameMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -100,10 +99,12 @@ void StartGameMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*
 void StartGameMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
 PickupDropMsg::PickupDropMsg():
-        MsgType(GenericMsg::PICKUP_DROP_MSG, MsgType::GAME_MSG), item_id(0), player_name("") {}
+        GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
+        item_id(0),
+        player_name("") {}
 
 PickupDropMsg::PickupDropMsg(uint8_t item_id, std::string player_name):
-        MsgType(GenericMsg::PICKUP_DROP_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
         item_id(item_id),
         player_name(player_name) {}
 
@@ -122,10 +123,12 @@ uint8_t PickupDropMsg::get_item_id() const { return item_id; }
 std::string PickupDropMsg::get_player_name() const { return player_name; }
 
 StartActionMsg::StartActionMsg():
-        MsgType(GenericMsg::START_ACTION_MSG, MsgType::GAME_MSG), action_id(0), player_name("") {}
+        GenericMsg(GenericMsg::START_ACTION_MSG, GenericMsg::GAME_MSG),
+        action_id(0),
+        player_name("") {}
 
 StartActionMsg::StartActionMsg(uint8_t action_id, std::string player_name):
-        MsgType(GenericMsg::START_ACTION_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::START_ACTION_MSG, GenericMsg::GAME_MSG),
         action_id(action_id),
         player_name(player_name) {}
 
@@ -144,10 +147,12 @@ uint8_t StartActionMsg::get_action_id() const { return action_id; }
 std::string StartActionMsg::get_player_name() const { return player_name; }
 
 StopActionMsg::StopActionMsg():
-        MsgType(GenericMsg::STOP_ACTION_MSG, MsgType::GAME_MSG), action_id(0), player_name("") {}
+        GenericMsg(GenericMsg::STOP_ACTION_MSG, GenericMsg::GAME_MSG),
+        action_id(0),
+        player_name("") {}
 
 StopActionMsg::StopActionMsg(uint8_t action_id, std::string player_name):
-        MsgType(GenericMsg::STOP_ACTION_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::STOP_ACTION_MSG, GenericMsg::GAME_MSG),
         action_id(action_id),
         player_name(player_name) {}
 
@@ -166,10 +171,10 @@ uint8_t StopActionMsg::get_action_id() const { return action_id; }
 std::string StopActionMsg::get_player_name() const { return player_name; }
 
 SendLobbiesListMsg::SendLobbiesListMsg():
-        MsgType(GenericMsg::SEND_LOBBIES_LIST_MSG, MsgType::LOBBY_MSG) {}
+        GenericMsg(GenericMsg::SEND_LOBBIES_LIST_MSG, GenericMsg::LOBBY_MSG) {}
 
 SendLobbiesListMsg::SendLobbiesListMsg(std::vector<std::string> lobbies):
-        MsgType(GenericMsg::SEND_LOBBIES_LIST_MSG, MsgType::LOBBY_MSG), lobbies(lobbies) {}
+        GenericMsg(GenericMsg::SEND_LOBBIES_LIST_MSG, GenericMsg::LOBBY_MSG), lobbies(lobbies) {}
 
 void SendLobbiesListMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -181,7 +186,8 @@ void SendLobbiesListMsg::set_lobbies(std::vector<std::string> lobbies) { this->l
 
 std::vector<std::string> SendLobbiesListMsg::get_lobbies() const { return lobbies; }
 
-EverythingOkMsg::EverythingOkMsg(): MsgType(GenericMsg::EVERYTHING_OK_MSG, MsgType::GAME_MSG) {}
+EverythingOkMsg::EverythingOkMsg():
+        GenericMsg(GenericMsg::EVERYTHING_OK_MSG, GenericMsg::GAME_MSG) {}
 
 void EverythingOkMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -189,10 +195,10 @@ void EverythingOkMsg::accept_recv(HandlerReceiver& handler) { handler.handle_rec
 
 void EverythingOkMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-ErrorMsg::ErrorMsg(): MsgType(GenericMsg::ERROR_MSG, MsgType::GAME_MSG), error_msg("") {}
+ErrorMsg::ErrorMsg(): GenericMsg(GenericMsg::ERROR_MSG, GenericMsg::GAME_MSG), error_msg("") {}
 
 ErrorMsg::ErrorMsg(std::string error_msg):
-        MsgType(GenericMsg::ERROR_MSG, MsgType::GAME_MSG), error_msg(error_msg) {}
+        GenericMsg(GenericMsg::ERROR_MSG, GenericMsg::GAME_MSG), error_msg(error_msg) {}
 
 void ErrorMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -205,10 +211,10 @@ void ErrorMsg::set_error_msg(std::string error_msg) { this->error_msg = error_ms
 std::string ErrorMsg::get_error_msg() const { return error_msg; }
 
 SendMapMsg::SendMapMsg():
-        MsgType(GenericMsg::SEND_MAP_MSG, MsgType::GAME_MSG), filas(0), columnas(0) {}
+        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG), filas(0), columnas(0) {}
 
 SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas):
-        MsgType(GenericMsg::SEND_MAP_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
         map(map),
         filas(filas),
         columnas(columnas) {}
@@ -231,7 +237,7 @@ uint16_t SendMapMsg::get_filas() const { return filas; }
 
 uint16_t SendMapMsg::get_columnas() const { return columnas; }
 
-GameEndedMsg::GameEndedMsg(): MsgType(GenericMsg::GAME_ENDED_MSG, MsgType::GAME_MSG) {}
+GameEndedMsg::GameEndedMsg(): GenericMsg(GenericMsg::GAME_ENDED_MSG, GenericMsg::GAME_MSG) {}
 
 void GameEndedMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -239,10 +245,10 @@ void GameEndedMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*
 
 void GameEndedMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-WinnerMsg::WinnerMsg(): MsgType(GenericMsg::WINNER_MSG, MsgType::GAME_MSG), winner_name("") {}
+WinnerMsg::WinnerMsg(): GenericMsg(GenericMsg::WINNER_MSG, GenericMsg::GAME_MSG), winner_name("") {}
 
 WinnerMsg::WinnerMsg(std::string winner_name):
-        MsgType(GenericMsg::WINNER_MSG, MsgType::GAME_MSG), winner_name(winner_name) {}
+        GenericMsg(GenericMsg::WINNER_MSG, GenericMsg::GAME_MSG), winner_name(winner_name) {}
 
 void WinnerMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -255,7 +261,7 @@ void WinnerMsg::set_winner_name(std::string winner_name) { this->winner_name = w
 std::string WinnerMsg::get_winner_name() const { return winner_name; }
 
 UpdatedPlayerInfoMsg::UpdatedPlayerInfoMsg():
-        MsgType(GenericMsg::UPDATED_PLAYER_INFO_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::UPDATED_PLAYER_INFO_MSG, GenericMsg::GAME_MSG),
         player_name(""),
         position(),
         state(0),
@@ -263,7 +269,7 @@ UpdatedPlayerInfoMsg::UpdatedPlayerInfoMsg():
 UpdatedPlayerInfoMsg::UpdatedPlayerInfoMsg(std::string player_name,
                                            std::pair<uint16_t, uint16_t> position, uint8_t state,
                                            uint8_t facing_direction):
-        MsgType(GenericMsg::UPDATED_PLAYER_INFO_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::UPDATED_PLAYER_INFO_MSG, GenericMsg::GAME_MSG),
         player_name(player_name),
         position(position),
         state(state),
@@ -298,13 +304,13 @@ void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
 }
 
 ProjectileInfoMsg::ProjectileInfoMsg():
-        MsgType(GenericMsg::PROJECTILE_INFO_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
         projectile_trail(),
         projectile_final_position() {}
 
 ProjectileInfoMsg::ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail,
                                      std::pair<uint16_t, uint16_t> projectile_final_position):
-        MsgType(GenericMsg::PROJECTILE_INFO_MSG, MsgType::GAME_MSG),
+        GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
         projectile_trail(projectile_trail),
         projectile_final_position(projectile_final_position) {}
 

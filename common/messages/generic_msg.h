@@ -52,6 +52,11 @@ public:
         PROJECTILE_INFO_MSG = 0x11,
     };
 
+    enum Type : uint8_t {
+        LOBBY_MSG = 0x01,
+        GAME_MSG = 0x02,
+    };
+
 
     enum FacingDirection : uint8_t {
         RIGHT = 0x01,
@@ -60,34 +65,20 @@ public:
 
 private:
     MsgTypeHeader header;
+    Type type;
 
 public:
-    explicit GenericMsg(MsgTypeHeader header);
+    explicit GenericMsg(MsgTypeHeader header, Type type);
 
     virtual void accept_send(HandlerSender& handler) = 0;
     virtual void accept_recv(HandlerReceiver& handler) = 0;
     virtual void accept_read(HandlerReader& handler) = 0;
     uint8_t get_header() const;
+    uint8_t get_type() const;
     virtual ~GenericMsg() = default;
 };
 
-class MsgType: public GenericMsg {
-public:
-    enum Type : uint8_t {
-        LOBBY_MSG = 0x01,
-        GAME_MSG = 0x02,
-    };
-
-private:
-    Type type;
-
-public:
-    explicit MsgType(GenericMsg::MsgTypeHeader header, Type type);
-
-    uint8_t get_type() const;
-};
-
-class CustomizedPlayerInfoMsg: public MsgType {
+class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
     uint8_t color;
     std::string player_name;
@@ -112,7 +103,7 @@ public:
     void set_player_name(std::string player_name);
 };
 
-class ViewLobbiesMsg: public MsgType {
+class ViewLobbiesMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -124,7 +115,7 @@ public:
     ViewLobbiesMsg();
 };
 
-class ChooseLobbyMsg: public MsgType {
+class ChooseLobbyMsg: public GenericMsg {
 private:
     uint8_t lobby_id;
 
@@ -144,7 +135,7 @@ public:
     uint8_t get_lobby_id() const;
 };
 
-class CreateLobbyMsg: public MsgType {
+class CreateLobbyMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -156,7 +147,7 @@ public:
     CreateLobbyMsg();
 };
 
-class GoBackMsg: public MsgType {
+class GoBackMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -168,7 +159,7 @@ public:
     GoBackMsg();
 };
 
-class ExitFromLobbyMsg: public MsgType {
+class ExitFromLobbyMsg: public GenericMsg {
 private:
     std::string player_name;
 
@@ -188,7 +179,7 @@ public:
     std::string get_player_name() const;
 };
 
-class StartGameMsg: public MsgType {
+class StartGameMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -200,7 +191,7 @@ public:
     StartGameMsg();
 };
 
-class PickupDropMsg: public MsgType {
+class PickupDropMsg: public GenericMsg {
 private:
     uint8_t item_id;
     std::string player_name;
@@ -225,7 +216,7 @@ public:
     std::string get_player_name() const;
 };
 
-class StartActionMsg: public MsgType {
+class StartActionMsg: public GenericMsg {
 private:
     uint8_t action_id;
     std::string player_name;
@@ -250,7 +241,7 @@ public:
     std::string get_player_name() const;
 };
 
-class StopActionMsg: public MsgType {
+class StopActionMsg: public GenericMsg {
 private:
     uint8_t action_id;
     std::string player_name;
@@ -276,7 +267,7 @@ public:
 };
 
 
-class SendLobbiesListMsg: public MsgType {
+class SendLobbiesListMsg: public GenericMsg {
 private:
     std::vector<std::string> lobbies;
 
@@ -296,7 +287,7 @@ public:
     std::vector<std::string> get_lobbies() const;
 };
 
-class EverythingOkMsg: public MsgType {
+class EverythingOkMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -308,7 +299,7 @@ public:
     EverythingOkMsg();
 };
 
-class ErrorMsg: public MsgType {
+class ErrorMsg: public GenericMsg {
 private:
     std::string error_msg;
 
@@ -328,7 +319,7 @@ public:
     std::string get_error_msg() const;
 };
 
-class SendMapMsg: public MsgType {
+class SendMapMsg: public GenericMsg {
 private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
     uint16_t filas;
@@ -358,7 +349,7 @@ public:
     uint16_t get_columnas() const;
 };
 
-class GameEndedMsg: public MsgType {
+class GameEndedMsg: public GenericMsg {
 private:
 public:
     void accept_send(HandlerSender& handler) override;
@@ -370,7 +361,7 @@ public:
     GameEndedMsg();
 };
 
-class WinnerMsg: public MsgType {
+class WinnerMsg: public GenericMsg {
 private:
     std::string winner_name;
     // type stats (a definir)
@@ -391,7 +382,7 @@ public:
     std::string get_winner_name() const;
 };
 
-class UpdatedPlayerInfoMsg: public MsgType {
+class UpdatedPlayerInfoMsg: public GenericMsg {
 private:
     std::string player_name;
     std::pair<uint16_t, uint16_t> position;
@@ -427,7 +418,7 @@ public:
     void set_facing_direction(uint8_t facing_direction);
 };
 
-class ProjectileInfoMsg: public MsgType {
+class ProjectileInfoMsg: public GenericMsg {
 private:
     std::vector<std::pair<uint16_t, uint16_t>> projectile_trail;
     std::pair<uint16_t, uint16_t> projectile_final_position;
