@@ -128,6 +128,7 @@ void Stage::ray_trace(std::unique_ptr<Projectile>& projectile) {
             map.set(bullet_position, projectile->get_id());
             projectile->move(bullet_position);
             coordinates_to_delete.push_back(bullet_position);
+            projectile->update();
             /*} else if(next_tile == PLAYER){
                 kill(player); */
         } else if (next_tile == FLOOR) {
