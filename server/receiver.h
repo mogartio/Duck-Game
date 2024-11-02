@@ -1,33 +1,19 @@
-#ifndef RECEIVER_H
-#define RECEIVER_H
-#include <array>
-#include <string>
+#ifndef RECEIVER_SERVER_H
+#define RECEIVER_SERVER_H
 
-#include "../common/queue.h"
-#include "../common/thread.h"
+#include "../common/receiver.h"
 
-#include "client.h"
-#include "protocolo-common.h"
+class Client;
 
-#define RECEIVER_LOBBY 0
-#define RECEIVER_GAME 1
-#define SPACE_ARRAY 2
-
-class Receiver: public Thread {
+class ReceiverServer: public Receiver {
 private:
-    Queue<GenericMsg*>* recv_queue_game;
-    ProtocoloCommon* protocol;
     Client* client;
 
-    void run() override;
+protected:
+    virtual void executeMsg(GenericMsg* msg) override;
 
 public:
-    explicit Receiver(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
-                      Client* client);
-
-    /*
-     * Detiene la ejecución del hilo seteando _keep_running en false.
-     */
-    void kill();
+    explicit ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
+                            Client* client);
 };
 #endif  // RECEIVER_H

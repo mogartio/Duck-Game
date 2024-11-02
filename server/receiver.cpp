@@ -1,21 +1,16 @@
 #include "receiver.h"
 
-Receiver::Receiver(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol, Client* client):
-        recv_queue_game(recv_queue_game), protocol(protocol), client(client) {}
+#include "client.h"
 
-void Receiver::run() {
-    while (_keep_running) {
-        try {
-            GenericMsg* msg = protocol->receive();
-            if (msg->get_type() == GenericMsg::LOBBY_MSG) {
-                msg->accept_read(*client);
-            } else {
-                recv_queue_game->push(msg);
-            }
-        } catch (const std::exception& e) {
-            _keep_running = false;
-        }
+ReceiverServer::ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
+                               Client* client):
+        Receiver(recv_queue_game, protocol), client(client) {}
+
+void ReceiverServer::executeMsg(GenericMsg* msg) {
+    msg->set_id_client(client->get_id());
+    if (msg->get_type() == GenericMsg::LOBBY_MSG) {
+        msg->accept_read(*client);
+    } else {
+        recv_queue->push(msg);
     }
 }
-
-void Receiver::kill() { _keep_running = false; }
