@@ -6,6 +6,7 @@
 
 #include "../../../common/coordinate.h"
 class Weapon;
+class Stage;
 
 class Projectile {
 protected:
@@ -35,6 +36,7 @@ public:
     virtual ~Projectile() = default;
     virtual int get_id() { return id; }
     virtual void update() {}
+    virtual bool ray_trace(Stage& stage);
 };
 
 
