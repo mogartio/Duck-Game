@@ -20,6 +20,7 @@ target_sources(server_exe  # Use the correct target name
     game_logic/player/player.cpp
     game_logic/player/player_position.cpp
     game_logic/player/weapon.cpp
+    game_logic/player/projectile.cpp
 
     game_logic/map/stage.cpp
 
