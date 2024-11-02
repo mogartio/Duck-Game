@@ -23,6 +23,7 @@ enum ActionId : uint8_t {
     SHOOT = 0x04,
     PLAY_DEAD = 0x05,
     AIM_UP = 0x06,
+    THROW_WEAPON = 0x07,
 };
 
 

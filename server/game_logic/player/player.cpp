@@ -14,7 +14,9 @@ Player::Player(Coordinate& initial_position, Stage& stage, int id):
         position(initial_position, *this, stage),
         is_alive(true),
         stage(stage),
-        weapon(std::move(std::make_unique<Magnum>(*this, stage))) {}
+        weapon(std::move(std::make_unique<Magnum>(stage))) {
+    weapon->set_player(this);
+}
 
 Coordinate Player::get_position() { return position.get_position(); }
 
@@ -37,13 +39,20 @@ void Player::remove_action(int& command) {
     if (command == SHOOT) {
         weapon->stop_shooting();
     }
+    if (command == THROW_WEAPON) {
+        weapon->finish_throw(position.get_facing_direction(), position.is_aiming_up(),
+                             std::move(weapon));
+        weapon = nullptr;
+    }
 }
 
 void Player::execute(int& command) {
     if (command == SHOOT) {
         shoot();
-        // TODO: ver si mantuvo apretado el boton
         return;
+    }
+    if (command == THROW_WEAPON) {
+        weapon->start_throw();
     }
 }
 
