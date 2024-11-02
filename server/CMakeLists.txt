@@ -15,6 +15,8 @@ target_sources(server_exe  # Use the correct target name
     server_protocol.cpp
     server.cpp
     receiver.cpp
+    lobby.cpp
+    lobbys_monitor.cpp
     game_logic/config.cpp
     game_logic/game_main.cpp
     game_logic/player/air_state.cpp
@@ -35,6 +37,8 @@ target_sources(server_exe  # Use the correct target name
     send_queues_monitor.h
     server.h
     receiver.h
+    lobby.h
+    lobbys_monitor.h
     game_logic/config.h
     game_logic/game_main.h
     game_logic/player/air_state.h

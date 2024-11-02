@@ -1,8 +1,9 @@
 #ifndef LOBBY_H
 #define LOBBY_H
 
-
 #include <list>
+#include <string>
+#include <tuple>
 
 #include "./../common/messages/descripcion-lobby.h"
 
@@ -13,9 +14,12 @@
 
 class Lobby {
 private:
-    std::list<Client*> jugadores;
+    // El primer elemento es el id del client y el segundo su nombre de usuario
+    std::list<DescipcionPlayer> players;
 
-    u_int8_t id_lobby;
+    uint player1_id;
+
+    uint id_lobby;
 
     void lobby_empty();
 
@@ -23,27 +27,22 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(Client* client, u_int8_t& id_lobby);
+    explicit Lobby(std::tuple<std::string, uint> player1, uint& id_lobby);
 
     /*
      * Metodo que agrega un jugador al lobby
      */
-    void addPlayer(Client* client);
+    void addPlayer(std::tuple<std::string, uint> player2);
 
     /*
      * Metodo que elimina un jugador del lobby
      */
-    void removePlayer(Client* client);
+    void removePlayer(std::tuple<std::string, uint> player);
 
     /*
      * Metodo que inicia el juego
      */
     void startGame();
-
-    /*
-     * Metodo que cierra el lobby
-     */
-    void closeLobby();
 
     /*
      * Metodo que devuelve si el lobby esta vacio
@@ -53,7 +52,7 @@ public:
     /*
      * Metodo que devuelve el id del lobby
      */
-    u_int8_t getId() const;
+    uint getId() const;
 
     /*
      * Metodo que devuelve la descripcion del lobby
