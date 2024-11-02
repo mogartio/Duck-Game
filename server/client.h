@@ -3,11 +3,14 @@
 #include <string>
 #include <utility>
 
+#include "../common/messages/generic_msg.h"
+#include "../common/messages/handler_read.h"
 #include "../common/receiver.h"
 #include "../common/sender.h"
+
 #include "server_protocol.h"
 
-class Client {
+class Client: public HandlerReader {
 private:
     Socket client_skt;
     Queue<GenericMsg*>* send_queue;
@@ -26,6 +29,15 @@ public:
 
     void stop();
     bool is_alive();
+    /*
+    virtual void handle_read(const CustomizedPlayerInfoMsg& msg) override;
+    virtual void handle_read(const ViewLobbiesMsg& msg) override;
+    virtual void handle_read(const ChooseLobbyMsg& msg) override;
+    virtual void handle_read(const CreateLobbyMsg& msg) override;
+    virtual void handle_read(const GoBackMsg& msg) override;
+    virtual void handle_read(const ExitFromLobbyMsg& msg) override;
+    virtual void handle_read(const StartGameMsg& msg) override;
+    */
 };
 
 #endif  // CLIENT_H
