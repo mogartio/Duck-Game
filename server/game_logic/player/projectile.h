@@ -19,6 +19,7 @@ protected:
     int reach;
     int distance_covered;
     int id;
+    std::vector<std::pair<uint16_t, uint16_t>> trail;
 
 public:
     Projectile(Coordinate& initial_position, int x_direction, int reach, int speed,

@@ -24,10 +24,15 @@ protected:
 public:
     Observer(SendQueuesMonitor<GenericMsg*>&);
     virtual void update();
-    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) {}
+    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t);
+    virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
+                        std::pair<uint16_t, uint16_t> final_position);
+    virtual ~Observer() = default;
 };
 
 class PlayerObserver: public Observer {
+    using Observer::update;
+
 public:
     virtual void update(std::string name, uint16_t pos_x, uint16_t pos_y, uint8_t state,
                         uint8_t facing_direction) override {
@@ -40,9 +45,11 @@ public:
 };
 
 class ProjectileObserver: public Observer {
+    using Observer::update;
+
 public:
     virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
-                        std::pair<uint16_t, uint16_t> final_position) {
+                        std::pair<uint16_t, uint16_t> final_position) override {
         ProjectileInfoMsg msg(trail, final_position);
         std::list<GenericMsg*>
                 porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez

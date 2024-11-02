@@ -23,7 +23,9 @@ bool Projectile::ray_trace(Stage& stage) {
             move(bullet_position);
             // coordinates_to_delete.push_back(bullet_position);
             update();
+            return false;
         }
+        trail.push_back(std::pair<uint16_t, uint16_t>(bullet_position.x, bullet_position.y));
     }
     return false;
 }
@@ -31,7 +33,7 @@ bool Projectile::ray_trace(Stage& stage) {
 void Projectile::notify() {
 
     for (Observer* obs: observers) {
-        obs->update(name, current_position.x, current_position.y, position.get_state(),
-                    position.get_facing_direction());
+        obs->update(trail, std::pair<uint16_t, uint16_t>(position.x, position.y));
     }
+    trail.clear();
 }
