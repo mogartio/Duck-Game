@@ -5,12 +5,13 @@
 #include "config.h"
 
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
-                   bool is_testing):
+                   bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
         stage("main_map.csv"),
-        q(q),
+        receiver_q(q),
         is_testing(is_testing),
         player_name1(player_name1),
-        player_name2(player_name2) {
+        player_name2(player_name2),
+        senders(senders) {
     CSVWriter::write_map("main_map.csv");
 
     std::vector<std::tuple<int, int>> player_spawn_sites =
@@ -32,17 +33,16 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
 
 void GameMain::run() {
     while (true) {
-        // Aca hay que try_popear de la cola de mensajes
         if (is_testing) {
             std::string command;
             std::getline(std::cin, command);
             GenericMsg* new_msg = create_msg(command);
             if (new_msg != nullptr) {
-                q.push(new_msg);
+                receiver_q.push(new_msg);
             }
         }
         GenericMsg* msg;
-        bool have_command = q.try_pop(msg);
+        bool have_command = receiver_q.try_pop(msg);
         if (have_command) {
             msg->accept_read(*this);  // esto equivale a una llamada al handle_read
         }
