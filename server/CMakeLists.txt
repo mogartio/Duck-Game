@@ -10,7 +10,6 @@ target_sources(server_exe  # Use the correct target name
     ${COMMON_SOURCES}  # Include all .cpp files from common
     acceptor.cpp
     client.cpp
-    clients_monitor.cpp
     main.cpp
     server_protocol.cpp
     server.cpp
@@ -32,9 +31,7 @@ target_sources(server_exe  # Use the correct target name
     ${COMMON_HEADERS}  # Include all .h files from common
     acceptor.h
     client.h
-    clients_monitor.h
     server_protocol.cpp
-    read_input.h
     send_queues_monitor.h
     server.h
     receiver.h

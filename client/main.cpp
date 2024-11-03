@@ -15,6 +15,7 @@ int main(int argc, char const* argv[]) {
     std::cout << argv[1] << std::endl;
 
     Socket skt(argv[1], argv[2]);
+    /*
     ClientProtocol protocol(skt);
 
     std::string input;
@@ -30,6 +31,8 @@ int main(int argc, char const* argv[]) {
     GenericMsg* msg_recv2 = protocol.receive();
     std::cout << "Mensaje recibido con header: 0x" << std::hex << std::setw(2) << std::setfill('0')
               << static_cast<int>(msg_recv2->get_header()) << std::endl;
+    */
+
 
     return 0;
 }
