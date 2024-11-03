@@ -53,7 +53,7 @@ public:
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mutex);
             if (instance == nullptr) {
-                instance = new Config("./server/game_logic/config.yaml");
+                instance = new Config("../server/game_logic/config.yaml");
             }
         }
         return instance;
