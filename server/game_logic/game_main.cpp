@@ -13,7 +13,6 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
         player_name1(player_name1),
         player_name2(player_name2),
         senders(senders) {
-    CSVWriter::write_map("main_map.csv");
 
     std::vector<std::tuple<int, int>> player_spawn_sites =
             Config::get_instance()->player_spawn_sites;

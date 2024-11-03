@@ -14,6 +14,7 @@
 #include "../player/projectile.h"
 
 #include "csv_reader.h"
+#include "csv_writer.h"
 #include "stage.h"
 
 Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& senders):
