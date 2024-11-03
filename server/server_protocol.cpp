@@ -45,14 +45,23 @@ void ServerProtocol::handle_recv(ExitFromLobbyMsg& msg) {
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    std::vector<std::string> lobbies = msg.get_lobbies();
+    std::vector<DescripcionLobby> lobbies = msg.get_lobbies();
     // mando el numero de lobbies
     uint8_t lobbies_size = lobbies.size();
     send_u_int8_t(lobbies_size);
     // mando los nombres de los lobbies
-    for (int i = 0; i < lobbies_size; i++) {
-        send_string(lobbies[i]);
-        // lobbies[i].get_amount_of_players();
+    for (auto& lobby: lobbies) {
+        send_u_int8_t(lobby.idLobby);
+        send_u_int8_t(lobby.cantidadJugadores);
+        for (int i = 0; i < lobby.cantidadJugadores; i++) {
+            if (i == 0) {
+                send_string(lobby.player1.nombre);
+                send_u_int8_t(lobby.player1.color);
+            } else {
+                send_string(lobby.player2.nombre);
+                send_u_int8_t(lobby.player2.color);
+            }
+        }
     }
 }
 

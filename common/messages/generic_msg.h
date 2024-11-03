@@ -10,6 +10,7 @@
 
 // TODO: Aca se puede directamente agregar los imports de los handlers
 // TODO: No se porque se los declara tempranamente aca????
+#include "descripcion-lobby.h"
 #include "handler_read.h"
 #include "handler_recv.h"
 #include "handler_send.h"
@@ -285,7 +286,7 @@ public:
 
 class SendLobbiesListMsg: public GenericMsg {
 private:
-    std::vector<std::string> lobbies;
+    std::vector<DescripcionLobby> lobbies;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -296,11 +297,11 @@ public:
 
     SendLobbiesListMsg();
 
-    explicit SendLobbiesListMsg(std::vector<std::string> lobbies);
+    explicit SendLobbiesListMsg(std::vector<DescripcionLobby> lobbies);
 
-    void set_lobbies(std::vector<std::string> lobbies);
+    void set_lobbies(std::vector<DescripcionLobby> lobbies);
 
-    std::vector<std::string> get_lobbies() const;
+    std::vector<DescripcionLobby> get_lobbies() const;
 };
 
 class EverythingOkMsg: public GenericMsg {

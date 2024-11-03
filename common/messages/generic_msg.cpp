@@ -190,7 +190,7 @@ std::string StopActionMsg::get_player_name() const { return player_name; }
 SendLobbiesListMsg::SendLobbiesListMsg():
         GenericMsg(GenericMsg::SEND_LOBBIES_LIST_MSG, GenericMsg::LOBBY_MSG) {}
 
-SendLobbiesListMsg::SendLobbiesListMsg(std::vector<std::string> lobbies):
+SendLobbiesListMsg::SendLobbiesListMsg(std::vector<DescripcionLobby> lobbies):
         GenericMsg(GenericMsg::SEND_LOBBIES_LIST_MSG, GenericMsg::LOBBY_MSG), lobbies(lobbies) {}
 
 void SendLobbiesListMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
@@ -199,9 +199,11 @@ void SendLobbiesListMsg::accept_recv(HandlerReceiver& handler) { handler.handle_
 
 void SendLobbiesListMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-void SendLobbiesListMsg::set_lobbies(std::vector<std::string> lobbies) { this->lobbies = lobbies; }
+void SendLobbiesListMsg::set_lobbies(std::vector<DescripcionLobby> lobbies) {
+    this->lobbies = lobbies;
+}
 
-std::vector<std::string> SendLobbiesListMsg::get_lobbies() const { return lobbies; }
+std::vector<DescripcionLobby> SendLobbiesListMsg::get_lobbies() const { return lobbies; }
 
 EverythingOkMsg::EverythingOkMsg():
         GenericMsg(GenericMsg::EVERYTHING_OK_MSG, GenericMsg::GAME_MSG) {}
