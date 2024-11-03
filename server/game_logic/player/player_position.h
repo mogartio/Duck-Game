@@ -15,12 +15,12 @@ private:
     std::vector<Coordinate> occupied;  // Las coordenadas que esta ocupando
     Player& player;
     std::unique_ptr<AirState> air_state;
-    uint8_t state;
     Stage& stage;
     uint8_t facing_direction;  // para disparar
     void move_horizontally(int);
     void move_vertically(int);
     bool aiming_up;
+    uint8_t state;
 
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);

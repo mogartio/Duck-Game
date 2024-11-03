@@ -9,12 +9,13 @@
 
 using namespace ActionsId;
 
-Player::Player(Coordinate& initial_position, Stage& stage, int id):
+Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string name):
         id(id),
         position(initial_position, *this, stage),
         is_alive(true),
         stage(stage),
-        weapon(std::move(std::make_unique<Magnum>(stage))) {
+        weapon(std::move(std::make_unique<Magnum>(stage))),
+        name(name) {
     weapon->set_player(this);
 }
 
@@ -65,6 +66,7 @@ void Player::update() {
         }
     }
     move(moving_commands);
+    notify();  // TODO: verificar que el estado haya cambiado antes de broadcastear
 }
 
 void Player::notify() {

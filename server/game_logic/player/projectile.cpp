@@ -16,17 +16,20 @@ bool Projectile::ray_trace(Stage& stage) {
 
         int next_tile = stage.get(bullet_position);
         if (next_tile == -1 || next_tile == FLOOR) {
+            notify();
             return true;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4) && i == speed - 1) {
             stage.set(bullet_position, id);
             move(bullet_position);
             // coordinates_to_delete.push_back(bullet_position);
+            notify();
             update();
             return false;
         }
         trail.push_back(std::pair<uint16_t, uint16_t>(bullet_position.x, bullet_position.y));
     }
+    notify();
     return false;
 }
 

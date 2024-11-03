@@ -7,7 +7,7 @@ protected:
     std::list<Observer*> observers;
 
 public:
-    Subject() {};
+    Subject() {}
     virtual void attach(Observer* obs) { observers.push_back(obs); }
     virtual void detach(Observer* obs) { observers.remove(obs); }
     virtual void notify() {}

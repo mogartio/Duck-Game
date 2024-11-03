@@ -16,7 +16,8 @@
 #include "csv_reader.h"
 #include "stage.h"
 
-Stage::Stage(const std::string& file_name): map(0, 0) {
+Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& senders):
+        map(0, 0), senders(senders), obs(this->senders) {
     CSVReader reader(file_name);
     map = std::move(reader.read_map());
 }
@@ -24,6 +25,7 @@ Stage::Stage(const std::string& file_name): map(0, 0) {
 void Stage::print() { map.print(); }
 
 void Stage::add_projectile(std::unique_ptr<Projectile>&& projectile) {
+    projectile.get()->attach(&obs);
     projectiles.push_back(std::move(projectile));
 }
 

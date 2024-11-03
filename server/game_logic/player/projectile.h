@@ -10,7 +10,7 @@
 class Weapon;
 class Stage;
 
-class Projectile: ProjectileSubject {
+class Projectile: public ProjectileSubject {
 protected:
     int speed;
     int x_direction;

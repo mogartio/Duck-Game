@@ -7,7 +7,7 @@
 
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
                    bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
-        stage("main_map.csv"),
+        stage("main_map.csv", senders),
         receiver_q(q),
         is_testing(is_testing),
         player_name1(player_name1),
@@ -24,10 +24,12 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
             Config::get_instance()->weapon_spawn_sites;
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
     WeaponSpawnPoint spawn(weapon_spawn, stage);
+    static PlayerObserver player_obs(senders);
 
     // players[player_name1] = new Player(coordinate_a, stage, 2);
     // stage.draw_player(*players[player_name1]);
-    players[player_name2] = new Player(coordinate_b, stage, 4);
+    players[player_name2] = new Player(coordinate_b, stage, 4, player_name2);
+    players[player_name2]->attach(&player_obs);
     stage.draw_player(*players[player_name2]);
     // spawn.spawn_weapon();
 }

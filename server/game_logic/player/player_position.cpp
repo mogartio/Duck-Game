@@ -12,7 +12,8 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
         player(player),
         stage(stage),
         facing_direction(AIM_RIGHT),
-        aiming_up(false) {
+        aiming_up(false),
+        state(GROUNDED) {
     air_state = std::move(std::make_unique<Grounded>());
 }
 

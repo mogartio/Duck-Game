@@ -17,18 +17,18 @@
 class Player: public PlayerSubject {
 private:
     int id;
-    std::string name;
     PlayerPosition position;
     bool is_alive;
     Stage& stage;
     std::unique_ptr<Weapon> weapon;
     std::set<int> current_actions;
+    std::string name;
 
 public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
-    Player(Coordinate&, Stage&, int);
+    Player(Coordinate&, Stage&, int, std::string);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);

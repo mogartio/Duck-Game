@@ -22,11 +22,11 @@ protected:
     SendQueuesMonitor<GenericMsg*>& senders;
 
 public:
-    Observer(SendQueuesMonitor<GenericMsg*>&);
-    virtual void update();
-    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t);
-    virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
-                        std::pair<uint16_t, uint16_t> final_position);
+    Observer(SendQueuesMonitor<GenericMsg*>& queues): senders(queues) {}
+    virtual void update() {}
+    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) {}
+    virtual void update(std::vector<std::pair<uint16_t, uint16_t>>, std::pair<uint16_t, uint16_t>) {
+    }
     virtual ~Observer() = default;
 };
 
@@ -34,6 +34,7 @@ class PlayerObserver: public Observer {
     using Observer::update;
 
 public:
+    PlayerObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
     virtual void update(std::string name, uint16_t pos_x, uint16_t pos_y, uint8_t state,
                         uint8_t facing_direction) override {
         std::list<GenericMsg*>
@@ -48,6 +49,7 @@ class ProjectileObserver: public Observer {
     using Observer::update;
 
 public:
+    ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
     virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
                         std::pair<uint16_t, uint16_t> final_position) override {
         ProjectileInfoMsg msg(trail, final_position);
