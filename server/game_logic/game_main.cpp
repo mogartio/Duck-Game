@@ -52,7 +52,7 @@ void GameMain::run() {
             stage.draw_player(*player);
         }
         stage.update();
-        stage.print();
+        //stage.print();
         sleep(1);
     }
 }
