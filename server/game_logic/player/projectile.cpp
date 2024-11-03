@@ -16,7 +16,6 @@ bool Projectile::ray_trace(Stage& stage) {
 
         int next_tile = stage.get(bullet_position);
         if (next_tile == -1 || next_tile == FLOOR) {
-            notify();
             return true;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4) && i == speed - 1) {

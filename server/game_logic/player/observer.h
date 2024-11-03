@@ -40,6 +40,10 @@ public:
         std::list<GenericMsg*>
                 porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
         UpdatedPlayerInfoMsg msg(name, std::make_pair(pos_x, pos_y), state, facing_direction);
+
+        std::cout << "se esta broadcasteando un jugador que es:" << name << " con pos: " << pos_x
+                  << pos_y << "En estado: " << state << "mirando a" << facing_direction
+                  << std::endl;
         porquenecesitounalist.push_back(&msg);
         senders.broadcast(porquenecesitounalist);
     }
@@ -53,6 +57,8 @@ public:
     virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
                         std::pair<uint16_t, uint16_t> final_position) override {
         ProjectileInfoMsg msg(trail, final_position);
+        std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+                  << std::get<0>(final_position) << std::get<1>(final_position) << std::endl;
         std::list<GenericMsg*>
                 porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
         porquenecesitounalist.push_back(&msg);
