@@ -8,6 +8,8 @@ void Sender::run() {
         try {
             GenericMsg* msg = send_queue->pop();
             protocol->send(msg);
+            delete msg;
+            msg = nullptr;
         } catch (const std::exception& e) {
             _keep_running = false;
         }
