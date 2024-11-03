@@ -33,9 +33,13 @@ void Lobby::addPlayer(std::tuple<std::string, uint> player2) {
 
 void Lobby::removePlayer(std::tuple<std::string, uint> player) {
     lobby_empty();
+    uint cant_players = players.size();
     players.remove_if([player](DescipcionPlayer& p) {
         return p.id == std::get<1>(player) && p.nombre == std::get<0>(player);
     });
+    if (cant_players == players.size()) {
+        throw std::runtime_error("Jugador no estaba en el lobby");
+    }
 }
 
 void Lobby::startGame() {

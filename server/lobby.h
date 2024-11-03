@@ -2,12 +2,12 @@
 #define LOBBY_H
 
 #include <list>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 
 #include "./../common/messages/descripcion-lobby.h"
 
-#include "client.h"
 #define MAX_PLAYERS 2
 #define EMPTY_PLAYERS 0
 

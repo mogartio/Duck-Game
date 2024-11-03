@@ -3,9 +3,9 @@
 
 LobbysMonitor::LobbysMonitor(): m(), lobbys_disponibles(), contador_id_lobbys(0) {}
 
-std::list<DescripcionLobby> LobbysMonitor::get_lobbys() {
+std::vector<DescripcionLobby> LobbysMonitor::get_lobbys() {
     std::lock_guard<std::mutex> lock(m);
-    std::list<DescripcionLobby> lobbys_disponibles_descripcion;
+    std::vector<DescripcionLobby> lobbys_disponibles_descripcion;
     for (const Lobby& lobby: lobbys_disponibles) {
         lobbys_disponibles_descripcion.push_back(lobby.getDescription());
     }

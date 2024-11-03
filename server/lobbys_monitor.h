@@ -5,6 +5,7 @@
 #include <mutex>
 #include <string>
 #include <tuple>
+#include <vector>
 
 #include "lobby.h"
 
@@ -18,7 +19,7 @@ private:
 public:
     LobbysMonitor();
     // Devuelve la lista de lobbys disponibles
-    std::list<DescripcionLobby> get_lobbys();
+    std::vector<DescripcionLobby> get_lobbys();
     // Agrega un lobby a la lista de lobbys disponibles y devuelve el id del lobby
     uint create(std::tuple<std::string, uint> player);
     // Agrega un jugador a un lobby
