@@ -9,10 +9,12 @@ Server::Server(const char* port, bool is_testing):
         srv(port), clients(), recv_queue(100), send_queues(), is_testing(is_testing) {}
 
 void Server::run() {
+<<<<<<< HEAD
 
     Acceptor acceptor(std::move(srv), clients, recv_queue, send_queues);
     acceptor.start();
     ReadInput read_input_t;
+<<<<<<< HEAD
     read_input_t.start();
 
     WinnerMsg msg1("Candela");
