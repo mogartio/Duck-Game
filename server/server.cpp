@@ -11,11 +11,20 @@ Server::Server(const char* port, bool is_testing):
 void Server::run() {
 <<<<<<< HEAD
 
+=======
+    GameMain game(recv_queue, "juancito", "pedrito", is_testing, send_queues);
+    game.start();
+    // pongo a correr el acceptor
+>>>>>>> main
     Acceptor acceptor(std::move(srv), clients, recv_queue, send_queues);
     acceptor.start();
     ReadInput read_input_t;
 <<<<<<< HEAD
     read_input_t.start();
+=======
+    // read_input_t.start();
+    // read_input_t.start();
+>>>>>>> main
 
     WinnerMsg msg1("Candela");
     UpdatedPlayerInfoMsg msg2("Candela", std::make_pair(1, 1), 1, 1);
@@ -30,7 +39,14 @@ void Server::run() {
         std::list<GenericMsg*> msgs;
         GenericMsg* msg;
         while (recv_queue.try_pop(msg)) {
+<<<<<<< HEAD
             msgs.push_back(&msg3);
+=======
+            std::cout << "Mensaje recibido con header: 0x" << std::hex << std::setw(2)
+                      << std::setfill('0') << static_cast<int>(msg->get_header()) << std::endl;
+            msgs.push_back(&msg1);
+            msgs.push_back(&msg2);
+>>>>>>> main
         }
         send_queues.broadcast(msgs);
     }
