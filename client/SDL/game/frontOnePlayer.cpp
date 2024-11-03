@@ -3,8 +3,6 @@
 
 #include "frontOnePlaye.h"
 
-#define TILES_TO_PIXELS 10
-
 enum Front_event {
     MOVE_LEFT,
     MOVE_RIGHT,
@@ -24,6 +22,9 @@ void OnePlayer::play() {
     }
     
     GenericMsg* matriz = queueRecive.pop();
+
+    std::cout << int(matriz->get_header()) << std::endl;
+
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
@@ -32,25 +33,27 @@ void OnePlayer::play() {
         mapa = map->get_map();
         filas = map->get_filas();
         columnas = map->get_columnas();
+    } else if (matriz->get_header() == GenericMsg::MsgTypeHeader::WINNER_MSG) {
+        // std::cout << "No se mando la matriz, se mando WINNER_MSG" << std::endl;
+        // return;
     } else if (matriz == nullptr) {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
     
-
-    // ------------ Codigo prueba --------------
-    // std::vector<uint16_t> mapa = {5,5,5,0,0,2,0,0,0,0,0,0,0,0,0,0,5,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    // uint16_t filas = 6;
-    // uint16_t columnas = 7;
-    // ------------------------------------------
-
-    Window win(500, 500);
+    Window win(500, 500); // Cambiar a WIindow win(columnas*TILES_TO_PIXELS, filas*TILES_TO_PIXELS);
     
     Map map(win.get_rend(), mapa);
     map.makeMap(columnas, filas);
 
-    const Uint32 frame_rate = 1000 / 40; // 30 FPS
+    GenericMsg* jugador = queueRecive.pop();
+
+    if (jugador->get_header() == GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
+        UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
+        map.addPlayer(player->get_position().first, player->get_position().second, 2, player->get_player_name());
+    }
+
+    const Uint32 frame_rate = 1000 / 40; // 40 FPS
     Uint32 last_frame_time = SDL_GetTicks(); // Tiempo del último frame
-    
 
     bool close = false;
     GenericMsg* msg1;
@@ -147,9 +150,9 @@ void OnePlayer::play() {
             //     std::string winner_name = winner->get_winner_name();
             // }
         }
+
         // Renderiza los objetos en la ventana
         if (elapsed_time >= frame_rate) {
-            
             win.clear();
             map.fill();
             win.fill();

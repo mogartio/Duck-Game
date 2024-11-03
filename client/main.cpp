@@ -24,7 +24,7 @@ int main(int argc, char const* argv[]) {
     ViewLobbiesMsg msg1;
     send_queue.push(&msg1);
     
-    OnePlayer front(send_queue, recv_queue, "pablito");
+    OnePlayer front(send_queue, recv_queue, "juancito");
     front.play();
 
     recv_queue.close();

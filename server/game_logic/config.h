@@ -49,7 +49,6 @@ public:
     int armor_strength;
     std::vector<std::tuple<int, int>> weapon_spawn_sites;
     std::vector<std::tuple<int, int>> player_spawn_sites;
-
     static Config* get_instance() {
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mutex);

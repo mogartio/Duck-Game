@@ -104,7 +104,6 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
         map.push_back(tile);
     }
     msg.set_map(map);
-    
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {

@@ -22,7 +22,6 @@ private:
 
     Image background;
 
-    void makePlayer(int columnaActual, int filaActual, int color, std::string name);
     void makeTile(int columnaActual, int filaActual /*, TileType tileType*/);
 
 
@@ -30,6 +29,8 @@ public:
     Map(SDL_Renderer* rend, std::vector<uint16_t> mapa);
 
     void makeMap(int w, int h);
+
+    void addPlayer(int columnaActual, int filaActual, int color, std::string name);
 
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);

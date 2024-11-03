@@ -1,7 +1,7 @@
 #include "map.h"
 #include <iostream>
 
-#define TILES_TO_PIXELS 50
+#define TILES_TO_PIXELS 24
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
@@ -17,19 +17,11 @@ void Map::makeTile(int columnaActual, int filaActual /*, TileType tileType*/) {
     tiles.push_back(tile);
 }
 
-void Map::makePlayer(int columnaActual, int filaActual, int color, std::string name) {
+void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
     player->defineSize(1*TILES_TO_PIXELS, 1*TILES_TO_PIXELS);
     player->update(columnaActual*TILES_TO_PIXELS, filaActual*TILES_TO_PIXELS, DuckState::STANDING, RIGHT);
     players[name] = player;
-}
-
-bool condicion(int i, int filaActual, int columnaActual, std::vector<std::vector<int>> *matriz) {
-    bool a = ((*matriz)[filaActual-1][columnaActual] == i);
-    bool b = ((*matriz)[filaActual][columnaActual-1] == i);
-    bool c = ((*matriz)[filaActual-2][columnaActual] == i);
-    bool d = ((*matriz)[filaActual][columnaActual-2] == i);
-    return (a || b || c || d);
 }
 
 void Map::makeMap(int columnas, int filas) {
@@ -49,19 +41,6 @@ void Map::makeMap(int columnas, int filas) {
         }
 
         switch (i) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                //llega jugador
-                // Necesito un sistema que si vuelve a aparecer el num 2 a 3 tiles de distancia de la actual lo saltee
-                // if (condicion(i, filaActual, columnaActual, &matriz)) {
-
-                // }
-                //aca determino que color es para conseguir el string q necesito}
-                // matriz[filaActual][columnaActual] = i;
-                makePlayer(columnaActual, filaActual, i-1, "A");
-                break;
             case 5: //piso
             case 6: //pared
                 // if ((matriz[filaActual-1][columnaActual] == i) || (matriz[filaActual][columnaActual-1] == i) ) {
@@ -94,14 +73,14 @@ void Map::fill() { // Dibuja de atras para adelante
 
     background.fill(true);
 
-    // for (auto& [type, tileVector] : tiles) {
-    //     for (Image& tile : tileVector) {
-    //         tile.fill();
-    //     }
-    // }
+    for (Image* tile : tiles) {
+        tile->fill();
+    }
+
     for (Image* piso: tiles) {
         piso->fill();
     }
+    
     /*
     for (Weapon weapon: weapons) {
         weapon.fill();

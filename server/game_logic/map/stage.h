@@ -29,10 +29,11 @@ public:
     void delete_player_from_stage(Player&);
     void print();
     bool should_fall(PlayerPosition&);
-    void ray_trace(std::unique_ptr<Projectile>&);
     void add_projectile(std::unique_ptr<Projectile>&&);
     void remove_projectile(std::unique_ptr<Projectile>&);
     void update();
+    void set(const Coordinate&, const int);
+    int get(const Coordinate&);
 };
 
 #endif
