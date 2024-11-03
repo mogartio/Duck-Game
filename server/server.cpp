@@ -16,6 +16,9 @@ void Server::run() {
     ReadInput read_input_t;
     read_input_t.start();
 
+    GameMain game(recv_queue, "juancito", "pedrito", is_testing, send_queues);
+    game.start();
+
     WinnerMsg msg1("Candela");
     UpdatedPlayerInfoMsg msg2("Candela", std::make_pair(1, 1), 1, 1);
 
