@@ -30,6 +30,8 @@ private:
         player_falling_speed = config["player_falling_speed"].as<int>();
         player_jumping_height = config["player_jumping_height"].as<int>();
         armor_strength = config["armor_strength"].as<int>();
+        columns_map = config["columns_map"].as<uint16_t>();
+        rows_map = config["rows_map"].as<uint16_t>();
         for (const auto& coords: config["weapon_spawn_sites"]) {
             weapon_spawn_sites.push_back(
                     std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
@@ -47,6 +49,8 @@ public:
     int player_falling_speed;
     int player_jumping_height;
     int armor_strength;
+    uint16_t columns_map;
+    uint16_t rows_map;
     std::vector<std::tuple<int, int>> weapon_spawn_sites;
     std::vector<std::tuple<int, int>> player_spawn_sites;
     static Config* get_instance() {

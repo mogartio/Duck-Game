@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <ostream>
 #include <sstream>
@@ -61,6 +62,16 @@ public:
             }
             std::cout << stream.str() << std::endl;
         }
+    }
+
+    std::vector<uint16_t> get_vector_representation() {
+        std::vector<uint16_t> res;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                res.push_back(static_cast<uint16_t>(matrix[i][j]));
+            }
+        }
+        return res;
     }
 };
 

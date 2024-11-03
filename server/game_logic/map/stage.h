@@ -36,6 +36,7 @@ public:
     void update();
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
+    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
 };
 
 #endif
