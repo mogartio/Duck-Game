@@ -5,6 +5,9 @@ project(duck_game
     LANGUAGES CXX
 )
 
+# Enable AUTOMOC for Qt's Meta-Object Compiler
+set(CMAKE_AUTOMOC ON)
+
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

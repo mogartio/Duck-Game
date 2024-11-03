@@ -29,7 +29,6 @@ void Server::run() {
             std::cout << "Mensaje recibido con header: 0x" << std::hex << std::setw(2)
                       << std::setfill('0') << static_cast<int>(msg->get_header()) << std::endl;
             msgs.push_back(&msg1);
-            msgs.push_back(&msg2);
         }
         send_queues.broadcast(msgs);
     }
