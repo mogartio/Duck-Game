@@ -17,6 +17,7 @@ public:
     void add(Queue<T>* queue, const int& client_id);
     void send_to_client(const T& msg, const int& client_id);
     void broadcast(const std::list<T>& msgs);
+    void broadcast(const T& msg);
     void remove_all();
 };
 
@@ -46,6 +47,14 @@ void SendQueuesMonitor<T>::broadcast(const std::list<T>& msgs) {
         for (const T& msg: msgs) {
             pair.second->push(msg);
         }
+    }
+}
+
+template <typename T>
+void SendQueuesMonitor<T>::broadcast(const T& msg) {
+    std::lock_guard<std::mutex> lock(m);
+    for (auto& pair: send_queues_map) {
+        pair.second->push(msg);
     }
 }
 
