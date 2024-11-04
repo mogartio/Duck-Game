@@ -7,9 +7,10 @@
 
 #include "config.h"
 
+
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
                    bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
-        stage("main_map.csv"),
+        stage("main_map.csv", senders),
         receiver_q(q),
         is_testing(is_testing),
         player_name1(player_name1),
@@ -25,10 +26,19 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
             Config::get_instance()->weapon_spawn_sites;
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
     WeaponSpawnPoint spawn(weapon_spawn, stage);
+    static PlayerObserver player_obs(senders);
+    std::vector<uint16_t> map = stage.get_vector_representation();
+    SendMapMsg map_msg(map, Config::get_instance()->rows_map, Config::get_instance()->columns_map);
+    std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
+    dejenmepasarleunmensajedirectoporfavor.push_back(&map_msg);
+    senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
 
     // players[player_name1] = new Player(coordinate_a, stage, 2);
     // stage.draw_player(*players[player_name1]);
-    players[player_name2] = new Player(coordinate_b, stage, 4);
+    players[player_name2] = new Player(coordinate_b, stage, 4, player_name2);
+    players[player_name2]->attach(&player_obs);
+    players[player_name2]->update();  // esto hace que se envie la posicion inicial
+
     stage.draw_player(*players[player_name2]);
     // spawn.spawn_weapon();
 }
@@ -54,7 +64,7 @@ void GameMain::run() {
             stage.draw_player(*player);
         }
         stage.update();
-        stage.print();
+        // stage.print();
         sleep(1);
     }
 }

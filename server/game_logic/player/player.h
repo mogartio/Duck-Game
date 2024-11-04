@@ -10,10 +10,12 @@
 #include "../map/stage.h"
 
 #include "air_state.h"
+#include "observer.h"
 #include "player_position.h"
+#include "subject.h"
 #include "weapon.h"
 
-class Player {
+class Player: public PlayerSubject {
 private:
     int id;
     PlayerPosition position;
@@ -21,12 +23,13 @@ private:
     Stage& stage;
     std::unique_ptr<Weapon> weapon;
     std::set<int> current_actions;
+    std::string name;
 
 public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
-    Player(Coordinate&, Stage&, int);
+    Player(Coordinate&, Stage&, int, std::string);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);
@@ -35,6 +38,7 @@ public:
     void execute(int&);
     void shoot();
     void update();
+    void notify() override;
 };
 
 #endif

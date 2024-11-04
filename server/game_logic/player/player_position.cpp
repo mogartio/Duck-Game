@@ -14,13 +14,15 @@ using ActionsId::SHOOT;
 using ActionsId::THROW_WEAPON;
 #define AIM_LEFT -1
 #define AIM_RIGHT 1
+using namespace ActionsId;
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
         position(initial_coordinates),
         player(player),
         stage(stage),
         facing_direction(AIM_RIGHT),
-        aiming_up(false) {
+        aiming_up(false),
+        state(GROUNDED) {
     air_state = std::move(std::make_unique<Grounded>());
 }
 
@@ -58,8 +60,9 @@ void PlayerPosition::move_horizontally(int offset) {
     }
 }
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
-void PlayerPosition::set_state(std::unique_ptr<AirState> new_state) {
+void PlayerPosition::set_state(std::unique_ptr<AirState> new_state, uint8_t state_code) {
     air_state = std::move(new_state);
+    state = state_code;
 }
 
 void PlayerPosition::move_vertically(int offset) {
@@ -84,4 +87,4 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-int PlayerPosition::get_facing_direction() { return facing_direction; }
+uint8_t PlayerPosition::get_facing_direction() { return facing_direction; }

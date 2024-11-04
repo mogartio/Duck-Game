@@ -15,12 +15,13 @@ using ActionsId::PLAY_DEAD;
 using ActionsId::SHOOT;
 using ActionsId::THROW_WEAPON;
 
-Player::Player(Coordinate& initial_position, Stage& stage, int id):
+Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string name):
         id(id),
         position(initial_position, *this, stage),
         is_alive(true),
         stage(stage),
-        weapon(std::move(std::make_unique<Magnum>(stage))) {
+        weapon(std::move(std::make_unique<Magnum>(stage))),
+        name(name) {
     weapon->set_player(this);
 }
 
@@ -71,6 +72,15 @@ void Player::update() {
         }
     }
     move(moving_commands);
+    notify();  // TODO: verificar que el estado haya cambiado antes de broadcastear
+}
+
+void Player::notify() {
+    Coordinate current_position = position.get_position();
+    for (Observer* obs: observers) {
+        obs->update(name, current_position.x, current_position.y, position.get_state(),
+                    position.get_facing_direction());
+    }
 }
 
 void Player::move(std::set<int>& movements) { position.move(movements); }
