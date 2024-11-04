@@ -54,14 +54,12 @@ int main(int argc, char const* argv[]) {
                 std::cout << "Termino el programa" << std::endl;
                 return 0;
         }
-
         msg->accept_send(protocol);
         GenericMsg* msg_recv = protocol.receive();
 
         std::cout << "Mensaje recibido con header: 0x" << std::hex << std::setw(2)
                   << std::setfill('0') << static_cast<int>(msg_recv->get_header()) << std::endl;
     }
-
     /*
 
     std::string input;

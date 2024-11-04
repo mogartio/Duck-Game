@@ -35,6 +35,7 @@ public:
     void stop();
     bool is_alive();
     uint get_id() const;
+    void switch_queues(Queue<GenericMsg*>* recv_queue);
 
     using HandlerReader::handle_read;
 
