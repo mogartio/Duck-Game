@@ -12,3 +12,5 @@ CTestTestfile.cmake
 
 build/
 server/game_logic/game
+AtoB.dump
+BtoA.dump

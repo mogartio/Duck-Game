@@ -1,14 +1,15 @@
 #include "client.h"
 
-Client::Client(const char* host, const char* port, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) :
-    client_skt(host, port),
-    send_queue(send_queue),
-    recv_queue(recv_queue),
-    protocol(client_skt),
-    receiver(recv_queue, &protocol),
-    sender(send_queue, &protocol) {
+Client::Client(const char* host, const char* port, Queue<GenericMsg*>* send_queue,
+               Queue<GenericMsg*>* recv_queue):
+        client_skt(host, port),
+        send_queue(send_queue),
+        recv_queue(recv_queue),
+        protocol(client_skt),
+        receiver(recv_queue, client_skt),
+        sender(send_queue, client_skt) {
     start_client();
-    }
+}
 
 void Client::start_client() {
     try {
@@ -29,4 +30,3 @@ void Client::stop() {
 }
 
 bool Client::is_alive() { return receiver.is_alive() && sender.is_alive(); }
-
