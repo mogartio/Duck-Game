@@ -1,6 +1,6 @@
 #include "client.h"
 
-Client::Client(Socket&& client_skt, int id, SendQueuesMonitor<GenericMsg*>& send_queues,
+Client::Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
                LobbysMonitor& lobbys):
         client_skt(std::move(client_skt)),
         send_queue(100),
@@ -33,7 +33,7 @@ void Client::stop() {
 
 bool Client::is_alive() { return receiver.is_alive() && sender.is_alive(); }
 
-int Client::get_id() const { return id; }
+uint Client::get_id() const { return id; }
 
 // operador de comparacion para poder comparar clientes
 bool Client::operator==(const Client* other) const { return id == other->id; }
@@ -44,13 +44,15 @@ void Client::handle_read(const ViewLobbiesMsg& msg) {
 }
 
 void Client::handle_read(const CreateLobbyMsg& msg) {
-    lobby_unido_id = lobbys.create(std::make_tuple(msg.get_player_name(), id));
+    std::string player_name = msg.get_player_name();
+    lobby_unido_id = lobbys.create(send_queues, player_name, this);
     send_queue.push(new EverythingOkMsg);
 }
 
 void Client::handle_read(const ChooseLobbyMsg& msg) {
     try {
-        lobbys.add_player(msg.get_lobby_id(), std::make_tuple(msg.get_player_name(), id));
+        std::string player_name = msg.get_player_name();
+        lobbys.add_player(msg.get_lobby_id(), player_name, this);
         lobby_unido_id = msg.get_lobby_id();
         send_queue.push(new EverythingOkMsg);
     } catch (const std::runtime_error& e) {
@@ -69,7 +71,7 @@ void Client::handle_read(const GoBackMsg& msg) { (void)msg; }
 
 void Client::handle_read(const ExitFromLobbyMsg& msg) {
     try {
-        lobbys.remove_player(lobby_unido_id, std::make_tuple(msg.get_player_name(), id));
+        lobbys.remove_player(lobby_unido_id, msg.get_player_name());
         send_queue.push(new EverythingOkMsg);
         lobby_unido_id = 0;
     } catch (const std::runtime_error& e) {

@@ -18,7 +18,7 @@ private:
     Queue<GenericMsg*> send_queue;
     Queue<GenericMsg*>* recv_queue;
     SendQueuesMonitor<GenericMsg*>& send_queues;
-    int id;  // a chequear, para la funcionalidad futura
+    uint id;  // a chequear, para la funcionalidad futura
     ServerProtocol protocol;
     ReceiverServer receiver;
     Sender sender;
@@ -28,13 +28,13 @@ private:
     void start_client();
 
 public:
-    Client(Socket&& client_skt, int id, SendQueuesMonitor<GenericMsg*>& send_queues,
+    Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
            LobbysMonitor& lobbys);
     bool operator==(const Client* other) const;
 
     void stop();
     bool is_alive();
-    int get_id() const;
+    uint get_id() const;
 
     using HandlerReader::handle_read;
 
