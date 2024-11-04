@@ -1,21 +1,28 @@
 #ifndef LOBBY_H
 #define LOBBY_H
 
-#include <list>
+#include <array>
+#include <map>
 #include <stdexcept>
 #include <string>
-#include <tuple>
 
 #include "./../common/messages/descripcion-lobby.h"
+#include "./../common/messages/generic_msg.h"
+
+#include "send_queues_monitor.h"
 
 #define MAX_PLAYERS 2
 #define EMPTY_PLAYERS 0
-
+#define FIRST_PLAYER 0
+#define SECOND_PLAYER 1
+class Client;
 
 class Lobby {
 private:
-    // El primer elemento es el id del client y el segundo su nombre de usuario
-    std::list<DescipcionPlayer> players;
+    std::array<DescipcionPlayer, MAX_PLAYERS> players_description;
+    std::map<std::string, Client*> players_map;
+
+    SendQueuesMonitor<GenericMsg*>& send_queues;
 
     uint player1_id;
 
@@ -27,17 +34,18 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(std::tuple<std::string, uint> player1, uint& id_lobby);
+    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
+                   Client* first_player, uint& id_lobby);
 
     /*
      * Metodo que agrega un jugador al lobby
      */
-    void addPlayer(std::tuple<std::string, uint> player2);
+    void addPlayer(std::string& player_name, Client* second_player);
 
     /*
      * Metodo que elimina un jugador del lobby
      */
-    void removePlayer(std::tuple<std::string, uint> player);
+    void removePlayer(std::string player_name);
 
     /*
      * Metodo que inicia el juego
@@ -60,17 +68,6 @@ public:
     DescripcionLobby getDescription() const;
 
     // ------------------ Desabilitamos -----------------------
-    /*
-     * Deshabilitamos el constructor por copia y operador asignación por copia
-     * */
-    Lobby(const Lobby&) = delete;
-    Lobby& operator=(const Lobby&) = delete;
-
-    /*
-     * Hacemos que la clase no sea movible.
-     * */
-    Lobby(Lobby&&) = delete;
-    Lobby& operator=(Lobby&&) = delete;
 
     /*
      * Destructor del aceptador del servidor

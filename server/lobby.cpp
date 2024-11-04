@@ -1,45 +1,35 @@
 #include "lobby.h"
 
-Lobby::Lobby(std::tuple<std::string, uint> player1, uint& id_lobby): id_lobby(id_lobby) {
-    DescipcionPlayer player1_desc;
-    player1_desc.nombre = std::get<0>(player1);
-    player1_desc.id = std::get<1>(player1);
-    player1_desc.color = 0;  // color del player1
-    players.push_back(player1_desc);
+#include "client.h"
+
+Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
+             Client* first_player, uint& id_lobby):
+        send_queues(send_queues), id_lobby(id_lobby) {
+    player1_id = first_player->get_id();
+    // players_description[FIRST_PLAYER] = descripcionPlayer;
+    players_map[player_name] = first_player;
 }
 
 void Lobby::lobby_empty() {
-    if (players.size() == EMPTY_PLAYERS) {
+    if (players_map.size() == EMPTY_PLAYERS) {
         throw std::runtime_error("Lobby vacio");
     }
 }
 
-void Lobby::addPlayer(std::tuple<std::string, uint> player2) {
+void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     lobby_empty();
-    if (players.size() == MAX_PLAYERS) {
+    if (players_map.size() == MAX_PLAYERS) {
         throw std::runtime_error("Lobby lleno");
     }
-    for (auto& player: players) {
-        if (player.id == std::get<1>(player2) && player.nombre == std::get<0>(player2)) {
+    players_map.find(player_name) == players_map.end() ?
+            players_map[player_name] = second_player :
             throw std::runtime_error("Jugador ya estaba en el lobby");
-        }
-    }
-    DescipcionPlayer player2_desc;
-    player2_desc.nombre = std::get<0>(player2);
-    player2_desc.id = std::get<1>(player2);
-    player2_desc.color = 1;  // color del player2
-    players.push_back(player2_desc);
+    // players_description[SECOND_PLAYER] = descripcionPlayer;
 }
 
-void Lobby::removePlayer(std::tuple<std::string, uint> player) {
+void Lobby::removePlayer(std::string player_name) {
     lobby_empty();
-    uint cant_players = players.size();
-    players.remove_if([player](DescipcionPlayer& p) {
-        return p.id == std::get<1>(player) && p.nombre == std::get<0>(player);
-    });
-    if (cant_players == players.size()) {
-        throw std::runtime_error("Jugador no estaba en el lobby");
-    }
+    players_map.erase(player_name);
 }
 
 void Lobby::startGame() {
@@ -48,20 +38,15 @@ void Lobby::startGame() {
     // lanzandose el gameloop aqui
 }
 
-bool Lobby::is_empty() const { return players.size() == EMPTY_PLAYERS; }
+bool Lobby::is_empty() const { return players_map.size() == EMPTY_PLAYERS; }
 
 uint Lobby::getId() const { return id_lobby; }
 
 DescripcionLobby Lobby::getDescription() const {
     DescripcionLobby desc;
     desc.idLobby = id_lobby;
-    desc.cantidadJugadores = players.size();
-    desc.player1 = players.front();
-    if (players.size() == MAX_PLAYERS) {
-        auto it = players.begin();
-        it++;
-        desc.player2 = *it;
-    }
-    // desc.nombreLobby = "Lobby " + std::to_string(id_lobby);  // nombre generico por ahora
+    desc.cantidadJugadores = players_map.size();
+    // desc.player1 = players_description[FIRST_PLAYER];
+    // desc.player2 = players_description[SECOND_PLAYER];
     return desc;
 }
