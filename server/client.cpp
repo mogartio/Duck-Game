@@ -7,9 +7,8 @@ Client::Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& sen
         recv_queue(),
         send_queues(send_queues),
         id(id),
-        protocol(this->client_skt),
-        receiver(recv_queue, &protocol, this),
-        sender(&send_queue, &protocol),
+        receiver(recv_queue, this, client_skt),
+        sender(&send_queue, client_skt),
         lobbys(lobbys) {
     send_queues.add(&send_queue, id);
     start_client();

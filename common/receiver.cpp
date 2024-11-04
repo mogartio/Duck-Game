@@ -1,9 +1,9 @@
 #include "receiver.h"
 
-Receiver::Receiver(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol):
-        recv_queue(recv_queue), protocol(protocol) {}
+Receiver::Receiver(Queue<GenericMsg*>* recv_queue, Socket& skt): recv_queue(recv_queue), skt(skt) {}
 
 void Receiver::run() {
+    assingProtocol();
     while (_keep_running) {
         try {
             GenericMsg* msg = protocol->receive();

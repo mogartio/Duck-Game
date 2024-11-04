@@ -2,9 +2,8 @@
 
 #include "client.h"
 
-ReceiverServer::ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
-                               Client* client):
-        Receiver(recv_queue_game, protocol), client(client) {}
+ReceiverServer::ReceiverServer(Queue<GenericMsg*>* recv_queue_game, Client* client, Socket& skt):
+        Receiver(recv_queue_game, skt), client(client) {}
 
 void ReceiverServer::executeMsg(GenericMsg* msg) {
     msg->set_id_client(client->get_id());
@@ -15,3 +14,5 @@ void ReceiverServer::executeMsg(GenericMsg* msg) {
         recv_queue->push(msg);
     }
 }
+
+void ReceiverServer::assingProtocol() { protocol = new ServerProtocol(skt); }

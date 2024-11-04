@@ -9,14 +9,17 @@
 #include "protocolo-common.h"
 
 class Sender: public Thread {
-private:
+protected:
     Queue<GenericMsg*>* send_queue;  // tiene que ser un puntero para poder cambiar la referencia
+    Socket& skt;
     ProtocoloCommon* protocol;
 
     void run() override;
 
+    virtual void assingProtocol() = 0;
+
 public:
-    Sender(Queue<GenericMsg*>* send_queue, ProtocoloCommon* protocol);
+    Sender(Queue<GenericMsg*>* send_queue, Socket& skt);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.
