@@ -11,14 +11,17 @@
 class Receiver: public Thread {
 protected:
     Queue<GenericMsg*>* recv_queue;
+    Socket& skt;
     ProtocoloCommon* protocol;
 
     void run() override;
 
     virtual void executeMsg(GenericMsg* msg) = 0;
 
+    virtual void assingProtocol() = 0;
+
 public:
-    explicit Receiver(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol);
+    explicit Receiver(Queue<GenericMsg*>* recv_queue, Socket& skt);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.

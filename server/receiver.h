@@ -12,8 +12,9 @@ private:
 protected:
     virtual void executeMsg(GenericMsg* msg) override;
 
+    virtual void assingProtocol() override;
+
 public:
-    explicit ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
-                            Client* client);
+    explicit ReceiverServer(Queue<GenericMsg*>* recv_queue_game, Client* client, Socket& skt);
 };
 #endif  // RECEIVER_H
