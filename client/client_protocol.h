@@ -22,6 +22,7 @@ public:
     virtual void handle_send(const ChooseLobbyMsg& msg) override;
     virtual void handle_send(const CreateLobbyMsg& msg) override;
     virtual void handle_send(const GoBackMsg& msg) override;
+    virtual void handle_send(const ExitFromLobbyMsg& msg) override;
     virtual void handle_send(const StartGameMsg& msg) override;
 
 

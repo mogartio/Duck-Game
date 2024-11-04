@@ -5,7 +5,6 @@
 
 struct DescipcionPlayer {
     std::string nombre;
-    uint id;
     uint8_t color;
     // agregar mas en caso de ser necesario
 

@@ -53,6 +53,7 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     for (auto& lobby: lobbies) {
         send_u_int8_t(lobby.idLobby);
         send_u_int8_t(lobby.cantidadJugadores);
+        /*
         for (int i = 0; i < lobby.cantidadJugadores; i++) {
             if (i == 0) {
                 send_string(lobby.player1.nombre);
@@ -62,6 +63,7 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
                 send_u_int8_t(lobby.player2.color);
             }
         }
+        */
     }
 }
 

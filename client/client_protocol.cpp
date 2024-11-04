@@ -40,6 +40,13 @@ void ClientProtocol::handle_send(const GoBackMsg& msg) {
     send_u_int8_t(header);
 }
 
+void ClientProtocol::handle_send(const ExitFromLobbyMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
+
 void ClientProtocol::handle_send(const StartGameMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
@@ -56,7 +63,7 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
 
         uint8_t cantidad_de_jugadores = recv_u_int8_t();
         lobby.cantidadJugadores = cantidad_de_jugadores;
-
+        /*
         for (int j = 0; j < cantidad_de_jugadores; j++) {
             std::string player_name = recv_string();
             uint8_t color = recv_u_int8_t();
@@ -68,7 +75,7 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
                 lobby.player2.color = color;
             }
         }
-
+        */
         lobbies.push_back(lobby);
     }
     msg.set_lobbies(lobbies);
