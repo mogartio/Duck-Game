@@ -82,6 +82,9 @@ void Client::handle_read(const StartGameMsg& msg) {
     try {
         lobbys.start_game(lobby_unido_id);
         // lobbys.start_game(lobby_unido_id,id); esto es para la funcionalidad futura
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error al unirse al lobby debido a que: " << e.what() << std::endl;
+        send_queues.send_to_client(new ErrorMsg(e.what()), id);
     } catch (...) {
         std::cout << "Error al iniciar el juego debido a un error desconocido " << std::endl;
         send_queues.send_to_client(

@@ -1,9 +1,9 @@
 #ifndef LOBBYS_MONITOR_H
 #define LOBBYS_MONITOR_H
 
-#include <algorithm>
 #include <list>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -13,7 +13,7 @@
 class LobbysMonitor {
 private:
     std::mutex m;
-    std::map<uint, Lobby> lobbys_disponibles;
+    std::map<uint, std::unique_ptr<Lobby>> lobbys_disponibles;
     // va aumentando asi cada lobby tiene un id unico
     uint contador_id_lobbys;
 

@@ -3,12 +3,15 @@
 
 #include <array>
 #include <map>
+#include <memory>
 #include <set>
 #include <stdexcept>
 #include <string>
 
 #include "./../common/messages/descripcion-lobby.h"
 #include "./../common/messages/generic_msg.h"
+#include "./../common/queue.h"
+#include "./game_logic/game_main.h"
 
 #include "send_queues_monitor.h"
 
@@ -24,6 +27,10 @@ private:
     std::map<std::string, Client*> players_map;
 
     SendQueuesMonitor<GenericMsg*>& send_queues;
+
+    Queue<GenericMsg*> receiver_q;
+
+    std::unique_ptr<GameMain> game;
 
     uint player1_id;
 
