@@ -1,5 +1,6 @@
 #include "projectile.h"
 
+#include "../config.h"
 #include "../map/stage.h"
 #define FLOOR 1
 #define BACKGROUND 0
@@ -15,7 +16,8 @@ bool Projectile::ray_trace(Stage& stage) {
                 round(position.y + (i)*cos(deviation_angle)));
 
         int next_tile = stage.get(bullet_position);
-        if (next_tile == -1 || next_tile == FLOOR) {
+        if (next_tile == -1 || next_tile == Config::get_instance()->mapsId["floor"] ||
+            next_tile == Config::get_instance()->mapsId["wall"]) {
             return true;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4) && i == speed - 1) {

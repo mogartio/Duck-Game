@@ -42,6 +42,11 @@ private:
             player_spawn_sites.push_back(
                     std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
         }
+        int counter = 0;
+        for (const auto& ids: config["mapId"]) {
+            mapsId[ids.as<std::string>()] = counter;
+            counter++;
+        }
     }
 
 public:
@@ -53,6 +58,7 @@ public:
     int armor_strength;
     uint16_t columns_map;
     uint16_t rows_map;
+    std::map<std::string, uint16_t> mapsId;
     std::vector<std::tuple<int, int>> weapon_spawn_sites;
     std::vector<std::tuple<int, int>> player_spawn_sites;
     static Config* get_instance() {

@@ -19,3 +19,22 @@ player_spawn_sites:
 
 rows_map: 50
 columns_map: 50
+
+mapId:
+  - background
+  - playerA
+  - playerB
+  - playerC
+  - playerD
+  - floor
+  - wall
+  - trail
+  - bullet
+  - ray
+  - shotgun pellet
+  - bananaProjectile
+  - grenadeProjectile
+  - box
+  - brokenBox
+  - armor
+  - helmet

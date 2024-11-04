@@ -23,7 +23,7 @@ private:
     // TODO: ademas de que se inicialice mejor todo en el constructor de GameMain
     Stage stage;
     Queue<GenericMsg*>& receiver_q;
-    std::map<std::string, Player*> players;
+    std::map<std::string, std::unique_ptr<Player>> players;
     bool is_testing;
     std::string player_name1;
     std::string player_name2;

@@ -20,6 +20,7 @@
 
 Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& senders):
         map(0, 0), senders(senders), obs(this->senders) {
+    CSVWriter::write_map("main_map.csv");
     CSVReader reader(file_name);
     map = std::move(reader.read_map());
 }
@@ -80,7 +81,8 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     Coordinate duck_feet(current_position.x, current_position.y + PLAYER_SIZE);
     for (int i = 0; i < PLAYER_SIZE; i++) {
         Coordinate aux(duck_feet.x + i, duck_feet.y);
-        if (map.get(aux) == FLOOR) {
+        if (map.get(aux) == Config::get_instance()->mapsId["floor"] ||
+            map.get(aux) == Config::get_instance()->mapsId["wall"]) {
             return false;
         }
     }

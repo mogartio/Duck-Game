@@ -5,15 +5,6 @@
 #include "../../../common/messages/generic_msg.h"
 
 #include "player.h"
-using ActionsId::AIM_UP;
-using ActionsId::JUMP;
-using ActionsId::MOVE_LEFT;
-using ActionsId::MOVE_RIGHT;
-using ActionsId::PLAY_DEAD;
-using ActionsId::SHOOT;
-using ActionsId::THROW_WEAPON;
-#define AIM_LEFT -1
-#define AIM_RIGHT 1
 using namespace ActionsId;
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
