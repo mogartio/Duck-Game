@@ -12,13 +12,28 @@ target_sources(client_exe  # Use the correct target name
     client_protocol.cpp  # Assuming client.cpp is the client implementation
     receiver.cpp  # Assuming receiver.cpp is the receiver implementation
 
+    client.cpp
+    SDL/game/frontOnePlayer.cpp
+    SDL/game/window.cpp
+    SDL/game/map.cpp
+    SDL/game/player.cpp
+    SDL/game/image.cpp
+    SDL/game/wingState.cpp
     PUBLIC
     # .h files
     ${COMMON_HEADERS}  # Include all .h files from common
       # Include only protocol.h from the client directory
     client_protocol.h
     receiver.h
+    client.h
+    SDL/game/frontOnePlaye.h
+    SDL/game/window.h
+    SDL/game/map.h
+    SDL/game/player.h
+    SDL/game/image.h
+    SDL/game/wingState.h
 )
 
 # Include the common directory for headers
 target_include_directories(client_exe PRIVATE ../common)
+

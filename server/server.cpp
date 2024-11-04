@@ -22,4 +22,5 @@ void Server::run() {
 
     acceptor.stop();
     acceptor.join();
+    read_input_t.join();
 }
