@@ -1,6 +1,7 @@
 #include "client_protocol.h"
 
 #include <string>
+#include <utility>
 #include <vector>
 
 
@@ -23,11 +24,15 @@ void ClientProtocol::handle_send(const ChooseLobbyMsg& msg) {
     send_u_int8_t(header);
     uint8_t lobby_id = msg.get_lobby_id();
     send_u_int8_t(lobby_id);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
 }
 
-void ClientProtocol::handle_send(const CreateLobbyMsg& msg) { 
+void ClientProtocol::handle_send(const CreateLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
 }
 
 void ClientProtocol::handle_send(const GoBackMsg& msg) {
@@ -35,17 +40,43 @@ void ClientProtocol::handle_send(const GoBackMsg& msg) {
     send_u_int8_t(header);
 }
 
-void ClientProtocol::handle_send(const StartGameMsg& msg) { 
+void ClientProtocol::handle_send(const ExitFromLobbyMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+}
+
+void ClientProtocol::handle_send(const StartGameMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
     uint8_t lobbies_size = recv_u_int8_t();
-    std::vector<std::string> lobbies;
+    std::vector<DescripcionLobby> lobbies;
+
     for (int i = 0; i < lobbies_size; i++) {
-        std::string lobby_name = recv_string();
-        lobbies.push_back(lobby_name);
+        DescripcionLobby lobby;
+        uint8_t lobby_id = recv_u_int8_t();
+        lobby.idLobby = lobby_id;
+
+        uint8_t cantidad_de_jugadores = recv_u_int8_t();
+        lobby.cantidadJugadores = cantidad_de_jugadores;
+        /*
+        for (int j = 0; j < cantidad_de_jugadores; j++) {
+            std::string player_name = recv_string();
+            uint8_t color = recv_u_int8_t();
+            if (j == 0) {
+                lobby.player1.nombre = player_name;
+                lobby.player1.color = color;
+            } else {
+                lobby.player2.nombre = player_name;
+                lobby.player2.color = color;
+            }
+        }
+        */
+        lobbies.push_back(lobby);
     }
     msg.set_lobbies(lobbies);
 }
@@ -99,7 +130,7 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
     uint16_t columnas = recv_u_int16_t();
     msg.set_columnas(columnas);
     std::vector<uint16_t> map;
-    for (int i = 0; i < filas*columnas; i++) {
+    for (int i = 0; i < filas * columnas; i++) {
         uint16_t tile = recv_u_int16_t();
         map.push_back(tile);
     }

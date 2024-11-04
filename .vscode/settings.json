@@ -74,6 +74,7 @@
         "io_context": "cpp",
         "netfwd": "cpp",
         "future": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "valarray": "cpp"
     }
 }

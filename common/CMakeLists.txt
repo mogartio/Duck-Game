@@ -23,6 +23,7 @@ target_sources(common
     socket/socket_error.h
     thread.h
     protocolo-common.h
+    messages/descripcion-lobby.h
     messages/generic_msg.h
     messages/handler_send.h
     messages/handler_recv.h

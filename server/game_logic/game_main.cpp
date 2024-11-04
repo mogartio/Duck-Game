@@ -1,5 +1,8 @@
 #include "game_main.h"
 
+#include <tuple>
+#include <vector>
+
 #include "map/spawn_point.h"
 
 #include "config.h"
