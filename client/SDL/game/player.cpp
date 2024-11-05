@@ -132,7 +132,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 
     duck->position(x, y);
-    std::cout << "player position: " << x << " , " << y << std::endl;
+    // std::cout << "player position: " << x << " , " << y << std::endl;
 
     if (side == LEFT) {
         flip = SDL_FLIP_HORIZONTAL;

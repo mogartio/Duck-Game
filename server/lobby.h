@@ -28,7 +28,7 @@ private:
 
     SendQueuesMonitor<GenericMsg*>& send_queues;
 
-    Queue<GenericMsg*> receiver_q;
+    Queue<GenericMsg*>* receiver_q;
 
     std::unique_ptr<GameMain> game;
 
