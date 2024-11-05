@@ -15,6 +15,6 @@ protected:
 public:
     explicit ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
                             Client* client);
-    // void switch_q(Queue<GenericMsg*>* q);
+    void switch_q(Queue<GenericMsg*>* q) { this->recv_queue = q; };
 };
 #endif  // RECEIVER_H

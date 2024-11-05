@@ -61,7 +61,7 @@ void OnePlayer::play() {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
 
-        std::cout << "SE VA A LEER UN INPUUUT" << std::endl;
+        // std::cout << "SE VA A LEER UN INPUUUT" << std::endl;
         SDL_Event event;
         // Procesa los eventos en la cola
         while (SDL_PollEvent(&event)) {
@@ -165,6 +165,5 @@ void OnePlayer::play() {
 
         // Controla la frecuencia de cuadros por segundo (FPS)
         SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
-
     }
 }

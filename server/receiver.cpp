@@ -6,7 +6,6 @@ ReceiverServer::ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCom
                                Client* client):
         Receiver(recv_queue_game, protocol), client(client) {}
 
-// void ReceiverServer::switch_q(Queue<GenericMsg*>* q) { this->recv_queue = q; }
 
 void ReceiverServer::executeMsg(GenericMsg* msg) {
     msg->set_id_client(client->get_id());
