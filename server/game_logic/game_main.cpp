@@ -66,9 +66,9 @@ void GameMain::run() {
             stage.draw_player(*player);
         }
         stage.update();
-        // stage.print();
-        std::this_thread::sleep_for(std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
-
+        stage.print();
+        std::this_thread::sleep_for(
+                std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
     }
 }
 

@@ -65,7 +65,7 @@ void Player::update() {
     std::set<int> moving_commands;  // comandos que te emocionan son...
     for (int command: current_actions) {
         execute(command);
-        if (command == AIM_UP || command == MOVE_LEFT || command == MOVE_RIGHT || command == JUMP) {
+        if (command == 6 || command == MOVE_LEFT || command == MOVE_RIGHT || command == JUMP) {
             moving_commands.insert(command);
         }
     }
