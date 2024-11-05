@@ -54,6 +54,7 @@ void GameMain::run() {
                 receiver_q.push(new_msg);
             }
         }
+        // players[player_name1]->notify();
         GenericMsg* msg;
         bool have_command = receiver_q.try_pop(msg);
         if (have_command) {
@@ -65,7 +66,7 @@ void GameMain::run() {
             stage.draw_player(*player);
         }
         stage.update();
-        stage.print();
+        // stage.print();
         sleep(1);
     }
 }

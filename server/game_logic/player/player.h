@@ -24,7 +24,6 @@ private:
     std::unique_ptr<Weapon> weapon;
     std::set<int> current_actions;
     std::string name;
-    void notify() override;
     bool should_notify;
 
 public:
@@ -41,6 +40,7 @@ public:
     void shoot();
     void update();
     void Notify() { should_notify = true; }
+    void notify() override;
 };
 
 #endif

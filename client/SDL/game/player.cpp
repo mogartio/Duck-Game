@@ -1,7 +1,7 @@
 #include "player.h"
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #define OFFSETX 7
 #define OFFSETY 13
@@ -53,8 +53,9 @@ void Player::initialiceDuckImages(DuckState state) {
 }
 
 
-Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), walk1(true) {
-    
+Player::Player(SDL_Renderer* rend, Color color):
+        rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), walk1(true) {
+
     chooseColor(color);
 
 
@@ -65,21 +66,20 @@ Player::Player(SDL_Renderer* rend, Color color): rend(rend), flip(SDL_FLIP_NONE)
     }
 
     duck = ducks[DuckState::STANDING][0];
-    
+
     // Crea el ala normal y la agrega al hashmap
-    for (int j = int(WingState::NORMAL); j <= int(WingState::FLAPDOWN); j++){
+    for (int j = int(WingState::NORMAL); j <= int(WingState::FLAPDOWN); j++) {
         WingState wingState = static_cast<WingState>(j);
         initializeWingImage(wingState);
     }
 
     wing = wings[int(WingState::NORMAL)];
-
 }
 
 void Player::defineSize(int height, int width) {
-    for (const auto& pair : ducks) {
-        const std::vector<Image*>& patos = pair.second; // Obtener el vector de imágenes
-        for (Image* pato : patos) {
+    for (const auto& pair: ducks) {
+        const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
+        for (Image* pato: patos) {
             pato->queryTexture();
             pato->defineSize(height, width);
         }
@@ -87,7 +87,7 @@ void Player::defineSize(int height, int width) {
 
     for (Image* ala: wings) {
         ala->queryTexture();
-        ala->defineSize(int(15*height/25), int(15*width/25));
+        ala->defineSize(int(15 * height / 25), int(15 * width / 25));
     }
     // El tamaño original de los png son del pato 24x24 y del ala 15x15
 }
@@ -113,11 +113,10 @@ void Player::updateWing(int x, int y) {
 
     // Actualiza posicion del ala
     if (flip == SDL_FLIP_HORIZONTAL) {
-        wing->position(x + 1.7*OFFSETX, y + OFFSETY);
+        wing->position(x + 1.7 * OFFSETX, y + OFFSETY);
     } else {
         wing->position(x + OFFSETX, y + OFFSETY);
     }
-
 }
 
 void Player::update(int x, int y, DuckState state, Side side) {
@@ -131,9 +130,10 @@ void Player::update(int x, int y, DuckState state, Side side) {
         duck = ducks[state][0];
         walk1 = false;
     }
-    
+
     duck->position(x, y);
-    
+    std::cout << "player position: " << x << " , " << y << std::endl;
+
     if (side == LEFT) {
         flip = SDL_FLIP_HORIZONTAL;
     } else {
@@ -150,7 +150,7 @@ void Player::fill() {
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        //weapon.fill(flip);
+        // weapon.fill(flip);
     }
 
     // Dibujo el ala del pato
@@ -160,7 +160,7 @@ void Player::fill() {
 }
 
 void Player::weapon() {
-    if (weaponON) { // Dropeo
+    if (weaponON) {  // Dropeo
         weaponON = false;
         // Actualizo pos del arma cuando la suelto
         /* y suelto el arma que tenia */
@@ -172,14 +172,14 @@ void Player::weapon() {
 
 void Player::shoot() {
     if (!weaponON) {
-        return; // Si no tiene unn arma no hace nada
+        return;  // Si no tiene unn arma no hace nada
     }
 
     /*
         Disparo el arma
         Me fijo cuantos usos le quedan
         En caso de quedarse sin usos la dropeo (la mato), weaponON = false y actualizo el alita
-        
+
     */
 }
 
@@ -188,12 +188,10 @@ Player::~Player() {
         delete wing;
     }
 
-    for (const auto& pair : ducks) {
-        const std::vector<Image*>& images = pair.second; // Obtener el vector de imágenes
-        for (Image* image : images) {
+    for (const auto& pair: ducks) {
+        const std::vector<Image*>& images = pair.second;  // Obtener el vector de imágenes
+        for (Image* image: images) {
             delete image;
         }
     }
 }
-
-

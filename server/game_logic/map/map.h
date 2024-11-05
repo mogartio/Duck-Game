@@ -68,7 +68,7 @@ public:
         std::vector<uint16_t> res;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                res.push_back(static_cast<uint16_t>(matrix[i][j]));
+                res.push_back(static_cast<uint16_t>(matrix[j][i]));
             }
         }
         return res;
