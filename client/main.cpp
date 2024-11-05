@@ -37,7 +37,7 @@ int main(int argc, char const* argv[]) {
     OnePlayer front(send_queue, recv_queue, "pepito");
     front.play();
 
-    // recv_queue.close();
-    // client1.stop();
+    recv_queue.close();
+    client1.stop();
     return 0;
 }

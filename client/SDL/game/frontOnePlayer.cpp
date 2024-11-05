@@ -20,8 +20,6 @@ void OnePlayer::play() {
 
     GenericMsg* matriz = queueRecive.pop();
 
-    // std::cout << int(matriz->get_header()) << std::endl;
-
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
@@ -30,9 +28,6 @@ void OnePlayer::play() {
         mapa = map->get_map();
         filas = map->get_filas();
         columnas = map->get_columnas();
-    } else if (matriz->get_header() == GenericMsg::MsgTypeHeader::WINNER_MSG) {
-        // std::cout << "No se mando la matriz, se mando WINNER_MSG" << std::endl;
-        // return;
     } else if (matriz == nullptr) {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
@@ -77,7 +72,6 @@ void OnePlayer::play() {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
 
-        // std::cout << "SE VA A LEER UN INPUUUT" << std::endl;
         SDL_Event event;
         // Procesa los eventos en la cola
         while (SDL_PollEvent(&event)) {
