@@ -76,7 +76,7 @@
         "future": "cpp",
         "codecvt": "cpp",
         "valarray": "cpp",
-        "complex": "cpp"
-
+        "complex": "cpp",
+        "source_location": "cpp"
     }
 }

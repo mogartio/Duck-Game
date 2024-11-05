@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#define TILES_TO_PIXELS 24
+#define TILES_TO_PIXELS 16
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa) {
     // Deberia llegarme la info del fondo
