@@ -24,12 +24,13 @@ private:
     Sender sender;
     LobbysMonitor& lobbys;
     uint lobby_unido_id;
+    bool is_testing;
 
     void start_client();
 
 public:
     Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
-           LobbysMonitor& lobbys);
+           LobbysMonitor& lobbys, bool is_testing);
     bool operator==(const Client* other) const;
 
     void stop();

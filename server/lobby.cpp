@@ -10,8 +10,11 @@ void Lobby::lobby_empty() {
 
 
 Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-             Client* first_player, uint& id_lobby):
-        send_queues(send_queues), receiver_q(new Queue<GenericMsg*>(200)), id_lobby(id_lobby) {
+             Client* first_player, uint& id_lobby, bool is_testing):
+        send_queues(send_queues),
+        receiver_q(new Queue<GenericMsg*>(200)),
+        id_lobby(id_lobby),
+        is_testing(is_testing) {
     player1_id = first_player->get_id();
     // players_description[FIRST_PLAYER] = descripcionPlayer;
     players_map[player_name] = first_player;
@@ -62,7 +65,7 @@ void Lobby::startGame() {
     // se inicia el juego
     // lanzandose el gameloop aqui
     game = std::make_unique<GameMain>(*receiver_q, players_map.begin()->first,
-                                      players_map.rbegin()->first, false, send_queues);
+                                      players_map.rbegin()->first, is_testing, send_queues);
 
     game->start();
 }

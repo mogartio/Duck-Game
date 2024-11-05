@@ -37,13 +37,14 @@ private:
     uint id_lobby;
 
     void lobby_empty();
+    bool is_testing;
 
 public:
     /*
      * Constructor del lobby
      */
     explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-                   Client* first_player, uint& id_lobby);
+                   Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby
