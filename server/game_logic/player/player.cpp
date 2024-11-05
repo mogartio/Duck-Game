@@ -37,10 +37,13 @@ void Player::remove_action(int& command) {
     if (command == JUMP) {  // esto va a terminar siendo un diccionario de funciones probablemente
         position.released_jump();
     }
-    if (command == AIM_UP) {
+    if (command == 6) {
         position.stop_aiming_up();
     }
     if (command == SHOOT) {
+        if (weapon == nullptr) {
+            return;
+        }
         weapon->stop_shooting();
     }
     if (command == THROW_WEAPON) {
@@ -85,6 +88,11 @@ void Player::notify() {
 
 void Player::move(std::set<int>& movements) { position.move(movements); }
 
-void Player::shoot() { weapon->shoot(position.get_facing_direction(), position.is_aiming_up()); }
+void Player::shoot() {
+    if (weapon == nullptr) {
+        return;
+    }
+    weapon->shoot(position.get_facing_direction(), position.is_aiming_up());
+}
 
 void Player::die() { is_alive = false; }
