@@ -9,11 +9,13 @@
 #include "protocolo-common.h"
 
 class Receiver: public Thread {
-private:
+protected:
     Queue<GenericMsg*>* recv_queue;
     ProtocoloCommon* protocol;
 
     void run() override;
+
+    virtual void executeMsg(GenericMsg* msg) = 0;
 
 public:
     explicit Receiver(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol);
@@ -22,6 +24,5 @@ public:
      * Detiene la ejecución del hilo seteando _keep_running en false.
      */
     void kill();
-
 };
 #endif  // RECEIVER_H

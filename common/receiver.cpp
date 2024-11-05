@@ -7,7 +7,7 @@ void Receiver::run() {
     while (_keep_running) {
         try {
             GenericMsg* msg = protocol->receive();
-            recv_queue->push(msg);
+            executeMsg(msg);
         } catch (const std::exception& e) {
             _keep_running = false;
         }
@@ -15,4 +15,3 @@ void Receiver::run() {
 }
 
 void Receiver::kill() { _keep_running = false; }
-

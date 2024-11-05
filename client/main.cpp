@@ -1,7 +1,7 @@
+#include <iomanip>  // Incluir el encabezado <iomanip> para std::setw y std::setfill
 #include <iostream>
+#include <sstream>  // Incluir el encabezado <sstream>
 
-#include "../common/socket/socket.h"
-#include "client_protocol.h"
 #include "../common/messages/generic_msg.h"
 #include "../common/queue.h"
 #include "client.h"
@@ -19,16 +19,24 @@ int main(int argc, char const* argv[]) {
     Queue<GenericMsg*> send_queue(MAX);
     Queue<GenericMsg*> recv_queue(MAX);
     
-    Client client(argv[1], argv[2], &send_queue, &recv_queue);
+    Client client1(argv[1], argv[2], &send_queue, &recv_queue);
+    // Client client2(argv[1], argv[2], &send_queue, &recv_queue);
 
-    ViewLobbiesMsg msg1;
-    send_queue.push(&msg1);
+    CreateLobbyMsg msg2;
+    send_queue.push(&msg2);
+
+    StartGameMsg msg3;
+    send_queue.push(&msg3);
+
+    for (int i = 0; i < 2; i++) {
+        GenericMsg* msg = recv_queue.pop();
+        std::cout << "recibi header: " << int(msg->get_header()) << std::endl;
+    }
     
-    OnePlayer front(send_queue, recv_queue, "juancito");
+    OnePlayer front(send_queue, recv_queue, "");
     front.play();
 
     recv_queue.close();
-    client.stop();
-
+    client1.stop();
     return 0;
 }

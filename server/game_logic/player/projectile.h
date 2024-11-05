@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <memory>
+#include <utility>
 
 #include "../../../common/coordinate.h"
 class Weapon;

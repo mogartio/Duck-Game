@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include "../common/receiver.h"
+#include "receiver.h"
 #include "../common/sender.h"
 #include "client_protocol.h"
 
@@ -13,7 +13,7 @@ private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
     ClientProtocol protocol;
-    Receiver receiver;
+    ReceiverClient receiver;
     Sender sender;
 
     void start_client();

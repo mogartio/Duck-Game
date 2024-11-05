@@ -23,7 +23,7 @@ void OnePlayer::play() {
     
     GenericMsg* matriz = queueRecive.pop();
 
-    std::cout << int(matriz->get_header()) << std::endl;
+    // std::cout << int(matriz->get_header()) << std::endl;
 
     std::vector<uint16_t> mapa;
     uint16_t filas;

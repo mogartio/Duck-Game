@@ -2,6 +2,7 @@
 #include <cmath>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "../player/player.h"
@@ -14,9 +15,11 @@
 #include "../player/projectile.h"
 
 #include "csv_reader.h"
+#include "csv_writer.h"
 #include "stage.h"
 
 Stage::Stage(const std::string& file_name): map(0, 0) {
+    CSVWriter::write_map("main_map.csv");
     CSVReader reader(file_name);
     map = std::move(reader.read_map());
 }

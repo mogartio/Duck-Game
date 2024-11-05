@@ -8,7 +8,7 @@
             "name": "Debuguer server",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/server",
+            "program": "${workspaceRoot}/build/server_exe",
             "args": ["8080"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

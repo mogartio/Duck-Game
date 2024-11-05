@@ -1,5 +1,7 @@
 #ifndef WEAPON_H
 #define WEAPON_H
+#include <memory>
+
 #include "../map/stage.h"
 
 class Weapon {
@@ -32,19 +34,19 @@ public:
 
 class CowboyGun: public Weapon {
 public:
-    CowboyGun(Stage&);
+    explicit CowboyGun(Stage&);
     virtual void shoot(int, bool) override;
 };
 
 class Magnum: public Weapon {
 public:
-    Magnum(Stage&);
+    explicit Magnum(Stage&);
     virtual void shoot(int, bool) override;
 };
 
 class Grenade: public Weapon {
 public:
-    Grenade(Stage&);
+    explicit Grenade(Stage&);
 };
 
 #endif

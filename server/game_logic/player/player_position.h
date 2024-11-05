@@ -1,7 +1,9 @@
 #ifndef PLAYER_POSITION_H
 #define PLAYER_POSITION_H
 
+#include <memory>
 #include <set>
+#include <utility>
 #include <vector>
 
 #include "../../../common/coordinate.h"

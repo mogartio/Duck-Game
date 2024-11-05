@@ -1,5 +1,8 @@
 #ifndef SPAWN_POINT_H
 #define SPAWN_POINT_H
+#include <memory>
+#include <utility>
+
 #include "../../../common/coordinate.h"
 #include "../player/projectile_dropped_weapon.h"
 

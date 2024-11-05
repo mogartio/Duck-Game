@@ -7,7 +7,13 @@
 
 #include "weapon.h"
 
-using namespace ActionsId;
+using ActionsId::AIM_UP;
+using ActionsId::JUMP;
+using ActionsId::MOVE_LEFT;
+using ActionsId::MOVE_RIGHT;
+using ActionsId::PLAY_DEAD;
+using ActionsId::SHOOT;
+using ActionsId::THROW_WEAPON;
 
 Player::Player(Coordinate& initial_position, Stage& stage, int id):
         id(id),

@@ -1,29 +1,33 @@
 #ifndef ACCEPTOR_H
 #define ACCEPTOR_H
-#include <string>
+#include <list>
 #include <utility>
 
 #include <sys/socket.h>
 
-#include "clients_monitor.h"
+#include "client.h"
+#include "lobbys_monitor.h"
 #include "send_queues_monitor.h"
 
 class Acceptor: public Thread {
 private:
     Socket srv;
-    ClientsMonitor& clients;
-    Queue<GenericMsg*>& recv_queue;
-    SendQueuesMonitor<GenericMsg*>& send_queues;
+    std::list<Client> clients;
+    SendQueuesMonitor<GenericMsg*> send_queues;
+    LobbysMonitor lobbys;
 
     void run() override;
 
     void reap_dead_clients();
 
+    void acceptClient(uint& id);
+
+    void remove_all();
+
     const int Q_MAX_SIZE = 100;
 
 public:
-    Acceptor(Socket srv, ClientsMonitor& clients, Queue<GenericMsg*>& recv_queue,
-             SendQueuesMonitor<GenericMsg*>& send_queues);
+    explicit Acceptor(const char* port);
 
     void stop() override;
 

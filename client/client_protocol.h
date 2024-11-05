@@ -22,12 +22,13 @@ public:
     virtual void handle_send(const ChooseLobbyMsg& msg) override;
     virtual void handle_send(const CreateLobbyMsg& msg) override;
     virtual void handle_send(const GoBackMsg& msg) override;
+    virtual void handle_send(const ExitFromLobbyMsg& msg) override;
     virtual void handle_send(const StartGameMsg& msg) override;
 
 
     virtual void handle_recv(SendLobbiesListMsg& msg) override;
     virtual void handle_recv(SendMapMsg& msg) override;
-    
+
     // CUSTOMIZED MESSAGES
     virtual void handle_send(const CustomizedPlayerInfoMsg& msg) override;
 

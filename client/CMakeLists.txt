@@ -17,6 +17,8 @@ target_sources(client_exe  # Use the correct target name
     SDL/game/player.cpp
     SDL/game/image.cpp
     SDL/game/wingState.cpp
+    receiver.cpp  # Assuming receiver.cpp is the receiver implementation
+
     PUBLIC
     # .h files
     ${COMMON_HEADERS}  # Include all .h files from common
@@ -29,6 +31,7 @@ target_sources(client_exe  # Use the correct target name
     SDL/game/player.h
     SDL/game/image.h
     SDL/game/wingState.h
+    receiver.h
 )
 
 # Include the common directory for headers

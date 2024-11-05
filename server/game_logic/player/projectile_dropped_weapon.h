@@ -2,6 +2,9 @@
 #define PROJECTILE_WEAPON_H
 
 #include <cmath>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include "projectile.h"
 #include "weapon.h"
