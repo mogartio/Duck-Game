@@ -15,8 +15,8 @@ enum class DuckState {
 std::string duckState_to_string(DuckState state, bool walk = true);  // Declaración
 
 enum Side {
-    LEFT,
-    RIGHT
+    RIGHT,
+    LEFT
 };
 #endif // DUCKSTATE_H
 

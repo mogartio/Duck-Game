@@ -51,13 +51,20 @@ void OnePlayer::play() {
                       player->get_player_name());
     }
 
-    const Uint32 frame_rate = 1000 / 30;      // 40 FPS
+    const Uint32 frame_rate = 1000 / 30;      // 30 FPS
     Uint32 last_frame_time = SDL_GetTicks();  // Tiempo del último frame
 
     bool close = false;
     GenericMsg* msg1;
     bool msjEnviado = true;
+    bool stated_palying = false;
+
+    std::string player_name;
+    std::pair<uint16_t, uint16_t> position;
+    uint8_t facing_direction = 1;
+
     uint8_t id_item = 0x05;  // Id del arma que sostiene el jugador
+
     std::map<int, bool> pressed_keys;
     pressed_keys[SDL_SCANCODE_E] = false;
     pressed_keys[SDL_SCANCODE_F] = false;
@@ -65,6 +72,7 @@ void OnePlayer::play() {
     pressed_keys[SDL_SCANCODE_S] = false;
     pressed_keys[SDL_SCANCODE_A] = false;
     pressed_keys[SDL_SCANCODE_D] = false;
+
     while (!close) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
@@ -152,23 +160,23 @@ void OnePlayer::play() {
 
         GenericMsg* msj;
         bool poped = queueRecive.try_pop(msj);
-
+        
         if (poped) {
             if (msj->get_header() == GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
                 UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
-                std::string player_name = player->get_player_name();
-                std::pair<uint16_t, uint16_t> position = player->get_position();
+                player_name = player->get_player_name();
+                position = player->get_position();
                 uint8_t state = player->get_state();
-                uint8_t facing_direction = player->get_facing_direction();
+                facing_direction = player->get_facing_direction();
                 map.update(player_name, position.first, position.second, DuckState(state),
-                           Side(facing_direction));
+                           Side(facing_direction-1));
+                stated_palying = true;
             } else if (msj->get_header() == GenericMsg::MsgTypeHeader::GAME_ENDED_MSG) {
                 // directa de que termino la partida y de q hay que mostrar la pantalla de fin
             }
-            //  else if (msj->get_header() == GenericMsg::MsgTypeHeader::WINNER_MSG) {
-            //     WinnerMsg* winner = dynamic_cast<WinnerMsg*>(msj);
-            //     std::string winner_name = winner->get_winner_name();
-            // }
+        } else if (stated_palying) {
+            map.update(player_name, position.first, position.second, DuckState::STANDING,
+            Side(facing_direction-1));
         }
 
         // Renderiza los objetos en la ventana
