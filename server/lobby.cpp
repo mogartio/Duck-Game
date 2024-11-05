@@ -62,7 +62,7 @@ void Lobby::startGame() {
     // se inicia el juego
     // lanzandose el gameloop aqui
     game = std::make_unique<GameMain>(*receiver_q, players_map.begin()->first,
-                                      players_map.rbegin()->first, true, send_queues);
+                                      players_map.rbegin()->first, false, send_queues);
 
     game->start();
 }
