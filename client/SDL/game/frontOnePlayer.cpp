@@ -1,3 +1,5 @@
+#include <map>
+
 #include <SDL2/SDL_timer.h>
 
 #include "frontOnePlaye.h"
@@ -56,7 +58,13 @@ void OnePlayer::play() {
     GenericMsg* msg1;
     bool msjEnviado = true;
     uint8_t id_item = 0x05;  // Id del arma que sostiene el jugador
-
+    std::map<int, bool> pressed_keys;
+    pressed_keys[SDL_SCANCODE_E] = false;
+    pressed_keys[SDL_SCANCODE_F] = false;
+    pressed_keys[SDL_SCANCODE_W] = false;
+    pressed_keys[SDL_SCANCODE_S] = false;
+    pressed_keys[SDL_SCANCODE_A] = false;
+    pressed_keys[SDL_SCANCODE_D] = false;
     while (!close) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
@@ -71,43 +79,47 @@ void OnePlayer::play() {
                     // queueSend.try_push(END);
                     break;
                 case SDL_KEYDOWN:  // Evento de tecla presionada
-                    switch (event.key.keysym.scancode) {
-                        case SDL_SCANCODE_E:  // shoot
-                            std::cout << "SE VA A MANDAR LA E" << std::endl;
-                            msg1 = new StartActionMsg(ActionsId::SHOOT, playerName);
-                            msjEnviado = false;
-                            break;
-                        case SDL_SCANCODE_F:  // agarrar/soltar arma
-                            std::cout << "SE VA A MANDAR LA F" << std::endl;
-                            msg1 = new PickupDropMsg(id_item, playerName);
-                            msjEnviado = false;
-                            break;
-                        case SDL_SCANCODE_W:  // Tecla W
-                            std::cout << "SE VA A MANDAR LA W" << std::endl;
-                            msg1 = new StartActionMsg(ActionsId::JUMP, playerName);
-                            msjEnviado = false;
-                            break;
-                        case SDL_SCANCODE_S:  // Tecla S
-                            std::cout << "SE VA A MANDAR LA S" << std::endl;
-                            msg1 = new StartActionMsg(ActionsId::PLAY_DEAD, playerName);
-                            msjEnviado = false;
-                            break;
-                        case SDL_SCANCODE_A:  // Tecla A
-                            std::cout << "SE VA A MANDAR LA A" << std::endl;
-                            msg1 = new StartActionMsg(ActionsId::MOVE_LEFT, playerName);
-                            msjEnviado = false;
-                            break;
-                        case SDL_SCANCODE_D:  // Tecla D
-                            std::cout << "SE VA A MANDAR LA D" << std::endl;
-                            msg1 = new StartActionMsg(ActionsId::MOVE_RIGHT, playerName);
-                            msjEnviado = false;
-                            break;
-                        default:
-                            break;  // Ignora otras teclas
+                    if (!pressed_keys[event.key.keysym.scancode]) {
+                        pressed_keys[event.key.keysym.scancode] = true;
+                        switch (event.key.keysym.scancode) {
+                            case SDL_SCANCODE_E:  // shoot
+                                std::cout << "SE VA A MANDAR LA E" << std::endl;
+                                msg1 = new StartActionMsg(ActionsId::SHOOT, playerName);
+                                msjEnviado = false;
+                                break;
+                            case SDL_SCANCODE_F:  // agarrar/soltar arma
+                                std::cout << "SE VA A MANDAR LA F" << std::endl;
+                                msg1 = new PickupDropMsg(id_item, playerName);
+                                msjEnviado = false;
+                                break;
+                            case SDL_SCANCODE_W:  // Tecla W
+                                std::cout << "SE VA A MANDAR LA W" << std::endl;
+                                msg1 = new StartActionMsg(ActionsId::JUMP, playerName);
+                                msjEnviado = false;
+                                break;
+                            case SDL_SCANCODE_S:  // Tecla S
+                                std::cout << "SE VA A MANDAR LA S" << std::endl;
+                                msg1 = new StartActionMsg(ActionsId::PLAY_DEAD, playerName);
+                                msjEnviado = false;
+                                break;
+                            case SDL_SCANCODE_A:  // Tecla A
+                                std::cout << "SE VA A MANDAR LA A" << std::endl;
+                                msg1 = new StartActionMsg(ActionsId::MOVE_LEFT, playerName);
+                                msjEnviado = false;
+                                break;
+                            case SDL_SCANCODE_D:  // Tecla D
+                                std::cout << "SE VA A MANDAR LA D" << std::endl;
+                                msg1 = new StartActionMsg(ActionsId::MOVE_RIGHT, playerName);
+                                msjEnviado = false;
+                                break;
+                            default:
+                                break;  // Ignora otras teclas
+                        }
                     }
                     break;
 
                 case SDL_KEYUP:  // Evento de tecla soltada
+                    pressed_keys[event.key.keysym.scancode] = false;
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_S:  // Tecla S
                             msg1 = new StopActionMsg(ActionsId::PLAY_DEAD, playerName);
@@ -119,6 +131,10 @@ void OnePlayer::play() {
                             break;
                         case SDL_SCANCODE_D:  // Tecla D
                             msg1 = new StopActionMsg(ActionsId::MOVE_RIGHT, playerName);
+                            msjEnviado = false;
+                            break;
+                        case SDL_SCANCODE_W:
+                            msg1 = new StopActionMsg(ActionsId::JUMP, playerName);
                             msjEnviado = false;
                             break;
                         default:
