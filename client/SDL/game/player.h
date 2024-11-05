@@ -26,7 +26,7 @@ private:
     DuckState state;
 
     bool weaponON;
-    bool walk1;
+    int walk;
     bool flapup;
 
     Image* duck;

@@ -1,14 +1,9 @@
 #include "duckState.h"
 
-std::string duckState_to_string(DuckState state, bool walk1) {
+std::string duckState_to_string(DuckState state) {
     switch (state) {
         case DuckState::STANDING:   return "standing.png";
-        case DuckState::WALK:
-            if (walk1) {
-                return "walk1.png";
-            } else {
-                return "walk2.png";
-            }
+        case DuckState::WALK:       return "walk";
         case DuckState::JUMP:       return "jump.png";
         case DuckState::FALL:       return "fall.png";
         case DuckState::SLOW_FALL:  return "slowFall.png";
