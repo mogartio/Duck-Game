@@ -83,32 +83,32 @@ void OnePlayer::play() {
                         pressed_keys[event.key.keysym.scancode] = true;
                         switch (event.key.keysym.scancode) {
                             case SDL_SCANCODE_E:  // shoot
-                                std::cout << "SE VA A MANDAR LA E" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA E" << std::endl;
                                 msg1 = new StartActionMsg(ActionsId::SHOOT, playerName);
                                 msjEnviado = false;
                                 break;
                             case SDL_SCANCODE_F:  // agarrar/soltar arma
-                                std::cout << "SE VA A MANDAR LA F" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA F" << std::endl;
                                 msg1 = new PickupDropMsg(id_item, playerName);
                                 msjEnviado = false;
                                 break;
                             case SDL_SCANCODE_W:  // Tecla W
-                                std::cout << "SE VA A MANDAR LA W" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA W" << std::endl;
                                 msg1 = new StartActionMsg(ActionsId::JUMP, playerName);
                                 msjEnviado = false;
                                 break;
                             case SDL_SCANCODE_S:  // Tecla S
-                                std::cout << "SE VA A MANDAR LA S" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA S" << std::endl;
                                 msg1 = new StartActionMsg(ActionsId::PLAY_DEAD, playerName);
                                 msjEnviado = false;
                                 break;
                             case SDL_SCANCODE_A:  // Tecla A
-                                std::cout << "SE VA A MANDAR LA A" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA A" << std::endl;
                                 msg1 = new StartActionMsg(ActionsId::MOVE_LEFT, playerName);
                                 msjEnviado = false;
                                 break;
                             case SDL_SCANCODE_D:  // Tecla D
-                                std::cout << "SE VA A MANDAR LA D" << std::endl;
+                                // std::cout << "SE VA A MANDAR LA D" << std::endl;
                                 msg1 = new StartActionMsg(ActionsId::MOVE_RIGHT, playerName);
                                 msjEnviado = false;
                                 break;

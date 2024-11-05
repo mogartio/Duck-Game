@@ -42,10 +42,10 @@ public:
         UpdatedPlayerInfoMsg* msg = new UpdatedPlayerInfoMsg(name, std::make_pair(pos_x, pos_y),
                                                              state, facing_direction);
 
-        std::cout << "se esta broadcasteando un jugador que es:" << name
-                  << " con pos: " << std::to_string(pos_x) << " , " << std::to_string(pos_y)
-                  << " En estado: " << std::to_string(state) << "mirando a "
-                  << std::to_string(facing_direction) << std::endl;
+        // std::cout << "se esta broadcasteando un jugador que es:" << name
+        //           << " con pos: " << std::to_string(pos_x) << " , " << std::to_string(pos_y)
+        //           << " En estado: " << std::to_string(state) << "mirando a "
+        //           << std::to_string(facing_direction) << std::endl;
         porquenecesitounalist.push_back(msg);
         senders.broadcast(porquenecesitounalist);
     }
@@ -64,10 +64,10 @@ public:
             ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
                << std::endl;
         }
-        std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-                  << std::to_string(std::get<0>(final_position))
-                  << std::to_string(std::get<1>(final_position)) << " con trail: " << ss.str()
-                  << std::endl;
+        // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+        //           << std::to_string(std::get<0>(final_position))
+        //           << std::to_string(std::get<1>(final_position)) << " con trail: " << ss.str()
+        //           << std::endl;
         std::list<GenericMsg*>
                 porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
         porquenecesitounalist.push_back(msg);
