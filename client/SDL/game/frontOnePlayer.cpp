@@ -51,7 +51,7 @@ void OnePlayer::play() {
                       player->get_player_name());
     }
 
-    const Uint32 frame_rate = 1000 / 40;      // 40 FPS
+    const Uint32 frame_rate = 1000 / 30;      // 40 FPS
     Uint32 last_frame_time = SDL_GetTicks();  // Tiempo del último frame
 
     bool close = false;
