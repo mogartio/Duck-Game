@@ -1,10 +1,10 @@
 #include <QApplication>
-#include "../client/menu/opening_screen.h"
+#include "../client/menu/logo_screen.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    OpeningScreen logo_screen;
+    LogoScreen logo_screen;
     logo_screen.show();
 
     return app.exec();

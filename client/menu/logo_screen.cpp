@@ -1,6 +1,6 @@
-#include "opening_screen.h"
+#include "logo_screen.h"
 
-OpeningScreen::OpeningScreen() {
+LogoScreen::LogoScreen() {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Create ParallaxBackground layers
@@ -19,7 +19,7 @@ OpeningScreen::OpeningScreen() {
     fadeInImage->start();
 }
 
-void OpeningScreen::resizeEvent(QResizeEvent *event) {
+void LogoScreen::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
     
     // Call resizeImages on each layer when the window size changes

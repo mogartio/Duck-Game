@@ -1,15 +1,15 @@
-#ifndef OPENING_SCREEN_H
-#define OPENING_SCREEN_H
+#ifndef CONNECTION_SCREEN_H
+#define CONNECTION_SCREEN_H
 
 #include <QWidget>
 #include "parallax_background.h"
 #include "fade_in_image.h"
 
-class OpeningScreen : public QWidget {
+class ConnectionScreen : public QWidget {
     Q_OBJECT
 
 public:
-    OpeningScreen();
+    ConnectionScreen();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -22,4 +22,4 @@ private:
     FadeInImage *fadeInImage;
 };
 
-#endif // OPENING_SCREEN_H
+#endif // CONNECTION_SCREEN_H
