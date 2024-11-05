@@ -46,9 +46,9 @@ void Lobby::removePlayer(std::string player_name) {
 
 void Lobby::startGame() {
     lobby_empty();
-    if (players_map.size() != MAX_PLAYERS) {
-        throw std::runtime_error("No se puede iniciar el juego porque hay un unico jugador");
-    }
+    // if (players_map.size() != MAX_PLAYERS) {
+    //     throw std::runtime_error("No se puede iniciar el juego porque hay un unico jugador");
+    // }
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {

@@ -29,19 +29,20 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
 
     static PlayerObserver player_obs(senders);
     std::vector<uint16_t> map = stage.get_vector_representation();
-    SendMapMsg map_msg(map, Config::get_instance()->rows_map, Config::get_instance()->columns_map);
+    SendMapMsg* map_msg = new SendMapMsg(map, Config::get_instance()->rows_map,
+                                         Config::get_instance()->columns_map);
     std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
-    dejenmepasarleunmensajedirectoporfavor.push_back(&map_msg);
+    dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
     senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
 
     players[player_name1] = std::make_unique<Player>(coordinate_a, stage, 2, player_name1);
-    players[player_name2] = std::make_unique<Player>(coordinate_b, stage, 4, player_name2);
+    // players[player_name2] = std::make_unique<Player>(coordinate_b, stage, 4, player_name2);
     players[player_name1]->attach(&player_obs);
-    players[player_name2]->attach(&player_obs);
+    // players[player_name2]->attach(&player_obs);
     players[player_name1]->update();  // esto hace que se envie la posicion inicial
-    players[player_name2]->update();  // esto hace que se envie la posicion inicial
+    // players[player_name2]->update();  // esto hace que se envie la posicion inicial
 
-    stage.draw_player(*players[player_name2]);
+    // stage.draw_player(*players[player_name2]);
     stage.draw_player(*players[player_name1]);
     // spawn.spawn_weapon();
 }
