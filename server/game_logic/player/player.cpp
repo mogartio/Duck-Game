@@ -8,14 +8,18 @@
 #include "weapon.h"
 
 using namespace ActionsId;
-Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string name):
+Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string name,
+               PlayerObserver* obs):
         id(id),
         position(initial_position, *this, stage),
         is_alive(true),
         stage(stage),
         weapon(std::move(std::make_unique<Magnum>(stage))),
-        name(name) {
+        name(name),
+        should_notify(true) {
+    attach(obs);
     weapon->set_player(this);
+    notify();
 }
 
 Coordinate Player::get_position() { return position.get_position(); }
@@ -57,6 +61,7 @@ void Player::execute(int& command) {
 }
 
 void Player::update() {
+    should_notify = false;
     std::set<int> moving_commands;  // comandos que te emocionan son...
     for (int command: current_actions) {
         execute(command);
@@ -65,12 +70,14 @@ void Player::update() {
         }
     }
     move(moving_commands);
-    notify();  // TODO: verificar que el estado haya cambiado antes de broadcastear
+    if (should_notify) {
+        notify();  // TODO: verificar que el estado haya cambiado antes de broadcastear
+    }
 }
 
 void Player::notify() {
     Coordinate current_position = position.get_position();
-    for (Observer* obs: observers) {
+    for (PlayerObserver* obs: observers) {
         obs->update(name, current_position.x, current_position.y, position.get_state(),
                     position.get_facing_direction());
     }

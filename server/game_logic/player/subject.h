@@ -4,22 +4,28 @@
 #include "observer.h"
 class Subject {
 protected:
-    std::list<Observer*> observers;
-
 public:
     Subject() {}
-    virtual void attach(Observer* obs) { observers.push_back(obs); }
-    virtual void detach(Observer* obs) { observers.remove(obs); }
     virtual void notify() {}
     virtual ~Subject() = default;
 };
 class PlayerSubject: public Subject {
+protected:
+    std::list<PlayerObserver*> observers;
+
 public:
     PlayerSubject() {}
+    void attach(PlayerObserver* obs) { observers.push_back(obs); }
+    void dettach(PlayerObserver* obs) { observers.remove(obs); }
 };
 
 class ProjectileSubject: public Subject {
+protected:
+    std::list<ProjectileObserver*> observers;
+
 public:
     ProjectileSubject() {}
+    void attach(ProjectileObserver* obs) { observers.push_back(obs); }
+    void dettach(ProjectileObserver* obs) { observers.remove(obs); }
 };
 #endif

@@ -24,12 +24,14 @@ private:
     std::unique_ptr<Weapon> weapon;
     std::set<int> current_actions;
     std::string name;
+    void notify() override;
+    bool should_notify;
 
 public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
-    Player(Coordinate&, Stage&, int, std::string);
+    Player(Coordinate&, Stage&, int, std::string, PlayerObserver*);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);
@@ -38,7 +40,7 @@ public:
     void execute(int&);
     void shoot();
     void update();
-    void notify() override;
+    void Notify() { should_notify = true; }
 };
 
 #endif
