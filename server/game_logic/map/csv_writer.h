@@ -19,15 +19,15 @@ public:
                     file << Config::get_instance()->mapsId["wall"] << ",";
                     continue;
                 }
-                if ((j == 9 || j == 10) && i == 35) {
+                if ((j == 7 || j == 6) && i >= 35) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if (j == 10 && i > 35) {
-                    file << Config::get_instance()->mapsId["wall"] << ",";
+                if ((i == 40 || i == 41) && j > 10 && j < 40) {
+                    file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if ((i == 40 || i == 41) && j > 10 && j < 40) {
+                if ((i > 40) && j > 10 && j < 40) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
