@@ -7,9 +7,12 @@
 
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
-OnePlayer::OnePlayer(Queue<GenericMsg*>& queueRecive, std::string playerName,
-                     std::atomic<bool>& running):
-        queueRecive(queueRecive), playerName(playerName), running(running) {}
+OnePlayer::OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
+                     std::string playerName):
+        queueRecive(queueRecive),
+        playerName(playerName),
+        running(true),
+        event_handler(queueSend, playerName, running) {}
 
 void OnePlayer::play() {
 
@@ -32,6 +35,9 @@ void OnePlayer::play() {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
 
+    // Despues de todas las corroboraciones, starteo el event handler
+    event_handler.start();
+
     Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
 
     Map map(win.get_rend(), mapa);
@@ -53,14 +59,6 @@ void OnePlayer::play() {
     std::string player_name;
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
-
-    std::map<int, bool> pressed_keys;
-    pressed_keys[SDL_SCANCODE_E] = false;
-    pressed_keys[SDL_SCANCODE_F] = false;
-    pressed_keys[SDL_SCANCODE_W] = false;
-    pressed_keys[SDL_SCANCODE_S] = false;
-    pressed_keys[SDL_SCANCODE_A] = false;
-    pressed_keys[SDL_SCANCODE_D] = false;
 
     while (running) {
         Uint32 current_time = SDL_GetTicks();
@@ -98,4 +96,7 @@ void OnePlayer::play() {
         // Controla la frecuencia de cuadros por segundo (FPS)
         SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
     }
+
+    event_handler.stop();
+    event_handler.join();
 }
