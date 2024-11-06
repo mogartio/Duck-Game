@@ -30,6 +30,7 @@ public:
     virtual void finish_throw(int, bool, std::unique_ptr<Weapon>);
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
+    virtual void update() {};
 };
 
 class CowboyGun: public Weapon {
@@ -47,11 +48,13 @@ public:
 class Grenade: public Weapon {
 protected:
     int counter = 0;
+    bool turned_on;
 
 public:
     explicit Grenade(Stage&);
-    virtual void shoot(int, bool) override {};
-    virtual void finish_throw(int, bool, std::unique_ptr<Weapon>) override {};
+    virtual void shoot(int, bool) override;
+    virtual void finish_throw(int, bool, std::unique_ptr<Weapon>) override;
+    virtual void update() override;
 };
 
 #endif

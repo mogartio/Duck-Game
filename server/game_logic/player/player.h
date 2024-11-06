@@ -30,6 +30,7 @@ public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
+    int get_facing_direction();
     Player(Coordinate&, Stage&, int, std::string, PlayerObserver*);
     void die();
     void occupy(Coordinate&);

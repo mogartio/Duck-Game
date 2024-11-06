@@ -37,6 +37,8 @@ public:
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
     std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
+    void set_explosion(Coordinate, int) {
+    };  // TODO: Implementar esto que recibe el centro y el rango de una explosion
 };
 
 #endif

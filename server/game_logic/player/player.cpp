@@ -24,6 +24,9 @@ Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string n
 
 Coordinate Player::get_position() { return position.get_position(); }
 
+int Player::get_facing_direction() { return position.get_facing_direction(); }
+
+
 int Player::get_id() { return id; }
 
 void Player::occupy(Coordinate& coordinate) { position.occupy(coordinate); }
@@ -73,6 +76,9 @@ void Player::update() {
         }
     }
     move(moving_commands);
+    if (weapon != nullptr) {
+        weapon->update();
+    }
     if (should_notify) {
         notify();
     }

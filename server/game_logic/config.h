@@ -34,6 +34,8 @@ private:
         armor_strength = config["armor_strength"].as<int>();
         columns_map = config["columns_map"].as<uint16_t>();
         rows_map = config["rows_map"].as<uint16_t>();
+        explosion_counter = config["explosion_counter"].as<int>();
+        explosion_range = config["explosion_range"].as<int>();
         for (const auto& coords: config["weapon_spawn_sites"]) {
             weapon_spawn_sites.push_back(
                     std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
@@ -61,6 +63,8 @@ public:
     std::map<std::string, uint16_t> mapsId;
     std::vector<std::tuple<int, int>> weapon_spawn_sites;
     std::vector<std::tuple<int, int>> player_spawn_sites;
+    int explosion_counter;
+    int explosion_range;
     static Config* get_instance() {
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mutex);
