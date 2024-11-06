@@ -37,11 +37,12 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
 
     players[player_name1] =
             std::make_unique<Player>(coordinate_a, stage, 2, player_name1, &player_obs);
-    // players[player_name2] = std::make_unique<Player>(coordinate_b, stage, 4, player_name2);
+    players[player_name2] =
+            std::make_unique<Player>(coordinate_b, stage, 4, player_name2, &player_obs);
 
-    // stage.draw_player(*players[player_name2]);
+    stage.draw_player(*players[player_name2]);
     stage.draw_player(*players[player_name1]);
-    // spawn.spawn_weapon();
+    spawn.spawn_weapon();
 }
 
 void GameMain::run() {

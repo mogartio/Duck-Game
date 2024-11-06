@@ -50,7 +50,7 @@ protected:
 
 public:
     explicit Grenade(Stage&);
-    virtual void shoot(int, bool) override;
+    virtual void shoot(int, bool) override {};
 };
 
 #endif

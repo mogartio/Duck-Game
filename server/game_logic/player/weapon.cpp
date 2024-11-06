@@ -18,7 +18,7 @@ void Weapon::finish_throw(int x_direction, bool is_aiming_up, std::unique_ptr<We
     if (is_aiming_up) {
         deviation_angle = 0;
     }
-    stage.add_projectile(std::move(std::make_unique<ProjectileDroppedWeapon>(
+    stage.add_projectile(std::move(std::make_unique<ProjectileThrownWeapon>(
             std::move(weapon), gun_position, throw_reach, x_direction, 80, deviation_angle)));
 }
 

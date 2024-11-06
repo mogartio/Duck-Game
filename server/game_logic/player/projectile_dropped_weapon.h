@@ -8,15 +8,15 @@
 
 #include "projectile.h"
 #include "weapon.h"
-class ProjectileDroppedWeapon: public Projectile {
+class ProjectileThrownWeapon: public Projectile {
 private:
     std::unique_ptr<Weapon> weapon;
     int current_angle_index;
     std::vector<double> deviation_angles{};
 
 public:
-    ProjectileDroppedWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                            int x_direction, int reach, double):
+    ProjectileThrownWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
+                           int x_direction, int reach, double):
             Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, 9),
             weapon(std::move(weapon)),
             current_angle_index(0),
@@ -29,5 +29,15 @@ public:
         deviation_angle =
                 deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
+};
+
+class ProjectileDroppedWeapon: public Projectile {
+private:
+    std::unique_ptr<Weapon> weapon;
+
+public:
+    ProjectileDroppedWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
+                            int reach, double):
+            Projectile(initial_position, 1, reach, speed, 0, 9), weapon(std::move(weapon)) {}
 };
 #endif

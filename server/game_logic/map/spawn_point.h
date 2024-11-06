@@ -16,8 +16,8 @@ public:
     WeaponSpawnPoint(Coordinate position, Stage& stage): position(position), stage(stage) {}
     void spawn_weapon() {
         auto weapon = std::make_unique<CowboyGun>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       2, 1, 50, 0));
+        stage.add_projectile(
+                std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position, 4, 4, 0));
     }
 };
 
