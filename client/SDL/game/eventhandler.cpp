@@ -90,8 +90,7 @@ void EventHandler::run() {
                 continue;
             }
             if (!mensajeEnviado) {
-                queueSend.push(msg);
-                mensajeEnviado = true;
+                mensajeEnviado = queueSend.try_push(msg);
             }
         }
     }
