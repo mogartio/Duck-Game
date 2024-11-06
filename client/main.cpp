@@ -5,6 +5,7 @@
 
 #include "../common/messages/generic_msg.h"
 #include "../common/queue.h"
+#include "SDL/game/eventhandler.h"
 #include "SDL/game/frontOnePlaye.h"
 
 #include "client.h"
@@ -33,11 +34,18 @@ int main(int argc, char const* argv[]) {
         GenericMsg* msg = recv_queue.pop();
         std::cout << "recibi header: " << int(msg->get_header()) << std::endl;
     }
+    std::string player_name = "pepito";
+    std::atomic<bool> running(true);
 
-    OnePlayer front(send_queue, recv_queue, "pepito");
+    EventHandler event_handler(send_queue, player_name, running);
+    event_handler.start();
+
+    OnePlayer front(recv_queue, player_name, running);
     front.play();
 
     recv_queue.close();
     client1.stop();
+    event_handler.stop();
+    event_handler.join();
     return 0;
 }
