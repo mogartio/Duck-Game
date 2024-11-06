@@ -89,7 +89,7 @@ void EventHandler::run() {
                 // si no se encontro la tecla en el mapa, no hacemos nada
                 continue;
             }
-            if (!mensajeEnviado) {
+            if (!mensajeEnviado && msg != nullptr) {
                 mensajeEnviado = queueSend.try_push(msg);
             }
         }
