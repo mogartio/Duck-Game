@@ -1,4 +1,5 @@
 #include "fade_in_image.h"
+#include <iostream>
 
 FadeInImage::FadeInImage(QWidget *parent, const QString &imagePath, int duration) {
     // Load the logo image with original size or larger

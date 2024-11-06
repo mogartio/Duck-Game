@@ -75,7 +75,16 @@
         "netfwd": "cpp",
         "future": "cpp",
         "codecvt": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "qwidget": "cpp",
+        "qpainter": "cpp",
+        "qvboxlayout": "cpp",
+        "qapplication": "cpp",
+        "qfontdatabase": "cpp",
+        "qresizeevent": "cpp",
+        "qmainwindow": "cpp",
+        "complex": "cpp",
+        "source_location": "cpp"
     },
     "makefile.configureOnOpen": false
 }

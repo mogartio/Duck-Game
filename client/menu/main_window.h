@@ -4,22 +4,25 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 #include "logo_screen.h"
-#include "connection_screen.h" // Assuming you have another screen called OpeningScreen
+#include "connection_screen.h"
+#include "../../common/queue.h"
+#include "../../common/messages/generic_msg.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent,Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue);
 
-private slots:
-    void showConnectionScreen();
     void showLogoScreen();
+    void showConnectionScreen();
 
 private:
     QStackedWidget *stackedWidget;
     LogoScreen *logoScreen;
-    ConnectionScreen *openingScreen;
+    ConnectionScreen *connectionScreen;
+    Queue<std::unique_ptr<GenericMsg>>& send_queue;
+    Queue<std::unique_ptr<GenericMsg>>& recv_queue;
 };
 
 #endif // MAIN_WINDOW_H
