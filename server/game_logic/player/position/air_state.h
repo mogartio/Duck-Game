@@ -2,7 +2,7 @@
 #define AIR_STATE_H
 #include <memory>
 
-#include "../config/config.h"
+#include "../../config/config.h"
 #define INITIAL_FALLING_SPEED 1
 #define NORMAL_FALLING_SPEED 2
 #define TOTAL_JUMPS 3

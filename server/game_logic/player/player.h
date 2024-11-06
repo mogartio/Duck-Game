@@ -8,11 +8,10 @@
 
 #include "../../../common/coordinate.h"
 #include "../map/stage.h"
+#include "position/player_position.h"
 #include "weapons/weapon.h"
 
-#include "air_state.h"
 #include "observer.h"
-#include "player_position.h"
 #include "subject.h"
 
 class Player: public PlayerSubject {

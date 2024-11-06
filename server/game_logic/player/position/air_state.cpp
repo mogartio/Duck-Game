@@ -3,9 +3,9 @@
 
 #include <memory>
 
-#include "../config/config.h"
+#include "../../config/config.h"
+#include "../observer.h"
 
-#include "observer.h"
 #include "player_position.h"
 
 using namespace PlayerInfoId;

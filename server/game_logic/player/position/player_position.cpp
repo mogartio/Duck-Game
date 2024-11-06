@@ -2,9 +2,8 @@
 
 #include <string>
 
-#include "../../../common/messages/generic_msg.h"
-
-#include "player.h"
+#include "../../../../common/messages/generic_msg.h"
+#include "../player.h"
 using namespace ActionsId;
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
