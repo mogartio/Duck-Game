@@ -81,7 +81,7 @@ void EventHandler::run() {
             GenericMsg* msg_posible_a_liberar = msg;
             try {
                 msg = key_accion_map.at(std::make_tuple(event.type, event.key.keysym.scancode))();
-                if (msg_posible_a_liberar != nullptr) {
+                if (msg_posible_a_liberar != nullptr && !mensajeEnviado) {
                     delete msg_posible_a_liberar;
                 }
                 mensajeEnviado = false;
