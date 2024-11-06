@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 ServerProtocol::ServerProtocol(Socket& skt): ProtocoloCommon(skt) {}
@@ -23,9 +24,14 @@ void ServerProtocol::handle_recv(ViewLobbiesMsg& msg) { (void)msg; }
 void ServerProtocol::handle_recv(ChooseLobbyMsg& msg) {
     uint8_t lobby_id = recv_u_int8_t();
     msg.set_lobby_id(lobby_id);
+    std::string player_name = recv_string();
+    msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_recv(CreateLobbyMsg& msg) { (void)msg; }
+void ServerProtocol::handle_recv(CreateLobbyMsg& msg) {
+    std::string player_name = recv_string();
+    msg.set_player_name(player_name);
+}
 
 void ServerProtocol::handle_recv(GoBackMsg& msg) { (void)msg; }
 
@@ -39,21 +45,32 @@ void ServerProtocol::handle_recv(ExitFromLobbyMsg& msg) {
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    std::vector<std::string> lobbies = msg.get_lobbies();
+    std::vector<DescripcionLobby> lobbies = msg.get_lobbies();
     // mando el numero de lobbies
     uint8_t lobbies_size = lobbies.size();
     send_u_int8_t(lobbies_size);
     // mando los nombres de los lobbies
-    for (int i = 0; i < lobbies_size; i++) {
-        send_string(lobbies[i]);
-        // lobbies[i].get_amount_of_players();
+    for (auto& lobby: lobbies) {
+        send_u_int8_t(lobby.idLobby);
+        send_u_int8_t(lobby.cantidadJugadores);
+        /*
+        for (int i = 0; i < lobby.cantidadJugadores; i++) {
+            if (i == 0) {
+                send_string(lobby.player1.nombre);
+                send_u_int8_t(lobby.player1.color);
+            } else {
+                send_string(lobby.player2.nombre);
+                send_u_int8_t(lobby.player2.color);
+            }
+        }
+        */
     }
 }
 
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    // mando filas y columnas 
+    // mando filas y columnas
     uint16_t filas = msg.get_filas();
     send_u_int16_t(filas);
     uint16_t columnas = msg.get_columnas();

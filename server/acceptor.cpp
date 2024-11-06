@@ -1,39 +1,52 @@
 #include "acceptor.h"
 
 
-Acceptor::Acceptor(Socket srv, ClientsMonitor& clients, Queue<GenericMsg*>& recv_queue,
-                   SendQueuesMonitor<GenericMsg*>& send_queues):
-        srv(std::move(srv)), clients(clients), recv_queue(recv_queue), send_queues(send_queues) {}
+Acceptor::Acceptor(const char* port): srv(port) {}
 
+void Acceptor::acceptClient(uint& id) {
+    Socket new_skt = srv.accept();
+    clients.emplace_back(std::move(new_skt), id, send_queues, lobbys);
+}
 
 void Acceptor::run() {
     try {
-        int id = 0;
+        uint id = 1;
         while (_keep_running) {
-            Socket new_skt = srv.accept();
-
-            Queue<GenericMsg*>* new_send_queue = new Queue<GenericMsg*>(Q_MAX_SIZE);
-            send_queues.add(new_send_queue, id);
-
-            Client* client = new Client(std::move(new_skt), new_send_queue, &recv_queue, id++);
-            clients.add(client);
+            acceptClient(id);
 
             reap_dead_clients();
+
+            id++;
         }
     } catch (const std::exception& e) {
         _keep_running = false;
     }
 }
 
-void Acceptor::reap_dead_clients() { clients.remove_dead_clients(); }
+void Acceptor::reap_dead_clients() {
+    clients.remove_if([](Client& client) {
+        if (!client.is_alive()) {
+            client.stop();
+            return true;
+        }
+        return false;
+    });
+}
+
+void Acceptor::remove_all() {
+    for (Client& client: clients) {
+        client.stop();
+    }
+    clients.clear();
+}
 
 void Acceptor::stop() {
     srv.shutdown(SHUT_RDWR);
     _keep_running = false;
-    recv_queue.close();
+    remove_all();
 }
 
 void Acceptor::shutdown() {
-    clients.remove_all();
+    remove_all();
     send_queues.remove_all();
 }

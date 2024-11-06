@@ -1,5 +1,6 @@
 #include "projectile.h"
 
+#include "../config.h"
 #include "../map/stage.h"
 #define FLOOR 1
 #define BACKGROUND 0
@@ -15,15 +16,28 @@ bool Projectile::ray_trace(Stage& stage) {
                 round(position.y + (i)*cos(deviation_angle)));
 
         int next_tile = stage.get(bullet_position);
-        if (next_tile == -1 || next_tile == FLOOR) {
+        if (next_tile == -1 || next_tile == Config::get_instance()->mapsId["floor"] ||
+            next_tile == Config::get_instance()->mapsId["wall"]) {
             return true;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4) && i == speed - 1) {
             stage.set(bullet_position, id);
             move(bullet_position);
             // coordinates_to_delete.push_back(bullet_position);
+            notify();
             update();
+            return false;
         }
+        trail.push_back(std::pair<uint16_t, uint16_t>(bullet_position.x, bullet_position.y));
     }
+    notify();
     return false;
+}
+
+void Projectile::notify() {
+
+    for (Observer* obs: observers) {
+        obs->update(trail, std::pair<uint16_t, uint16_t>(position.x, position.y));
+    }
+    trail.clear();
 }

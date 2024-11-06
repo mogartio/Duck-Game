@@ -6,15 +6,14 @@
 
 #include "player.h"
 using namespace ActionsId;
-#define AIM_LEFT -1
-#define AIM_RIGHT 1
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
         position(initial_coordinates),
         player(player),
         stage(stage),
         facing_direction(AIM_RIGHT),
-        aiming_up(false) {
+        aiming_up(false),
+        state(GROUNDED) {
     air_state = std::move(std::make_unique<Grounded>());
 }
 
@@ -48,12 +47,17 @@ bool PlayerPosition::is_aiming_up() { return aiming_up; }
 void PlayerPosition::move_horizontally(int offset) {
     Coordinate current(position.x + offset, position.y);
     if (stage.is_valid_position(current, player.get_id())) {
+        if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
+            player.Notify();
+        }
         position = current;
     }
 }
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
-void PlayerPosition::set_state(std::unique_ptr<AirState> new_state) {
+void PlayerPosition::set_state(std::unique_ptr<AirState> new_state, uint8_t state_code) {
     air_state = std::move(new_state);
+    state = state_code;
+    player.Notify();
 }
 
 void PlayerPosition::move_vertically(int offset) {
@@ -64,6 +68,9 @@ void PlayerPosition::move_vertically(int offset) {
     for (int i = 0; i < offset * direction_handler; i++) {
         Coordinate current(position.x, position.y + direction_handler);
         if (stage.is_valid_position(current, player.get_id())) {
+            if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
+                player.Notify();
+            }
             position = current;
         } else {
             return;
@@ -78,4 +85,4 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-int PlayerPosition::get_facing_direction() { return facing_direction; }
+uint8_t PlayerPosition::get_facing_direction() { return facing_direction; }

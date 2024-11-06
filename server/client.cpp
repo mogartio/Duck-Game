@@ -1,14 +1,17 @@
 #include "client.h"
 
-Client::Client(Socket&& client_skt, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue,
-               int id):
+Client::Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
+               LobbysMonitor& lobbys):
         client_skt(std::move(client_skt)),
-        send_queue(send_queue),
-        recv_queue(recv_queue),
+        send_queue(100),
+        recv_queue(),
+        send_queues(send_queues),
         id(id),
         protocol(this->client_skt),
-        receiver(recv_queue, &protocol),
-        sender(send_queue, &protocol) {
+        receiver(recv_queue, &protocol, this),
+        sender(&send_queue, &protocol),
+        lobbys(lobbys) {
+    send_queues.add(&send_queue, id);
     start_client();
 }
 
@@ -24,11 +27,68 @@ void Client::start_client() {
 void Client::stop() {
     receiver.stop();
     receiver.join();
-    sender.stop();
+    sender.kill();
     sender.join();
 }
 
 bool Client::is_alive() { return receiver.is_alive() && sender.is_alive(); }
 
+uint Client::get_id() const { return id; }
+
+void Client::switch_queues(Queue<GenericMsg*>* new_queue) { receiver.switch_q(new_queue); }
+
 // operador de comparacion para poder comparar clientes
 bool Client::operator==(const Client* other) const { return id == other->id; }
+
+void Client::handle_read(const ViewLobbiesMsg& msg) {
+    (void)msg;
+    send_queues.send_to_client(new SendLobbiesListMsg(lobbys.get_lobbys()), id);
+}
+
+void Client::handle_read(const CreateLobbyMsg& msg) {
+    std::string player_name = msg.get_player_name();
+    std::cout << "player name es: " << player_name << std::endl;
+    lobby_unido_id = lobbys.create(send_queues, player_name, this);
+}
+
+void Client::handle_read(const ChooseLobbyMsg& msg) {
+    try {
+        std::string player_name = msg.get_player_name();
+        lobbys.add_player(msg.get_lobby_id(), player_name, this);
+        lobby_unido_id = msg.get_lobby_id();
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error al unirse al lobby debido a que: " << e.what() << std::endl;
+        send_queues.send_to_client(new ErrorMsg(e.what()), id);
+    }
+}
+
+void Client::handle_read(const CustomizedPlayerInfoMsg& msg) {
+    (void)msg;
+    // lobbys.update_player(lobby_unido_id, std::make_tuple(msg.get_player_name(), id));
+}
+
+void Client::handle_read(const GoBackMsg& msg) { (void)msg; }
+
+void Client::handle_read(const ExitFromLobbyMsg& msg) {
+    try {
+        lobbys.remove_player(lobby_unido_id, msg.get_player_name());
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error al salir del lobby debido a que: " << e.what() << std::endl;
+        send_queues.send_to_client(new ErrorMsg(e.what()), id);
+    }
+}
+
+void Client::handle_read(const StartGameMsg& msg) {
+    (void)msg;
+    try {
+        lobbys.start_game(lobby_unido_id);
+        // lobbys.start_game(lobby_unido_id,id); esto es para la funcionalidad futura
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error al unirse al lobby debido a que: " << e.what() << std::endl;
+        send_queues.send_to_client(new ErrorMsg(e.what()), id);
+    } catch (...) {
+        std::cout << "Error al iniciar el juego debido a un error desconocido " << std::endl;
+        send_queues.send_to_client(
+                new ErrorMsg("Error al iniciar el juego debido a un error desconocido "), id);
+    }
+}

@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <iostream>
 #include <ostream>
 #include <sstream>
@@ -44,23 +45,33 @@ public:
             std::stringstream stream;
             for (int j = 0; j < columns; j++) {
                 if (matrix[j][i] == 2) {
-                    stream << "\033[31m" << "|" << matrix[j][i]
-                           << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 1) {
-                    stream << "\033[34m" << "|" << matrix[j][i]
-                           << "\033[0m";  // Rojo para el número 2
+                    stream << "\033[31m"
+                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[j][i] == 5 || matrix[j][i] == 6) {
+                    stream << "\033[34m"
+                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 8 || matrix[j][i] == 9) {
-                    stream << "\033[33m" << "|" << matrix[j][i]
-                           << "\033[0m";  // Rojo para el número 2
+                    stream << "\033[33m"
+                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 4) {
-                    stream << "\033[32m" << "|" << matrix[j][i]
-                           << "\033[0m";  // Rojo para el número 2
+                    stream << "\033[32m"
+                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else {
                     stream << "|" << matrix[j][i];  // Imprimir el valor normalmente
                 }
             }
             std::cout << stream.str() << std::endl;
         }
+    }
+
+    std::vector<uint16_t> get_vector_representation() {
+        std::vector<uint16_t> res;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                res.push_back(static_cast<uint16_t>(matrix[j][i]));
+            }
+        }
+        return res;
     }
 };
 

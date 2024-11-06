@@ -10,6 +10,7 @@
 
 // TODO: Aca se puede directamente agregar los imports de los handlers
 // TODO: No se porque se los declara tempranamente aca????
+#include "descripcion-lobby.h"
 #include "handler_read.h"
 #include "handler_recv.h"
 #include "handler_send.h"
@@ -52,6 +53,11 @@ public:
         PROJECTILE_INFO_MSG = 0x12,
     };
 
+    enum Type : uint8_t {
+        LOBBY_MSG = 0x01,
+        GAME_MSG = 0x02,
+    };
+
 
     enum FacingDirection : uint8_t {
         RIGHT = 0x01,
@@ -60,14 +66,19 @@ public:
 
 private:
     MsgTypeHeader header;
+    Type type;
+    int id_client;
 
 public:
-    explicit GenericMsg(MsgTypeHeader header);
+    explicit GenericMsg(MsgTypeHeader header, Type type);
 
     virtual void accept_send(HandlerSender& handler) = 0;
     virtual void accept_recv(HandlerReceiver& handler) = 0;
     virtual void accept_read(HandlerReader& handler) = 0;
-    virtual uint8_t get_header() const;
+    uint8_t get_header() const;
+    uint8_t get_type() const;
+    int get_id_client() const;
+    void set_id_client(int id_client);
     virtual ~GenericMsg() = default;
 };
 
@@ -111,6 +122,7 @@ public:
 class ChooseLobbyMsg: public GenericMsg {
 private:
     uint8_t lobby_id;
+    std::string player_name;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -121,15 +133,21 @@ public:
 
     ChooseLobbyMsg();
 
-    explicit ChooseLobbyMsg(uint8_t lobby_id);
+    explicit ChooseLobbyMsg(uint8_t lobby_id, std::string player_name);
 
     void set_lobby_id(uint8_t lobby_id);
 
     uint8_t get_lobby_id() const;
+
+    std::string get_player_name() const;
+
+    void set_player_name(std::string player_name);
 };
 
 class CreateLobbyMsg: public GenericMsg {
 private:
+    std::string player_name;
+
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -138,6 +156,12 @@ public:
     void accept_read(HandlerReader& handler) override;
 
     CreateLobbyMsg();
+
+    explicit CreateLobbyMsg(std::string player_name);
+
+    void set_player_name(std::string player_name);
+
+    std::string get_player_name() const;
 };
 
 class GoBackMsg: public GenericMsg {
@@ -262,7 +286,7 @@ public:
 
 class SendLobbiesListMsg: public GenericMsg {
 private:
-    std::vector<std::string> lobbies;
+    std::vector<DescripcionLobby> lobbies;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -273,11 +297,11 @@ public:
 
     SendLobbiesListMsg();
 
-    explicit SendLobbiesListMsg(std::vector<std::string> lobbies);
+    explicit SendLobbiesListMsg(std::vector<DescripcionLobby> lobbies);
 
-    void set_lobbies(std::vector<std::string> lobbies);
+    void set_lobbies(std::vector<DescripcionLobby> lobbies);
 
-    std::vector<std::string> get_lobbies() const;
+    std::vector<DescripcionLobby> get_lobbies() const;
 };
 
 class EverythingOkMsg: public GenericMsg {

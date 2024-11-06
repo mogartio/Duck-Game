@@ -1,18 +1,21 @@
 #include "game_main.h"
 
+#include <tuple>
+#include <vector>
+
 #include "map/spawn_point.h"
 
 #include "config.h"
 
+
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
                    bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
-        stage("main_map.csv"),
+        stage("main_map.csv", senders),
         receiver_q(q),
         is_testing(is_testing),
         player_name1(player_name1),
         player_name2(player_name2),
         senders(senders) {
-    CSVWriter::write_map("main_map.csv");
 
     std::vector<std::tuple<int, int>> player_spawn_sites =
             Config::get_instance()->player_spawn_sites;
@@ -24,10 +27,20 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string 
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
     WeaponSpawnPoint spawn(weapon_spawn, stage);
 
-    // players[player_name1] = new Player(coordinate_a, stage, 2);
-    // stage.draw_player(*players[player_name1]);
-    players[player_name2] = new Player(coordinate_b, stage, 4);
-    stage.draw_player(*players[player_name2]);
+    static PlayerObserver player_obs(senders);
+    std::vector<uint16_t> map = stage.get_vector_representation();
+    SendMapMsg* map_msg = new SendMapMsg(map, Config::get_instance()->rows_map,
+                                         Config::get_instance()->columns_map);
+    std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
+    dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
+    senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
+
+    players[player_name1] =
+            std::make_unique<Player>(coordinate_a, stage, 2, player_name1, &player_obs);
+    // players[player_name2] = std::make_unique<Player>(coordinate_b, stage, 4, player_name2);
+
+    // stage.draw_player(*players[player_name2]);
+    stage.draw_player(*players[player_name1]);
     // spawn.spawn_weapon();
 }
 
@@ -41,6 +54,7 @@ void GameMain::run() {
                 receiver_q.push(new_msg);
             }
         }
+        // players[player_name1]->notify();
         GenericMsg* msg;
         bool have_command = receiver_q.try_pop(msg);
         if (have_command) {
@@ -52,8 +66,9 @@ void GameMain::run() {
             stage.draw_player(*player);
         }
         stage.update();
-        //stage.print();
-        sleep(1);
+        // stage.print();
+        std::this_thread::sleep_for(std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
+
     }
 }
 

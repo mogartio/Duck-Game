@@ -1,21 +1,40 @@
 #ifndef LOBBY_H
 #define LOBBY_H
 
-
-#include <list>
+#include <array>
+#include <map>
+#include <memory>
+#include <set>
+#include <stdexcept>
+#include <string>
 
 #include "./../common/messages/descripcion-lobby.h"
+#include "./../common/messages/generic_msg.h"
+#include "./../common/queue.h"
+#include "./game_logic/game_main.h"
 
-#include "client.h"
+#include "send_queues_monitor.h"
+
 #define MAX_PLAYERS 2
 #define EMPTY_PLAYERS 0
-
+#define FIRST_PLAYER 0
+#define SECOND_PLAYER 1
+class Client;
 
 class Lobby {
 private:
-    std::list<Client*> jugadores;
+    std::array<DescipcionPlayer, MAX_PLAYERS> players_description;
+    std::map<std::string, Client*> players_map;
 
-    u_int8_t id_lobby;
+    SendQueuesMonitor<GenericMsg*>& send_queues;
+
+    Queue<GenericMsg*>* receiver_q;
+
+    std::unique_ptr<GameMain> game;
+
+    uint player1_id;
+
+    uint id_lobby;
 
     void lobby_empty();
 
@@ -23,27 +42,23 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(Client* client, u_int8_t& id_lobby);
+    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
+                   Client* first_player, uint& id_lobby);
 
     /*
      * Metodo que agrega un jugador al lobby
      */
-    void addPlayer(Client* client);
+    void addPlayer(std::string& player_name, Client* second_player);
 
     /*
      * Metodo que elimina un jugador del lobby
      */
-    void removePlayer(Client* client);
+    void removePlayer(std::string player_name);
 
     /*
      * Metodo que inicia el juego
      */
     void startGame();
-
-    /*
-     * Metodo que cierra el lobby
-     */
-    void closeLobby();
 
     /*
      * Metodo que devuelve si el lobby esta vacio
@@ -53,7 +68,7 @@ public:
     /*
      * Metodo que devuelve el id del lobby
      */
-    u_int8_t getId() const;
+    uint getId() const;
 
     /*
      * Metodo que devuelve la descripcion del lobby
@@ -61,17 +76,6 @@ public:
     DescripcionLobby getDescription() const;
 
     // ------------------ Desabilitamos -----------------------
-    /*
-     * Deshabilitamos el constructor por copia y operador asignación por copia
-     * */
-    Lobby(const Lobby&) = delete;
-    Lobby& operator=(const Lobby&) = delete;
-
-    /*
-     * Hacemos que la clase no sea movible.
-     * */
-    Lobby(Lobby&&) = delete;
-    Lobby& operator=(Lobby&&) = delete;
 
     /*
      * Destructor del aceptador del servidor
