@@ -54,7 +54,13 @@ if(TALLER_CLIENT)
 
     target_include_directories(client_exe PRIVATE ${libSDL2pp_SOURCE_DIR})
 
-    target_link_libraries(client_exe common SDL2pp::SDL2pp)
+    target_link_libraries(client_exe common SDL2pp::SDL2pp SDL2 SDL2_image)
+    
+    add_custom_command(TARGET client_exe POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/client/SDL/img_src"
+        "${CMAKE_BINARY_DIR}/img_src"
+    )
 endif()
 
 if(TALLER_SERVER)

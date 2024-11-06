@@ -1,11 +1,11 @@
 #include <fstream>
 #include <string>
+
+#include "../config.h"
 #ifndef CSV_WRITER_H
 
 #define ROW_NUMBER 50
 #define COLUMN_NUMBER 50
-#define FLOOR 1
-#define BACKGROUND 0
 // Esta clase se encarga de crear mapas en formato csv
 class CSVWriter {
 public:
@@ -16,22 +16,22 @@ public:
         for (int i = 0; i < ROW_NUMBER; i++) {
             for (int j = 0; j < COLUMN_NUMBER; j++) {
                 if (j == 20 && i < 36) {
-                    file << FLOOR << ",";
+                    file << Config::get_instance()->mapsId["wall"] << ",";
                     continue;
                 }
-                if ((j == 9 || j == 10) && i == 35) {
-                    file << FLOOR << ",";
-                    continue;
-                }
-                if (j == 10 && i > 35) {
-                    file << FLOOR << ",";
+                if ((j == 7 || j == 6) && i >= 35) {
+                    file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
                 if ((i == 40 || i == 41) && j > 10 && j < 40) {
-                    file << FLOOR << ",";
+                    file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                file << BACKGROUND;
+                if ((i > 40) && j > 10 && j < 40) {
+                    file << Config::get_instance()->mapsId["floor"] << ",";
+                    continue;
+                }
+                file << Config::get_instance()->mapsId["background"];
                 if (j != COLUMN_NUMBER - 1) {
                     file << ",";
                 }

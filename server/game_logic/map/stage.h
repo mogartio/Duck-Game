@@ -20,12 +20,14 @@ private:
     void printStage();
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<Coordinate> coordinates_to_delete;
+    SendQueuesMonitor<GenericMsg*>& senders;
+    ProjectileObserver obs;
 
 public:
     // Son es para poder mockear la clase mas facilmente
     void draw_player(Player&);
     bool is_valid_position(Coordinate, int);
-    explicit Stage(const std::string&);
+    Stage(const std::string&, SendQueuesMonitor<GenericMsg*>&);
     void delete_player_from_stage(Player&);
     void print();
     bool should_fall(PlayerPosition&);
@@ -34,6 +36,7 @@ public:
     void update();
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
+    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
 };
 
 #endif

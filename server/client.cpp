@@ -35,7 +35,7 @@ bool Client::is_alive() { return receiver.is_alive() && sender.is_alive(); }
 
 uint Client::get_id() const { return id; }
 
-void Client::switch_queues(Queue<GenericMsg*>* recv_queue) { this->recv_queue = recv_queue; }
+void Client::switch_queues(Queue<GenericMsg*>* new_queue) { receiver.switch_q(new_queue); }
 
 // operador de comparacion para poder comparar clientes
 bool Client::operator==(const Client* other) const { return id == other->id; }
@@ -47,6 +47,7 @@ void Client::handle_read(const ViewLobbiesMsg& msg) {
 
 void Client::handle_read(const CreateLobbyMsg& msg) {
     std::string player_name = msg.get_player_name();
+    std::cout << "player name es: " << player_name << std::endl;
     lobby_unido_id = lobbys.create(send_queues, player_name, this);
 }
 

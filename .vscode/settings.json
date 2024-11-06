@@ -75,6 +75,11 @@
         "netfwd": "cpp",
         "future": "cpp",
         "codecvt": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "complex": "cpp",
+        "source_location": "cpp"
+    },
+    "files.watcherExclude": {
+        "**/target": true
     }
 }

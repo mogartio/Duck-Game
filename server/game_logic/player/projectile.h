@@ -6,10 +6,12 @@
 #include <utility>
 
 #include "../../../common/coordinate.h"
+
+#include "subject.h"
 class Weapon;
 class Stage;
 
-class Projectile {
+class Projectile: public ProjectileSubject {
 protected:
     int speed;
     int x_direction;
@@ -18,6 +20,7 @@ protected:
     int reach;
     int distance_covered;
     int id;
+    std::vector<std::pair<uint16_t, uint16_t>> trail;
 
 public:
     Projectile(Coordinate& initial_position, int x_direction, int reach, int speed,
@@ -38,6 +41,7 @@ public:
     virtual int get_id() { return id; }
     virtual void update() {}
     virtual bool ray_trace(Stage& stage);
+    virtual void notify() override;
 };
 
 
