@@ -4,8 +4,7 @@
 #include <memory>
 
 #include "../../../common/messages/generic_msg.h"
-
-#include "weapon.h"
+#include "weapons/weapon.h"
 
 using namespace ActionsId;
 Player::Player(Coordinate& initial_position, Stage& stage, int id, std::string name,

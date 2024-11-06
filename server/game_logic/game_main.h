@@ -11,11 +11,10 @@
 #include "../../common/messages/generic_msg.h"
 #include "../../common/messages/handler_read.h"
 #include "../send_queues_monitor.h"
+#include "config/config.h"
 #include "map/csv_writer.h"
 #include "map/stage.h"
 #include "player/player.h"
-
-#include "config.h"
 
 class GameMain: public HandlerReader, public Thread {
 private:

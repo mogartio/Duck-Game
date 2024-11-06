@@ -1,7 +1,7 @@
 #include "projectile.h"
 
-#include "../config.h"
-#include "../map/stage.h"
+#include "../../../config/config.h"
+#include "../../../map/stage.h"
 #define FLOOR 1
 #define BACKGROUND 0
 

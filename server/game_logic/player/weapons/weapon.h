@@ -2,7 +2,7 @@
 #define WEAPON_H
 #include <memory>
 
-#include "../map/stage.h"
+#include "../../map/stage.h"
 
 class Weapon {
 protected:

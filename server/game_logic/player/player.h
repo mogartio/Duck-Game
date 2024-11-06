@@ -8,12 +8,12 @@
 
 #include "../../../common/coordinate.h"
 #include "../map/stage.h"
+#include "weapons/weapon.h"
 
 #include "air_state.h"
 #include "observer.h"
 #include "player_position.h"
 #include "subject.h"
-#include "weapon.h"
 
 class Player: public PlayerSubject {
 private:

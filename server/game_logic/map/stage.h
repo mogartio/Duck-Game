@@ -8,7 +8,7 @@
 #define COLUMN_NUMBER 50
 #include <vector>
 
-#include "../player/projectile.h"
+#include "../player/weapons/projectiles/projectile.h"
 
 #include "map.h"
 

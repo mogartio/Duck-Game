@@ -4,7 +4,7 @@
 #include <utility>
 
 #include "../../../common/coordinate.h"
-#include "../player/projectile_dropped_weapon.h"
+#include "../player/weapons/projectiles/projectile_dropped_weapon.h"
 
 #include "stage.h"
 class WeaponSpawnPoint {

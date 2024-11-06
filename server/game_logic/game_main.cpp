@@ -3,9 +3,8 @@
 #include <tuple>
 #include <vector>
 
+#include "config/config.h"
 #include "map/spawn_point.h"
-
-#include "config.h"
 
 
 GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,

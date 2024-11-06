@@ -5,9 +5,8 @@
 #include <memory>
 #include <utility>
 
-#include "../../../common/coordinate.h"
-
-#include "subject.h"
+#include "../../../../../common/coordinate.h"
+#include "../../subject.h"
 class Weapon;
 class Stage;
 

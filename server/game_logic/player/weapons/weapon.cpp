@@ -4,9 +4,9 @@
 #include <memory>
 #include <utility>
 
-#include "player.h"
-#include "projectile.h"
-#include "projectile_dropped_weapon.h"
+#include "../player.h"
+#include "projectiles/projectile.h"
+#include "projectiles/projectile_dropped_weapon.h"
 // ammo, reach
 void Weapon::start_throw() {
     throw_started = true;

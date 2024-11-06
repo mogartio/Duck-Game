@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "../config.h"
+#include "../config/config.h"
 
 #include "observer.h"
 #include "player_position.h"

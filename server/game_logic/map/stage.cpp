@@ -12,7 +12,7 @@
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
-#include "../player/projectile.h"
+#include "../player/weapons/projectiles/projectile.h"
 
 #include "csv_reader.h"
 #include "csv_writer.h"

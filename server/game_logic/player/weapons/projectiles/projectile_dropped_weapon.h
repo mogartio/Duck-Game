@@ -6,10 +6,10 @@
 #include <utility>
 #include <vector>
 
-#include "../config.h"
+#include "../../../config/config.h"
+#include "../weapon.h"
 
 #include "projectile.h"
-#include "weapon.h"
 class ProjectileThrownWeapon: public Projectile {
 private:
     std::unique_ptr<Weapon> weapon;
