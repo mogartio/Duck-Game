@@ -1,4 +1,5 @@
 #include "connection_screen.h"
+#include "rounded_rectangle.h"
 #include <QPainter>
 #include <QResizeEvent>
 #include <qboxlayout.h>
@@ -10,16 +11,27 @@ ConnectionScreen::ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queu
     setFocusPolicy(Qt::StrongFocus);
 
     // Create ParallaxBackground layers
-    QVBoxLayout *layout = new QVBoxLayout(this);
     layer0 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_1.png", 0.5f);
     layer1 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_2.png", 0.75f);
     layer2 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_3.png", 1.0f);
     layer3 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_4.png", 1.25f);
+
     layer0->start();
     layer1->start();
     layer2->start();
     layer3->start();
-    setLayout(layout);
+
+    // Center of the screen: (1920 / 2, 1080 / 2) = (960, 540)
+    // Top-left corner of the rectangle: (960 - 500 / 2, 540 - 400 / 2) = (710, 340)
+    int offset = 100;
+    // Add the rounded rectangles to the parent widget
+    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 710-offset, 340, 500+offset, 400, QColor(213, 226, 224, 100), QColor(213, 226, 224, 100));
+    RoundedRectangle * hostnameInputRectangle = new RoundedRectangle(this, 760-offset, 400, 400+offset, 50, QColor(206, 212, 218, 100), QColor(189, 194, 199, 100));
+    RoundedRectangle * portInputRectangle = new RoundedRectangle(this, 760-offset, 500, 400+offset, 50, QColor(206, 212, 218, 100), QColor(189, 194, 199, 100));
+    // Add the rectangles to the parent widget
+    hostnameInputRectangle->setParent(this);
+    baseRectangle->setParent(this);
+    portInputRectangle->setParent(this);
 }
 
 void ConnectionScreen::resizeEvent(QResizeEvent *event) {
@@ -30,23 +42,4 @@ void ConnectionScreen::resizeEvent(QResizeEvent *event) {
     layer2->resizeImages();
     layer3->resizeImages();
     update();
-}
-
-void ConnectionScreen::paintEvent(QPaintEvent *event) {
-    QWidget::paintEvent(event); // Call the base class implementation
-
-    QPainter painter(this);
-
-    // Now draw the rounded rectangle on top of the layers
-    QColor rectColor(0, 0, 0, 127); // Semi-opaque black
-    painter.setBrush(rectColor);
-    painter.setPen(Qt::NoPen);
-
-    int rectWidth = width() * 0.8;
-    int rectHeight = height() * 0.6;
-    int rectX = (width() - rectWidth) / 2;
-    int rectY = (height() - rectHeight) / 2;
-
-    // Draw the rounded rectangle on top
-    painter.drawRoundedRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
 }

@@ -29,10 +29,10 @@ private slots:
     void toggleTextVisibility();
 
 private:
-    ParallaxImage *layer0;
-    ParallaxImage *layer1;
-    ParallaxImage *layer2;
-    ParallaxImage *layer3;
+    ParallaxBackground *layer0;
+    ParallaxBackground *layer1;
+    ParallaxBackground *layer2;
+    ParallaxBackground *layer3;
     FadeInImage *fadeInImage;
     QLabel *flickeringText;
     QTimer *timer;

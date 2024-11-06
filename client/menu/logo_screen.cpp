@@ -15,7 +15,7 @@ LogoScreen::LogoScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std
     layer1 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_2.png", 0.60f);
     layer2 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_3.png", 0.75f);
     layer3 = new ParallaxBackground(this, "client/img_src/front_window_background/parallax_background_layer_4.png", 1.00f);
-    
+
     layer0->start();
     layer1->start();
     layer2->start();

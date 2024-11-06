@@ -84,7 +84,8 @@
         "qresizeevent": "cpp",
         "qmainwindow": "cpp",
         "complex": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "qkeyevent": "cpp"
     },
     "makefile.configureOnOpen": false
 }
