@@ -57,11 +57,4 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
 }
 
 
-/*Grenade::Grenade(Player& player, Stage& stage): Weapon(player, stage, 1, 5){}
-
-Grenade::shoot(int x_direction){
-    if (ammo == 0){
-        return;
-    }
-
-}*/
+Grenade::Grenade(Stage& stage): Weapon(stage, 1, 5) {}

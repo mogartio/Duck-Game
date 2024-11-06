@@ -74,7 +74,7 @@ void Player::update() {
     }
     move(moving_commands);
     if (should_notify) {
-        notify();  // TODO: verificar que el estado haya cambiado antes de broadcastear
+        notify();
     }
 }
 

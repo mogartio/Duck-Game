@@ -45,8 +45,12 @@ public:
 };
 
 class Grenade: public Weapon {
+protected:
+    int counter = 0;
+
 public:
     explicit Grenade(Stage&);
+    virtual void shoot(int, bool) override;
 };
 
 #endif
