@@ -51,6 +51,7 @@ protected:
 public:
     explicit Grenade(Stage&);
     virtual void shoot(int, bool) override {};
+    virtual void finish_throw(int, bool, std::unique_ptr<Weapon>) override {};
 };
 
 #endif
