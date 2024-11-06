@@ -77,8 +77,13 @@ void EventHandler::run() {
             pressed_keys_state[event.key.keysym.scancode] =
                     event.type ==
                     SDL_KEYDOWN;  // si es un evento de tecla soltada, el valor pasa a ser false
+
+            GenericMsg* msg_posible_a_liberar = msg;
             try {
                 msg = key_accion_map.at(std::make_tuple(event.type, event.key.keysym.scancode))();
+                if (msg_posible_a_liberar != nullptr) {
+                    delete msg_posible_a_liberar;
+                }
                 mensajeEnviado = false;
             } catch (std::out_of_range& e) {
                 // si no se encontro la tecla en el mapa, no hacemos nada
