@@ -22,6 +22,8 @@ target_sources(server_exe  # Use the correct target name
     game_logic/player/player.cpp
     game_logic/player/position/player_position.cpp
     game_logic/player/weapons/weapon.cpp
+    game_logic/player/weapons/pistols.cpp
+    game_logic/player/weapons/throwables.cpp
     game_logic/player/weapons/projectiles/projectile.cpp
 
     game_logic/map/stage.cpp
@@ -43,6 +45,8 @@ target_sources(server_exe  # Use the correct target name
     game_logic/player/player.h
     game_logic/player/position/player_position.h
     game_logic/player/weapons/weapon.h
+    game_logic/player/weapons/pistols.h
+    game_logic/player/weapons/throwables.h
     game_logic/player/weapons/projectiles/projectile.h
 
     game_logic/map/stage.h

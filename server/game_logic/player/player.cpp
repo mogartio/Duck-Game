@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "../../../common/messages/generic_msg.h"
+#include "weapons/pistols.h"
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
