@@ -1,123 +1,51 @@
-cmake_minimum_required(VERSION 3.13)
-
-if (POLICY CMP0135)
-    cmake_policy(SET CMP0135 NEW)
-endif()
-
-if (NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 20)
-endif()
-
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-project(taller_tp
+cmake_minimum_required(VERSION 3.15)
+project(duck_game
     VERSION 1.0
-    HOMEPAGE_URL "https://github.com/URL-HERE"
+    HOMEPAGE_URL "https://github.com/FacuGerez/Tp-Duck-Game-7.git"
     LANGUAGES CXX
 )
 
-option(TALLER_TESTS "Enable / disable tests." ON)
-option(TALLER_CLIENT "Enable / disable client program." ON)
-option(TALLER_SERVER "Enable / disable server program." ON)
-option(TALLER_EDITOR "Enable / disable editor program." ON)
-option(TALLER_MAKE_WARNINGS_AS_ERRORS "Enable / disable warnings as errors." ON)
+# Enable AUTOMOC for Qt's Meta-Object Compiler
+set(CMAKE_AUTOMOC ON)
 
-message(CMAKE_CXX_COMPILER_ID="${CMAKE_CXX_COMPILER_ID}")
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(common STATIC)  # Define the common target
+# Compiler flags for C and C++
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=c11 -D _POSIX_C_SOURCE=200809L")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -pedantic-errors -O0 -ggdb -DDEBUG -fno-inline -std=c++17 -D _POSIX_C_SOURCE=200809L")
 
-add_subdirectory(common/)
+# Include directories
+include_directories(common client server common/messages common/socket client/menu server/game_logic client/menu)
 
-include(cmake/CompilerWarnings.cmake)
-set_project_warnings(common ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
+# Find required libraries
+find_package(SDL2 REQUIRED)
+find_package(SDL2pp REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
-target_include_directories(common PUBLIC .)
+# Add all .cpp and .h files 
+file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h)
+file(GLOB_RECURSE CLIENT_SOURCES client/*.cpp client/*.h client/menu/*.cpp client/menu/*.h)
+file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h)
 
-if(TALLER_CLIENT OR TALLER_EDITOR)
-    include(FetchContent)
-    FetchContent_Declare(
-        libSDL2pp
-        URL https://github.com/libSDL2pp/libSDL2pp/archive/cc198c9a5657048bee67ece82de620b2d5661084.zip
-    )
+# Define the common static library
+add_library(common STATIC ${COMMON_SOURCES})
 
-    FetchContent_MakeAvailable(libSDL2pp)
-endif()
+# Add executables 
+add_executable(client ${CLIENT_SOURCES} ${COMMON_SOURCES})
+add_executable(server ${SERVER_SOURCES} ${COMMON_SOURCES})
 
-if(TALLER_CLIENT)
-    add_executable(client_exe)  # Change the executable name to client_exe
+# Copy the entire img_src folder, including subdirectories, to the build directory
+add_custom_target(CopyResources ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/client/SDL/img_src ${CMAKE_BINARY_DIR}/img_src
+)
 
-    add_dependencies(client_exe common SDL2pp::SDL2pp)
+add_dependencies(client CopyResources)
 
-    add_subdirectory(client)
 
-    set_project_warnings(client_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
-
-    target_include_directories(client_exe PRIVATE ${libSDL2pp_SOURCE_DIR})
-
-    target_link_libraries(client_exe common SDL2pp::SDL2pp SDL2 SDL2_image)
-    
-    add_custom_command(TARGET client_exe POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/client/SDL/img_src"
-        "${CMAKE_BINARY_DIR}/img_src"
-    )
-endif()
-
-if(TALLER_SERVER)
-    add_executable(server_exe)  # Change the executable name to server_exe
-
-    add_dependencies(server_exe common)
-
-    add_subdirectory(server)
-
-    set_project_warnings(server_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
-
-    target_link_libraries(server_exe common yaml-cpp)
-endif()
-
-if(TALLER_EDITOR)
-    add_executable(editor_exe)  # Change the executable name to editor_exe
-
-    add_dependencies(editor_exe common SDL2pp::SDL2pp)
-
-    add_subdirectory(editor)
-
-    set_project_warnings(editor_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} FALSE)
-
-    target_include_directories(editor_exe PRIVATE ${libSDL2pp_SOURCE_DIR})
-
-    target_link_libraries(editor_exe common SDL2pp::SDL2pp)
-endif()
-
-if(TALLER_TESTS)
-    include(FetchContent)
-    FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-    )
-
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-    include(GoogleTest)
-
-    add_executable(tests_exe)  # Change the executable name to tests_exe
-
-    add_dependencies(tests_exe common)
-
-    target_include_directories(tests_exe PUBLIC .)
-
-    add_subdirectory(tests)
-
-    set_project_warnings(tests_exe ${TALLER_MAKE_WARNINGS_AS_ERRORS} TRUE)
-
-    target_include_directories(tests_exe
-        PUBLIC
-        ${gtest_SOURCE_DIR}/include
-        ${gmock_SOURCE_DIR}/include
-    )
-
-    target_link_libraries(tests_exe
-        common
-        GTest::gtest_main
-    )
-endif()
+# Link libraries
+target_link_libraries(client common SDL2::SDL2 SDL2::SDL2main SDL2pp::SDL2pp Qt5::Core Qt5::Widgets yaml-cpp)
+target_link_libraries(server common yaml-cpp)
