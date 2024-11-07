@@ -86,7 +86,8 @@
         "complex": "cpp",
         "source_location": "cpp",
         "qkeyevent": "cpp",
-        "qpushbutton": "cpp"
+        "qpushbutton": "cpp",
+        "qsound": "cpp"
     },
     "makefile.configureOnOpen": false
 }
