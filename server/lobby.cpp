@@ -1,5 +1,7 @@
 #include "lobby.h"
 
+#include "game_logic/game.h"
+
 #include "client.h"
 
 void Lobby::lobby_empty() {
@@ -52,6 +54,7 @@ void Lobby::startGame() {
     // if (players_map.size() != MAX_PLAYERS) {
     //     throw std::runtime_error("No se puede iniciar el juego porque hay un unico jugador");
     // }
+    std::vector<std::string> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
@@ -60,12 +63,12 @@ void Lobby::startGame() {
             pair.second->switch_queues(
                     receiver_q);  // aca cambiariamos la queue para definir la que
             // se va a pasar a la partida
+            names.push_back(pair.first);
         }
     }
     // se inicia el juego
     // lanzandose el gameloop aqui
-    game = std::make_unique<GameMain>(*receiver_q, players_map.begin()->first,
-                                      players_map.rbegin()->first, is_testing, send_queues);
+    game = std::make_unique<Game>(*receiver_q, names, is_testing, send_queues);
 
     game->start();
 }

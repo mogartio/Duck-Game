@@ -17,20 +17,21 @@
 class Player: public PlayerSubject {
 private:
     int id;
-    PlayerPosition position;
+    std::unique_ptr<PlayerPosition> position;
     bool is_alive;
-    Stage& stage;
+    Stage* stage;
     std::unique_ptr<Weapon> weapon;
     std::set<int> current_actions;
     std::string name;
     bool should_notify;
+    Coordinate initial_position;
 
 public:
     int get_id();
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    Player(Coordinate&, Stage&, int, std::string, PlayerObserver*);
+    Player(Coordinate&, int, std::string, PlayerObserver*);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);
@@ -41,6 +42,7 @@ public:
     void update();
     void Notify() { should_notify = true; }
     void notify() override;
+    void init_for_stage(Stage*);
 };
 
 #endif

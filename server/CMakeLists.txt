@@ -18,6 +18,7 @@ target_sources(server_exe  # Use the correct target name
     lobbys_monitor.cpp
     game_logic/config/config.cpp
     game_logic/game_main.cpp
+    game_logic/game.cpp
     game_logic/player/position/air_state.cpp
     game_logic/player/player.cpp
     game_logic/player/position/player_position.cpp
@@ -41,6 +42,7 @@ target_sources(server_exe  # Use the correct target name
     lobbys_monitor.h
     game_logic/config/config.h
     game_logic/game_main.h
+    game_logic/game.h
     game_logic/player/position/air_state.h
     game_logic/player/player.h
     game_logic/player/position/player_position.h
