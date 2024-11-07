@@ -1,9 +1,11 @@
 #include "main_window.h"
+#include <QApplication>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue) {
     
     resize(1920, 1080);
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     stackedWidget = new QStackedWidget(this);
     setCentralWidget(stackedWidget);
@@ -25,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send
 
     // Connect the signal from LogoScreen to switch to ConnectionScreen
     connect(logoScreen, &LogoScreen::switchToConnectionScreen, this, &MainWindow::showConnectionScreen);
+
+    // Connect the quir signal from ConnectionScreen to quit the application
+    connect(connectionScreen, &ConnectionScreen::quitApplication, this, &MainWindow::handleQuitApplication);
+
+    // Connect the signal from ConnectionScreen to switch to MainMenuScreen
+    connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 }
 
 void MainWindow::showLogoScreen() {
@@ -33,4 +41,17 @@ void MainWindow::showLogoScreen() {
 
 void MainWindow::showConnectionScreen() {
     stackedWidget->setCurrentWidget(connectionScreen);
+}
+
+void MainWindow::handleQuitApplication() {
+    QApplication::quit();
+}
+
+void MainWindow::showMainMenuScreen() {
+    stackedWidget->setCurrentWidget(mainMenuScreen);    
+}
+
+
+MainWindow::~MainWindow() {
+    delete connectionScreen;
 }
