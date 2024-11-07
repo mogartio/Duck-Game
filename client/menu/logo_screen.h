@@ -11,7 +11,7 @@
 #include "fade_in_image.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
-
+#include <QSound>
 class LogoScreen : public QWidget {
     Q_OBJECT
 
@@ -36,6 +36,7 @@ private:
     FadeInImage *fadeInImage;
     QLabel *flickeringText;
     QTimer *timer;
+    QSound *keyPressSound;
     Queue<std::unique_ptr<GenericMsg>>& send_queue;
     Queue<std::unique_ptr<GenericMsg>>& recv_queue;
     bool initialized = false;
