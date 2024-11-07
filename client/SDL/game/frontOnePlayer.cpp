@@ -8,11 +8,10 @@
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
 OnePlayer::OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
-                     std::string playerName):
+                     std::string playerName1, std::string playerName2):
         queueRecive(queueRecive),
-        playerName(playerName),
         running(true),
-        event_handler(queueSend, playerName, running) {}
+        event_handler(queueSend, playerName1, running, playerName2) {}
 
 void OnePlayer::play() {
 
