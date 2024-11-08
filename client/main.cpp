@@ -26,15 +26,18 @@ int main(int argc, char const* argv[]) {
     CreateLobbyMsg* msg2 = new CreateLobbyMsg("pepito");
     send_queue.push(msg2);
 
+    ChooseLobbyMsg* msg1 = new ChooseLobbyMsg(1, "player2");
+    send_queue.push(msg1);
+
     StartGameMsg msg3;
     send_queue.push(&msg3);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
         GenericMsg* msg = recv_queue.pop();
         std::cout << "recibi header: " << int(msg->get_header()) << std::endl;
     }
 
-    OnePlayer front(send_queue, recv_queue, "pepito");
+    OnePlayer front(send_queue, recv_queue, "pepito", "player2");
     front.play();
 
     recv_queue.close();
