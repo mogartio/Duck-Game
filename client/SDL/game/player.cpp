@@ -34,19 +34,21 @@ void Player::initializeWingImage(WingState wingState) {
 }
 
 void Player::initialiceDuckImages(DuckState state) {
-    std::string action = file + duckState_to_string(state);
     std::vector<Image*> images;
-
-    // Crear el objeto Image y luego inicializarlo
-    Image* image = new Image();
-    image->initialize(rend, action);
-    images.push_back(image);
+    std::string action = file + duckState_to_string(state);
 
     if (state == DuckState::WALK) {
-        action = file + duckState_to_string(state, false);
-        Image* additionalImage = new Image();
-        additionalImage->initialize(rend, action);
-        images.push_back(additionalImage);
+        for (int i = 1; i <= 5; i++) {
+            std::string walk_action = action + std::to_string(i) + ".png";
+            Image* additionalImage = new Image();
+            additionalImage->initialize(rend, walk_action);
+            images.push_back(additionalImage);
+        }
+    } else {
+        // Crear el objeto Image y luego inicializarlo
+        Image* image = new Image();
+        image->initialize(rend, action);
+        images.push_back(image);
     }
 
     ducks.emplace(state, std::move(images));
@@ -54,8 +56,9 @@ void Player::initialiceDuckImages(DuckState state) {
 
 
 Player::Player(SDL_Renderer* rend, Color color):
-        rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), walk1(true) {
+        rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false) {
 
+    walk = 0;
     chooseColor(color);
 
 
@@ -77,6 +80,8 @@ Player::Player(SDL_Renderer* rend, Color color):
 }
 
 void Player::defineSize(int height, int width) {
+    this->height = height;
+    this->width = width;
     for (const auto& pair: ducks) {
         const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
         for (Image* pato: patos) {
@@ -111,11 +116,14 @@ void Player::updateWing(int x, int y) {
         }
     }
 
+    uint offset_x = width / 4;
+    uint offset_y = (height) / 4;
+
     // Actualiza posicion del ala
     if (flip == SDL_FLIP_HORIZONTAL) {
-        wing->position(x + 1.7 * OFFSETX, y + OFFSETY);
+        wing->position(x + offset_x, y + offset_y);
     } else {
-        wing->position(x + OFFSETX, y + OFFSETY);
+        wing->position(x + 0.5 * offset_x, y + offset_y);
     }
 }
 
@@ -123,12 +131,15 @@ void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
 
     // Actualizo la imagen del pato y su posicion
-    if ((state == DuckState::WALK) && (walk1 == false)) {
-        duck = ducks[state][1];
-        walk1 = true;
+    if (state == DuckState::WALK) {
+        duck = ducks[state][this->walk];
+        if (this->walk == 4) {
+            this->walk = 0;
+        } else {
+            this->walk++;
+        }
     } else {
         duck = ducks[state][0];
-        walk1 = false;
     }
 
     duck->position(x, y);

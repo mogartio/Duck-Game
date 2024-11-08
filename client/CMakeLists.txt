@@ -12,6 +12,7 @@ target_sources(client_exe  # Use the correct target name
     client_protocol.cpp  # Assuming client.cpp is the client implementation
     client.cpp
     SDL/game/frontOnePlayer.cpp
+    SDL/game/eventhandler.cpp
     SDL/game/window.cpp
     SDL/game/map.cpp
     SDL/game/player.cpp
@@ -26,6 +27,7 @@ target_sources(client_exe  # Use the correct target name
     client_protocol.h
     client.h
     SDL/game/frontOnePlaye.h
+    SDL/game/eventhandler.h
     SDL/game/window.h
     SDL/game/map.h
     SDL/game/player.h

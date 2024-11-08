@@ -12,7 +12,7 @@ enum class DuckState {
     PLAY_DEAD 
 };
 
-std::string duckState_to_string(DuckState state, bool walk = true);  // Declaración
+std::string duckState_to_string(DuckState state);  // Declaración
 
 enum Side {
     RIGHT,

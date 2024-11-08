@@ -78,5 +78,8 @@
         "valarray": "cpp",
         "complex": "cpp",
         "source_location": "cpp"
+    },
+    "files.watcherExclude": {
+        "**/target": true
     }
 }

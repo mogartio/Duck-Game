@@ -29,9 +29,23 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     if (players_map.size() == MAX_PLAYERS) {
         throw std::runtime_error("Lobby lleno");
     }
-    players_map.find(player_name) == players_map.end() ?
-            players_map[player_name] = second_player :
-            throw std::runtime_error("Jugador ya estaba en el lobby");
+    uint cantidadLocalPlayers = 1;
+    for (auto& pair: players_map) {
+        // Busco los clientes locales (con el mismo id)
+        if (pair.second->get_id() == second_player->get_id()) {
+            // Sumo la cantidad de jugadores locales
+            cantidadLocalPlayers++;
+            // Si la cantidad de jugadores locales supera el maximo permitido
+            if (cantidadLocalPlayers > MAX_LOCAL_PLAYERS) {
+                throw std::runtime_error("Maximo de jugadores locales alcanzado");
+            }
+        }
+        // Si el jugador ya esta en el lobby (por nombre)
+        if (pair.first == player_name) {
+            throw std::runtime_error("El jugador ya esta en el lobby");
+        }
+    }
+    players_map[player_name] = second_player;
 
     send_queues.send_to_client(new EverythingOkMsg, second_player->get_id());
 
@@ -52,7 +66,8 @@ void Lobby::removePlayer(std::string player_name) {
 void Lobby::startGame() {
     lobby_empty();
     // if (players_map.size() != MAX_PLAYERS) {
-    //     throw std::runtime_error("No se puede iniciar el juego porque hay un unico jugador");
+    //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
+    //     necesitados");
     // }
     std::vector<std::string> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
