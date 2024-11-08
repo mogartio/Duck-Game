@@ -15,7 +15,8 @@
 
 #include "send_queues_monitor.h"
 
-#define MAX_PLAYERS 2
+#define MAX_PLAYERS 4
+#define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
 #define SECOND_PLAYER 1
