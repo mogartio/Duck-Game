@@ -342,6 +342,10 @@ private:
     uint16_t filas;
     uint16_t columnas;
 
+    // TODO: se agrego esto de nuevo
+    uint8_t background_time;  // o 0 o 1
+    uint8_t size_of_players;
+
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -364,6 +368,14 @@ public:
     uint16_t get_filas() const;
 
     uint16_t get_columnas() const;
+
+    void set_background_time(uint8_t background_time);
+
+    uint8_t get_background_time() const;
+
+    void set_size_of_players(uint8_t size_of_players);
+
+    uint8_t get_size_of_players() const;
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -406,6 +418,9 @@ private:
     uint8_t state;
     uint8_t facing_direction;
 
+    // TODO: se agrego esto de nuevo
+    uint8_t color;
+
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -433,6 +448,10 @@ public:
     void set_state(uint8_t state);
 
     void set_facing_direction(uint8_t facing_direction);
+
+    void set_color(uint8_t color);
+
+    uint8_t get_color() const;
 };
 
 class ProjectileInfoMsg: public GenericMsg {

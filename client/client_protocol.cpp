@@ -135,6 +135,12 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
         map.push_back(tile);
     }
     msg.set_map(map);
+
+    uint8_t background_time = recv_u_int8_t();
+    msg.set_background_time(background_time);
+
+    uint8_t size_of_players = recv_u_int8_t();
+    msg.set_size_of_players(size_of_players);
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
@@ -161,8 +167,10 @@ void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
     uint16_t y = recv_u_int16_t();
     uint8_t state = recv_u_int8_t();
     uint8_t facing_direction = recv_u_int8_t();
+    uint8_t color = recv_u_int8_t();
     msg.set_player_name(player_name);
     msg.set_position(x, y);
     msg.set_state(state);
     msg.set_facing_direction(facing_direction);
+    msg.set_color(color);
 }

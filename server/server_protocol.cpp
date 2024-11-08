@@ -80,6 +80,12 @@ void ServerProtocol::handle_send(const SendMapMsg& msg) {
     for (size_t i = 0; i < map.size(); i++) {
         send_u_int16_t(map[i]);
     }
+
+    uint8_t background_time = msg.get_background_time();
+    send_u_int8_t(background_time);
+
+    uint8_t size_of_players = msg.get_size_of_players();
+    send_u_int8_t(size_of_players);
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
@@ -153,4 +159,6 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
     send_u_int8_t(state);
     uint8_t facing_direction = msg.get_facing_direction();
     send_u_int8_t(facing_direction);
+    uint8_t color = msg.get_color();
+    send_u_int8_t(color);
 }

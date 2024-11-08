@@ -256,6 +256,18 @@ uint16_t SendMapMsg::get_filas() const { return filas; }
 
 uint16_t SendMapMsg::get_columnas() const { return columnas; }
 
+void SendMapMsg::set_background_time(uint8_t background_time) {
+    this->background_time = background_time;
+}
+
+uint8_t SendMapMsg::get_background_time() const { return background_time; }
+
+void SendMapMsg::set_size_of_players(uint8_t size_of_players) {
+    this->size_of_players = size_of_players;
+}
+
+uint8_t SendMapMsg::get_size_of_players() const { return size_of_players; }
+
 GameEndedMsg::GameEndedMsg(): GenericMsg(GenericMsg::GAME_ENDED_MSG, GenericMsg::GAME_MSG) {}
 
 void GameEndedMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
@@ -321,6 +333,10 @@ void UpdatedPlayerInfoMsg::set_state(uint8_t state) { this->state = state; }
 void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
     this->facing_direction = facing_direction;
 }
+
+void UpdatedPlayerInfoMsg::set_color(uint8_t color) { this->color = color; }
+
+uint8_t UpdatedPlayerInfoMsg::get_color() const { return color; }
 
 ProjectileInfoMsg::ProjectileInfoMsg():
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
