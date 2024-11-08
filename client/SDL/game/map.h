@@ -1,20 +1,22 @@
-#include "../../../common/queue.h"
-#include "player.h"
-
 #include <list>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
 #include <SDL2/SDL_render.h>
 
-enum TileType {
-    COLUMN,
-    GRASS,
-    ROCK
-};
+#include "../../../common/queue.h"
+
+#include "player.h"
+
+enum TileType { COLUMN, GRASS, ROCK };
 
 class Map {
 private:
-
     SDL_Renderer* rend;
     std::vector<uint16_t> mapa;
+    uint tiles;
 
     std::vector<Image*> tilesImages;
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
@@ -28,7 +30,7 @@ private:
 
 
 public:
-    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa);
+    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
 
     void makeMap(int w, int h);
 

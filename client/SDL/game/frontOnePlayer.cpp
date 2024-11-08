@@ -20,6 +20,12 @@ void OnePlayer::play() {
         return;
     }
 
+    SDL_Rect displayBounds;
+    if (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {
+        SDL_Quit();
+        throw("Error al obtener los limites de la pantalla");
+    }
+
     GenericMsg* matriz = queueRecive.pop();
 
     std::vector<uint16_t> mapa;
@@ -34,22 +40,18 @@ void OnePlayer::play() {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
 
+    uint tiles_w = displayBounds.w / columnas;
+    uint tiles_h = displayBounds.h / filas;
+    uint tiles = std::min(tiles_w, tiles_h);
+
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
-    /* ASI SE CREA LA PANTALLA COMPLETA
-    SDL_Rect displayBounds;
-    if (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {
-        SDL_Quit();
-        throw("Error al obtener los limites de la pantalla");
-    }
-
     Window win(displayBounds.w, displayBounds.h);
-    */
 
-    Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
+    // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
 
-    Map map(win.get_rend(), mapa);
+    Map map(win.get_rend(), mapa, tiles);
     map.makeMap(columnas, filas);
 
     GenericMsg* jugador = queueRecive.pop();
