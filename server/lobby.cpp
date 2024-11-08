@@ -69,17 +69,17 @@ void Lobby::startGame() {
     //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
     //     necesitados");
     // }
-    std::vector<std::string> names;
+    // Nombres y id de clients
+    std::map<std::string, uint> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
             send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
-            pair.second->switch_queues(
-                    receiver_q);  // aca cambiariamos la queue para definir la que
-            // se va a pasar a la partida
-            names.push_back(pair.first);
+            pair.second->switch_queues(receiver_q);  // aca cambiariamos la queue para definir la
+                                                     // queue de cada jugador
         }
+        names[pair.first] = pair.second->get_id();
     }
     // se inicia el juego
     // lanzandose el gameloop aqui
