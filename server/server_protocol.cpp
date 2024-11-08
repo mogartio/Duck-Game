@@ -42,6 +42,20 @@ void ServerProtocol::handle_recv(ExitFromLobbyMsg& msg) {
     msg.set_player_name(player_name);
 }
 
+void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+
+    std::list<DescipcionPlayer> players_from_lobby = msg.get_players();
+    uint8_t players_size = players_from_lobby.size();
+    send_u_int8_t(players_size);
+
+    for (auto& player: players_from_lobby) {
+        send_string(player.nombre);
+        send_u_int8_t(player.color);
+    }
+}
+
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
@@ -52,18 +66,8 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     // mando los nombres de los lobbies
     for (auto& lobby: lobbies) {
         send_u_int8_t(lobby.idLobby);
+        send_string(lobby.nombreLobby);
         send_u_int8_t(lobby.cantidadJugadores);
-        /*
-        for (int i = 0; i < lobby.cantidadJugadores; i++) {
-            if (i == 0) {
-                send_string(lobby.player1.nombre);
-                send_u_int8_t(lobby.player1.color);
-            } else {
-                send_string(lobby.player2.nombre);
-                send_u_int8_t(lobby.player2.color);
-            }
-        }
-        */
     }
 }
 
@@ -80,12 +84,6 @@ void ServerProtocol::handle_send(const SendMapMsg& msg) {
     for (size_t i = 0; i < map.size(); i++) {
         send_u_int16_t(map[i]);
     }
-
-    uint8_t background_time = msg.get_background_time();
-    send_u_int8_t(background_time);
-
-    uint8_t size_of_players = msg.get_size_of_players();
-    send_u_int8_t(size_of_players);
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
@@ -159,6 +157,4 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
     send_u_int8_t(state);
     uint8_t facing_direction = msg.get_facing_direction();
     send_u_int8_t(facing_direction);
-    uint8_t color = msg.get_color();
-    send_u_int8_t(color);
 }

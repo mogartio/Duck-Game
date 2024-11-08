@@ -1,6 +1,7 @@
 #ifndef HANDLER_RECEIVER_H
 #define HANDLER_RECEIVER_H
 
+class InfoLobbyMsg;
 class CustomizedPlayerInfoMsg;
 class ViewLobbiesMsg;
 class ChooseLobbyMsg;
@@ -26,6 +27,7 @@ class ProjectileInfoMsg;
 class HandlerReceiver {
 public:
     // from client
+    virtual void handle_recv(InfoLobbyMsg& msg);
     virtual void handle_recv(CustomizedPlayerInfoMsg& msg);
     virtual void handle_recv(ViewLobbiesMsg& msg);
     virtual void handle_recv(ChooseLobbyMsg& msg);

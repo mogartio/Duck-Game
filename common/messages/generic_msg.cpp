@@ -10,6 +10,21 @@ int GenericMsg::get_id_client() const { return id_client; }
 
 void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
 
+InfoLobbyMsg::InfoLobbyMsg(): GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
+
+InfoLobbyMsg::InfoLobbyMsg(std::list<DescipcionPlayer> players):
+        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players) {}
+
+void InfoLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void InfoLobbyMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void InfoLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+void InfoLobbyMsg::set_players(std::list<DescipcionPlayer> players) { this->players = players; }
+
+std::list<DescipcionPlayer> InfoLobbyMsg::get_players() const { return players; }
+
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
@@ -256,18 +271,6 @@ uint16_t SendMapMsg::get_filas() const { return filas; }
 
 uint16_t SendMapMsg::get_columnas() const { return columnas; }
 
-void SendMapMsg::set_background_time(uint8_t background_time) {
-    this->background_time = background_time;
-}
-
-uint8_t SendMapMsg::get_background_time() const { return background_time; }
-
-void SendMapMsg::set_size_of_players(uint8_t size_of_players) {
-    this->size_of_players = size_of_players;
-}
-
-uint8_t SendMapMsg::get_size_of_players() const { return size_of_players; }
-
 GameEndedMsg::GameEndedMsg(): GenericMsg(GenericMsg::GAME_ENDED_MSG, GenericMsg::GAME_MSG) {}
 
 void GameEndedMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
@@ -333,10 +336,6 @@ void UpdatedPlayerInfoMsg::set_state(uint8_t state) { this->state = state; }
 void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
     this->facing_direction = facing_direction;
 }
-
-void UpdatedPlayerInfoMsg::set_color(uint8_t color) { this->color = color; }
-
-uint8_t UpdatedPlayerInfoMsg::get_color() const { return color; }
 
 ProjectileInfoMsg::ProjectileInfoMsg():
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),

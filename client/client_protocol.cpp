@@ -52,6 +52,23 @@ void ClientProtocol::handle_send(const StartGameMsg& msg) {
     send_u_int8_t(header);
 }
 
+void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
+    uint8_t players_size = recv_u_int8_t();
+    std::list<DescipcionPlayer> players;
+
+    for (int i = 0; i < players_size; i++) {
+        DescipcionPlayer player;
+        std::string nombre = recv_string();
+        player.nombre = nombre;
+
+        uint8_t color = recv_u_int8_t();
+        player.color = color;
+
+        players.push_back(player);
+    }
+    msg.set_players(players);
+}
+
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
     uint8_t lobbies_size = recv_u_int8_t();
     std::vector<DescripcionLobby> lobbies;
@@ -61,21 +78,12 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
         uint8_t lobby_id = recv_u_int8_t();
         lobby.idLobby = lobby_id;
 
+        std::string nombre_lobby = recv_string();
+        lobby.nombreLobby = nombre_lobby;
+
         uint8_t cantidad_de_jugadores = recv_u_int8_t();
         lobby.cantidadJugadores = cantidad_de_jugadores;
-        /*
-        for (int j = 0; j < cantidad_de_jugadores; j++) {
-            std::string player_name = recv_string();
-            uint8_t color = recv_u_int8_t();
-            if (j == 0) {
-                lobby.player1.nombre = player_name;
-                lobby.player1.color = color;
-            } else {
-                lobby.player2.nombre = player_name;
-                lobby.player2.color = color;
-            }
-        }
-        */
+
         lobbies.push_back(lobby);
     }
     msg.set_lobbies(lobbies);
@@ -135,12 +143,6 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
         map.push_back(tile);
     }
     msg.set_map(map);
-
-    uint8_t background_time = recv_u_int8_t();
-    msg.set_background_time(background_time);
-
-    uint8_t size_of_players = recv_u_int8_t();
-    msg.set_size_of_players(size_of_players);
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
@@ -167,10 +169,8 @@ void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
     uint16_t y = recv_u_int16_t();
     uint8_t state = recv_u_int8_t();
     uint8_t facing_direction = recv_u_int8_t();
-    uint8_t color = recv_u_int8_t();
     msg.set_player_name(player_name);
     msg.set_position(x, y);
     msg.set_state(state);
     msg.set_facing_direction(facing_direction);
-    msg.set_color(color);
 }

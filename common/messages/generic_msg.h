@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <list>
 #include <string>
 #include <utility>
 #include <vector>
@@ -33,6 +34,7 @@ enum ActionId : uint8_t {
 class GenericMsg {
 public:
     enum MsgTypeHeader : uint8_t {
+        INFO_LOBBY_MSG = 0x00,
         CUSTOMIZED_PLAYER_INFO_MSG = 0x01,
         VIEW_LOBBIES_MSG = 0x02,
         CHOOSE_LOBBY_MSG = 0x03,
@@ -81,6 +83,27 @@ public:
     void set_id_client(int id_client);
     virtual ~GenericMsg() = default;
 };
+
+class InfoLobbyMsg: public GenericMsg {
+private:
+    std::list<DescipcionPlayer> players;
+
+public:
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    InfoLobbyMsg();
+
+    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players);
+
+    void set_players(std::list<DescipcionPlayer> players);
+
+    std::list<DescipcionPlayer> get_players() const;
+};
+
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
@@ -342,10 +365,6 @@ private:
     uint16_t filas;
     uint16_t columnas;
 
-    // TODO: se agrego esto de nuevo
-    uint8_t background_time;  // o 0 o 1
-    uint8_t size_of_players;
-
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -368,14 +387,6 @@ public:
     uint16_t get_filas() const;
 
     uint16_t get_columnas() const;
-
-    void set_background_time(uint8_t background_time);
-
-    uint8_t get_background_time() const;
-
-    void set_size_of_players(uint8_t size_of_players);
-
-    uint8_t get_size_of_players() const;
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -418,9 +429,6 @@ private:
     uint8_t state;
     uint8_t facing_direction;
 
-    // TODO: se agrego esto de nuevo
-    uint8_t color;
-
 public:
     void accept_send(HandlerSender& handler) override;
 
@@ -448,10 +456,6 @@ public:
     void set_state(uint8_t state);
 
     void set_facing_direction(uint8_t facing_direction);
-
-    void set_color(uint8_t color);
-
-    uint8_t get_color() const;
 };
 
 class ProjectileInfoMsg: public GenericMsg {
