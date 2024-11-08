@@ -43,6 +43,7 @@ public:
     void Notify() { should_notify = true; }
     void notify() override;
     void init_for_stage(Stage*);
+    bool lives() { return is_alive; }
 };
 
 #endif

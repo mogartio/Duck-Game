@@ -57,6 +57,9 @@ void Stage::update() {
 }
 
 void Stage::draw_player(Player& player) {
+    if (!player.lives()) {
+        return;
+    }
     Coordinate init_position = player.get_position();
     int x = init_position.x;
     int y = init_position.y;

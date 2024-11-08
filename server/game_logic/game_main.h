@@ -22,6 +22,7 @@ private:
     std::map<std::string, Player*> players;
     SendQueuesMonitor<GenericMsg*>& senders;
     void create_command();
+    std::set<std::string> alive_players;
 
 public:
     explicit GameMain(Queue<GenericMsg*>&, std::map<std::string, Player*>, bool,

@@ -20,6 +20,8 @@ Player::Player(Coordinate& initial_position, int id, std::string name, PlayerObs
 void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
+    is_alive = true;
+    weapon = nullptr;
     notify();
 }
 
@@ -58,6 +60,9 @@ void Player::remove_action(int& command) {
 }
 
 void Player::execute(int& command) {
+    if (!is_alive) {
+        return;
+    }
     if (command == SHOOT) {
         shoot();
         return;
@@ -68,6 +73,9 @@ void Player::execute(int& command) {
 }
 
 void Player::update() {
+    if (!is_alive) {
+        return;
+    }
     should_notify = false;
     std::set<int> moving_commands;  // comandos que te emocionan son...
     for (int command: current_actions) {

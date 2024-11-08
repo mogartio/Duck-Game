@@ -11,21 +11,10 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players
                    SendQueuesMonitor<GenericMsg*>& senders):
         receiver_q(q), is_testing(is_testing), players(players), senders(senders) {
 
-    // std::vector<std::tuple<int, int>> player_spawn_sites =
-    //         Config::get_instance()->player_spawn_sites;
-    // Coordinate coordinate_a(std::get<0>(player_spawn_sites[0]),
-    // std::get<1>(player_spawn_sites[0])); Coordinate
-    // coordinate_b(std::get<0>(player_spawn_sites[1]), std::get<1>(player_spawn_sites[1]));
     // std::vector<std::tuple<int, int>> weapon_spawn_sites =
     //         Config::get_instance()->weapon_spawn_sites;
     // Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]),
     // std::get<1>(weapon_spawn_sites[0])); WeaponSpawnPoint spawn(weapon_spawn, stage);
-    // players[player_name1] =
-    //         std::make_unique<Player>(coordinate_a, stage, 2, player_name1, &player_obs);
-    // players[player_name2] =
-    //         std::make_unique<Player>(coordinate_b, stage, 4, player_name2, &player_obs);
-    // stage.draw_player(*players[player_name2]);
-    // stage.draw_player(*players[player_name1]);
     // spawn.spawn_weapon();
 }
 
@@ -33,22 +22,39 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players
 std::string GameMain::play_round(Stage& stage) {
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
+        alive_players.insert(name);
     }
     while (true) {
-        // if (is_testing) {
-        //     create_command();
-        // }
+        if (is_testing) {
+            create_command();
+        }
         GenericMsg* msg;
         if (receiver_q.try_pop(msg)) {
             msg->accept_read(*this);  // esto equivale a una llamada al handle_read
         }
         for (auto& [name, player]: players) {
+            if (!player->lives()) {
+                continue;
+            }
             stage.delete_player_from_stage(*player);  // Borro su dibujo viejo
             player->update();
             stage.draw_player(*player);
         }
         stage.update();
-        // stage.print();
+        if (is_testing) {
+            stage.print();
+        }
+        for (std::string player: alive_players) {
+            if (!players[player]->lives()) {
+                alive_players.erase(player);
+            }
+        }
+        if (alive_players.size() == 0) {
+            return "";
+        }
+        // if (alive_players.size() == 1) {
+        //     return *alive_players.begin();
+        // }
         std::this_thread::sleep_for(
                 std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
     }
@@ -72,7 +78,19 @@ void GameMain::handle_read(const StopActionMsg& msg) {
 // El peor codigo que escribi en este tp hasta ahora
 // pero funciona
 // no lo toquen
-/*GenericMsg* GameMain::create_msg(std::string command) {
+GenericMsg* GameMain::create_msg(std::string command) {
+    // Lo hice todavia mas feo somehow
+    // its never been this serious
+    std::string player_name1;
+    std::string player_name2;
+    auto it = players.begin();
+    if (it != players.end()) {
+        player_name1 = it->first;
+        ++it;
+    }
+    if (it != players.end()) {
+        player_name2 = it->first;
+    }
     std::map<std::string, uint8_t> command_map{
             {"a", 0x01},
             {"d", 0x02},
@@ -127,4 +145,4 @@ void GameMain::create_command() {
     if (new_msg != nullptr) {
         receiver_q.push(new_msg);
     }
-}*/
+}
