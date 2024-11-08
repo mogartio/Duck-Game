@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send
     // Connect the signal from ConnectionScreen to switch to MainMenuScreen
     connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 
+    // Connect the quit signal from MainMenuScreen to quit the application
     connect(mainMenuScreen, &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 }
 
@@ -53,7 +54,32 @@ void MainWindow::handleQuitApplication() {
 }
 
 void MainWindow::showMainMenuScreen() {
-    stackedWidget->setCurrentWidget(mainMenuScreen);    
+    QWidget *overlay = new QWidget(this);
+    overlay->setStyleSheet("background-color: black;");
+    overlay->setGeometry(this->rect());
+    overlay->show();
+
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(this);
+    overlay->setGraphicsEffect(effect);
+
+    QPropertyAnimation *fadeOut = new QPropertyAnimation(effect, "opacity");
+    fadeOut->setDuration(1000);
+    fadeOut->setStartValue(0);
+    fadeOut->setEndValue(1);
+
+    connect(fadeOut, &QPropertyAnimation::finished, [this, overlay]() {
+        stackedWidget->setCurrentWidget(mainMenuScreen);
+
+        QPropertyAnimation *fadeIn = new QPropertyAnimation(overlay->graphicsEffect(), "opacity");
+        fadeIn->setDuration(1000);
+        fadeIn->setStartValue(1);
+        fadeIn->setEndValue(0);
+
+        connect(fadeIn, &QPropertyAnimation::finished, overlay, &QWidget::deleteLater);
+        fadeIn->start(QPropertyAnimation::DeleteWhenStopped);
+    });
+
+    fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
 }
 
 
