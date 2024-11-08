@@ -2,6 +2,7 @@
 #define LOBBY_H
 
 #include <array>
+#include <list>
 #include <map>
 #include <memory>
 #include <set>
@@ -38,6 +39,8 @@ private:
     uint id_lobby;
 
     void lobby_empty();
+
+    std::list<DescipcionPlayer> get_players_description();
 
 public:
     /*
