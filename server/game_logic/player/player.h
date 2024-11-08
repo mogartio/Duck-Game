@@ -44,6 +44,7 @@ public:
     void notify() override;
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
+    void set_weapon(std::unique_ptr<Weapon> new_weapon) { weapon = std::move(new_weapon); }
 };
 
 #endif

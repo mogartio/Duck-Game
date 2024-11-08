@@ -21,7 +21,8 @@ void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
     is_alive = true;
-    weapon = nullptr;
+    weapon = std::make_unique<CowboyGun>(*stage);
+    weapon->set_player(this);
     notify();
 }
 
@@ -53,8 +54,10 @@ void Player::remove_action(int& command) {
         weapon->stop_shooting();
     }
     if (command == THROW_WEAPON) {
-        weapon->finish_throw(position->get_facing_direction(), position->is_aiming_up(),
-                             std::move(weapon));
+        if (weapon != nullptr) {
+            weapon->finish_throw(position->get_facing_direction(), position->is_aiming_up(),
+                                 std::move(weapon));
+        }
         weapon = nullptr;
     }
 }
@@ -68,7 +71,9 @@ void Player::execute(int& command) {
         return;
     }
     if (command == THROW_WEAPON) {
-        weapon->start_throw();
+        if (weapon != nullptr) {
+            weapon->start_throw();
+        }
     }
 }
 

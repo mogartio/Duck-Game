@@ -31,6 +31,7 @@ public:
         deviation_angle =
                 deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
+    virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
 };
 
 class ProjectileDroppedWeapon: public Projectile {
@@ -41,6 +42,8 @@ public:
     ProjectileDroppedWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                             int reach, double):
             Projectile(initial_position, 1, reach, speed, 0, 9, false), weapon(std::move(weapon)) {}
+
+    virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
 };
 
 class GrenadeProjectile: public ProjectileThrownWeapon {

@@ -12,7 +12,7 @@ std::map<std::string, Player*> Game::generate_players(std::vector<std::string> n
                                                       PlayerObserver* obs) {
     std::vector<std::tuple<int, int>> coordinates = Config::get_instance()->player_spawn_sites;
     for (size_t i = 0; i < names.size(); i++) {
-        Coordinate coordinate(std::get<0>(coordinates[0]), std::get<1>(coordinates[0]));
+        Coordinate coordinate(std::get<0>(coordinates[i]), std::get<1>(coordinates[i]));
         players[names[i]] = new Player(coordinate, i + 1, names[i], obs);
         player_points[names[i]] = 0;
     }

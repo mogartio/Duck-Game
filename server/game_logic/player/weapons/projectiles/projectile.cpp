@@ -29,6 +29,9 @@ bool Projectile::ray_trace(Stage& stage) {
             stage.set(position, id);
             return despawns_on_contact;
         }
+        if (next_tile == 1 || next_tile == 2) {
+            stage.kill(next_tile);
+        }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {
                 stage.set(bullet_position, id);

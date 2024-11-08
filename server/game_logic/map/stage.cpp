@@ -13,6 +13,7 @@
 #define RIGHT "d"
 #define UP "w"
 #include "../player/weapons/projectiles/projectile.h"
+#include "../player/weapons/projectiles/projectile_dropped_weapon.h"
 
 #include "csv_reader.h"
 #include "csv_writer.h"
@@ -41,11 +42,16 @@ void Stage::remove_projectile(std::unique_ptr<Projectile>& projectile) {
     }
 }
 
+void Stage::kill(int id) { players[id]->die(); }
+
 void Stage::update() {
     for (auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
     }
     for (auto iterator = projectiles.begin(); iterator != projectiles.end();) {
+        if (*iterator == nullptr) {
+            continue;
+        }
         bool projectile_was_erased =
                 (*iterator)->ray_trace(*this);  // *iterator = unique_ptr(projectile)
         if (projectile_was_erased) {
@@ -55,6 +61,8 @@ void Stage::update() {
         iterator++;
     }
 }
+
+void Stage::add_player(Player* player, int id) { players[id] = player; }
 
 void Stage::draw_player(Player& player) {
     if (!player.lives()) {
@@ -106,6 +114,26 @@ bool Stage::is_valid_position(Coordinate position, int color) {
         }
     }
     return true;
+}
+
+std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
+    for (auto& projectile: projectiles) {
+        if (ProjectileDroppedWeapon* weaponProjectile =
+                    dynamic_cast<ProjectileDroppedWeapon*>(projectile.get())) {
+            if (weaponProjectile->get_position() == position) {
+                map.set(position, BACKGROUND);
+                return weaponProjectile->get_weapon();
+            }
+        }
+        if (ProjectileThrownWeapon* weaponProjectile =
+                    dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
+            if (weaponProjectile->get_position() == position) {
+                map.set(position, BACKGROUND);
+                return weaponProjectile->get_weapon();
+            }
+        }
+    }
+    return nullptr;
 }
 
 void Stage::set(const Coordinate& coor, const int value) {

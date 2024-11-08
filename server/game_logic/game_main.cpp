@@ -23,6 +23,7 @@ std::string GameMain::play_round(Stage& stage) {
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
         alive_players.insert(name);
+        stage.add_player(player, player->get_id());
     }
     while (true) {
         if (is_testing) {
@@ -52,9 +53,11 @@ std::string GameMain::play_round(Stage& stage) {
         if (alive_players.size() == 0) {
             return "";
         }
-        // if (alive_players.size() == 1) {
-        //     return *alive_players.begin();
-        // }
+        if (alive_players.size() == 1) {
+            std::cout << "SE TERMINO LA RONDA" << std::endl;
+            sleep(2);
+            return *alive_players.begin();
+        }
         std::this_thread::sleep_for(
                 std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
     }
