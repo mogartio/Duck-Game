@@ -91,16 +91,16 @@ ConnectionScreen::ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queu
     QPushButton *connectButton = new QPushButton("CONNECT", this);
     connectButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        // Blue background
-        "color: #ced4da;"                     // White text
-        "font-size: 42px;"                  // Font size
-        "border: 0px solid #555555;"        // Border color and size
-        "border-radius: 15px;"              // Rounded corners
-        "padding: 10px;"                    // Padding inside the button
-        "text-align: center;"               // Center the text horizontally
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 42px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"        // Slightly darker on hover
+        "background-color: rgba(232, 89, 12, 100);"
         "}"
     );
     connectButton->setFont(customFont);
@@ -114,16 +114,16 @@ ConnectionScreen::ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queu
     QPushButton *quitButton = new QPushButton("QUIT", this);
     quitButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        // Blue background
-        "color: #ced4da;"                     // White text
-        "font-size: 42px;"                  // Font size
-        "border: 0px solid #555555;"        // Border color and size
-        "border-radius: 15px;"              // Rounded corners
-        "padding: 10px;"                    // Padding inside the button
-        "text-align: center;"               // Center the text horizontally
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 42px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"        // Slightly darker on hover
+        "background-color: rgba(232, 89, 12, 100);"
         "}"
     );
     quitButton->setFont(customFont);
@@ -144,7 +144,6 @@ void ConnectionScreen::resizeEvent(QResizeEvent *event) {
 
 void ConnectionScreen::onConnectButtonClicked() {
     keyPressSound->play();
-    std::cout << "Connect button clicked" << std::endl;
     if (hostname->text().isEmpty() || port->text().isEmpty()) {
         drawEmptyFieldsError();
         return;
@@ -162,7 +161,6 @@ void ConnectionScreen::onConnectButtonClicked() {
 
 void ConnectionScreen::onQuitButtonClicked() {
     keyPressSound->play();
-    std::cout << "Quit button clicked" << std::endl;
     emit quitApplication();
 }
 

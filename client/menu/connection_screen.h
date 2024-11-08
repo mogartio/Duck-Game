@@ -17,6 +17,7 @@ class ConnectionScreen : public QWidget {
 public: 
     ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue);
     Socket* getSocket();
+    
 signals:
     void switchToMainMenuScreen();
     void quitApplication();

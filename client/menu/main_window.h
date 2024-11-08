@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
 #include "logo_screen.h"
 #include "connection_screen.h"
 #include "main_menu_screen.h"

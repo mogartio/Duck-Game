@@ -13,14 +13,17 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send
     // Create screens
     logoScreen = new LogoScreen(send_queue, recv_queue);
     connectionScreen = new ConnectionScreen(send_queue, recv_queue);
+    mainMenuScreen = new MainMenuScreen(send_queue, recv_queue);
 
     // Add screens to stacked widget
     stackedWidget->addWidget(logoScreen);
     stackedWidget->addWidget(connectionScreen);
+    stackedWidget->addWidget(mainMenuScreen);
 
     // Ensure the screens are resized to fit the QMainWindow
     logoScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connectionScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mainMenuScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Show the logo screen initially
     showLogoScreen();
@@ -33,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send
 
     // Connect the signal from ConnectionScreen to switch to MainMenuScreen
     connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+
+    connect(mainMenuScreen, &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 }
 
 void MainWindow::showLogoScreen() {
