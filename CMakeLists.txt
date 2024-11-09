@@ -21,7 +21,6 @@ include_directories(common client server common/messages common/socket client/me
 
 # Find required libraries
 find_package(SDL2 REQUIRED)
-find_package(SDL2pp REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
@@ -47,5 +46,5 @@ add_dependencies(client CopyResources)
 
 
 # Link libraries
-target_link_libraries(client common SDL2::SDL2 SDL2::SDL2main SDL2pp::SDL2pp Qt5::Core Qt5::Widgets yaml-cpp)
+target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image Qt5::Core Qt5::Widgets yaml-cpp)
 target_link_libraries(server common yaml-cpp)
