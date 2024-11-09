@@ -8,6 +8,8 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa)
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
+    armor.initialize(rend, "img_src/armor/armor.png"); 
+
     for (int i = int(TileType::COLUMN); i <= int(TileType::ROCK); i++) {
         TileType tileType = static_cast<TileType>(i);
         makeTile(tileType);
@@ -16,19 +18,9 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa): rend(rend), mapa(mapa)
 
 void Map::makeTile(TileType tileType) {
     Image* tile = new Image();
-    switch (tileType) {
-        case GRASS:
-            tile->initialize(rend, "img_src/tiles/dayTiles/grass.png");
-            break;
-        case ROCK:
-            tile->initialize(rend, "img_src/tiles/dayTiles/rock.png");
-            break;
-        case COLUMN:
-            tile->initialize(rend, "img_src/tiles/dayTiles/column.png");
-            break;
-        default:
-            tile->initialize(rend, "img_src/tiles/dayTiles/middle.png");
-    }
+    std::string path = "img_src/tiles/dayTiles/"; // esto dsp se cambia a aceptar el tipo de tile q me mande el server (dia, noche)
+    path += tileType_to_string(tileType);
+    tile->initialize(rend, path);
     tile->queryTexture();
     tile->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
     tile->position(0, 0);
@@ -63,14 +55,14 @@ void Map::makeMap(int columnas, int filas) {
             case 5: // piso
                 matriz[filaActual][columnaActual] = i;
                 if (matriz[filaActual-1][columnaActual] == i) {
-                    tilesPlace[ROCK].push_back(std::pair(columnaActual, filaActual));
+                    tilesPlace[tilesImages[int(TileType::ROCK)]].push_back(std::pair(columnaActual, filaActual));
                 } else {
-                    tilesPlace[GRASS].push_back(std::pair(columnaActual, filaActual));
+                    tilesPlace[tilesImages[int(TileType::GRASS)]].push_back(std::pair(columnaActual, filaActual));
                 }
                 break;
             case 6: // pared
                 matriz[filaActual][columnaActual] = i; // este proximamente va a servir para cuando las columnas tengan tope inferior
-                tilesPlace[COLUMN].push_back(std::pair(columnaActual, filaActual));
+                tilesPlace[tilesImages[int(TileType::COLUMN)]].push_back(std::pair(columnaActual, filaActual));
                 break;
             case 13: // caja                
             case 14: // caja rota
@@ -95,10 +87,10 @@ void Map::fill() { // Dibuja de atras para adelante
     background.fill(true);
 
     for(const auto& tilePair: tilesPlace) {
-        if (tilesImages[int(tilePair.first)] != nullptr) {
+        if (tilePair.first != nullptr) {
             for (const auto& pair: tilePair.second) {
-                tilesImages[int(tilePair.first)]->position(pair.first * TILES_TO_PIXELS, pair.second * TILES_TO_PIXELS);
-                tilesImages[int(tilePair.first)]->fill();
+                tilePair.first->position(pair.first * TILES_TO_PIXELS, pair.second * TILES_TO_PIXELS);
+                tilePair.first->fill();
             }
         }
     }

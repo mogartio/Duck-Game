@@ -3,15 +3,8 @@
 #include <unordered_map>
 
 #include "image.h"
-#include "wingState.h"
+#include "enums.h"
 #include "../../../common/duckState/duckState.h"
-
-enum Color {
-    WHITE,
-    GREY,
-    ORANGE,
-    YELLOW
-};
 
 class Player {
 private:
@@ -31,9 +24,11 @@ private:
 
     Image* duck;
     Image* wing;
-    //Weapon weapon;
 
-    void chooseColor(Color color);
+    Image* _armor;
+    Image* _helmet;
+    Image* _weapon;
+
     void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
     void initialiceDuckImages(DuckState state);
@@ -41,19 +36,27 @@ private:
 public:
     Player(SDL_Renderer* rend, Color color);
 
-    // El tamaño original de los png son del pato 32x32 y del ala 15x15
+    // El tamaño original de los png son del pato 24x24 y del ala 15x15
     void defineSize(int height, int width);
 
-    // Actualiza la posicion y la imagen
+    // Actualizar posicion e imagen
     void update(int x, int y, DuckState newState, Side side);
 
-    // Dibuja el jugador
+    // Dibujar jugador
     void fill();
 
-    // Agarra o suelta un arma
-    void weapon(/*tipo de arma*/);
+    // Agarrar un arma
+    void weapon(Image* weapon);
+    // Soltar un arma
+    void weapon();
 
-    // Dispara el arma
+    // Agarrar armadura
+    void armor(Image* armor);
+
+    // Agarrar casco
+    void helmet(Image* helmet);
+
+    // Disparar arma
     void shoot();
 
     ~Player();

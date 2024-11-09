@@ -4,28 +4,41 @@
 #include <list>
 #include <SDL2/SDL_render.h>
 
-enum TileType {
-    COLUMN,
-    GRASS,
-    ROCK
-};
-
 class Map {
 private:
 
     SDL_Renderer* rend;
+    // mapa que entra por parametro para ser dibujado
     std::vector<uint16_t> mapa;
 
+    // Imagenes de los tiles
     std::vector<Image*> tilesImages;
-    std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
+    // Posiciones de los tiles
+    std::unordered_map<Image*, std::vector<std::pair<int, int>>> tilesPlace;
+
+    // Jugadores
     std::unordered_map<std::string, Player*> players;
 
-    // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
+    // Imagenes de las armas
+    std::vector<Image*> weapons;
+    // Posiciones de las armas
+    std::unordered_map<Image*, std::vector<std::pair<int, int>>> weaponsMap;
+
+    // Imagenes de los cascos
+    std::vector<Image*> helmets;
+    // Posiciones de los cascos
+    std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
+    
+    // Imagen de armadura
+    Image armor;
+    // Posiciones de la armadura
+    std::vector<std::pair<int, int>> armorMap;
 
     Image background;
 
     void makeTile(TileType tileType);
-
+    void makeWeapon(/*Weapon weapon*/);
+    void makeHelmet(Helemts helmet);
 
 public:
     Map(SDL_Renderer* rend, std::vector<uint16_t> mapa);
@@ -34,12 +47,17 @@ public:
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
 
-
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
 
     // Agrega un nuevo arma al mapa
     void newWeapon(/*int x, int y*/ /*, Weapon newWeapon*/);
+
+    // Agrega un nuevo casco al mapa
+    void newHelmet(/*int x, int y*/ /*, Helemts newHelmet*/);
+
+    // Agrega una nueva armadura al mapa
+    void newArmor(/*int x, int y*/);
 
     // Dibuja el mapa, a los jugadores y las armas
     void fill();

@@ -6,25 +6,6 @@
 #define OFFSETX 7
 #define OFFSETY 13
 
-void Player::chooseColor(Color color) {
-    switch (color) {
-        case WHITE:
-            file += "white/";
-            break;
-        case GREY:
-            file += "grey/";
-            break;
-        case ORANGE:
-            file += "orange/";
-            break;
-        case YELLOW:
-            file += "yellow/";
-            break;
-        default:
-            break;
-    }
-}
-
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
     // Crear el objeto Image y luego inicializarlo
@@ -59,8 +40,7 @@ Player::Player(SDL_Renderer* rend, Color color):
         rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false) {
     
     walk = 0;
-    chooseColor(color);
-
+    file += color_to_string(color);
 
     // Crea el primer pato y lo agrega al hashmap
     for (int i = int(DuckState::STANDING); i <= int(DuckState::PLAY_DEAD); i++) {
