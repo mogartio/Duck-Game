@@ -48,6 +48,7 @@ void Stage::update() {
     for (auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
     }
+    coordinates_to_delete.clear();
     for (auto iterator = projectiles.begin(); iterator != projectiles.end();) {
         if (*iterator == nullptr) {
             continue;
@@ -121,15 +122,19 @@ std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
         if (ProjectileDroppedWeapon* weaponProjectile =
                     dynamic_cast<ProjectileDroppedWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
-                map.set(position, BACKGROUND);
-                return weaponProjectile->get_weapon();
+                std::unique_ptr new_weapon = (weaponProjectile->get_weapon());
+                coordinates_to_delete.push_back(position);
+                remove_projectile(projectile);
+                return new_weapon;
             }
         }
         if (ProjectileThrownWeapon* weaponProjectile =
                     dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
-                map.set(position, BACKGROUND);
-                return weaponProjectile->get_weapon();
+                std::unique_ptr new_weapon = weaponProjectile->get_weapon();
+                coordinates_to_delete.push_back(position);
+                remove_projectile(projectile);
+                return new_weapon;
             }
         }
     }

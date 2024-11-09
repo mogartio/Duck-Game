@@ -84,4 +84,9 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-uint8_t PlayerPosition::get_facing_direction() { return facing_direction; }
+int PlayerPosition::get_facing_direction() {
+    if (facing_direction == 2) {
+        return -1;
+    }
+    return 1;
+}  // malisimo, its never been this serious

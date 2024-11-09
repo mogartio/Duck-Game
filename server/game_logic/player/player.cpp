@@ -21,7 +21,7 @@ void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
     is_alive = true;
-    pick_weapon(std::make_unique<CowboyGun>(*stage));
+    pick_weapon(std::make_unique<Unarmed>(*stage));
     current_actions.clear();
     notify();
 }

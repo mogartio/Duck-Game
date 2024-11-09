@@ -9,17 +9,15 @@
 
 GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players, bool is_testing,
                    SendQueuesMonitor<GenericMsg*>& senders):
-        receiver_q(q), is_testing(is_testing), players(players), senders(senders) {
-
-    // std::vector<std::tuple<int, int>> weapon_spawn_sites =
-    //         Config::get_instance()->weapon_spawn_sites;
-    // Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]),
-    // std::get<1>(weapon_spawn_sites[0])); WeaponSpawnPoint spawn(weapon_spawn, stage);
-    // spawn.spawn_weapon();
-}
+        receiver_q(q), is_testing(is_testing), players(players), senders(senders) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
 std::string GameMain::play_round(Stage& stage) {
+    std::vector<std::tuple<int, int>> weapon_spawn_sites =
+            Config::get_instance()->weapon_spawn_sites;
+    Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
+    WeaponSpawnPoint spawn(weapon_spawn, stage);
+    spawn.spawn_weapon();
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
         alive_players.insert(name);
@@ -60,6 +58,8 @@ std::string GameMain::play_round(Stage& stage) {
         if (alive_players.size() == 1) {
             std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
             sleep(2);
+            stage.delete_player_from_stage(
+                    *players[*alive_players.begin()]);  // Borro su dibujo viejo
             return *alive_players.begin();
         }
         std::this_thread::sleep_for(
