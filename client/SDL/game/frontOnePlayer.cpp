@@ -8,17 +8,22 @@
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
 OnePlayer::OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
-                     std::string playerName):
+                     std::string playerName1, std::string playerName2):
         queueRecive(queueRecive),
-        playerName(playerName),
         running(true),
-        event_handler(queueSend, playerName, running) {}
+        event_handler(queueSend, playerName1, running, playerName2) {}
 
 void OnePlayer::play() {
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("Error initializing SDL: %s\n", SDL_GetError());
         return;
+    }
+
+    SDL_Rect displayBounds;
+    if (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {
+        SDL_Quit();
+        throw("Error al obtener los limites de la pantalla");
     }
 
     GenericMsg* matriz = queueRecive.pop();
@@ -35,12 +40,18 @@ void OnePlayer::play() {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
 
+    uint tiles_w = displayBounds.w / columnas;
+    uint tiles_h = displayBounds.h / filas;
+    uint tiles = std::min(tiles_w, tiles_h);
+
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
-    Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
+    Window win(displayBounds.w, displayBounds.h);
 
-    Map map(win.get_rend(), mapa);
+    // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
+
+    Map map(win.get_rend(), mapa, tiles);
     map.makeMap(columnas, filas);
 
     GenericMsg* jugador = queueRecive.pop();

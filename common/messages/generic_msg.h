@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <list>
 #include <string>
 #include <utility>
 #include <vector>
@@ -33,6 +34,7 @@ enum ActionId : uint8_t {
 class GenericMsg {
 public:
     enum MsgTypeHeader : uint8_t {
+        INFO_LOBBY_MSG = 0x00,
         CUSTOMIZED_PLAYER_INFO_MSG = 0x01,
         VIEW_LOBBIES_MSG = 0x02,
         CHOOSE_LOBBY_MSG = 0x03,
@@ -81,6 +83,27 @@ public:
     void set_id_client(int id_client);
     virtual ~GenericMsg() = default;
 };
+
+class InfoLobbyMsg: public GenericMsg {
+private:
+    std::list<DescipcionPlayer> players;
+
+public:
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    InfoLobbyMsg();
+
+    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players);
+
+    void set_players(std::list<DescipcionPlayer> players);
+
+    std::list<DescipcionPlayer> get_players() const;
+};
+
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:

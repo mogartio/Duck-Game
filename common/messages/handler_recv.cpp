@@ -1,5 +1,6 @@
 #include "handler_recv.h"
 
+void HandlerReceiver::handle_recv(InfoLobbyMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(CustomizedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(ViewLobbiesMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(ChooseLobbyMsg& msg) { (void)msg; }

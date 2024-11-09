@@ -2,6 +2,7 @@
 #define LOBBY_H
 
 #include <array>
+#include <list>
 #include <map>
 #include <memory>
 #include <set>
@@ -16,6 +17,7 @@
 #include "send_queues_monitor.h"
 
 #define MAX_PLAYERS 2
+#define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
 #define SECOND_PLAYER 1
@@ -37,6 +39,8 @@ private:
     uint id_lobby;
 
     void lobby_empty();
+
+    std::list<DescipcionPlayer> get_players_description();
 
 public:
     /*
