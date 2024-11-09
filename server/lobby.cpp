@@ -1,5 +1,7 @@
 #include "lobby.h"
 
+#include "game_logic/game.h"
+
 #include "client.h"
 
 void Lobby::lobby_empty() {
@@ -20,8 +22,11 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
 }
 
 Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-             Client* first_player, uint& id_lobby):
-        send_queues(send_queues), receiver_q(new Queue<GenericMsg*>(200)), id_lobby(id_lobby) {
+             Client* first_player, uint& id_lobby, bool is_testing):
+        send_queues(send_queues),
+        receiver_q(new Queue<GenericMsg*>(200)),
+        id_lobby(id_lobby),
+        is_testing(is_testing) {
     player1_id = first_player->get_id();
     // players_description[FIRST_PLAYER] = descripcionPlayer;
     players_map[player_name] = first_player;
@@ -85,6 +90,9 @@ void Lobby::startGame() {
     //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
     //     necesitados");
     // }
+    // Nombres y id de clients
+    // std::map<std::string, uint> names;
+    std::vector<std::string> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
@@ -95,11 +103,12 @@ void Lobby::startGame() {
                     receiver_q);  // aca cambiariamos la queue para definir la que
             // se va a pasar a la partida
         }
+        names.push_back(pair.first);
+        // names[pair.first] = pair.second->get_id();
     }
     // se inicia el juego
     // lanzandose el gameloop aqui
-    game = std::make_unique<GameMain>(*receiver_q, players_map.begin()->first,
-                                      players_map.rbegin()->first, false, send_queues);
+    game = std::make_unique<Game>(*receiver_q, names, is_testing, send_queues);
 
     game->start();
 }

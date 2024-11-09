@@ -16,13 +16,16 @@ target_sources(server_exe  # Use the correct target name
     receiver.cpp
     lobby.cpp
     lobbys_monitor.cpp
-    game_logic/config.cpp
+    game_logic/config/config.cpp
     game_logic/game_main.cpp
-    game_logic/player/air_state.cpp
+    game_logic/game.cpp
+    game_logic/player/position/air_state.cpp
     game_logic/player/player.cpp
-    game_logic/player/player_position.cpp
-    game_logic/player/weapon.cpp
-    game_logic/player/projectile.cpp
+    game_logic/player/position/player_position.cpp
+    game_logic/player/weapons/weapon.cpp
+    game_logic/player/weapons/pistols.cpp
+    game_logic/player/weapons/throwables.cpp
+    game_logic/player/weapons/projectiles/projectile.cpp
 
     game_logic/map/stage.cpp
 
@@ -37,13 +40,16 @@ target_sources(server_exe  # Use the correct target name
     receiver.h
     lobby.h
     lobbys_monitor.h
-    game_logic/config.h
+    game_logic/config/config.h
     game_logic/game_main.h
-    game_logic/player/air_state.h
+    game_logic/game.h
+    game_logic/player/position/air_state.h
     game_logic/player/player.h
-    game_logic/player/player_position.h
-    game_logic/player/weapon.h
-    game_logic/player/projectile.h
+    game_logic/player/position/player_position.h
+    game_logic/player/weapons/weapon.h
+    game_logic/player/weapons/pistols.h
+    game_logic/player/weapons/throwables.h
+    game_logic/player/weapons/projectiles/projectile.h
 
     game_logic/map/stage.h
 )

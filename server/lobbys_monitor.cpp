@@ -1,7 +1,8 @@
 #include "lobbys_monitor.h"
 
 
-LobbysMonitor::LobbysMonitor(): m(), lobbys_disponibles(), contador_id_lobbys(0) {}
+LobbysMonitor::LobbysMonitor(bool is_testing):
+        m(), lobbys_disponibles(), contador_id_lobbys(0), is_testing(is_testing) {}
 
 std::vector<DescripcionLobby> LobbysMonitor::get_lobbys() {
     std::lock_guard<std::mutex> lock(m);
@@ -16,9 +17,9 @@ uint LobbysMonitor::create(SendQueuesMonitor<GenericMsg*>& send_queues, std::str
                            Client* first_player) {
     std::lock_guard<std::mutex> lock(m);
     contador_id_lobbys++;
-    lobbys_disponibles.emplace(
-            contador_id_lobbys,
-            std::make_unique<Lobby>(send_queues, player_name, first_player, contador_id_lobbys));
+    lobbys_disponibles.emplace(contador_id_lobbys,
+                               std::make_unique<Lobby>(send_queues, player_name, first_player,
+                                                       contador_id_lobbys, is_testing));
     return contador_id_lobbys;
 }
 

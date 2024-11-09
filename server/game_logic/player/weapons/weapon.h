@@ -2,7 +2,7 @@
 #define WEAPON_H
 #include <memory>
 
-#include "../map/stage.h"
+#include "../../map/stage.h"
 
 class Weapon {
 protected:
@@ -30,23 +30,14 @@ public:
     virtual void finish_throw(int, bool, std::unique_ptr<Weapon>);
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
+    virtual void update() {}
 };
 
-class CowboyGun: public Weapon {
+class Unarmed: public Weapon {
 public:
-    explicit CowboyGun(Stage&);
+    explicit Unarmed(Stage&);
     virtual void shoot(int, bool) override;
-};
-
-class Magnum: public Weapon {
-public:
-    explicit Magnum(Stage&);
-    virtual void shoot(int, bool) override;
-};
-
-class Grenade: public Weapon {
-public:
-    explicit Grenade(Stage&);
+    virtual Coordinate get_gun_position(int) override;
 };
 
 #endif

@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../../common/coordinate.h"
-#include "../map/stage.h"
+#include "../../../../common/coordinate.h"
+#include "../../map/stage.h"
 
 #include "air_state.h"
 class Player;
