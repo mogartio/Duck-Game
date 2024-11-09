@@ -1,5 +1,5 @@
 #include "protocolo-common.h"
-
+#include <iostream>
 #include <arpa/inet.h>
 
 void ProtocoloCommon::send(GenericMsg* msg) { msg->accept_send(*this); }
@@ -8,6 +8,7 @@ GenericMsg* ProtocoloCommon::receive() {
     uint8_t header = recv_u_int8_t();
     GenericMsg* msg = recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
     msg->accept_recv(*this);
+    std::cout << "Received message with header: 0x" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(msg->get_header()) << std::endl;
     return msg;
 }
 

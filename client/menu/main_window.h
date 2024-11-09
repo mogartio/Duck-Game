@@ -13,6 +13,7 @@
 #include "logo_screen.h"
 #include "connection_screen.h"
 #include "main_menu_screen.h"
+#include "create_game_screen.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/socket/socket.h"
@@ -28,7 +29,7 @@ public:
     void showConnectionScreen();
     void showMainMenuScreen();
     // void showJoinGammeScreen();
-    // void showCreateGameScreen();
+    void showCreateGameScreen();
     // void showLobbyScreen();
 
 private:
@@ -36,9 +37,14 @@ private:
     LogoScreen *logoScreen;
     ConnectionScreen *connectionScreen;
     MainMenuScreen *mainMenuScreen;
+    CreateGameScreen *createGameScreen;
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
     Client* client;
+    QLabel *backgroundLabel;
+    
+    void setupBackground();
+    void slideBackground(int targetX);
 };
 
 #endif // MAIN_WINDOW_H
