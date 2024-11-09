@@ -17,7 +17,7 @@ class MainMenuScreen : public QWidget {
     Q_OBJECT
 
 public:
-    MainMenuScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue);
+    MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
 
 signals:
     void switchToJoinGameScreen();
@@ -36,7 +36,7 @@ private:
     QSound *keyPressSound;
     QFont customFont;
     QPixmap background;
-    Queue<std::unique_ptr<GenericMsg>>& send_queue;
-    Queue<std::unique_ptr<GenericMsg>>& recv_queue;
+    Queue<GenericMsg*>* send_queue;
+    Queue<GenericMsg*>* recv_queue;
 };
 #endif

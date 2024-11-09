@@ -1,6 +1,6 @@
 #include "main_menu_screen.h"
 
-MainMenuScreen::MainMenuScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
@@ -8,13 +8,6 @@ MainMenuScreen::MainMenuScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Q
 
     // Load key press sound
     keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
-
-    // Set background image using QLabel
-    QLabel *backgroundLabel = new QLabel(this);
-    background.load("client/menu/assets/sliding_background.png");
-    background = background.scaled(size(), Qt::KeepAspectRatioByExpanding);
-    backgroundLabel->setPixmap(background);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
 
     // Create black opaque background rectangle
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 710, 260, 500, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
@@ -94,22 +87,6 @@ MainMenuScreen::MainMenuScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Q
 
 void MainMenuScreen::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-    // Trigger a repaint to adjust the background and rectangle
-    QPixmap background("client/menu/assets/sliding_background.png");
-    if (!background.isNull()) {
-        int centerX = background.width() / 2;
-        int centerY = background.height() / 2 - 150;
-        int halfHeight = height() / 2;
-        QRect centerRect(centerX - width(), centerY - halfHeight, width(), height());
-
-        QPixmap centeredBackground = background.copy(centerRect);
-        centeredBackground = centeredBackground.scaled(size(), Qt::KeepAspectRatioByExpanding);
-        QLabel *backgroundLabel = findChild<QLabel *>();
-        if (backgroundLabel) {
-            backgroundLabel->setPixmap(centeredBackground);
-            backgroundLabel->setGeometry(0, 0, this->width(), this->height());
-        }
-    }
     update();
 }
 

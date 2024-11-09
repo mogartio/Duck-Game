@@ -12,7 +12,7 @@
 #include <QSound>
 #include <string>
 #include <iostream>
-ConnectionScreen::ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+ConnectionScreen::ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : send_queue(send_queue), recv_queue(recv_queue), client(client) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
@@ -152,6 +152,7 @@ void ConnectionScreen::onConnectButtonClicked() {
         std::string hostnameStr = hostname->text().toStdString();
         std::string portStr = port->text().toStdString();
         Socket skt(hostnameStr.c_str(), portStr.c_str());
+        client = new Client(std::move(skt), send_queue, recv_queue);
         // successful connection
         emit switchToMainMenuScreen();
     } catch (const std::exception &e) {
@@ -184,8 +185,4 @@ void ConnectionScreen::drawConnectionRefusedError() {
     errorLabel->show();
     // Remove the error message after 2 seconds
     QTimer::singleShot(2000, errorLabel, &QObject::deleteLater);
-}
-
-Socket* ConnectionScreen::getSocket() {
-    return socket;
 }

@@ -9,14 +9,14 @@
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/socket/socket.h"
+#include "../client.h"
 #include <QSound>
 #include <QFontDatabase>
 class ConnectionScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    ConnectionScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue);
-    Socket* getSocket();
+    ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client);
     
 signals:
     void switchToMainMenuScreen();
@@ -32,7 +32,6 @@ private slots:
     void onQuitButtonClicked();
     
 private:
-    Socket *socket;
     ParallaxBackground *layer0;
     ParallaxBackground *layer1;
     ParallaxBackground *layer2;
@@ -41,8 +40,9 @@ private:
     QLineEdit *hostname;
     QLineEdit *port;
     QFont customFont;
-    Queue<std::unique_ptr<GenericMsg>>& send_queue;
-    Queue<std::unique_ptr<GenericMsg>>& recv_queue;
+    Queue<GenericMsg*>* send_queue;
+    Queue<GenericMsg*>* recv_queue;
+    Client* client;
 };
 
 #endif // CONNECTION_SCREEN_H

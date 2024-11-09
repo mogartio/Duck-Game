@@ -16,7 +16,7 @@ class LogoScreen : public QWidget {
     Q_OBJECT
 
 public:
-    LogoScreen(Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue);
+    LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
 
 signals:
     void switchToConnectionScreen();
@@ -37,8 +37,8 @@ private:
     QLabel *flickeringText;
     QTimer *timer;
     QSound *keyPressSound;
-    Queue<std::unique_ptr<GenericMsg>>& send_queue;
-    Queue<std::unique_ptr<GenericMsg>>& recv_queue;
+    Queue<GenericMsg*>* send_queue;
+    Queue<GenericMsg*>* recv_queue;
     bool initialized = false;
 };
 

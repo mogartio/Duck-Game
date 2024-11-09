@@ -1,8 +1,6 @@
 #include "main_window.h"
-#include <QApplication>
-#include <iostream>
 
-MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send_queue, Queue<std::unique_ptr<GenericMsg>>& recv_queue) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue) {
+MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client) {
     
     resize(1920, 1080);
     //setWindowFlags(Qt::FramelessWindowHint);
@@ -12,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::unique_ptr<GenericMsg>>& send
 
     // Create screens
     logoScreen = new LogoScreen(send_queue, recv_queue);
-    connectionScreen = new ConnectionScreen(send_queue, recv_queue);
+    connectionScreen = new ConnectionScreen(send_queue, recv_queue, client);
     mainMenuScreen = new MainMenuScreen(send_queue, recv_queue);
 
     // Add screens to stacked widget
