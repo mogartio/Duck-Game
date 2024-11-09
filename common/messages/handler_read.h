@@ -1,6 +1,7 @@
 #ifndef HANDLER_READ_H
 #define HANDLER_READ_H
 
+class InfoLobbyMsg;
 class CustomizedPlayerInfoMsg;
 class ViewLobbiesMsg;
 class ChooseLobbyMsg;
@@ -26,6 +27,7 @@ class ProjectileInfoMsg;
 class HandlerReader {
 public:
     // reader methods menu
+    virtual void handle_read(const InfoLobbyMsg& msg);
     virtual void handle_read(const CustomizedPlayerInfoMsg& msg);
     virtual void handle_read(const ViewLobbiesMsg& msg);
     virtual void handle_read(const ChooseLobbyMsg& msg);

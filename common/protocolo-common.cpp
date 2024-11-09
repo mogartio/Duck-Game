@@ -12,6 +12,8 @@ GenericMsg* ProtocoloCommon::receive() {
 }
 
 ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(false) {
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG,
+                          [this]() { return new InfoLobbyMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::CUSTOMIZED_PLAYER_INFO_MSG,
                           [this]() { return new CustomizedPlayerInfoMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::VIEW_LOBBIES_MSG,

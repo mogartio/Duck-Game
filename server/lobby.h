@@ -2,6 +2,7 @@
 #define LOBBY_H
 
 #include <array>
+#include <list>
 #include <map>
 #include <memory>
 #include <set>
@@ -40,6 +41,8 @@ private:
 
     void lobby_empty();
     bool is_testing;
+
+    std::list<DescipcionPlayer> get_players_description();
 
 public:
     /*

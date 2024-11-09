@@ -16,10 +16,8 @@ struct DescipcionPlayer {
  */
 struct DescripcionLobby {
     u_int8_t idLobby;
+    std::string nombreLobby;
     u_int8_t cantidadJugadores;  // 1 o 2 por ahora (tanto online como local)
-    DescipcionPlayer player1;
-    DescipcionPlayer player2;
-    // std::string nombreLobby; // super mega opcional
 
     /*
      * Destructor del mensaje del lobby
