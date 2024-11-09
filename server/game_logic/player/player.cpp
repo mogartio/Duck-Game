@@ -21,9 +21,14 @@ void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
     is_alive = true;
-    weapon = std::make_unique<CowboyGun>(*stage);
-    weapon->set_player(this);
+    pick_weapon(std::make_unique<CowboyGun>(*stage));
+    current_actions.clear();
     notify();
+}
+
+void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
+    weapon = std::move(new_weapon);
+    weapon->set_player(this);
 }
 
 Coordinate Player::get_position() { return position->get_position(); }

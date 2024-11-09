@@ -31,6 +31,7 @@ bool Projectile::ray_trace(Stage& stage) {
         }
         if (next_tile == 1 || next_tile == 2) {
             stage.kill(next_tile);
+            return true;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {

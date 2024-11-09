@@ -45,16 +45,20 @@ std::string GameMain::play_round(Stage& stage) {
         if (is_testing) {
             stage.print();
         }
+        std::vector<std::string> recently_deceased;  // its never been this serious
         for (std::string player: alive_players) {
             if (!players[player]->lives()) {
-                alive_players.erase(player);
+                recently_deceased.push_back(player);
             }
+        }
+        for (std::string player: recently_deceased) {
+            alive_players.erase(player);
         }
         if (alive_players.size() == 0) {
             return "";
         }
         if (alive_players.size() == 1) {
-            std::cout << "SE TERMINO LA RONDA" << std::endl;
+            std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
             sleep(2);
             return *alive_players.begin();
         }

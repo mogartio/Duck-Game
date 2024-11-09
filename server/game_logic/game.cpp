@@ -27,7 +27,7 @@ void Game::run() {
             player_points[winner]++;
         }
         for (auto [name, points]: player_points) {
-            if (points >= 10) {
+            if (points >= 5) {
                 game_over = true;
             }
         }

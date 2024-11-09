@@ -24,9 +24,9 @@ void Weapon::finish_throw(int x_direction, bool, std::unique_ptr<Weapon> weapon)
 Coordinate Weapon::get_gun_position(int facing_direction) {
     Coordinate player_position = player->get_position();
     if (facing_direction == 1) {
-        return Coordinate(player_position.x + 2, player_position.y + 1);
+        return Coordinate(player_position.x + 3, player_position.y + 1);
     }
-    return Coordinate(player_position.x, player_position.y + 1);
+    return Coordinate(player_position.x - 1, player_position.y + 1);
 }
 
 Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3) {}
