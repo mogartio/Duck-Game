@@ -1,4 +1,7 @@
 #include <QApplication>
+#include <iostream>
+#include "client.h"
+#include "client_protocol.h"
 #include "../client/menu/main_window.h"
 #include "../client/menu/connection_screen.h"
 #include "../common/queue.h"
@@ -9,11 +12,16 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    Queue<std::unique_ptr<GenericMsg>> send_queue;
-    Queue<std::unique_ptr<GenericMsg>> recv_queue;
+    Queue<GenericMsg*>* send_queue = new Queue<GenericMsg*>(100);
+    Queue<GenericMsg*>* recv_queue = new Queue<GenericMsg*>(100);
 
-    MainWindow mainWindow(nullptr, send_queue, recv_queue);
+    Client* client = nullptr;
+
+    MainWindow mainWindow(nullptr, send_queue, recv_queue, client);
     mainWindow.show();
 
-    return app.exec();
+    if (app.exec() == 0) {
+        // se cerro ordenadamente y se tiene que iniciar el render del juego
+    }
+    return 0;
 }
