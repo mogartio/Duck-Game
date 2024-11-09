@@ -1,7 +1,7 @@
 #include <fstream>
 #include <string>
 
-#include "../config.h"
+#include "../config/config.h"
 #ifndef CSV_WRITER_H
 
 #define ROW_NUMBER 50

@@ -1,26 +1,22 @@
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "../../../common/duckState/duckState.h"
 
 #include "image.h"
 #include "wingState.h"
-#include "../../../common/duckState/duckState.h"
 
-enum Color {
-    WHITE,
-    GREY,
-    ORANGE,
-    YELLOW
-};
+enum Color { WHITE, GREY, ORANGE, YELLOW };
 
 class Player {
 private:
-
     SDL_Renderer* rend;
     SDL_RendererFlip flip;
     std::string file;
 
-    std::unordered_map<DuckState, std::vector<Image*>> ducks; 
+    std::unordered_map<DuckState, std::vector<Image*>> ducks;
     std::vector<Image*> wings;
 
     DuckState state;
@@ -28,10 +24,12 @@ private:
     bool weaponON;
     int walk;
     bool flapup;
+    uint width;
+    uint height;
 
     Image* duck;
     Image* wing;
-    //Weapon weapon;
+    // Weapon weapon;
 
     void chooseColor(Color color);
     void initializeWingImage(WingState wingState);
@@ -57,5 +55,4 @@ public:
     void shoot();
 
     ~Player();
-
 };

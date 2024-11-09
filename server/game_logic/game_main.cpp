@@ -3,72 +3,67 @@
 #include <tuple>
 #include <vector>
 
+#include "config/config.h"
 #include "map/spawn_point.h"
 
-#include "config.h"
 
+GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players, bool is_testing,
+                   SendQueuesMonitor<GenericMsg*>& senders):
+        receiver_q(q), is_testing(is_testing), players(players), senders(senders) {}
 
-GameMain::GameMain(Queue<GenericMsg*>& q, std::string player_name1, std::string player_name2,
-                   bool is_testing, SendQueuesMonitor<GenericMsg*>& senders):
-        stage("main_map.csv", senders),
-        receiver_q(q),
-        is_testing(is_testing),
-        player_name1(player_name1),
-        player_name2(player_name2),
-        senders(senders) {
-
-    std::vector<std::tuple<int, int>> player_spawn_sites =
-            Config::get_instance()->player_spawn_sites;
-    Coordinate coordinate_a(std::get<0>(player_spawn_sites[0]), std::get<1>(player_spawn_sites[0]));
-    Coordinate coordinate_b(std::get<0>(player_spawn_sites[1]), std::get<1>(player_spawn_sites[1]));
-
+// Recibe el stage del round, devuelve el nombre del pato ganador
+std::string GameMain::play_round(Stage& stage) {
     std::vector<std::tuple<int, int>> weapon_spawn_sites =
             Config::get_instance()->weapon_spawn_sites;
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
     WeaponSpawnPoint spawn(weapon_spawn, stage);
-
-    static PlayerObserver player_obs(senders);
-    std::vector<uint16_t> map = stage.get_vector_representation();
-    SendMapMsg* map_msg = new SendMapMsg(map, Config::get_instance()->rows_map,
-                                         Config::get_instance()->columns_map);
-    std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
-    dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
-    senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
-
-    players[player_name1] =
-            std::make_unique<Player>(coordinate_a, stage, 2, player_name1, &player_obs);
-    // players[player_name2] = std::make_unique<Player>(coordinate_b, stage, 4, player_name2);
-
-    // stage.draw_player(*players[player_name2]);
-    stage.draw_player(*players[player_name1]);
-    // spawn.spawn_weapon();
-}
-
-void GameMain::run() {
+    spawn.spawn_weapon();
+    for (auto [name, player]: players) {
+        player->init_for_stage(&stage);
+        alive_players.insert(name);
+        stage.add_player(player, player->get_id());
+    }
     while (true) {
         if (is_testing) {
-            std::string command;
-            std::getline(std::cin, command);
-            GenericMsg* new_msg = create_msg(command);
-            if (new_msg != nullptr) {
-                receiver_q.push(new_msg);
-            }
+            create_command();
         }
-        // players[player_name1]->notify();
         GenericMsg* msg;
-        bool have_command = receiver_q.try_pop(msg);
-        if (have_command) {
+        if (receiver_q.try_pop(msg)) {
             msg->accept_read(*this);  // esto equivale a una llamada al handle_read
         }
         for (auto& [name, player]: players) {
+            if (!player->lives()) {
+                continue;
+            }
             stage.delete_player_from_stage(*player);  // Borro su dibujo viejo
             player->update();
             stage.draw_player(*player);
         }
         stage.update();
-        // stage.print();
-        std::this_thread::sleep_for(std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
-
+        if (is_testing) {
+            stage.print();
+        }
+        std::vector<std::string> recently_deceased;  // its never been this serious
+        for (std::string player: alive_players) {
+            if (!players[player]->lives()) {
+                recently_deceased.push_back(player);
+            }
+        }
+        for (std::string player: recently_deceased) {
+            alive_players.erase(player);
+        }
+        if (alive_players.size() == 0) {
+            return "";
+        }
+        if (alive_players.size() == 1) {
+            std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
+            sleep(2);
+            stage.delete_player_from_stage(
+                    *players[*alive_players.begin()]);  // Borro su dibujo viejo
+            return *alive_players.begin();
+        }
+        std::this_thread::sleep_for(
+                std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
     }
 }
 
@@ -91,6 +86,18 @@ void GameMain::handle_read(const StopActionMsg& msg) {
 // pero funciona
 // no lo toquen
 GenericMsg* GameMain::create_msg(std::string command) {
+    // Lo hice todavia mas feo somehow
+    // its never been this serious
+    std::string player_name1;
+    std::string player_name2;
+    auto it = players.begin();
+    if (it != players.end()) {
+        player_name1 = it->first;
+        ++it;
+    }
+    if (it != players.end()) {
+        player_name2 = it->first;
+    }
     std::map<std::string, uint8_t> command_map{
             {"a", 0x01},
             {"d", 0x02},
@@ -136,4 +143,13 @@ GenericMsg* GameMain::create_msg(std::string command) {
         return &msg;
     }
     return nullptr;
+}
+
+void GameMain::create_command() {
+    std::string command;
+    std::getline(std::cin, command);
+    GenericMsg* new_msg = create_msg(command);
+    if (new_msg != nullptr) {
+        receiver_q.push(new_msg);
+    }
 }

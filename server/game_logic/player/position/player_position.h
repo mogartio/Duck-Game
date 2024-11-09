@@ -6,8 +6,8 @@
 #include <utility>
 #include <vector>
 
-#include "../../../common/coordinate.h"
-#include "../map/stage.h"
+#include "../../../../common/coordinate.h"
+#include "../../map/stage.h"
 
 #include "air_state.h"
 class Player;
@@ -33,7 +33,7 @@ public:
     void occupy(Coordinate&);
     void free_occupied();
     std::vector<Coordinate> get_occupied();
-    uint8_t get_facing_direction();
+    int get_facing_direction();
     void released_jump();
     void released_w();
     bool is_aiming_up();

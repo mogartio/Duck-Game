@@ -2,9 +2,8 @@
 
 #include <string>
 
-#include "../../../common/messages/generic_msg.h"
-
-#include "player.h"
+#include "../../../../common/messages/generic_msg.h"
+#include "../player.h"
 using namespace ActionsId;
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
@@ -29,7 +28,7 @@ void PlayerPosition::move(std::set<int>& directions) {
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
             air_state->jump(*this);
-        } else if (direction == AIM_UP) {
+        } else if (direction == 6) {
             aiming_up = true;
         } else {
             continue;
@@ -85,4 +84,9 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-uint8_t PlayerPosition::get_facing_direction() { return facing_direction; }
+int PlayerPosition::get_facing_direction() {
+    if (facing_direction == 2) {
+        return -1;
+    }
+    return 1;
+}  // malisimo, its never been this serious

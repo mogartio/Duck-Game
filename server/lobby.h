@@ -2,6 +2,7 @@
 #define LOBBY_H
 
 #include <array>
+#include <list>
 #include <map>
 #include <memory>
 #include <set>
@@ -12,10 +13,12 @@
 #include "./../common/messages/generic_msg.h"
 #include "./../common/queue.h"
 #include "./game_logic/game_main.h"
+#include "game_logic/game.h"
 
 #include "send_queues_monitor.h"
 
 #define MAX_PLAYERS 2
+#define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
 #define SECOND_PLAYER 1
@@ -30,20 +33,23 @@ private:
 
     Queue<GenericMsg*>* receiver_q;
 
-    std::unique_ptr<GameMain> game;
+    std::unique_ptr<Game> game;
 
     uint player1_id;
 
     uint id_lobby;
 
     void lobby_empty();
+    bool is_testing;
+
+    std::list<DescipcionPlayer> get_players_description();
 
 public:
     /*
      * Constructor del lobby
      */
     explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-                   Client* first_player, uint& id_lobby);
+                   Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby

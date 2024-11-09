@@ -1,6 +1,7 @@
 #ifndef HANDLER_SENDER_H
 #define HANDLER_SENDER_H
 
+class InfoLobbyMsg;
 class CustomizedPlayerInfoMsg;
 class ViewLobbiesMsg;
 class ChooseLobbyMsg;
@@ -26,6 +27,7 @@ class ProjectileInfoMsg;
 class HandlerSender {
 public:
     // from client
+    virtual void handle_send(const InfoLobbyMsg& msg);
     virtual void handle_send(const CustomizedPlayerInfoMsg& msg);
     virtual void handle_send(const ViewLobbiesMsg& msg);
     virtual void handle_send(const ChooseLobbyMsg& msg);
