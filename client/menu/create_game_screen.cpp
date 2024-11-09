@@ -7,13 +7,6 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     // Set focus policy to receive key events
     setFocusPolicy(Qt::StrongFocus);
 
-    // Set background image using QLabel
-    QLabel *backgroundLabel = new QLabel(this);
-    background.load("client/menu/assets/sliding_background.png");
-    background = background.scaled(size(), Qt::KeepAspectRatioByExpanding);
-    backgroundLabel->setPixmap(background);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
-
     // Load key press sound
     keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
 
@@ -205,23 +198,7 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
    
 
 void CreateGameScreen::resizeEvent(QResizeEvent *event) {
-        // Trigger a repaint to adjust the background and rectangle
-    QPixmap background("client/menu/assets/sliding_background.png");
-    if (!background.isNull()) {
-        int centerX = background.width() / 2;
-        int centerY = background.height() / 2 - 150;
-        int halfHeight = height() / 2;
-        QRect centerRect(centerX - width(), centerY - halfHeight, width(), height());
-
-        QPixmap centeredBackground = background.copy(centerRect);
-        centeredBackground = centeredBackground.scaled(size(), Qt::KeepAspectRatioByExpanding);
-        QLabel *backgroundLabel = findChild<QLabel *>();
-        if (backgroundLabel) {
-            backgroundLabel->setPixmap(centeredBackground);
-            backgroundLabel->setGeometry(0, 0, this->width(), this->height());
-        }
-    }
-
+    
     update();
 }
 

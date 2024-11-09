@@ -9,13 +9,6 @@ MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*
     // Load key press sound
     keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
 
-    // Set background image using QLabel
-    QLabel *backgroundLabel = new QLabel(this);
-    background.load("client/menu/assets/sliding_background.png");
-    background = background.scaled(size(), Qt::KeepAspectRatioByExpanding);
-    backgroundLabel->setPixmap(background);
-    backgroundLabel->setGeometry(0, 0, this->width(), this->height());
-
     // Create black opaque background rectangle
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 710, 260, 500, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
@@ -93,23 +86,6 @@ MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*
 }
 
 void MainMenuScreen::resizeEvent(QResizeEvent *event) {
-        // Trigger a repaint to adjust the background and rectangle
-    QPixmap background("client/menu/assets/sliding_background.png");
-    if (!background.isNull()) {
-        int centerX = background.width() / 2;
-        int centerY = background.height() / 2 - 150;
-        int halfHeight = height() / 2;
-        QRect centerRect(centerX - width(), centerY - halfHeight, width(), height());
-
-        QPixmap centeredBackground = background.copy(centerRect);
-        centeredBackground = centeredBackground.scaled(size(), Qt::KeepAspectRatioByExpanding);
-        QLabel *backgroundLabel = findChild<QLabel *>();
-        if (backgroundLabel) {
-            backgroundLabel->setPixmap(centeredBackground);
-            backgroundLabel->setGeometry(0, 0, this->width(), this->height());
-        }
-    }
-
     update();
 }
 

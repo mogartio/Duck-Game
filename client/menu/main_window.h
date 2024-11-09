@@ -28,6 +28,7 @@ public:
     void showLogoScreen();
     void showConnectionScreen();
     void showMainMenuScreen();
+    void showMainMenuScreenWithFade();
     // void showJoinGammeScreen();
     void showCreateGameScreen();
     // void showLobbyScreen();

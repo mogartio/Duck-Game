@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     connect(connectionScreen, &ConnectionScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 
     // Connect the signal from ConnectionScreen to switch to MainMenuScreen
-    connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+   connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreenWithFade);
 
     // Connect the quit signal from MainMenuScreen to quit the application
     connect(mainMenuScreen, &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
@@ -74,6 +74,12 @@ void MainWindow::slideBackground(int targetX) {
     animation->start(QPropertyAnimation::DeleteWhenStopped);
 }
 
+void MainWindow::showMainMenuScreen() {
+    stackedWidget->setCurrentWidget(mainMenuScreen);
+    slideBackground(0); // Move to the first third
+
+}
+
 
 void MainWindow::showLogoScreen() {
     stackedWidget->setCurrentWidget(logoScreen);
@@ -87,7 +93,7 @@ void MainWindow::handleQuitApplication() {
     QApplication::quit();
 }
 
-void MainWindow::showMainMenuScreen() {
+void MainWindow::showMainMenuScreenWithFade() {
     QWidget *overlay = new QWidget(this);
     overlay->setStyleSheet("background-color: black;");
     overlay->setGeometry(this->rect());
@@ -118,6 +124,7 @@ void MainWindow::showMainMenuScreen() {
 
 void MainWindow::showCreateGameScreen() {
     stackedWidget->setCurrentWidget(createGameScreen);
+    slideBackground(-640); // Move to the second third
 }
 
 MainWindow::~MainWindow() {
