@@ -31,6 +31,10 @@ void ServerProtocol::handle_recv(ChooseLobbyMsg& msg) {
 void ServerProtocol::handle_recv(CreateLobbyMsg& msg) {
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+    std::string lobby_name = recv_string();
+    msg.set_lobby_name(lobby_name);
+    uint8_t max_players = recv_u_int8_t();
+    msg.set_max_players(max_players);
 }
 
 void ServerProtocol::handle_recv(GoBackMsg& msg) { (void)msg; }
@@ -54,6 +58,10 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
         send_string(player.nombre);
         send_u_int8_t(player.color);
     }
+
+    uint8_t max_players = msg.get_max_players();
+    send_u_int8_t(max_players);
+    std::cout << "Max players sent: " << static_cast<int>(max_players) << std::endl;
 }
 
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {

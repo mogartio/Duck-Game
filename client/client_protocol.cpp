@@ -32,7 +32,11 @@ void ClientProtocol::handle_send(const CreateLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
+    std::string lobby_name = msg.get_lobby_name();
+    uint8_t max_players = msg.get_max_players();
     send_string(player_name);
+    send_string(lobby_name);
+    send_u_int8_t(max_players);
 }
 
 void ClientProtocol::handle_send(const GoBackMsg& msg) {
@@ -65,8 +69,13 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
         player.color = color;
 
         players.push_back(player);
+        std::cout << "Player: " << player.nombre << " Color: " << static_cast<int>(player.color) << std::endl;
     }
     msg.set_players(players);
+
+    uint8_t max_players = recv_u_int8_t();
+    msg.set_max_players(max_players);
+    std::cout << "Max players: " << static_cast<int>(max_players) << std::endl;
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {

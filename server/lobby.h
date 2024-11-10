@@ -17,7 +17,7 @@
 
 #include "send_queues_monitor.h"
 
-#define MAX_PLAYERS 2
+#define MAX_PLAYERS 2 // inicialmente es 2 (????)
 #define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
@@ -39,6 +39,9 @@ private:
 
     uint id_lobby;
 
+    std::string lobby_name;
+    uint8_t max_players;
+
     void lobby_empty();
     bool is_testing;
 
@@ -48,8 +51,7 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-                   Client* first_player, uint& id_lobby, bool is_testing);
+    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby

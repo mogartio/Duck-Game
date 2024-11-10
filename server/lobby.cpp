@@ -21,17 +21,19 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
     return players_description;
 }
 
-Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-             Client* first_player, uint& id_lobby, bool is_testing):
+Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing):
         send_queues(send_queues),
         receiver_q(new Queue<GenericMsg*>(200)),
         id_lobby(id_lobby),
         is_testing(is_testing) {
     player1_id = first_player->get_id();
     // players_description[FIRST_PLAYER] = descripcionPlayer;
-    players_map[player_name] = first_player;
+    players_map[player_name] = first_player;    
+    this->lobby_name = lobby_name;
+    this->max_players = max_players;
 
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
+    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players), first_player->get_id());
 }
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
@@ -61,7 +63,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
                                        pair.second->get_id());
         }
     }
@@ -75,7 +77,7 @@ void Lobby::removePlayer(std::string player_name) {
         for (auto& pair: players_map) {
             if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
                 players_ids.insert(pair.second->get_id());
-                send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+                send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
                                            pair.second->get_id());
             }
         }
@@ -97,7 +99,7 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
                                        pair.second->get_id());
             pair.second->switch_queues(
                     receiver_q);  // aca cambiariamos la queue para definir la que
