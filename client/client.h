@@ -3,9 +3,10 @@
 #include <string>
 #include <utility>
 
-#include "receiver.h"
 #include "../common/sender.h"
+
 #include "client_protocol.h"
+#include "receiver.h"
 
 class Client {
 private:

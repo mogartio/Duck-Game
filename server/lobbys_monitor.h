@@ -16,9 +16,10 @@ private:
     std::map<uint, std::unique_ptr<Lobby>> lobbys_disponibles;
     // va aumentando asi cada lobby tiene un id unico
     uint contador_id_lobbys;
+    bool is_testing;
 
 public:
-    LobbysMonitor();
+    LobbysMonitor(bool);
     // Devuelve la lista de lobbys disponibles
     std::vector<DescripcionLobby> get_lobbys();
     // Agrega un lobby a la lista de lobbys disponibles y devuelve el id del lobby
