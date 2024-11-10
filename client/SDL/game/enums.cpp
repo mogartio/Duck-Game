@@ -40,16 +40,16 @@ std::string color_to_string(Color color) {
 
 std::string weapon_to_string(Weapon weapon) {
     switch (weapon) {
-        case Weapon::GRANADA:       return "weapon/granada.png";
-        case Weapon::BANANA:        return "weapon/banana.png";
-        case Weapon::PEWPEWLASE:    return "weapon/pewpewlase.png";
-        case Weapon::LASERRIFLE:    return "weapon/laserRifle.png";
-        case Weapon::AK47:          return "weapon/ak47.png";
-        case Weapon::DUELOS:        return "weapon/duelos.png";
-        case Weapon::COWBOY:        return "weapon/cowboy.png";
-        case Weapon::MAGNUM:        return "weapon/magnum.png";
-        case Weapon::ESCOPETA:      return "weapon/escopeta.png";
-        case Weapon::SNIPER:        return "weapon/sniper.png";
+        case Weapon::GRANADA:       return "granada.png";
+        case Weapon::BANANA:        return "banana.png";
+        case Weapon::PEWPEWLASE:    return "pewpewlase.png";
+        case Weapon::LASERRIFLE:    return "laserRifle.png";
+        case Weapon::AK47:          return "ak47.png";
+        case Weapon::DUELOS:        return "duelos.png";
+        case Weapon::COWBOY:        return "cowboy.png";
+        case Weapon::MAGNUM:        return "magnum.png";
+        case Weapon::ESCOPETA:      return "escopeta.png";
+        case Weapon::SNIPER:        return "sniper.png";
         default:        return "unknown.png";
     }
 }

@@ -41,6 +41,10 @@ void Image::position(int x, int y) {
     dest.y = y;
 }
 
+std::pair<int, int> Image::getPosition() const {
+    return std::pair(dest.x, dest.y);
+}
+
 Image::~Image() {
     if (imgTex != nullptr) {
         SDL_DestroyTexture(imgTex); // Libera la textura

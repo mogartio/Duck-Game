@@ -19,6 +19,8 @@ private:
     DuckState state;
 
     bool weaponON;
+    bool armorOn;
+    bool helmetOn;
     int walk;
     bool flapup;
 
@@ -26,6 +28,7 @@ private:
     Image* wing;
 
     Image* _armor;
+    Image* _hombro;
     Image* _helmet;
     Image* _weapon;
 
@@ -42,22 +45,27 @@ public:
     // Actualizar posicion e imagen
     void update(int x, int y, DuckState newState, Side side);
 
-    // Dibujar jugador
-    void fill();
-
     // Agarrar un arma
     void weapon(Image* weapon);
-    // Soltar un arma
-    void weapon();
+    // Devolver el arma
+    Image* dropWeapon();
 
     // Agarrar armadura
-    void armor(Image* armor);
+    void armor(Image* armor, Image* hombro);
+    // Devolver armadura
+    Image* dropArmor();
 
     // Agarrar casco
     void helmet(Image* helmet);
+    // Devolver casco
+    Image* dropHelmet();
 
     // Disparar arma
     void shoot();
+
+    // Dibujar jugador
+    void fill();
+
 
     ~Player();
 

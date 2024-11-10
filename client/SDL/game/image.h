@@ -23,6 +23,7 @@ public:
 
     void defineSize(int height, int width);
     void position(int x, int y);
+    std::pair<int, int> getPosition() const;
 
     ~Image();
 };
