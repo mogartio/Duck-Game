@@ -17,7 +17,6 @@
 
 #include "send_queues_monitor.h"
 
-#define MAX_PLAYERS 2 // inicialmente es 2 (????)
 #define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
@@ -26,7 +25,6 @@ class Client;
 
 class Lobby {
 private:
-    std::array<DescipcionPlayer, MAX_PLAYERS> players_description;
     std::map<std::string, Client*> players_map;
 
     SendQueuesMonitor<GenericMsg*>& send_queues;

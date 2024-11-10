@@ -15,7 +15,7 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
     for (auto& pair: players_map) {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
-        descripcionPlayer.color = 0;  // por ahora, despues tenemos que hacer que esto se almacene
+        descripcionPlayer.color = 0x01;  // por ahora, despues tenemos que hacer que esto se almacene
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
@@ -38,7 +38,7 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     lobby_empty();
-    if (players_map.size() == MAX_PLAYERS) {
+    if (players_map.size() == max_players) {
         throw std::runtime_error("Lobby lleno");
     }
     uint cantidadLocalPlayers = 1;
@@ -88,7 +88,7 @@ void Lobby::removePlayer(std::string player_name) {
 
 void Lobby::startGame() {
     lobby_empty();
-    // if (players_map.size() != MAX_PLAYERS) {
+    // if (players_map.size() != max_players) {
     //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
     //     necesitados");
     // }
