@@ -233,8 +233,10 @@ void CreateGameScreen::onCreateGameButtonClicked() {
         return;
     }
     // Send a create game message to the server. 
-    // Por ahora no manda estas especificaciones
-    CreateLobbyMsg* createLobbyMsg = new CreateLobbyMsg(lobbyNameStr);
+    // Nombre default del que crea el server:
+    std::string playerName = "Player 1";
+    uint8_t maxPlayers = this->maxPlayers;
+    CreateLobbyMsg* createLobbyMsg = new CreateLobbyMsg(playerName, lobbyNameStr, maxPlayers);
     send_queue->push(createLobbyMsg);
     GenericMsg* response = recv_queue->pop();
     if (response->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {

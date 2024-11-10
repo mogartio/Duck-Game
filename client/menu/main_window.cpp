@@ -10,24 +10,27 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
 
     // Setup the background
     setupBackground();
-
+    
     // Create screens
     logoScreen = new LogoScreen(send_queue, recv_queue);
     connectionScreen = new ConnectionScreen(send_queue, recv_queue, client);
     mainMenuScreen = new MainMenuScreen(send_queue, recv_queue);
     createGameScreen = new CreateGameScreen(send_queue, recv_queue);
+    lobbyScreen = new LobbyScreen(send_queue, recv_queue);
 
     // Add screens to stacked widget
     stackedWidget->addWidget(logoScreen);
     stackedWidget->addWidget(connectionScreen);
     stackedWidget->addWidget(mainMenuScreen);
     stackedWidget->addWidget(createGameScreen);
+    stackedWidget->addWidget(lobbyScreen);
 
     // Ensure the screens are resized to fit the QMainWindow
     logoScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     connectionScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mainMenuScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     createGameScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    lobbyScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Show the logo screen initially
     showLogoScreen();
@@ -51,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     connect(createGameScreen, &CreateGameScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 
     // Connect the signal from CreateGameScreen to switch to LobbyScreen
+    connect(createGameScreen, &CreateGameScreen::switchToLobbyScreen, this, &MainWindow::showLobbyScreen);
 }
 
 void MainWindow::setupBackground() {
@@ -77,7 +81,6 @@ void MainWindow::slideBackground(int targetX) {
 void MainWindow::showMainMenuScreen() {
     stackedWidget->setCurrentWidget(mainMenuScreen);
     slideBackground(0); // Move to the first third
-
 }
 
 
@@ -124,7 +127,12 @@ void MainWindow::showMainMenuScreenWithFade() {
 
 void MainWindow::showCreateGameScreen() {
     stackedWidget->setCurrentWidget(createGameScreen);
-    slideBackground(-640); // Move to the second third
+    slideBackground(-480); // Move to the second third
+}
+
+void MainWindow::showLobbyScreen() {
+    stackedWidget->setCurrentWidget(lobbyScreen);
+    slideBackground(-960); // Move to the last third
 }
 
 MainWindow::~MainWindow() {
