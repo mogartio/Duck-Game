@@ -127,7 +127,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
         _hombro->position(x, y);
     }
 
-    if(weaponON) { // Falta agregar offset (perdon facu)
+    if(weaponON) { // Falta agregar offsets (perdon facu)
         _weapon->position(x, y + 12);
     }
 }
@@ -156,20 +156,16 @@ void Player::shoot() {
     */
 }
 
-void Player::fill() {
+void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
     duck->fill(flip);
-
-    // Dibujo el arma que tiene el pato
-    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        // weapon.fill(flip);
-    }
     
     if (armorOn) {
         _armor->fill(flip);
     }
 
-    if (weaponON) {
+    // Dibujo el arma que tiene el pato
+    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
         _weapon->fill(flip);
     }
 
