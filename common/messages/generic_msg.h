@@ -66,6 +66,24 @@ public:
         LEFT = 0x02,
     };
 
+    enum ProjectileId : uint8_t {
+        GRENADE = 0x01,
+        BANANA = 0x02,
+        PEW_PEW_LASER = 0x03,
+        LASER_RIFLE = 0x04,
+        AK_47 = 0x05,
+        DUEL_PISTOL = 0x06,
+        COWBOY_PISTOL = 0x07,
+        MAGNUM = 0x08,
+        SHOTGUN = 0x09,
+        SNIPER = 0x0A,
+        HELMET = 0x0B,
+        CHEST = 0x0C,
+        // balas (?)
+        LASER = 0x0D, // PEW_PEW_LASER y LASER_RIFLE
+        BULLET = 0x0E, // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    };
+
 private:
     MsgTypeHeader header;
     Type type;
