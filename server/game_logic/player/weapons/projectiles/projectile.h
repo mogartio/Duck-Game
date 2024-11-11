@@ -21,10 +21,11 @@ protected:
     int id;
     std::vector<std::pair<uint16_t, uint16_t>> trail;
     bool despawns_on_contact;
+    bool is_lethal;
 
 public:
     Projectile(Coordinate& initial_position, int x_direction, int reach, int speed,
-               double deviation_angle, int id, bool despawns_on_contact):
+               double deviation_angle, int id, bool despawns_on_contact, bool is_lethal):
             speed(speed),
             x_direction(x_direction),
             deviation_angle(deviation_angle),
@@ -32,7 +33,8 @@ public:
             reach(reach),
             distance_covered(0),
             id(id),
-            despawns_on_contact(despawns_on_contact) {}
+            despawns_on_contact(despawns_on_contact),
+            is_lethal(is_lethal) {}
     virtual void move(Coordinate new_position) { position = new_position; }
     virtual int get_x_direction() { return x_direction; }
     virtual int get_speed() { return speed; }
@@ -49,7 +51,7 @@ public:
 class CowboyBullet: public Projectile {
 public:
     CowboyBullet(Coordinate& initial_position, int x_direction, bool is_aiming_up, int reach):
-            Projectile(initial_position, x_direction, reach, 15, 0, 8, true) {
+            Projectile(initial_position, x_direction, reach, 15, 0, 8, true, true) {
         deviation_angle = M_PI / 2 + (M_PI / 2 * is_aiming_up);
     }
 };
@@ -57,7 +59,7 @@ public:
 class MagnumBullet: public Projectile {
 public:
     MagnumBullet(Coordinate& initial_position, int x_direction, bool is_aiming_up, int reach):
-            Projectile(initial_position, x_direction, reach, 15, 0, 8, true) {
+            Projectile(initial_position, x_direction, reach, 15, 0, 8, true, true) {
         deviation_angle = M_PI / 1.92 + (M_PI / 2 * is_aiming_up);
     }
 };

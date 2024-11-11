@@ -30,8 +30,10 @@ bool Projectile::ray_trace(Stage& stage) {
             return despawns_on_contact;
         }
         if (next_tile == 1 || next_tile == 2) {
-            stage.kill(next_tile);
-            return true;
+            if (is_lethal) {
+                stage.kill(next_tile);
+            }
+            return is_lethal;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {
