@@ -14,6 +14,7 @@
 #include "connection_screen.h"
 #include "main_menu_screen.h"
 #include "create_game_screen.h"
+#include "join_lobby_screen.h"
 #include "lobby_screen.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
@@ -31,6 +32,7 @@ public:
     void showMainMenuScreen();
     void showMainMenuScreenWithFade();
     void showCreateGameScreen();
+    void showJoinLobbyScreen();
     void showLobbyScreen();
 
 private:
@@ -40,6 +42,7 @@ private:
     MainMenuScreen *mainMenuScreen;
     CreateGameScreen *createGameScreen;
     LobbyScreen *lobbyScreen;
+    JoinLobbyScreen *joinLobbyScreen;
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
     Client* client;

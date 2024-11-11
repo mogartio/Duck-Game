@@ -89,7 +89,8 @@
         "qpushbutton": "cpp",
         "qsound": "cpp",
         "qlabel": "cpp",
-        "qdebug": "cpp"
+        "qdebug": "cpp",
+        "qlineedit": "cpp"
     },
     "makefile.configureOnOpen": false
 }

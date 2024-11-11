@@ -256,3 +256,4 @@ void CreateGameScreen::drawLobbyNameError() {
     // Remove the error message after 2 seconds
     QTimer::singleShot(2000, errorLabel, &QObject::deleteLater);
 }
+

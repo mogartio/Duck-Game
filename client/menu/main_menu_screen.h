@@ -20,7 +20,7 @@ public:
     MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
 
 signals:
-    void switchToJoinGameScreen();
+    void switchToJoinLobbyScreen();
     void switchToCreateGameScreen();
     void quitApplication(); 
 
@@ -28,7 +28,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void onJoinGameButtonClicked();
+    void onJoinLobbyButtonClicked();
     void onCreateGameButtonClicked();
     void onQuitButtonClicked();
 

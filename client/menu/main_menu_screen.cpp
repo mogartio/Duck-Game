@@ -24,8 +24,8 @@ MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*
     int buttonX = 820;
     int buttonSpacing = 50; // Space between buttons
     // Join Game button
-    QPushButton *joinGameButton = new QPushButton("Join Game", this);
-    joinGameButton->setStyleSheet(
+    QPushButton *JoinLobbyButton = new QPushButton("Join Game", this);
+    JoinLobbyButton->setStyleSheet(
         "QPushButton {"
         "background-color: rgba(240, 140, 0, 100);"        
         "color: #ced4da;"                     
@@ -39,10 +39,10 @@ MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*
         "background-color: rgba(232, 89, 12, 100);"
         "}"
     );
-    joinGameButton->setFont(customFont);
-    joinGameButton->setGeometry(buttonX, 293, buttonWidth, buttonHeight);
+    JoinLobbyButton->setFont(customFont);
+    JoinLobbyButton->setGeometry(buttonX, 293, buttonWidth, buttonHeight);
 
-    connect(joinGameButton, &QPushButton::clicked, this, &MainMenuScreen::onJoinGameButtonClicked);
+    connect(JoinLobbyButton, &QPushButton::clicked, this, &MainMenuScreen::onJoinLobbyButtonClicked);
 
     // Create Game button
     QPushButton *createGameButton = new QPushButton("Create Game", this);
@@ -89,9 +89,9 @@ void MainMenuScreen::resizeEvent(QResizeEvent *event) {
     update();
 }
 
-void MainMenuScreen::onJoinGameButtonClicked() {
+void MainMenuScreen::onJoinLobbyButtonClicked() {
     keyPressSound->play();
-    // emit switchToJoinGameScreen();
+    emit switchToJoinLobbyScreen();
 }
 
 void MainMenuScreen::onCreateGameButtonClicked() {

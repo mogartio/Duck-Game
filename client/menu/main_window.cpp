@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     mainMenuScreen = new MainMenuScreen(send_queue, recv_queue);
     createGameScreen = new CreateGameScreen(send_queue, recv_queue);
     lobbyScreen = new LobbyScreen(send_queue, recv_queue);
+    joinLobbyScreen = new JoinLobbyScreen(send_queue, recv_queue);
 
     // Add screens to stacked widget
     stackedWidget->addWidget(logoScreen);
@@ -24,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     stackedWidget->addWidget(mainMenuScreen);
     stackedWidget->addWidget(createGameScreen);
     stackedWidget->addWidget(lobbyScreen);
+    stackedWidget->addWidget(joinLobbyScreen);
 
     // Ensure the screens are resized to fit the QMainWindow
     logoScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -31,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     mainMenuScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     createGameScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     lobbyScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    joinLobbyScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     // Show the logo screen initially
     showLogoScreen();
@@ -55,6 +58,12 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
 
     // Connect the signal from CreateGameScreen to switch to LobbyScreen
     connect(createGameScreen, &CreateGameScreen::switchToLobbyScreen, this, &MainWindow::showLobbyScreen);
+
+    // Connect the signal from MainMenuScreen to switch to JoinLobbyScreen
+    connect(mainMenuScreen, &MainMenuScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
+
+    // Connect the signal from JoinLobbyScreen to switch to MainMenuScreen
+    connect(joinLobbyScreen, &JoinLobbyScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 }
 
 void MainWindow::setupBackground() {
@@ -82,7 +91,6 @@ void MainWindow::showMainMenuScreen() {
     stackedWidget->setCurrentWidget(mainMenuScreen);
     slideBackground(0); // Move to the first third
 }
-
 
 void MainWindow::showLogoScreen() {
     stackedWidget->setCurrentWidget(logoScreen);
@@ -133,6 +141,11 @@ void MainWindow::showCreateGameScreen() {
 void MainWindow::showLobbyScreen() {
     stackedWidget->setCurrentWidget(lobbyScreen);
     slideBackground(-960); // Move to the last third
+}
+
+void MainWindow::showJoinLobbyScreen() {
+    stackedWidget->setCurrentWidget(joinLobbyScreen);
+    slideBackground(-480); // Move to the last third
 }
 
 MainWindow::~MainWindow() {
