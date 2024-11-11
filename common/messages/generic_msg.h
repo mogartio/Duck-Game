@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <list>
+#include <map>
 #include <string>
 #include <utility>
 #include <vector>
@@ -86,7 +87,7 @@ public:
 
 class InfoLobbyMsg: public GenericMsg {
 private:
-    std::list<DescipcionPlayer> players;
+    std::map<std::string, uint8_t> players_name_color;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -97,11 +98,11 @@ public:
 
     InfoLobbyMsg();
 
-    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players);
+    explicit InfoLobbyMsg(std::map<std::string, uint8_t> players_name_color);
 
-    void set_players(std::list<DescipcionPlayer> players);
+    void set_players(std::map<std::string, uint8_t> players_name_color);
 
-    std::list<DescipcionPlayer> get_players() const;
+    std::map<std::string, uint8_t> get_players() const;
 };
 
 

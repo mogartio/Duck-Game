@@ -10,17 +10,6 @@ void Lobby::lobby_empty() {
     }
 }
 
-std::list<DescipcionPlayer> Lobby::get_players_description() {
-    std::list<DescipcionPlayer> players_description;
-    for (auto& pair: players_map) {
-        DescipcionPlayer descripcionPlayer;
-        descripcionPlayer.nombre = pair.first;
-        descripcionPlayer.color = 0;  // por ahora, despues tenemos que hacer que esto se almacene
-        players_description.push_back(descripcionPlayer);
-    }
-    return players_description;
-}
-
 Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
              Client* first_player, uint& id_lobby, bool is_testing):
         send_queues(send_queues),
@@ -28,9 +17,9 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
         id_lobby(id_lobby),
         is_testing(is_testing) {
     player1_id = first_player->get_id();
-    // players_description[FIRST_PLAYER] = descripcionPlayer;
+    players_description[player_name] = 0;  // color del primer jugador predeterminado
+    colores_usados.insert(0);
     players_map[player_name] = first_player;
-
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
 }
 
@@ -56,12 +45,19 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
         }
     }
     players_map[player_name] = second_player;
+    for (uint8_t i = 0; i < MAX_PLAYERS; i++) {
+        if (colores_usados.find(i) == colores_usados.end()) {
+            colores_usados.insert(i);
+            players_description[player_name] = i;
+            break;
+        }
+    }
 
     std::set<uint> players_ids;
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            send_queues.send_to_client(new InfoLobbyMsg(players_description),
                                        pair.second->get_id());
         }
     }
@@ -75,10 +71,14 @@ void Lobby::removePlayer(std::string player_name) {
         for (auto& pair: players_map) {
             if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
                 players_ids.insert(pair.second->get_id());
-                send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+                send_queues.send_to_client(new InfoLobbyMsg(players_description),
                                            pair.second->get_id());
             }
         }
+
+        colores_usados.erase(players_description[player_name]);
+        players_description.erase(player_name);
+
     } else {
         throw std::runtime_error("Jugador no estaba en el lobby");
     }
@@ -97,7 +97,7 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            send_queues.send_to_client(new InfoLobbyMsg(players_description),
                                        pair.second->get_id());
             pair.second->switch_queues(
                     receiver_q);  // aca cambiariamos la queue para definir la que

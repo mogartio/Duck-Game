@@ -62,15 +62,15 @@ void OnePlayer::play() {
 
     // Agrego a cada jugador usando el mensaje de info lobby
     InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
-    std::list<DescipcionPlayer> players = info_lobby->get_players();
+    std::map<std::string, u_int8_t> players = info_lobby->get_players();
     for (uint i = 0; i < players.size(); i++) {
         GenericMsg* jugador = queueRecive.pop();
         if (jugador->get_header() != GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
             throw("Estoy recibiendo un mensaje que no es de updated player info");
         }
         UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
-        map.addPlayer(player_info->get_position().first, player_info->get_position().second, 2,
-                      player_info->get_player_name());
+        map.addPlayer(player_info->get_position().first, player_info->get_position().second,
+                      players[player_info->get_player_name()], player_info->get_player_name());
     }
 
     const Uint32 frame_rate = 1000 / 30;      // 30 FPS

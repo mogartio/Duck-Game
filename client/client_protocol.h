@@ -2,6 +2,7 @@
 #define CLIENT_PROTOCOL_H
 
 #include <list>
+#include <map>
 
 #include "../common/protocolo-common.h"
 

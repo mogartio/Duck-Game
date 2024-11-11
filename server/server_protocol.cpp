@@ -46,13 +46,18 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 
-    std::list<DescipcionPlayer> players_from_lobby = msg.get_players();
-    uint8_t players_size = players_from_lobby.size();
+    std::map<std::string, uint8_t> players = msg.get_players();
+
+    // mando la cantidad de jugadores
+    uint8_t players_size = players.size();
     send_u_int8_t(players_size);
 
-    for (auto& player: players_from_lobby) {
-        send_string(player.nombre);
-        send_u_int8_t(player.color);
+    // mando los nombres de los jugadores
+    for (auto& player: players) {
+        std::string player_name = player.first;
+        send_string(player_name);
+        // mando el color del jugador
+        send_u_int8_t(player.second);
     }
 }
 

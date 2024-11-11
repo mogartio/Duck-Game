@@ -3,14 +3,6 @@
 #include <cstdint>
 #include <string>
 
-struct DescipcionPlayer {
-    std::string nombre;
-    uint8_t color;
-    // agregar mas en caso de ser necesario
-
-    ~DescipcionPlayer() = default;
-};
-
 /*
  * Clase que representa la descripcion de un lobby
  */
