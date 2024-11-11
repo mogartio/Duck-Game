@@ -146,21 +146,14 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
-    // recibo la cantidad de posiciones que tiene el trail
-    uint16_t trail_size = recv_u_int16_t();
-    // recibo las posiciones del trail
-    std::vector<std::pair<uint16_t, uint16_t>> trail;
-    for (int i = 0; i < trail_size; i++) {
-        uint16_t x = recv_u_int16_t();
-        uint16_t y = recv_u_int16_t();
-        trail.push_back(std::make_pair(x, y));
-    }
-    // recibo la posicion final
-    uint16_t x = recv_u_int16_t();
-    uint16_t y = recv_u_int16_t();
-    // seteo los valores en el mensaje
-    msg.set_projectile_trail(trail);
-    msg.set_projectile_final_position(x, y);
+    // recibo la posicion del proyectil
+    uint8_t pos_x = recv_u_int8_t();
+    uint8_t pos_y = recv_u_int8_t();
+    msg.set_pos_x(pos_x);
+    msg.set_pos_y(pos_y);
+    // recibo el item del proyectil
+    uint8_t item = recv_u_int8_t();
+    msg.set_item(item);
 }
 
 void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {

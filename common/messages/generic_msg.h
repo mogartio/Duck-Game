@@ -460,8 +460,9 @@ public:
 
 class ProjectileInfoMsg: public GenericMsg {
 private:
-    std::vector<std::pair<uint16_t, uint16_t>> projectile_trail;
-    std::pair<uint16_t, uint16_t> projectile_final_position;
+    uint8_t pos_x;
+    uint8_t pos_y;
+    uint8_t item;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -472,16 +473,19 @@ public:
 
     ProjectileInfoMsg();
 
-    explicit ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail,
-                               std::pair<uint16_t, uint16_t> projectile_final_position);
+    explicit ProjectileInfoMsg(uint8_t pos_x, uint8_t pos_y, uint8_t item);
 
-    std::vector<std::pair<uint16_t, uint16_t>> get_projectile_trail() const;
+    uint8_t get_pos_x() const;
 
-    std::pair<uint16_t, uint16_t> get_final_position() const;
+    uint8_t get_pos_y() const;
 
-    void set_projectile_trail(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail);
+    uint8_t get_item() const;
 
-    void set_projectile_final_position(uint16_t x, uint16_t y);
+    void set_pos_x(uint8_t pos_x);
+
+    void set_pos_y(uint8_t pos_y);
+
+    void set_item(uint8_t item);
 };
 
 
