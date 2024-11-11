@@ -69,13 +69,11 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
         player.color = color;
 
         players.push_back(player);
-        std::cout << "Player: " << player.nombre << " Color: " << static_cast<int>(player.color) << std::endl;
     }
     msg.set_players(players);
 
     uint8_t max_players = recv_u_int8_t();
     msg.set_max_players(max_players);
-    std::cout << "Max players: " << static_cast<int>(max_players) << std::endl;
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
@@ -92,6 +90,9 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
 
         uint8_t cantidad_de_jugadores = recv_u_int8_t();
         lobby.cantidadJugadores = cantidad_de_jugadores;
+
+        uint8_t max_jugadores = recv_u_int8_t();
+        lobby.maxJugadores = max_jugadores;
 
         lobbies.push_back(lobby);
     }

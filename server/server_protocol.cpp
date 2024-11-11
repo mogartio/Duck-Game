@@ -76,6 +76,7 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
         send_u_int8_t(lobby.idLobby);
         send_string(lobby.nombreLobby);
         send_u_int8_t(lobby.cantidadJugadores);
+        send_u_int8_t(lobby.maxJugadores);
     }
 }
 

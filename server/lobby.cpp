@@ -122,7 +122,8 @@ uint Lobby::getId() const { return id_lobby; }
 DescripcionLobby Lobby::getDescription() const {
     DescripcionLobby desc;
     desc.idLobby = id_lobby;
-    desc.nombreLobby = "Lobby " + std::to_string(id_lobby);
+    desc.nombreLobby = lobby_name;
     desc.cantidadJugadores = players_map.size();
+    desc.maxJugadores = max_players;
     return desc;
 }
