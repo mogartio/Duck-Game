@@ -19,7 +19,6 @@ protected:
     int reach;
     int distance_covered;
     int id;
-    std::vector<std::pair<uint16_t, uint16_t>> trail;
     bool despawns_on_contact;
     bool is_lethal;
 

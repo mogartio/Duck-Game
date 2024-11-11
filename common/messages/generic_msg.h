@@ -472,8 +472,7 @@ public:
 
     ProjectileInfoMsg();
 
-    explicit ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail,
-                               std::pair<uint16_t, uint16_t> projectile_final_position);
+    explicit ProjectileInfoMsg(std::pair<uint16_t, uint16_t> projectile_final_position);
 
     std::vector<std::pair<uint16_t, uint16_t>> get_projectile_trail() const;
 

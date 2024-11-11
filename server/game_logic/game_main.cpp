@@ -24,22 +24,20 @@ std::string GameMain::play_round(Stage& stage) {
         stage.add_player(player, player->get_id());
     }
     while (true) {
-        for (int i = 0; i < 15; i++) {
-            if (is_testing) {
-                create_command();
+        if (is_testing) {
+            create_command();
+        }
+        GenericMsg* msg;
+        if (receiver_q.try_pop(msg)) {
+            msg->accept_read(*this);  // esto equivale a una llamada al handle_read
+        }
+        for (auto& [name, player]: players) {
+            if (!player->lives()) {
+                continue;
             }
-            GenericMsg* msg;
-            if (receiver_q.try_pop(msg)) {
-                msg->accept_read(*this);  // esto equivale a una llamada al handle_read
-            }
-            for (auto& [name, player]: players) {
-                if (!player->lives()) {
-                    continue;
-                }
-                stage.delete_player_from_stage(*player);  // Borro su dibujo viejo
-                player->update();
-                stage.draw_player(*player);
-            }
+            stage.delete_player_from_stage(*player);  // Borro su dibujo viejo
+            player->update();
+            stage.draw_player(*player);
         }
         stage.update();
         if (is_testing) {

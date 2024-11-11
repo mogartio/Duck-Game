@@ -342,10 +342,8 @@ ProjectileInfoMsg::ProjectileInfoMsg():
         projectile_trail(),
         projectile_final_position() {}
 
-ProjectileInfoMsg::ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail,
-                                     std::pair<uint16_t, uint16_t> projectile_final_position):
+ProjectileInfoMsg::ProjectileInfoMsg(std::pair<uint16_t, uint16_t> projectile_final_position):
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
-        projectile_trail(projectile_trail),
         projectile_final_position(projectile_final_position) {}
 
 void ProjectileInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }

@@ -25,8 +25,7 @@ public:
     Observer(SendQueuesMonitor<GenericMsg*>& queues): senders(queues) {}
     virtual void update() {}
     virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) {}
-    virtual void update(std::vector<std::pair<uint16_t, uint16_t>>, std::pair<uint16_t, uint16_t>) {
-    }
+    virtual void update(std::pair<uint16_t, uint16_t>) {}
     virtual ~Observer() = default;
 };
 
@@ -56,18 +55,8 @@ class ProjectileObserver: public Observer {
 
 public:
     ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
-    virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
-                        std::pair<uint16_t, uint16_t> final_position) override {
-        ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, final_position);
-        std::stringstream ss;
-        for (auto& coor: trail) {
-            ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
-               << std::endl;
-        }
-        // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-        //           << std::to_string(std::get<0>(final_position))
-        //           << std::to_string(std::get<1>(final_position)) << " con trail: " << ss.str()
-        //           << std::endl;
+    virtual void update(std::pair<uint16_t, uint16_t> final_position) override {
+        ProjectileInfoMsg* msg = new ProjectileInfoMsg(final_position);
         std::list<GenericMsg*>
                 porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
         porquenecesitounalist.push_back(msg);
