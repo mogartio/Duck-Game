@@ -339,12 +339,11 @@ void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
 
 ProjectileInfoMsg::ProjectileInfoMsg():
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
-        projectile_trail(),
-        projectile_final_position() {}
+        pos_x(), pos_y(), item() {}
 
-ProjectileInfoMsg::ProjectileInfoMsg(std::pair<uint16_t, uint16_t> projectile_final_position):
+ProjectileInfoMsg::ProjectileInfoMsg(uint8_t pos_x, uint8_t pos_y, uint8_t item):
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
-        projectile_final_position(projectile_final_position) {}
+        pos_x(pos_x), pos_y(pos_y), item(item) {}
 
 void ProjectileInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -352,19 +351,14 @@ void ProjectileInfoMsg::accept_recv(HandlerReceiver& handler) { handler.handle_r
 
 void ProjectileInfoMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-std::vector<std::pair<uint16_t, uint16_t>> ProjectileInfoMsg::get_projectile_trail() const {
-    return projectile_trail;
-}
+uint8_t ProjectileInfoMsg::get_pos_x() const { return pos_x; }
 
-std::pair<uint16_t, uint16_t> ProjectileInfoMsg::get_final_position() const {
-    return projectile_final_position;
-}
+uint8_t ProjectileInfoMsg::get_pos_y() const { return pos_y; }
 
-void ProjectileInfoMsg::set_projectile_trail(
-        std::vector<std::pair<uint16_t, uint16_t>> projectile_trail) {
-    this->projectile_trail = projectile_trail;
-}
+uint8_t ProjectileInfoMsg::get_item() const { return item; }
 
-void ProjectileInfoMsg::set_projectile_final_position(uint16_t x, uint16_t y) {
-    this->projectile_final_position = std::make_pair(x, y);
-}
+void ProjectileInfoMsg::set_pos_x(uint8_t pos_x) { this->pos_x = pos_x; }
+
+void ProjectileInfoMsg::set_pos_y(uint8_t pos_y) { this->pos_y = pos_y; }
+
+void ProjectileInfoMsg::set_item(uint8_t item) { this->item = item; }

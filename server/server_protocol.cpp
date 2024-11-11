@@ -129,20 +129,14 @@ void ServerProtocol::handle_send(const WinnerMsg& msg) {
 void ServerProtocol::handle_send(const ProjectileInfoMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    // recibo las posiciones de los proyectiles y la posicion final
-    std::vector<std::pair<uint16_t, uint16_t>> trail = msg.get_projectile_trail();
-    std::pair<uint16_t, uint16_t> final_position = msg.get_final_position();
-    // mando la cantidad de posiciones
-    uint16_t trail_size = trail.size();
-    send_u_int16_t(trail_size);
-    // mando las posiciones
-    for (size_t i = 0; i < trail.size(); i++) {
-        send_u_int16_t(trail[i].first);
-        send_u_int16_t(trail[i].second);
-    }
-    // mando la posicion final
-    send_u_int16_t(final_position.first);
-    send_u_int16_t(final_position.second);
+    // recibo posiciones x e y del proyectil
+    uint8_t pos_x = msg.get_pos_x();
+    send_u_int8_t(pos_x);
+    uint8_t pos_y = msg.get_pos_y();
+    send_u_int8_t(pos_y);
+    // recibo el item del proyectil
+    uint8_t item = msg.get_item();
+    send_u_int8_t(item);
 }
 
 void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
