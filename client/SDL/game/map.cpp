@@ -10,6 +10,7 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles):
         tiles(tiles),
         tilesImages(3, nullptr),
         mapTexture(nullptr),
+        parentTexture(nullptr),
         updated(true) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
@@ -138,14 +139,16 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Creamos una textura padre de toda la pantalla
     SDL_Rect displayBounds;
     while (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {}
-    SDL_Texture* parentTexture =
-            SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
-                              displayBounds.w, displayBounds.h);
 
+    if (parentTexture == nullptr) {
+        parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                              displayBounds.w, displayBounds.h);
+    }
     // Cambiamos el render a la textura padre
     SDL_SetRenderTarget(rend, parentTexture);
     // limpiamos la textura padre por si acaso
     SDL_RenderClear(rend);
+
 
     if (mapTexture == nullptr) {
         mapTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
@@ -201,6 +204,15 @@ void Map::fill() {  // Dibuja de atras para adelante
 }
 
 Map::~Map() {
+
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
+    }
+
+    if (parentTexture != nullptr) {
+        SDL_DestroyTexture(parentTexture);
+    }
+
     for (Image* piso: tilesImages) {
         delete piso;
     }
