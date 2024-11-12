@@ -26,6 +26,8 @@ private:
     bool flapup;
     uint width;
     uint height;
+    int x;
+    int y;
 
     Image* duck;
     Image* wing;
@@ -53,6 +55,8 @@ public:
 
     // Dispara el arma
     void shoot();
+
+    std::pair<int, int> getPosition();
 
     ~Player();
 };

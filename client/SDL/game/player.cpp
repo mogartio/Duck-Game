@@ -129,6 +129,8 @@ void Player::updateWing(int x, int y) {
 
 void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
+    this->x = x;
+    this->y = y;
 
     // Actualizo la imagen del pato y su posicion
     if (state == DuckState::WALK) {
@@ -193,6 +195,8 @@ void Player::shoot() {
 
     */
 }
+
+std::pair<int, int> Player::getPosition() { return std::make_pair(x, y); }
 
 Player::~Player() {
     for (Image* wing: wings) {
