@@ -11,7 +11,7 @@ private:
     SendQueuesMonitor<GenericMsg*>& senders;
     std::map<std::string, Player*> players;
     std::map<std::string, int> player_points;
-    Stage current_stage;
+    Stage* current_stage;
     std::unique_ptr<GameMain> game_loop;
     std::map<std::string, Player*> generate_players(std::vector<std::string>, PlayerObserver*);
     bool game_over;

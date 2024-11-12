@@ -2,7 +2,7 @@
 
 Game::Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, bool is_testing,
            SendQueuesMonitor<GenericMsg*>& senders):
-        senders(senders), current_stage("main_map.csv", senders), game_over(false) {
+        senders(senders), game_over(false) {
     PlayerObserver* player_obs = new PlayerObserver(senders);
     players = generate_players(player_names, player_obs);
     game_loop = std::make_unique<GameMain>(recv, players, is_testing, senders);
@@ -22,8 +22,9 @@ std::map<std::string, Player*> Game::generate_players(std::vector<std::string> n
 void Game::run() {
     while (!game_over) {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
+            current_stage = new Stage("main_map.csv", senders);
             send_map();
-            std::string winner = game_loop->play_round(current_stage);
+            std::string winner = game_loop->play_round(*current_stage);
             player_points[winner]++;
         }
         for (auto [name, points]: player_points) {
@@ -35,7 +36,7 @@ void Game::run() {
 }
 
 void Game::send_map() {
-    std::vector<uint16_t> map = current_stage.get_vector_representation();
+    std::vector<uint16_t> map = current_stage->get_vector_representation();
     SendMapMsg* map_msg = new SendMapMsg(map, Config::get_instance()->rows_map,
                                          Config::get_instance()->columns_map);
     std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;

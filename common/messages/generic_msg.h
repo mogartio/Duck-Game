@@ -31,7 +31,7 @@ enum ActionId : uint8_t {
 
 }
 
-namespace ActionsId {
+namespace ProjectilesId {
 
 enum ProjectileId : uint8_t {
     GRENADE = 0x01,

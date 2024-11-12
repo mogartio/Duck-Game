@@ -13,14 +13,16 @@ protected:
     bool stopped_holding_trigger;
     bool throw_started;
     int throw_reach;
+    int id;
 
 public:
-    Weapon(Stage& stage, int ammo, int reach):
+    Weapon(Stage& stage, int ammo, int reach, int id):
             ammo(ammo),
             reach(reach),
             stage(stage),
             player(nullptr),
-            stopped_holding_trigger(true) {}
+            stopped_holding_trigger(true),
+            id(id) {}
     virtual int get_ammo() { return ammo; }
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}

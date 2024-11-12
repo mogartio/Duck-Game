@@ -27,26 +27,28 @@ bool Projectile::ray_trace(Stage& stage) {
             next_tile == Config::get_instance()->mapsId["wall"]) {
             speed = 0;
             stage.set(position, id);
+            notify();
             return despawns_on_contact;
         }
         if (next_tile == 1 || next_tile == 2) {
             if (is_lethal) {
                 stage.kill(next_tile);
             }
+            if (!(initial_position == position)) {
+                notify();
+            }
             return is_lethal;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {
                 stage.set(bullet_position, id);
+                notify();
                 return false;
             }
             position = bullet_position;
             // coordinates_to_delete.push_back(bullet_position);
             update();
         }
-    }
-    if (!(position == initial_position)) {
-        notify();
     }
     return false;
 }

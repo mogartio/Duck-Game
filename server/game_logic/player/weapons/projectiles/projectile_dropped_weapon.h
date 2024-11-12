@@ -18,8 +18,8 @@ private:
 
 public:
     ProjectileThrownWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                           int x_direction, int reach):
-            Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, 9, false, false),
+                           int x_direction, int reach, int id):
+            Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, id, false, false),
             weapon(std::move(weapon)),
             current_angle_index(0),
             deviation_angles({M_PI / 4, M_PI / 2, 9 * M_PI / 4}) {}
@@ -40,8 +40,8 @@ private:
 
 public:
     ProjectileDroppedWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                            int reach, double):
-            Projectile(initial_position, 1, reach, speed, 0, 9, false, false),
+                            int reach, int id):
+            Projectile(initial_position, 1, reach, speed, 0, id, false, false),
             weapon(std::move(weapon)) {}
 
     virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
@@ -53,8 +53,9 @@ class GrenadeProjectile: public ProjectileThrownWeapon {
 
 public:
     GrenadeProjectile(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                      int x_direction, int reach, int counter, Stage& stage):
-            ProjectileThrownWeapon(std::move(weapon), initial_position, speed, x_direction, reach),
+                      int x_direction, int reach, int counter, Stage& stage, int id):
+            ProjectileThrownWeapon(std::move(weapon), initial_position, speed, x_direction, reach,
+                                   id),
             counter(counter),
             stage(stage) {}
     void update() override {
