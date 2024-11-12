@@ -74,6 +74,9 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
 
     uint8_t max_players = recv_u_int8_t();
     msg.set_max_players(max_players);
+
+    uint8_t lobby_id = recv_u_int8_t();
+    msg.set_lobby_id(lobby_id);
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {

@@ -61,7 +61,9 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
 
     uint8_t max_players = msg.get_max_players();
     send_u_int8_t(max_players);
-    std::cout << "Max players sent: " << static_cast<int>(max_players) << std::endl;
+
+    uint8_t lobby_id = msg.get_lobby_id();
+    send_u_int8_t(lobby_id);
 }
 
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {

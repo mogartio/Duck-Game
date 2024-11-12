@@ -66,6 +66,15 @@ public:
         LEFT = 0x02,
     };
 
+    enum DuckColor : uint8_t {
+        RED = 0x01,
+        BLUE = 0x02,
+        GREEN = 0x03,
+        YELLOW = 0x04,
+        ORANGE = 0x05,
+        PURPLE = 0x06,
+    };
+
 private:
     MsgTypeHeader header;
     Type type;
@@ -88,7 +97,7 @@ class InfoLobbyMsg: public GenericMsg {
 private:
     std::list<DescipcionPlayer> players;
     uint8_t max_players;
-
+    uint8_t lobby_id;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -99,15 +108,19 @@ public:
 
     InfoLobbyMsg();
 
-    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players);
+    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id);
 
     void set_players(std::list<DescipcionPlayer> players);
 
     void set_max_players(uint8_t max_players);
 
+    void set_lobby_id(uint8_t lobby_id);
+
     std::list<DescipcionPlayer> get_players() const;
 
     uint8_t get_max_players() const;
+
+    uint8_t get_lobby_id() const;
 };
 
 

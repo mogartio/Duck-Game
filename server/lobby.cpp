@@ -15,7 +15,7 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
     for (auto& pair: players_map) {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
-        descripcionPlayer.color = 0x01;  // por ahora, despues tenemos que hacer que esto se almacene
+        descripcionPlayer.color = players_colors[pair.first];
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
@@ -33,7 +33,7 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
     this->max_players = max_players;
 
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
-    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players), first_player->get_id());
+    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), first_player->get_id());
 }
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
@@ -44,7 +44,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     uint cantidadLocalPlayers = 1;
     for (auto& pair: players_map) {
         // Busco los clientes locales (con el mismo id)
-        if (pair.second->get_id() == second_player->get_id()) {
+        if (pair.second->get_id() == second_player->get_id()) { // si es el mismo cliente...
             // Sumo la cantidad de jugadores locales
             cantidadLocalPlayers++;
             // Si la cantidad de jugadores locales supera el maximo permitido
@@ -63,8 +63,9 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
+            players_colors[player_name] = GenericMsg::DuckColor::YELLOW;
             send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                        pair.second->get_id());
         }
     }
@@ -78,7 +79,7 @@ void Lobby::removePlayer(std::string player_name) {
         for (auto& pair: players_map) {
             if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
                 players_ids.insert(pair.second->get_id());
-                send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
+                send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                            pair.second->get_id());
             }
         }
@@ -100,7 +101,7 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                        pair.second->get_id());
             pair.second->switch_queues(
                     receiver_q);  // aca cambiariamos la queue para definir la que

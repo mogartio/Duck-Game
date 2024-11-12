@@ -26,7 +26,7 @@ class Client;
 class Lobby {
 private:
     std::map<std::string, Client*> players_map;
-
+    std::map<std::string, uint8_t> players_colors;
     SendQueuesMonitor<GenericMsg*>& send_queues;
 
     Queue<GenericMsg*>* receiver_q;
