@@ -13,8 +13,10 @@ GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
 std::string GameMain::play_round(Stage& stage) {
+
     std::vector<std::tuple<int, int>> weapon_spawn_sites =
             Config::get_instance()->weapon_spawn_sites;
+
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
     WeaponSpawnPoint spawn(weapon_spawn, stage);
     spawn.spawn_weapon();
@@ -29,7 +31,7 @@ std::string GameMain::play_round(Stage& stage) {
         }
         GenericMsg* msg;
         if (receiver_q.try_pop(msg)) {
-            msg->accept_read(*this);  // esto equivale a una llamada al handle_read
+            msg->accept_read(*this);  // esta linea ejecuta el comando
         }
         for (auto& [name, player]: players) {
             if (!player->lives()) {
@@ -66,6 +68,7 @@ std::string GameMain::play_round(Stage& stage) {
                 std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
     }
 }
+// podes ignorar todo lo que esta abajo
 
 
 void GameMain::handle_read(const PickupDropMsg&) {}
@@ -79,7 +82,6 @@ void GameMain::handle_read(const StopActionMsg& msg) {
     int action = msg.get_action_id();
     players[msg.get_player_name()]->remove_action(action);
 }
-
 
 // OH el HORROR
 // El peor codigo que escribi en este tp hasta ahora

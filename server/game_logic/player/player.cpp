@@ -23,7 +23,7 @@ void Player::init_for_stage(Stage* stage) {
     is_alive = true;
     pick_weapon(std::make_unique<Unarmed>(*stage));
     current_actions.clear();
-    notify();
+    notify();  // los notify hacen que se broadcasteen mensajes
 }
 
 void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
