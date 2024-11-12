@@ -63,6 +63,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
+            send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
             send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players),
                                        pair.second->get_id());
         }
