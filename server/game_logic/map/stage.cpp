@@ -6,6 +6,9 @@
 #include <vector>
 
 #include "../player/player.h"
+#define FREE 0
+#define OCCUPIED 1
+#define DEATH -1
 #define FLOOR 1
 #define BACKGROUND 0
 #define PLAYER_SIZE 3
@@ -101,20 +104,21 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     return true;
 }
 
-bool Stage::is_valid_position(Coordinate position, int color) {
+// color seria el id del personaje
+int Stage::is_valid_position(Coordinate position, int color) {
     for (int i = 0; i < PLAYER_SIZE; i++) {
         for (int j = 0; j < PLAYER_SIZE; j++) {
             Coordinate aux(position.x + j, position.y + i);
             if (map.out_of_range(aux)) {
-                return false;
+                return DEATH;
             }
             int value = map.get(aux);
             if (value != BACKGROUND && value != color) {
-                return false;
+                return OCCUPIED;
             }
         }
     }
-    return true;
+    return FREE;
 }
 
 std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {

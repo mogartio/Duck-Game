@@ -54,6 +54,7 @@ bool Projectile::ray_trace(Stage& stage) {
 void Projectile::notify() {
 
     for (Observer* obs: observers) {
-        obs->update(std::pair<uint16_t, uint16_t>(position.x, position.y));
+        obs->update(static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+                    static_cast<uint8_t>(id));
     }
 }

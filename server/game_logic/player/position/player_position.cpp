@@ -4,6 +4,9 @@
 
 #include "../../../../common/messages/generic_msg.h"
 #include "../player.h"
+#define FREE 0
+#define OCCUPIED 1
+#define DEATH -1
 using namespace ActionsId;
 
 PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, Stage& stage):
@@ -45,13 +48,19 @@ bool PlayerPosition::is_aiming_up() { return aiming_up; }
 
 void PlayerPosition::move_horizontally(int offset) {
     Coordinate current(position.x + offset, position.y);
-    if (stage.is_valid_position(current, player.get_id())) {
+    int next_position = stage.is_valid_position(current, player.get_id());
+    if (next_position == DEATH) {
+        player.die();
+    } else if (next_position == OCCUPIED) {
+        return;
+    } else {
         if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
             player.Notify();
         }
         position = current;
     }
 }
+
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
 void PlayerPosition::set_state(std::unique_ptr<AirState> new_state, uint8_t state_code) {
     air_state = std::move(new_state);
@@ -66,13 +75,16 @@ void PlayerPosition::move_vertically(int offset) {
     }
     for (int i = 0; i < offset * direction_handler; i++) {
         Coordinate current(position.x, position.y + direction_handler);
-        if (stage.is_valid_position(current, player.get_id())) {
+        int next_position = stage.is_valid_position(current, player.get_id());
+        if (next_position == DEATH) {
+            player.die();
+        } else if (next_position == OCCUPIED) {
+            return;
+        } else {
             if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
                 player.Notify();
             }
             position = current;
-        } else {
-            return;
         }
     }
 }
