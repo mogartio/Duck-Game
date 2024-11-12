@@ -39,7 +39,7 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     lobby_empty();
     if (players_map.size() == max_players) {
-        throw std::runtime_error("Lobby lleno");
+        throw std::runtime_error("lobby is full");
     }
     uint cantidadLocalPlayers = 1;
     for (auto& pair: players_map) {
@@ -49,12 +49,12 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
             cantidadLocalPlayers++;
             // Si la cantidad de jugadores locales supera el maximo permitido
             if (cantidadLocalPlayers > MAX_LOCAL_PLAYERS) {
-                throw std::runtime_error("Maximo de jugadores locales alcanzado");
+                throw std::runtime_error("max local players reached");
             }
         }
         // Si el jugador ya esta en el lobby (por nombre)
         if (pair.first == player_name) {
-            throw std::runtime_error("El jugador ya esta en el lobby");
+            throw std::runtime_error("player already in lobby");
         }
     }
     players_map[player_name] = second_player;
