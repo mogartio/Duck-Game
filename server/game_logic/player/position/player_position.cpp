@@ -14,6 +14,7 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
         player(player),
         stage(stage),
         facing_direction(AIM_RIGHT),
+        aiming_direction(-1),
         aiming_up(false),
         state(GROUNDED) {
     air_state = std::move(std::make_unique<Grounded>());
@@ -24,9 +25,11 @@ void PlayerPosition::move(std::set<int>& directions) {
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...
             facing_direction = AIM_LEFT;
+            aiming_direction = -1;
             x_offset = -1;
         } else if (direction == MOVE_RIGHT) {
             facing_direction = AIM_RIGHT;
+            aiming_direction = AIM_RIGHT;
             x_offset = 1;
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
@@ -96,9 +99,5 @@ std::vector<Coordinate> PlayerPosition::get_occupied() { return occupied; }
 
 Coordinate PlayerPosition::get_position() { return position; }
 
-int PlayerPosition::get_facing_direction() {
-    if (facing_direction == 2) {
-        return -1;
-    }
-    return 1;
-}  // malisimo, its never been this serious
+int PlayerPosition::get_aiming_direction() { return aiming_direction; }
+int PlayerPosition::get_facing_direction() { return facing_direction; }  // TODO: arreglar esto

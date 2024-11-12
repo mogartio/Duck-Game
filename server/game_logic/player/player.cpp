@@ -60,7 +60,7 @@ void Player::remove_action(int& command) {
     }
     if (command == THROW_WEAPON) {
         if (weapon != nullptr) {
-            weapon->finish_throw(position->get_facing_direction(), position->is_aiming_up(),
+            weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
         }
         weapon = nullptr;
@@ -117,7 +117,7 @@ void Player::shoot() {
     if (weapon == nullptr) {
         return;
     }
-    weapon->shoot(position->get_facing_direction(), position->is_aiming_up());
+    weapon->shoot(position->get_aiming_direction(), position->is_aiming_up());
 }
 
 void Player::die() { is_alive = false; }
