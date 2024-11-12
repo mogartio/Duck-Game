@@ -19,7 +19,6 @@ private:
     std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
-    // std::vector<Image*> weapons;
     std::unordered_map<Weapon, Image*> weapons;
     // Posiciones de las armas
     std::unordered_map<Weapon, std::vector<std::pair<int, int>>> weaponsMap;

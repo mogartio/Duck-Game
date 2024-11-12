@@ -7,7 +7,7 @@
 
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
-    // Crear el objeto Image y luego inicializarlo
+
     Image* image = new Image();
     image->initialize(rend, wingType);
     wings.push_back(image);
@@ -25,7 +25,6 @@ void Player::initialiceDuckImages(DuckState state) {
             images.push_back(additionalImage);
         }
     } else {
-        // Crear el objeto Image y luego inicializarlo
         Image* image = new Image();
         image->initialize(rend, action);
         images.push_back(image);
@@ -74,7 +73,6 @@ void Player::defineSize(int height, int width) {
         ala->queryTexture();
         ala->defineSize(height, width);
     }
-    // El tamaño original de los png son del pato 24x24 y del ala 15x15
 }
 
 void Player::updateWing(int x, int y) {

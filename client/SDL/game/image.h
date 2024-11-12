@@ -12,6 +12,7 @@ public:
     Image();
 
     void initialize(SDL_Renderer* rend, const std::string& img);
+    
     // fill() para background e imagenes estaticas
     void fill(bool background = false);
     

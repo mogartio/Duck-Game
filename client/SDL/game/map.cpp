@@ -21,8 +21,6 @@ Map::Map(SDL_Renderer* rend): rend(rend), tilesImages(3, nullptr) {
 
     makeArmor();
 
-    // newWeapon(5, 5, Weapon::MAGNUM);
-
     for (int i = int(TileType::COLUMN); i <= int(TileType::ROCK); i++) {
         TileType tileType = static_cast<TileType>(i);
         makeTile(tileType);
@@ -61,7 +59,7 @@ void Map::makeHelmet(Helemts helmet) {
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
-    helmetImage->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS);
+    helmetImage->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); // mismo tamaño que el pato
     helmets.push_back(helmetImage);
 }
 
