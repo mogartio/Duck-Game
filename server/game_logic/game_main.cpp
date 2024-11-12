@@ -59,7 +59,7 @@ std::string GameMain::play_round(Stage& stage) {
         }
         if (alive_players.size() == 1) {
             std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
-            sleep(2);
+            // sleep(2);
             stage.delete_player_from_stage(
                     *players[*alive_players.begin()]);  // Borro su dibujo viejo
             return *alive_players.begin();
