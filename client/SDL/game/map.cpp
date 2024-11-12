@@ -5,7 +5,12 @@
 #define TILES_TO_PIXELS 16
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles):
-        rend(rend), mapa(mapa), tiles(tiles), tilesImages(3, nullptr) {
+        rend(rend),
+        mapa(mapa),
+        tiles(tiles),
+        tilesImages(3, nullptr),
+        mapTexture(nullptr),
+        updated(true) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
@@ -57,9 +62,12 @@ SDL_Rect Map::adjustMapZoom() {
             min_y = position.second;
         }
     }
+    int distancia = 3 * tiles;
+    min_x < distancia ? min_x = 0 : min_x -= distancia;
+    min_y < distancia ? min_y = 0 : min_y -= distancia;
 
-    int new_width = (max_x - min_x);
-    int new_height = (max_y - min_y);
+    int new_width = (max_x - min_x) + 6 * tiles;
+    int new_height = (max_y - min_y) + 6 * tiles;
 
     zoomRect = {min_x, min_y, new_width, new_height};
     return zoomRect;
@@ -116,32 +124,80 @@ void Map::makeMap(int columnas, int filas) {
 
 void Map::update(std::string player, int x, int y, DuckState state, Side side) {
     players[player]->update(x * tiles, y * tiles, state, side);
+    updated = true;
 }
 
 void Map::newWeapon(/*int x, int y*/) {}
 
 void Map::fill() {  // Dibuja de atras para adelante
 
-    background.fill(true);
-
-    for (const auto& tilePair: tilesPlace) {
-        if (tilesImages[int(tilePair.first)] != nullptr) {
-            for (const auto& pair: tilePair.second) {
-                tilesImages[int(tilePair.first)]->position(pair.first * tiles, pair.second * tiles);
-                tilesImages[int(tilePair.first)]->fill();
-            }
-        }
+    if (!updated) {
+        return;
     }
 
+    // Creamos una textura padre de toda la pantalla
+    SDL_Rect displayBounds;
+    while (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {}
+    SDL_Texture* parentTexture =
+            SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                              displayBounds.w, displayBounds.h);
+
+    // Cambiamos el render a la textura padre
+    SDL_SetRenderTarget(rend, parentTexture);
+    // limpiamos la textura padre por si acaso
+    SDL_RenderClear(rend);
+
+    if (mapTexture == nullptr) {
+        mapTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                                       displayBounds.w, displayBounds.h);
+        SDL_RenderClear(rend);
+        SDL_SetRenderTarget(rend, mapTexture);
+
+        // Dibujamos el fondo
+        background.fill(true);
+
+        // Dibujamos las imagenes de los elementos del mapa
+        for (const auto& tilePair: tilesPlace) {
+            if (tilesImages[int(tilePair.first)] != nullptr) {
+                for (const auto& pair: tilePair.second) {
+                    tilesImages[int(tilePair.first)]->position(pair.first * tiles,
+                                                               pair.second * tiles);
+                    tilesImages[int(tilePair.first)]->fill();
+                }
+            }
+        }
+
+        // Cambiamos el render al parentTexture para dibujar el mapa
+        SDL_SetRenderTarget(rend, parentTexture);
+        SDL_RenderClear(rend);
+    }
+
+    // Dibujamos el mapa
+    SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
+
+    // Dibujamos a las armas
     /*
     for (Weapon weapon: weapons) {
         weapon.fill();
     }
     */
 
+    // Dibujamos a los jugadores
     for (const auto& pair: players) {
         pair.second->fill();
     }
+
+    // Cambiamos el render a la ventana
+    SDL_SetRenderTarget(rend, nullptr);
+
+    // Aca modificamos la textura padre
+    SDL_Rect zoomRect = adjustMapZoom();
+
+    // Renderizamos la textura padre en toda la ventana
+    SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
+
+    // le decimos que se actualizo
+    updated = false;
 }
 
 Map::~Map() {

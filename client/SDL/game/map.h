@@ -23,6 +23,8 @@ private:
     std::vector<Image*> tilesImages;
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
     std::unordered_map<std::string, Player*> players;
+    SDL_Texture* mapTexture;
+    bool updated;
 
     // std::vector<Weapon> weapons; // Tengo que crear un sistema de descarte de las armas vacias
 
