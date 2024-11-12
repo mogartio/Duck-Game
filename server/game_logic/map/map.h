@@ -21,16 +21,16 @@ public:
     void set(const Coordinate& position, const int& value) {
         if (out_of_range(position)) {
             // TODO: que sea una excepcion
-            std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
-                      << std::endl;
+            // std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
+                    //   << std::endl;
             return;
         }
         matrix[position.x][position.y] = value;
     }
     int get(const Coordinate& position) {
         if (out_of_range(position)) {
-            std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
-                      << std::endl;
+            // std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
+                    //   << std::endl;
             return -1;
         }
         return matrix[position.x][position.y];
