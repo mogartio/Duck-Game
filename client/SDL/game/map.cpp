@@ -37,7 +37,7 @@ void Map::makeWeapon(Weapon weapon) {
     path += weapon_to_string(weapon);
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
-    if (weapon == Weapon::GRANADA) {
+    if ((weapon == Weapon::GRANADA) || (weapon == Weapon::DUELOS)) {
         weaponImage->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
     } else {
         weaponImage->defineSize(1 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
@@ -52,7 +52,7 @@ void Map::makeHelmet(Helemts helmet) {
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
-    mapHelmet->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    mapHelmet->defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
     helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
 
     // Creo casco de inventario
@@ -61,7 +61,7 @@ void Map::makeHelmet(Helemts helmet) {
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
-    helmetImage->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    helmetImage->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS);
     helmets.push_back(helmetImage);
 }
 
@@ -69,7 +69,7 @@ void Map::makeArmor() {
     // Creo armadura de mapa
     armorOnMap.initialize(rend, "img_src/map/armor.png");
     armorOnMap.queryTexture();
-    armorOnMap.defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    armorOnMap.defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
 
     // Creo armadura de inventario
     armor.initialize(rend, "img_src/armor/armor4.png"); 
@@ -142,6 +142,7 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
                    DuckState::STANDING, RIGHT);
     player->armor(&armor, &hombro);
     player->weapon(weapons[Weapon::MAGNUM]);
+    player->helmet(helmets[int(Helemts::TINFOIL)]);
     players[name] = player;
     playersNamesAlive.push_back(name);
 }

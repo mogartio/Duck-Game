@@ -132,8 +132,14 @@ void Player::update(int x, int y, DuckState state, Side side) {
         _hombro->position(x, y);
     }
 
+    // Actualizo posicion del arma
     if(weaponON) { // Falta agregar offsets (perdon facu)
         _weapon->position(x, y);
+    }
+
+    // Actualizo posicion del casco
+    if (helmetOn) {
+        _helmet->position(x, y - 8);
     }
 }
 
@@ -188,7 +194,7 @@ void Player::helmet(Image* helmet) {
     }
     _helmet = helmet;
     std::pair<int, int> position = duck->getPosition();
-    _helmet->position(position.first, position.second);
+    _helmet->position(position.first, position.second - 8);
     helmetOn = true;
 }
 
@@ -197,7 +203,13 @@ void Player::helmet(Image* helmet) {
 void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
     duck->fill(flip);
+
+    // Dibujo el casco que tiene el pato
+    if (helmetOn) {
+        _helmet->fill(flip);
+    }
     
+    // Dibujo la armadura que tiene el pato
     if (armorOn) {
         _armor->fill(flip);
     }
@@ -212,6 +224,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
         wing->fill(flip);
     }
 
+    // Dibujo el hombro de la armadura
     if (armorOn) {
         _hombro->fill(flip);
     }

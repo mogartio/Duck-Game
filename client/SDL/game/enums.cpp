@@ -21,9 +21,9 @@ std::string tileType_to_string(TileType type) {
 
 std::string helmet_to_string(Helemts helmet) {
     switch (helmet) {
-        case Helemts::NORMAL:   return "helmet/normal.png";
-        case Helemts::KNIGHT:   return "helmet/knight.png";
-        case Helemts::TINFOIL:  return "helmet/tinfoil.png";
+        case Helemts::NORMAL:   return "normal.png";
+        case Helemts::KNIGHT:   return "knight.png";
+        case Helemts::TINFOIL:  return "tinfoil.png";
         default:        return "unknown.png";
     }
 }
