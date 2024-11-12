@@ -36,6 +36,35 @@ void Map::makeTile(TileType tileType) {
     tilesImages[int(tileType)] = tile;
 }
 
+SDL_Rect Map::adjustMapZoom() {
+    SDL_Rect zoomRect;
+    int max_x = 0;
+    int max_y = 0;
+    int min_x = 0;
+    int min_y = 0;
+    for (const auto& pair: players) {
+        std::pair<int, int> position = pair.second->getPosition();
+        if (position.first > max_x) {
+            max_x = position.first;
+        }
+        if (position.first < min_x || min_x == 0) {
+            min_x = position.first;
+        }
+        if (position.second > max_y) {
+            max_y = position.second;
+        }
+        if (position.second < min_y || min_y == 0) {
+            min_y = position.second;
+        }
+    }
+
+    int new_width = (max_x - min_x);
+    int new_height = (max_y - min_y);
+
+    zoomRect = {min_x, min_y, new_width, new_height};
+    return zoomRect;
+}
+
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
     player->defineSize(3 * tiles, 3 * tiles);
@@ -44,6 +73,8 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
 }
 
 void Map::makeMap(int columnas, int filas) {
+    this->columnas = columnas;
+    this->filas = filas;
 
     std::vector<std::vector<int>> matriz(filas, std::vector<int>(columnas, 0));
 

@@ -17,6 +17,8 @@ private:
     SDL_Renderer* rend;
     std::vector<uint16_t> mapa;
     uint tiles;
+    uint columnas;
+    uint filas;
 
     std::vector<Image*> tilesImages;
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
@@ -28,6 +30,7 @@ private:
 
     void makeTile(TileType tileType);
 
+    SDL_Rect adjustMapZoom();
 
 public:
     Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
@@ -35,7 +38,6 @@ public:
     void makeMap(int w, int h);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
-
 
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
