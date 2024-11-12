@@ -10,6 +10,24 @@ int GenericMsg::get_id_client() const { return id_client; }
 
 void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
 
+InfoLobbyMsg::InfoLobbyMsg(): GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
+
+InfoLobbyMsg::InfoLobbyMsg(std::map<std::string, uint8_t> players_name_color):
+        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG),
+        players_name_color(players_name_color) {}
+
+void InfoLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void InfoLobbyMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void InfoLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+void InfoLobbyMsg::set_players(std::map<std::string, uint8_t> players_name_color) {
+    this->players_name_color = players_name_color;
+}
+
+std::map<std::string, uint8_t> InfoLobbyMsg::get_players() const { return players_name_color; }
+
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),

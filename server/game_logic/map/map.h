@@ -21,16 +21,16 @@ public:
     void set(const Coordinate& position, const int& value) {
         if (out_of_range(position)) {
             // TODO: que sea una excepcion
-            std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
-                      << std::endl;
+            // std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
+                    //   << std::endl;
             return;
         }
         matrix[position.x][position.y] = value;
     }
     int get(const Coordinate& position) {
         if (out_of_range(position)) {
-            std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
-                      << std::endl;
+            // std::cout << "Error. Posicion" << position.x << "," << position.y << "fuera de rango"
+                    //   << std::endl;
             return -1;
         }
         return matrix[position.x][position.y];
@@ -44,7 +44,7 @@ public:
         for (int i = 0; i < rows; i++) {
             std::stringstream stream;
             for (int j = 0; j < columns; j++) {
-                if (matrix[j][i] == 2) {
+                if (matrix[j][i] == 2 || matrix[j][i] == 1) {
                     stream << "\033[31m"
                            << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 5 || matrix[j][i] == 6) {

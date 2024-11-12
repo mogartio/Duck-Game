@@ -3,9 +3,10 @@
 #include <string>
 #include <utility>
 
-#include "receiver.h"
 #include "../common/sender.h"
+
 #include "client_protocol.h"
+#include "receiver.h"
 
 class Client {
 private:
@@ -19,7 +20,8 @@ private:
     void start_client();
 
 public:
-    Client(const char* host, const char* port, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    Client(const char* host, const char* port, Queue<GenericMsg*>* send_queue,
+           Queue<GenericMsg*>* recv_queue);
 
     void stop();
     bool is_alive();

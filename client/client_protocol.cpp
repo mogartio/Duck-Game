@@ -52,6 +52,18 @@ void ClientProtocol::handle_send(const StartGameMsg& msg) {
     send_u_int8_t(header);
 }
 
+void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
+    uint8_t players_size = recv_u_int8_t();
+    std::map<std::string, uint8_t> players;
+
+    for (int i = 0; i < players_size; i++) {
+        std::string nombre = recv_string();
+        uint8_t color = recv_u_int8_t();
+        players[nombre] = color;
+    }
+    msg.set_players(players);
+}
+
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
     uint8_t lobbies_size = recv_u_int8_t();
     std::vector<DescripcionLobby> lobbies;
@@ -61,21 +73,12 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
         uint8_t lobby_id = recv_u_int8_t();
         lobby.idLobby = lobby_id;
 
+        std::string nombre_lobby = recv_string();
+        lobby.nombreLobby = nombre_lobby;
+
         uint8_t cantidad_de_jugadores = recv_u_int8_t();
         lobby.cantidadJugadores = cantidad_de_jugadores;
-        /*
-        for (int j = 0; j < cantidad_de_jugadores; j++) {
-            std::string player_name = recv_string();
-            uint8_t color = recv_u_int8_t();
-            if (j == 0) {
-                lobby.player1.nombre = player_name;
-                lobby.player1.color = color;
-            } else {
-                lobby.player2.nombre = player_name;
-                lobby.player2.color = color;
-            }
-        }
-        */
+
         lobbies.push_back(lobby);
     }
     msg.set_lobbies(lobbies);

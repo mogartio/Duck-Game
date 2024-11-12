@@ -1,5 +1,6 @@
 #include "handler_read.h"
 
+void HandlerReader::handle_read(const InfoLobbyMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const CustomizedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const ViewLobbiesMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const ChooseLobbyMsg& msg) { (void)msg; }

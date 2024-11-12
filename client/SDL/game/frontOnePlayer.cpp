@@ -8,17 +8,28 @@
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
 OnePlayer::OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
-                     std::string playerName):
+                     std::string playerName1, std::string playerName2):
         queueRecive(queueRecive),
-        playerName(playerName),
         running(true),
-        event_handler(queueSend, playerName, running) {}
+        event_handler(queueSend, playerName1, running, playerName2) {}
 
 void OnePlayer::play() {
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("Error initializing SDL: %s\n", SDL_GetError());
         return;
+    }
+
+    SDL_Rect displayBounds;
+    if (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {
+        SDL_Quit();
+        throw("Error al obtener los limites de la pantalla");
+    }
+
+    GenericMsg* msg_players_info = queueRecive.pop();
+
+    if (msg_players_info->get_header() != GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
+        throw("Estoy recibiendo un mensaje que no es de info lobby");
     }
 
     GenericMsg* matriz = queueRecive.pop();
@@ -35,21 +46,31 @@ void OnePlayer::play() {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
 
+    uint tiles_w = displayBounds.w / columnas;
+    uint tiles_h = displayBounds.h / filas;
+    uint tiles = std::min(tiles_w, tiles_h);
+
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
-    Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
+    Window win(displayBounds.w, displayBounds.h);
 
-    Map map(win.get_rend());
-    map.makeMap(columnas, filas, mapa);
+    // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
 
-    GenericMsg* jugador = queueRecive.pop();
+    Map map(win.get_rend(), mapa, tiles);
+    map.makeMap(columnas, filas);
 
-    if (jugador->get_header() == GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
-        std::cout << "se entro, recibio el msg updateando la pos" << std::endl;
-        UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
-        map.addPlayer(player->get_position().first, player->get_position().second, 2,
-                      player->get_player_name());
+    // Agrego a cada jugador usando el mensaje de info lobby
+    InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
+    std::map<std::string, u_int8_t> players = info_lobby->get_players();
+    for (uint i = 0; i < players.size(); i++) {
+        GenericMsg* jugador = queueRecive.pop();
+        if (jugador->get_header() != GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
+            throw("Estoy recibiendo un mensaje que no es de updated player info");
+        }
+        UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
+        map.addPlayer(player_info->get_position().first, player_info->get_position().second,
+                      players[player_info->get_player_name()], player_info->get_player_name());
     }
 
     const Uint32 frame_rate = 1000 / 30;      // 30 FPS

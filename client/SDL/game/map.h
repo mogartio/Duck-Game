@@ -1,19 +1,33 @@
-#include "../../../common/queue.h"
-#include "player.h"
-
 #include <list>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
 #include <SDL2/SDL_render.h>
+
+#include "../../../common/queue.h"
+
+#include "player.h"
 
 class Map {
 private:
-
     SDL_Renderer* rend;
+
+    std::vector<uint16_t> mapa;
+    uint tiles;
+    uint columnas;
+    uint filas;
+  
+    SDL_Texture* mapTexture;
+    SDL_Texture* parentTexture;
+    bool updated;
 
     // Imagenes de los tiles
     std::vector<Image*> tilesImages;
     // Posiciones de los tiles
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> tilesPlace;
-
+    std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
+  
     // Jugadores
     std::unordered_map<std::string, Player*> players;
     std::list<std::string> playersNamesAlive;
@@ -43,14 +57,18 @@ private:
     void makeArmor();
     void makeTile(TileType tileType);
 
+    SDL_Rect adjustMapZoom();
 
 public:
-    Map(SDL_Renderer* rend);
+
+    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
+
     void remove(std::string playerName);
+
 
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);

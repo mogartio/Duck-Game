@@ -61,6 +61,8 @@ Player::Player(SDL_Renderer* rend, Color color):
 // ----------------- Player -----------------
 
 void Player::defineSize(int height, int width) {
+    this->height = height;
+    this->width = width;
     for (const auto& pair: ducks) {
         const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
         for (Image* pato: patos) {
@@ -94,15 +96,21 @@ void Player::updateWing(int x, int y) {
         }
     }
 
+    uint offset_x = width / 4;
+    uint offset_y = (height) / 4;
+
     // Actualiza posicion del ala
     wing->position(x, y);
+
 }
 
 void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
+    this->x = x;
+    this->y = y;
 
     // Actualizo la imagen del pato y su posicion
-    if (state == DuckState::WALK){
+    if (state == DuckState::WALK) {
         duck = ducks[state][this->walk];
         if (this->walk == 4) {
             this->walk = 0;
@@ -229,6 +237,8 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 }
 
 // ----------------- Destructor -----------------
+
+std::pair<int, int> Player::getPosition() { return std::make_pair(x, y); }
 
 Player::~Player() {
     for (Image* wing: wings) {

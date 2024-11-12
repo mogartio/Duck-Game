@@ -1,19 +1,20 @@
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "../../../common/duckState/duckState.h"
 
 #include "image.h"
 #include "enums.h"
-#include "../../../common/duckState/duckState.h"
 
 class Player {
 private:
-
     SDL_Renderer* rend;
     SDL_RendererFlip flip;
     std::string file;
 
-    std::unordered_map<DuckState, std::vector<Image*>> ducks; 
+    std::unordered_map<DuckState, std::vector<Image*>> ducks;
     std::vector<Image*> wings;
 
     DuckState state;
@@ -23,6 +24,10 @@ private:
     bool helmetOn;
     int walk;
     bool flapup;
+    uint width;
+    uint height;
+    int x;
+    int y;
 
     Image* duck;
     Image* wing;
@@ -66,4 +71,7 @@ public:
 
     ~Player();
 
+    std::pair<int, int> getPosition();
+
+    ~Player();
 };

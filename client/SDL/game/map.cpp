@@ -5,7 +5,15 @@
 
 #define TILES_TO_PIXELS 16
 
-Map::Map(SDL_Renderer* rend): rend(rend), tilesImages(3, nullptr) {
+
+Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles):
+        rend(rend),
+        mapa(mapa),
+        tiles(tiles),
+        tilesImages(3, nullptr),
+        mapTexture(nullptr),
+        parentTexture(nullptr),
+        updated(true) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
@@ -85,14 +93,48 @@ void Map::makeTile(TileType tileType) {
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
     tile->queryTexture();
-    tile->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    tile->defineSize(1 * tiles, 1 * tiles);
     tile->position(0, 0);
     tilesImages[int(tileType)] = tile;
 }
 
+SDL_Rect Map::adjustMapZoom() {
+    SDL_Rect zoomRect;
+    int max_x = 0;
+    int max_y = 0;
+    int min_x = 0;
+    int min_y = 0;
+    for (const auto& pair: players) {
+        std::pair<int, int> position = pair.second->getPosition();
+        if (position.first > max_x) {
+            max_x = position.first;
+        }
+        if (position.first < min_x || min_x == 0) {
+            min_x = position.first;
+        }
+        if (position.second > max_y) {
+            max_y = position.second;
+        }
+        if (position.second < min_y || min_y == 0) {
+            min_y = position.second;
+        }
+    }
+    int distancia = 3 * tiles;
+    min_x < distancia ? min_x = 0 : min_x -= distancia;
+    min_y < distancia ? min_y = 0 : min_y -= distancia;
+
+    int new_width = (max_x - min_x) + 6 * tiles;
+    int new_height = (max_y - min_y) + 6 * tiles;
+
+    zoomRect = {min_x, min_y, new_width, new_height};
+    return zoomRect;
+}
+
 // ----------------- Make Map -----------------
 
-void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
+void Map::makeMap(int columnas, int filas) {
+    this->columnas = columnas;
+    this->filas = filas;
     
     std::vector<std::vector<int>> matriz(filas, std::vector<int>(columnas, 0));
 
@@ -103,26 +145,27 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
             columnaActual = 0;
             filaActual++;
         }
-        
+
         if (filaActual >= filas) {
             break;
         }
 
         switch (i) {
-            case 5: // piso
+            case 5:  // piso
                 matriz[filaActual][columnaActual] = i;
-                if (matriz[filaActual-1][columnaActual] == i) {
-                    tilesPlace[tilesImages[int(TileType::ROCK)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+                if (matriz[filaActual - 1][columnaActual] == i) {
+                    tilesPlace[ROCK].push_back(std::pair(columnaActual, filaActual));
                 } else {
                     tilesPlace[tilesImages[int(TileType::GRASS)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
                 }
                 break;
-            case 6: // pared
-                matriz[filaActual][columnaActual] = i; // este proximamente va a servir para cuando las columnas tengan tope inferior
-                tilesPlace[tilesImages[int(TileType::COLUMN)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+            case 6:                                     // pared
+                matriz[filaActual][columnaActual] = i;  // este proximamente va a servir para cuando
+                                                        // las columnas tengan tope inferior
+                tilesPlace[COLUMN].push_back(std::pair(columnaActual, filaActual));
                 break;
-            case 13: // caja                
-            case 14: // caja rota
+            case 13:  // caja
+            case 14:  // caja rota
                 break;
             default:
                 break;
@@ -138,9 +181,6 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
     player->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS);
     player->update(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS,
                    DuckState::STANDING, RIGHT);
-    player->armor(&armor, &hombro);
-    player->weapon(weapons[Weapon::MAGNUM]);
-    player->helmet(helmets[int(Helemts::TINFOIL)]);
     players[name] = player;
     playersNamesAlive.push_back(name);
 }
@@ -150,11 +190,12 @@ void Map::remove(std::string playerName) {
 }
 
 void Map::update(std::string player, int x, int y, DuckState state, Side side) {
-    if (std::find(playersNamesAlive.begin(), playersNamesAlive.end(), player) == playersNamesAlive.end()) {
+      if (std::find(playersNamesAlive.begin(), playersNamesAlive.end(), player) == playersNamesAlive.end()) {
         players[player]->dropEverithing();
         playersNamesAlive.push_back(player);
     }
-    players[player]->update(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS, state, side);
+    players[player]->update(x * tiles, y * tiles, state, side);
+    updated = true;
 }
 
 // ----------------- Weapon -----------------
@@ -194,19 +235,55 @@ void Map::armorPlayer(std::string playerName) {
 
 // ----------------- Fill -----------------
 
-void Map::fill() { // Dibuja de atras para adelante
+void Map::fill() {  // Dibuja de atras para adelante
 
-    background.fill(true);
-
-    for(const auto& tilePair: tilesPlace) {
-        if (tilePair.first != nullptr) {
-            for (const auto& pair: tilePair.second) {
-                tilePair.first->position(pair.first, pair.second);
-                tilePair.first->fill();
-            }
-        }
+    if (!updated) {
+        return;
     }
 
+    // Creamos una textura padre de toda la pantalla
+    SDL_Rect displayBounds;
+    while (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {}
+
+    if (parentTexture == nullptr) {
+        parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                              displayBounds.w, displayBounds.h);
+    }
+    // Cambiamos el render a la textura padre
+    SDL_SetRenderTarget(rend, parentTexture);
+    // limpiamos la textura padre por si acaso
+    SDL_RenderClear(rend);
+
+
+    if (mapTexture == nullptr) {
+        mapTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                                       displayBounds.w, displayBounds.h);
+        SDL_RenderClear(rend);
+        SDL_SetRenderTarget(rend, mapTexture);
+
+        // Dibujamos el fondo
+        background.fill(true);
+
+        // Dibujamos las imagenes de los elementos del mapa
+        for (const auto& tilePair: tilesPlace) {
+            if (tilesImages[int(tilePair.first)] != nullptr) {
+                for (const auto& pair: tilePair.second) {
+                    tilesImages[int(tilePair.first)]->position(pair.first * tiles,
+                                                               pair.second * tiles);
+                    tilesImages[int(tilePair.first)]->fill();
+                }
+            }
+        }
+
+        // Cambiamos el render al parentTexture para dibujar el mapa
+        SDL_SetRenderTarget(rend, parentTexture);
+        SDL_RenderClear(rend);
+    }
+  
+    // Dibujamos el mapa
+    SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
+
+    // Dibujamos a os cascos
     for (const auto& pair : helmetsMap) {
         for (const auto& helmet: pair.second) {
             pair.first->position(helmet.first, helmet.second);
@@ -214,26 +291,49 @@ void Map::fill() { // Dibuja de atras para adelante
         }
     }
 
+    // Dibujamos las armaduras
     for (std::pair armorPos: armorMap) {
         armorOnMap.position(armorPos.first, armorPos.second);
         armorOnMap.fill();
     }
     
+  // Dibujamos las armas
     for (const auto& pair : weaponsMap) {
         for (const auto& weapon: pair.second) {
             weapons[pair.first]->position(weapon.first, weapon.second);
             weapons[pair.first]->fill();
         }
-    }
 
+    // Dibujamos a los jugadores
     for (std::string playerName: playersNamesAlive) {
         players[playerName]->fill();
     }
+
+    // Cambiamos el render a la ventana
+    SDL_SetRenderTarget(rend, nullptr);
+
+    // Aca modificamos la textura padre
+    SDL_Rect zoomRect = adjustMapZoom();
+
+    // Renderizamos la textura padre en toda la ventana
+    SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
+
+    // le decimos que se actualizo
+    updated = false;
 }
 
 // ----------------- Destructor -----------------
 
 Map::~Map() {
+
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
+    }
+
+    if (parentTexture != nullptr) {
+        SDL_DestroyTexture(parentTexture);
+    }
+
     for (Image* piso: tilesImages) {
         delete piso;
     }
@@ -254,4 +354,3 @@ Map::~Map() {
         delete pair.second;
     }
 }
-
