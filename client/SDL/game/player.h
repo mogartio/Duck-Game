@@ -45,27 +45,24 @@ public:
     // Actualizar posicion e imagen
     void update(int x, int y, DuckState newState, Side side);
 
+    // Vacia el inventario
+    void dropEverithing();
+
     // Agarrar un arma
     void weapon(Image* weapon);
     // Devolver el arma
-    Image* dropWeapon();
-
-    // Agarrar armadura
-    void armor(Image* armor, Image* hombro);
-    // Devolver armadura
-    Image* dropArmor();
-
-    // Agarrar casco
-    void helmet(Image* helmet);
-    // Devolver casco
-    Image* dropHelmet();
-
+    void dropWeapon();
     // Disparar arma
     void shoot();
 
+    // Agarrar/Droppear armadura
+    void armor(Image* armor, Image* hombro);
+
+    // Agarrar/Dropear casco
+    void helmet(Image* helmet);
+
     // Dibujar jugador
     void fill();
-
 
     ~Player();
 

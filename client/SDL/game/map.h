@@ -8,8 +8,6 @@ class Map {
 private:
 
     SDL_Renderer* rend;
-    // mapa que entra por parametro para ser dibujado
-    std::vector<uint16_t> mapa;
 
     // Imagenes de los tiles
     std::vector<Image*> tilesImages;
@@ -18,6 +16,7 @@ private:
 
     // Jugadores
     std::unordered_map<std::string, Player*> players;
+    std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
     // std::vector<Image*> weapons;
@@ -40,16 +39,19 @@ private:
 
     Image background;
 
-    void makeTile(TileType tileType);
     void makeWeapon(Weapon weapon);
     void makeHelmet(Helemts helmet);
+    void makeArmor();
+    void makeTile(TileType tileType);
+
 
 public:
-    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa);
+    Map(SDL_Renderer* rend);
 
-    void makeMap(int w, int h);
+    void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
+    void remove(std::string playerName);
 
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
@@ -57,23 +59,19 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, Weapon newWeapon);
     // Asignar arma a un jugador
-    void addWeaponPlayer(int x, int y, Weapon weapon, std::string playerName);
+    void weaponPlayer(Weapon weapon, std::string playerName); // si ya tiene arma tonces dispara
     // Remover arma del jugador
-    void dropWeapon(int x, int y, std::string playerName);
+    void dropWeapon(std::string playerName);
 
     // Agrega un nuevo casco al mapa
     void newHelmet(int x, int y, Helemts newHelmet);
-    // Asignar casco a un jugador
-    void addHelmetPlayer(int x, int y, Helemts helmet, std::string playerName);
-    // Remover casco del jugador
-    void dropHelmet(int x, int y, std::string playerName);
+    // Asignar/Remover casco a un jugador
+    void helmetPlayer(Helemts helmet, std::string playerName);
 
     // Agrega una nueva armadura al mapa
     void newArmor(int x, int y);
-    // Asignar armadura a un jugador
-    void addArmorPlayer(int x, int y, std::string playerName);
-    // Remover armadura del jugador
-    void dropArmor(int x, int y, std::string playerName);
+    // Asignar/Reomver armadura a un jugador
+    void armorPlayer(std::string playerName);
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();

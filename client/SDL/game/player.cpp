@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+// ----------------- Initialize Images -----------------
+
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
     // Crear el objeto Image y luego inicializarlo
@@ -32,6 +34,7 @@ void Player::initialiceDuckImages(DuckState state) {
     ducks.emplace(state, std::move(images));
 }
 
+// ----------------- Constructor -----------------
 
 Player::Player(SDL_Renderer* rend, Color color):
         rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
@@ -55,6 +58,8 @@ Player::Player(SDL_Renderer* rend, Color color):
 
     wing = wings[int(WingState::NORMAL)];
 }
+
+// ----------------- Player -----------------
 
 void Player::defineSize(int height, int width) {
     for (const auto& pair: ducks) {
@@ -128,22 +133,25 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 
     if(weaponON) { // Falta agregar offsets (perdon facu)
-        _weapon->position(x, y + 12);
+        _weapon->position(x, y);
     }
 }
+
+void Player::dropEverithing() {
+    weaponON = false;
+    armorOn = false;
+    helmetOn = false; 
+}
+
+// ----------------- Weapon -----------------
 
 void Player::weapon(Image* weapon) {
     _weapon = weapon;
     weaponON = true;
 }
 
-void Player::armor(Image* armor, Image* hombro) {
-    _armor = armor;
-    _hombro = hombro;
-    std::pair<int, int> position = duck->getPosition();
-    _armor->position(position.first, position.second);
-    _hombro->position(position.first, position.second);
-    armorOn = true;
+void Player::dropWeapon() {
+    weaponON = false;
 }
 
 void Player::shoot() {
@@ -155,6 +163,36 @@ void Player::shoot() {
         Disparo el arma
     */
 }
+
+// ----------------- Armor -----------------
+
+void Player::armor(Image* armor, Image* hombro) {
+    if (armorOn) {
+        armorOn = false;
+        return;
+    }
+    _armor = armor;
+    _hombro = hombro;
+    std::pair<int, int> position = duck->getPosition();
+    _armor->position(position.first, position.second);
+    _hombro->position(position.first, position.second);
+    armorOn = true;
+}
+
+// ----------------- Helmet -----------------
+
+void Player::helmet(Image* helmet) {
+    if (helmetOn) {
+        helmetOn = false;
+        return;
+    }
+    _helmet = helmet;
+    std::pair<int, int> position = duck->getPosition();
+    _helmet->position(position.first, position.second);
+    helmetOn = true;
+}
+
+// ----------------- Fill -----------------
 
 void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
@@ -178,6 +216,8 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
         _hombro->fill(flip);
     }
 }
+
+// ----------------- Destructor -----------------
 
 Player::~Player() {
     for (Image* wing: wings) {
