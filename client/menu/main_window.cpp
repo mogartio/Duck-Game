@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     lobbyScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     joinLobbyScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    // Show the logo screen initially
+    // Show the logo screen first
     showLogoScreen();
 
     // Connect the signal from LogoScreen to switch to ConnectionScreen
@@ -64,6 +64,12 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
 
     // Connect the signal from JoinLobbyScreen to switch to MainMenuScreen
     connect(joinLobbyScreen, &JoinLobbyScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+
+    // Connect the signal from JoinLobbyScreen to switch to LobbyScreen
+    connect(joinLobbyScreen, &JoinLobbyScreen::switchToLobbyScreen, this, &MainWindow::showLobbyScreen);
+
+    // Connect the signal to trigger refresh when JoinLobbyScreen is shown
+    connect(this, &MainWindow::joinLobbyScreenShown, joinLobbyScreen, &JoinLobbyScreen::triggerRefresh);
 }
 
 void MainWindow::setupBackground() {
@@ -146,6 +152,7 @@ void MainWindow::showLobbyScreen() {
 void MainWindow::showJoinLobbyScreen() {
     stackedWidget->setCurrentWidget(joinLobbyScreen);
     slideBackground(-480); // Move to the last third
+    emit joinLobbyScreenShown();
 }
 
 MainWindow::~MainWindow() {

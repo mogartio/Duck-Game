@@ -198,7 +198,6 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
    
 
 void CreateGameScreen::resizeEvent(QResizeEvent *event) {
-    
     update();
 }
 

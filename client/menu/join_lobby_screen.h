@@ -11,7 +11,8 @@
 #include <QPushButton>
 #include <QPixmap>
 #include <QKeyEvent>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QScrollArea>
 #include <iostream>
 #include "logo_screen.h"
 #include "rounded_rectangle.h"
@@ -34,8 +35,11 @@ signals:
     void switchToMainMenuScreen();
     void switchToLobbyScreen();
 
+public slots:
+    void triggerRefresh();
+
 private slots:
-    void onJoinButtonClicked();
+    void onJoinButtonClicked(uint8_t lobby_id);
     void onBackButtonClicked();
     void onRefreshButtonClicked();
 
@@ -45,8 +49,10 @@ private:
     QSound *keyPressSound;
     QFont customFont;
     std::vector<DescripcionLobby> lobbies;
-
-    void drawLobbyInList(uint8_t lobbyId, std::string lobbyName, uint8_t players, uint8_t maxPlayers);
+    std::vector<QWidget*> lobbyWidgets;
+    QScrollArea* scrollArea;
+    QWidget* scrollWidget;
+    QVBoxLayout* scrollLayout;
 };
 
 #endif  // JOIN_LOBBY_SCREEN_H

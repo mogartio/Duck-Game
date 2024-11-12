@@ -35,6 +35,9 @@ public:
     void showJoinLobbyScreen();
     void showLobbyScreen();
 
+signals:
+    void joinLobbyScreenShown();
+
 private:
     QStackedWidget *stackedWidget;
     LogoScreen *logoScreen;
