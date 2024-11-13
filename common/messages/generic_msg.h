@@ -67,12 +67,10 @@ public:
     };
 
     enum DuckColor : uint8_t {
-        RED = 0x01,
-        BLUE = 0x02,
-        GREEN = 0x03,
-        YELLOW = 0x04,
-        ORANGE = 0x05,
-        PURPLE = 0x06,
+        WHITE = 0x00,
+        YELLOW = 0x01,
+        ORANGE = 0x02,
+        GREY = 0x03,
     };
 
 private:

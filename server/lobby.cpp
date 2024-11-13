@@ -31,6 +31,7 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
     players_map[player_name] = first_player;    
     this->lobby_name = lobby_name;
     this->max_players = max_players;
+    players_colors[player_name] = GenericMsg::DuckColor::WHITE;
 
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
     send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), first_player->get_id());
@@ -63,7 +64,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            players_colors[player_name] = GenericMsg::DuckColor::YELLOW;
+            players_colors[player_name] = GenericMsg::DuckColor::GREY;
             send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
             send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                        pair.second->get_id());
