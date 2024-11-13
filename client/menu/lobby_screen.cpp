@@ -1,57 +1,41 @@
 #include "lobby_screen.h"
 
 LobbyScreen::LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
-    quakSound = new QSound("client/menu/assets/Duck Game - Quack Sound.wav");
-    white_cuak_sprite_sheet = new QPixmap("client/menu/assets/white_duck_cuak.png");
+setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
+    setFocusPolicy(Qt::StrongFocus);
+    // Load key press sound
+    keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
+    // Load custom font
+    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    customFont = QFont(fontFamily);
+    // Create black opaque background rectangle
+    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 200, 100, 800, 700, QColor(0,0,0, 100), QColor(0,0,0, 100));
+    baseRectangle->setParent(this);
+    // Create game label
+    QLabel *lobbyLabel = new QLabel("Players", this);
+    lobbyLabel->setStyleSheet(
+        "QLabel {"
+        "color: #ced4da;"
+        "font-size: 52px;"
+        "}"
+    );
+    lobbyLabel->setFont(customFont);
+    lobbyLabel->setGeometry(250, 130, 500, 100);
 
-    // Initialize the label
-    white_cuak_label = new QLabel(this);
-    white_cuak_label->setGeometry(1280, 530, 128, 128); // Adjust size as needed
-    white_cuak_label->show();
+    // Add scroll area 
+    scrollArea = new QScrollArea(this);
+    scrollArea->setGeometry(200, 230, 800, 700);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setStyleSheet("background-color: rgba(255,0,0,100);");
 
-    // Initialize the timer
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &LobbyScreen::updateAnimationFrame);
+    scrollWidget = new QWidget();
+    scrollWidget->setStyleSheet("background: transparent;");
+    scrollArea->setWidget(scrollWidget);
 
-    // 
-}
+    scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout->setSpacing(20); // Set spacing between widgets
+    scrollWidget->setLayout(scrollLayout);
+    scrollLayout->setAlignment(Qt::AlignTop);
 
-
-void LobbyScreen::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_C) {
-        quakSound->play();
-        timer->start(100); // Adjust the interval as needed (milliseconds)
-    }
-}
-
-void LobbyScreen::updateAnimationFrame() {
-    int frame_width = 32;
-    int frame_height = 32;
-    int frames_per_row = white_cuak_sprite_sheet->width() / frame_width;
-
-    // Calculate the x and y coordinates of the current frame
-    int x = (current_frame % frames_per_row) * frame_width;
-    int y = (current_frame / frames_per_row) * frame_height;
-
-    // Crop the current frame
-    QPixmap cropped_pixmap = white_cuak_sprite_sheet->copy(x, y, frame_width, frame_height);
-
-    // Scale the cropped pixmap to the desired size
-    QPixmap scaled_pixmap = cropped_pixmap.scaled(frame_width * 4, frame_height * 4, Qt::KeepAspectRatio);
-
-    // Update the label with the new frame
-    white_cuak_label->setPixmap(scaled_pixmap);
-
-    // Move to the next frame
-    current_frame++;
-
-    // Stop the animation when all frames have been displayed
-    if (current_frame >= 4) {
-        timer->stop();
-        current_frame = 0;
-        // crop the first frame
-        QPixmap first_frame = white_cuak_sprite_sheet->copy(0, 0, frame_width, frame_height);
-        QPixmap scaled_first_frame = first_frame.scaled(frame_width * 4, frame_height * 4, Qt::KeepAspectRatio);
-        white_cuak_label->setPixmap(scaled_first_frame);
-    }
 }

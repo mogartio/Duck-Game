@@ -16,6 +16,7 @@
 #include "create_game_screen.h"
 #include "join_lobby_screen.h"
 #include "lobby_screen.h"
+#include "host_lobby_screen.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/socket/socket.h"
@@ -34,6 +35,7 @@ public:
     void showCreateGameScreen();
     void showJoinLobbyScreen();
     void showLobbyScreen();
+    void showHostLobbyScreen();
 
 signals:
     void joinLobbyScreenShown();
@@ -46,6 +48,7 @@ private:
     CreateGameScreen *createGameScreen;
     LobbyScreen *lobbyScreen;
     JoinLobbyScreen *joinLobbyScreen;
+    HostLobbyScreen *hostLobbyScreen;
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
     Client* client;

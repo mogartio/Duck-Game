@@ -1,5 +1,5 @@
-#ifndef LOBBY_SCREEN_H
-#define LOBBY_SCREEN_H
+#ifndef HOST_LOBBY_SCREEN_H
+#define HOST_LOBBY_SCREEN_H
 
 #include <QPainter>
 #include <QResizeEvent>
@@ -20,28 +20,40 @@
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 
-class LobbyScreen : public QWidget {
+class HostLobbyScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
 
 
 private slots: 
-    //void onReceivedMsg(); // updatea la lista de jugadores en el lobby
+    void onAddLocalPlayerButtonClicked();
+    void updatePlayersInLobby();
+    void onLeftArrowClicked();
+    void onRightArrowClicked();
+    void onReadyButtonClicked();
+signals: 
+    void playersUpdated();
 
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
     QFont customFont;
     QSound *keyPressSound;
+    QPushButton *localPlayerButton;
     QScrollArea* scrollArea;
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
+    QPixmap *leftIcon;
+    QPixmap *rightIcon;
     uint8_t lobby_id;
-    // la key del map es el nombre inicial del jugador, el value es el nombre actual y el color
-    std::map<std::string, std::pair<std::string, uint8_t>> players; 
-
+    bool isLocalPlayerAdded = false;
+    std::list<DescipcionPlayer> players;
+    std::vector<QWidget*> lobbyWidgets;
+    // color de pato y su imagen
+    std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
+    void processIncomingMessages();
 };  
 
 #endif // LOBBY_SCREEN_H
