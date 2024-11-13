@@ -5,7 +5,8 @@
 
 #include "config/config.h"
 #include "map/spawn_point.h"
-
+#define TARGET_TIME 35
+using namespace std::chrono;
 
 GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players, bool is_testing,
                    SendQueuesMonitor<GenericMsg*>& senders):
@@ -26,12 +27,15 @@ std::string GameMain::play_round(Stage& stage) {
         stage.add_player(player, player->get_id());
     }
     while (true) {
-        if (is_testing) {
-            create_command();
-        }
-        GenericMsg* msg;
-        if (receiver_q.try_pop(msg)) {
-            msg->accept_read(*this);  // esta linea ejecuta el comando
+        steady_clock::time_point t0 = steady_clock::now();
+        for (int i = 0; i < 10; i++) {
+            if (is_testing) {
+                create_command();
+            }
+            GenericMsg* msg;
+            if (receiver_q.try_pop(msg)) {
+                msg->accept_read(*this);  // esta linea ejecuta el comando
+            }
         }
         for (auto& [name, player]: players) {
             if (!player->lives()) {
@@ -64,8 +68,22 @@ std::string GameMain::play_round(Stage& stage) {
                     *players[*alive_players.begin()]);  // Borro su dibujo viejo
             return *alive_players.begin();
         }
-        std::this_thread::sleep_for(
-                std::chrono::milliseconds(35));  // Sleep for 1000 milliseconds (1 second)
+
+        steady_clock::time_point t1 = steady_clock::now();
+        duration<int, std::milli> time_span = duration_cast<duration<int, std::milli>>(t1 - t0);
+        if (time_span > duration<double, std::milli>(TARGET_TIME)) {
+            std::cout << "timespan MAYOR a target_time" << std::endl;
+            duration<int, std::milli> sleep_duration =
+                    duration<int, std::milli>(TARGET_TIME) + time_span % TARGET_TIME;
+            std::this_thread::sleep_for(std::chrono::milliseconds(
+                    sleep_duration));  // Sleep for 1000 milliseconds (1 second)
+            continue;
+        }
+        std::cout << "timespan MENOR a target_time" << std::endl;
+        duration<int, std::milli> sleep_duration =
+                duration<int, std::milli>(TARGET_TIME) - time_span;
+        std::this_thread::sleep_for(std::chrono::milliseconds(
+                sleep_duration));  // Sleep for 1000 milliseconds (1 second)
     }
 }
 // podes ignorar todo lo que esta abajo
