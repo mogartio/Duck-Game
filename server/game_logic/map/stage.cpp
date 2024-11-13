@@ -87,7 +87,8 @@ void Stage::draw_player(Player& player) {
 void Stage::delete_player_from_stage(Player& player) {
     std::vector<Coordinate> occupied = player.get_occupied();
     for (auto& coordinate: occupied) {
-        map.set(coordinate, BACKGROUND);
+        map.set(coordinate,
+                BACKGROUND);  //  TODO: eliminar todo esto y usar lo de coordenadas a borrar
     }
 }
 

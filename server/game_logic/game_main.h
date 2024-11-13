@@ -1,6 +1,7 @@
 #ifndef GAME_MAIN_H
 #define GAME_MAIN_H
 
+#include <chrono>
 #include <iostream>
 #include <map>
 #include <string>
@@ -23,6 +24,12 @@ private:
     SendQueuesMonitor<GenericMsg*>& senders;
     void create_command();
     std::set<std::string> alive_players;
+    void process_commands(Stage& stage);
+    std::string look_for_dead_people_and_do_what_you_must(Stage& stage, bool& round_over);
+    void sleep_for_round(std::chrono::steady_clock::time_point t0,
+                         std::chrono::steady_clock::time_point t1);
+
+    void init_round(Stage& stage);
 
 public:
     explicit GameMain(Queue<GenericMsg*>&, std::map<std::string, Player*>, bool,
