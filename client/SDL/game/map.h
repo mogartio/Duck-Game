@@ -18,10 +18,6 @@ private:
     uint tiles;
     uint columnas;
     uint filas;
-  
-    SDL_Texture* mapTexture;
-    SDL_Texture* parentTexture;
-    bool updated;
 
     // Imagenes de los tiles
     std::vector<Image*> tilesImages;
@@ -52,6 +48,10 @@ private:
 
     Image background;
 
+    SDL_Texture* mapTexture;
+    SDL_Texture* parentTexture;
+    bool updated;
+
     void makeWeapon(Weapon weapon);
     void makeHelmet(Helemts helmet);
     void makeArmor();
@@ -63,7 +63,7 @@ public:
 
     Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
 
-    void makeMap(int w, int h, std::vector<uint16_t> mapa);
+    void makeMap(int w, int h);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
 

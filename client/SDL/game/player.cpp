@@ -95,10 +95,7 @@ void Player::updateWing(int x, int y) {
             wing = wings[int(WingState::NORMAL)];
         }
     }
-
-    uint offset_x = width / 4;
-    uint offset_y = (height) / 4;
-
+    
     // Actualiza posicion del ala
     wing->position(x, y);
 

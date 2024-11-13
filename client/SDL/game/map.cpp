@@ -154,15 +154,15 @@ void Map::makeMap(int columnas, int filas) {
             case 5:  // piso
                 matriz[filaActual][columnaActual] = i;
                 if (matriz[filaActual - 1][columnaActual] == i) {
-                    tilesPlace[ROCK].push_back(std::pair(columnaActual, filaActual));
+                    tilesPlace[TileType::ROCK].push_back(std::pair<int, int>(columnaActual, filaActual));
                 } else {
-                    tilesPlace[tilesImages[int(TileType::GRASS)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+                    tilesPlace[TileType::GRASS].push_back(std::pair<int, int>(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
                 }
                 break;
             case 6:                                     // pared
                 matriz[filaActual][columnaActual] = i;  // este proximamente va a servir para cuando
                                                         // las columnas tengan tope inferior
-                tilesPlace[COLUMN].push_back(std::pair(columnaActual, filaActual));
+                tilesPlace[TileType::COLUMN].push_back(std::pair<int, int>(columnaActual, filaActual));
                 break;
             case 13:  // caja
             case 14:  // caja rota
@@ -201,7 +201,7 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, Weapon weapon) {
-    weaponsMap[weapon].push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    weaponsMap[weapon].push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
 }
 
 void Map::weaponPlayer(Weapon weapon, std::string playerName) {
@@ -216,7 +216,7 @@ void Map::dropWeapon(std::string playerName) {
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, Helemts newHelmet) {
-    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
 }
 
 void Map::helmetPlayer(Helemts helmet, std::string playerName) {
@@ -226,7 +226,7 @@ void Map::helmetPlayer(Helemts helmet, std::string playerName) {
 // ----------------- Armor -----------------
 
 void Map::newArmor(int x, int y) {
-    armorMap.push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    armorMap.push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
 }
 
 void Map::armorPlayer(std::string playerName) {
@@ -292,7 +292,7 @@ void Map::fill() {  // Dibuja de atras para adelante
     }
 
     // Dibujamos las armaduras
-    for (std::pair armorPos: armorMap) {
+    for (std::pair<int, int> armorPos: armorMap) {
         armorOnMap.position(armorPos.first, armorPos.second);
         armorOnMap.fill();
     }
@@ -303,7 +303,7 @@ void Map::fill() {  // Dibuja de atras para adelante
             weapons[pair.first]->position(weapon.first, weapon.second);
             weapons[pair.first]->fill();
         }
-
+    }
     // Dibujamos a los jugadores
     for (std::string playerName: playersNamesAlive) {
         players[playerName]->fill();
@@ -321,6 +321,7 @@ void Map::fill() {  // Dibuja de atras para adelante
     // le decimos que se actualizo
     updated = false;
 }
+
 
 // ----------------- Destructor -----------------
 
@@ -354,3 +355,4 @@ Map::~Map() {
         delete pair.second;
     }
 }
+

@@ -69,8 +69,6 @@ public:
     // Dibujar jugador
     void fill();
 
-    ~Player();
-
     std::pair<int, int> getPosition();
 
     ~Player();
