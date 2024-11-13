@@ -65,6 +65,8 @@ void GameMain::process_commands(Stage& stage) {
     }
 }
 
+// Se fija si solamente queda un jugador vivo. si lo hay settea el bool que se le pasa a true y
+// devuelve el nombre del ganador
 std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bool& round_over) {
     std::vector<std::string> recently_deceased;  // its never been this serious
     for (std::string player: alive_players) {
@@ -89,19 +91,12 @@ std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
 }
 
 
+// Duerme lo que le falta para terminar el ciclo actual
 void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_point t1) {
     duration<int, std::milli> time_span = duration_cast<duration<int, std::milli>>(t1 - t0);
-    if (time_span > duration<double, std::milli>(TARGET_TIME)) {
-        std::cout << "timespan MAYOR a target_time" << std::endl;
-        duration<int, std::milli> sleep_duration =
-                duration<int, std::milli>(TARGET_TIME) + time_span % TARGET_TIME;
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
-    } else {
-        // std::cout << "timespan MENOR a target_time" << std::endl;
-        duration<int, std::milli> sleep_duration =
-                duration<int, std::milli>(TARGET_TIME) - time_span;
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
-    }
+    duration<int, std::milli> sleep_duration =
+            duration<int, std::milli>(TARGET_TIME) - (time_span % TARGET_TIME);
+    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
 }
 void GameMain::handle_read(const PickupDropMsg&) {}
 
