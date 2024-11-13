@@ -3,8 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-#define TILES_TO_PIXELS 16
-
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles):
         rend(rend),
@@ -44,9 +42,9 @@ void Map::makeWeapon(Weapon weapon) {
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
     if ((weapon == Weapon::GRANADA) || (weapon == Weapon::DUELOS)) {
-        weaponImage->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+        weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
-        weaponImage->defineSize(1 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+        weaponImage->defineSize(1 * tiles, 2 * tiles);
     }
     weapons[weapon] = weaponImage;
 }
@@ -58,7 +56,7 @@ void Map::makeHelmet(Helemts helmet) {
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
-    mapHelmet->defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+    mapHelmet->defineSize(2 * tiles, 2 * tiles);
     helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
 
     // Creo casco de inventario
@@ -67,7 +65,7 @@ void Map::makeHelmet(Helemts helmet) {
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
-    helmetImage->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); // mismo tamaño que el pato
+    helmetImage->defineSize(3 * tiles, 3 * tiles); // mismo tamaño que el pato
     helmets.push_back(helmetImage);
 }
 
@@ -75,16 +73,16 @@ void Map::makeArmor() {
     // Creo armadura de mapa
     armorOnMap.initialize(rend, "img_src/map/armor.png");
     armorOnMap.queryTexture();
-    armorOnMap.defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+    armorOnMap.defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
     armor.initialize(rend, "img_src/armor/armor4.png"); 
     armor.queryTexture();
-    armor.defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); // mismo tamaño que el pato
+    armor.defineSize(3 * tiles, 3 * tiles); // mismo tamaño que el pato
 
     hombro.initialize(rend, "img_src/armor/hombro4.png");
     hombro.queryTexture();
-    hombro.defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); //mismo tamaño q el pato
+    hombro.defineSize(3 * tiles, 3 * tiles); //mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
@@ -156,7 +154,7 @@ void Map::makeMap(int columnas, int filas) {
                 if (matriz[filaActual - 1][columnaActual] == i) {
                     tilesPlace[TileType::ROCK].push_back(std::pair<int, int>(columnaActual, filaActual));
                 } else {
-                    tilesPlace[TileType::GRASS].push_back(std::pair<int, int>(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+                    tilesPlace[TileType::GRASS].push_back(std::pair<int, int>(columnaActual, filaActual));
                 }
                 break;
             case 6:                                     // pared
@@ -178,8 +176,8 @@ void Map::makeMap(int columnas, int filas) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS);
-    player->update(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS,
+    player->defineSize(3 * tiles, 3 * tiles);
+    player->update(columnaActual * tiles, filaActual * tiles,
                    DuckState::STANDING, RIGHT);
     players[name] = player;
     playersNamesAlive.push_back(name);
@@ -201,7 +199,7 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, Weapon weapon) {
-    weaponsMap[weapon].push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    weaponsMap[weapon].push_back(std::pair<int, int>(x, y));
 }
 
 void Map::weaponPlayer(Weapon weapon, std::string playerName) {
@@ -216,7 +214,7 @@ void Map::dropWeapon(std::string playerName) {
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, Helemts newHelmet) {
-    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair<int, int>(x, y));
 }
 
 void Map::helmetPlayer(Helemts helmet, std::string playerName) {
@@ -226,7 +224,7 @@ void Map::helmetPlayer(Helemts helmet, std::string playerName) {
 // ----------------- Armor -----------------
 
 void Map::newArmor(int x, int y) {
-    armorMap.push_back(std::pair<int, int>(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    armorMap.push_back(std::pair<int, int>(x, y));
 }
 
 void Map::armorPlayer(std::string playerName) {
@@ -266,13 +264,12 @@ void Map::fill() {  // Dibuja de atras para adelante
 
         // Dibujamos las imagenes de los elementos del mapa
         for (const auto& tilePair: tilesPlace) {
-            if (tilesImages[int(tilePair.first)] != nullptr) {
                 for (const auto& pair: tilePair.second) {
                     tilesImages[int(tilePair.first)]->position(pair.first * tiles,
                                                                pair.second * tiles);
                     tilesImages[int(tilePair.first)]->fill();
                 }
-            }
+            
         }
 
         // Cambiamos el render al parentTexture para dibujar el mapa

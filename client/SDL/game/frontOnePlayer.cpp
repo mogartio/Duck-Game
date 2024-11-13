@@ -101,6 +101,7 @@ void OnePlayer::play() {
                 map.update(player_name, position.first, position.second, DuckState(state),
                            Side(facing_direction - 1));
                 stated_palying = true;
+                break;
             /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
                 // directa de que murio el jugador y de que hay que mostrar la pantalla de muerte
                 UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
@@ -120,7 +121,7 @@ void OnePlayer::play() {
             */
             case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                 // directa de que termino la partida y de q hay que mostrar la pantalla de fin
-
+                break;
             default:
                 break;
             }
