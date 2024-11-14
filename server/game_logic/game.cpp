@@ -1,8 +1,8 @@
 #include "game.h"
 
-Game::Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, bool is_testing,
+Game::Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, std::vector<uint> player_ids, bool is_testing,
            SendQueuesMonitor<GenericMsg*>& senders):
-        senders(senders), game_over(false) {
+        senders(senders), player_ids(player_ids), game_over(false) {
     PlayerObserver* player_obs = new PlayerObserver(senders);
     players = generate_players(player_names, player_obs);
     game_loop = std::make_unique<GameMain>(recv, players, is_testing, senders);
@@ -42,4 +42,8 @@ void Game::send_map() {
     std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
     dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
     senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
+    // for (uint id : player_ids) {
+    //     int id_int = static_cast<int>(id);
+    //     senders.send_to_client(map_msg, id_int);
+    // }
 }

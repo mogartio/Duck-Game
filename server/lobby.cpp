@@ -93,6 +93,7 @@ void Lobby::startGame() {
     // Nombres y id de clients
     // std::map<std::string, uint> names;
     std::vector<std::string> names;
+    std::vector<uint> ids;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
@@ -104,11 +105,12 @@ void Lobby::startGame() {
             // se va a pasar a la partida
         }
         names.push_back(pair.first);
+        ids.push_back(pair.second->get_id());
         // names[pair.first] = pair.second->get_id();
     }
     // se inicia el juego
     // lanzandose el gameloop aqui
-    game = std::make_unique<Game>(*receiver_q, names, is_testing, send_queues);
+    game = std::make_unique<Game>(*receiver_q, names, ids, is_testing, send_queues);
 
     game->start();
 }

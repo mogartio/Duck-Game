@@ -14,11 +14,12 @@ private:
     Stage* current_stage;
     std::unique_ptr<GameMain> game_loop;
     std::map<std::string, Player*> generate_players(std::vector<std::string>, PlayerObserver*);
+    std::vector<uint> player_ids;
     bool game_over;
     void send_map();
 
 public:
-    Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, bool is_testing,
+    Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, std::vector<uint> playe_ids, bool is_testing,
          SendQueuesMonitor<GenericMsg*>& senders);
     void run() override;
 };
