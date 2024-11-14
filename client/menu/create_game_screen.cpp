@@ -8,14 +8,14 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
+    keyPressSound = new QSound("assets/Retro3.wav", this);
 
     // Create black opaque background rectangle
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 635, 260, 650, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
     
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 
@@ -50,7 +50,7 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     backButton->setGeometry(460, 260, 160, 80);
 
     // Load the original icon
-    QPixmap goBackIcon("client/menu/assets/Left-Arrow.png");
+    QPixmap goBackIcon("assets/Left-Arrow.png");
     QPixmap goBackIconScaled = goBackIcon.scaled(30, 30);
 
     // Create a transparent QPixmap
@@ -123,7 +123,7 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
         "}"
     );
     // Load up arrow icon
-    QPixmap upArrowIcon("client/menu/assets/Chevron-Arrow-Up.png");
+    QPixmap upArrowIcon("assets/Chevron-Arrow-Up.png");
     QPixmap upArrowIconScaled = upArrowIcon.scaled(30, 25);
     QPixmap transparentUpArrowIcon(upArrowIconScaled.size());
     transparentUpArrowIcon.fill(Qt::transparent);
@@ -162,7 +162,7 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
         "background-color: rgba(0,0,0,0);"
         "}"
     );
-    QPixmap downArrowIcon("client/menu/assets/Chevron-Arrow-Down.png");
+    QPixmap downArrowIcon("assets/Chevron-Arrow-Down.png");
     QPixmap downArrowIconScaled = downArrowIcon.scaled(30, 25);
     QPixmap transparentDownArrowIcon(downArrowIconScaled.size());
     transparentDownArrowIcon.fill(Qt::transparent);

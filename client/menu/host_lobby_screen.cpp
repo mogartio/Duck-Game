@@ -5,9 +5,9 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
 setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
-    keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
+    keyPressSound = new QSound("assets/Retro3.wav", this);
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
     // Create black opaque background rectangle
@@ -59,15 +59,15 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     connect(localPlayerButton, &QPushButton::clicked, this, &HostLobbyScreen::onAddLocalPlayerButtonClicked);
 
     // Load images for ducks and icons 
-    leftIcon = new QPixmap("client/menu/assets/Chevron-Arrow-Left.png");
+    leftIcon = new QPixmap("assets/Chevron-Arrow-Left.png");
     *leftIcon = leftIcon->scaled(50, 50, Qt::KeepAspectRatio);
-    rightIcon = new QPixmap("client/menu/assets/Chevron-Arrow-Right.png");
+    rightIcon = new QPixmap("assets/Chevron-Arrow-Right.png");
     *rightIcon = rightIcon->scaled(50, 50, Qt::KeepAspectRatio);
 
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, new QPixmap("client/menu/assets/white_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, new QPixmap("client/menu/assets/yellow_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, new QPixmap("client/menu/assets/orange_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, new QPixmap("client/menu/assets/grey_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, new QPixmap("assets/white_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, new QPixmap("assets/yellow_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, new QPixmap("assets/orange_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, new QPixmap("assets/grey_duck_head.png")));
 
     // Scale images
     for (auto& duck : ducks_images) {

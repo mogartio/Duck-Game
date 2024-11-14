@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
 
 void MainWindow::setupBackground() {
     backgroundLabel = new QLabel(this);
-    QPixmap backgroundPixmap("client/menu/assets/sliding_background.png"); // Load your image
+    QPixmap backgroundPixmap("assets/sliding_background.png"); // Load your image
     backgroundLabel->setPixmap(backgroundPixmap);
     backgroundLabel->setScaledContents(true); // Optional: scale the image to fit the window
 

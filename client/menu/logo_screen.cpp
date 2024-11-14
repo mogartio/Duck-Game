@@ -12,14 +12,14 @@ LogoScreen::LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_
     setFocusPolicy(Qt::StrongFocus);
     
     // Add this line in the constructor
-    keyPressSound = new QSound("client/menu/assets/Retro8.wav", this);
+    keyPressSound = new QSound("assets/Retro8.wav", this);
 
     // Create ParallaxBackground layers
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layer0 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_4.png", 1.25f);
+    layer0 = new ParallaxBackground(this, "assets/parallax_background_layer_1.png", 0.5f);
+    layer1 = new ParallaxBackground(this, "assets/parallax_background_layer_2.png", 0.75f);
+    layer2 = new ParallaxBackground(this, "assets/parallax_background_layer_3.png", 1.0f);
+    layer3 = new ParallaxBackground(this, "assets/parallax_background_layer_4.png", 1.25f);
 
     layer0->start();
     layer1->start();
@@ -28,11 +28,11 @@ LogoScreen::LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_
     setLayout(layout);
 
     // Create FadeInImage
-    fadeInImage = new FadeInImage(this, "client/menu/assets/duck_game_logo.png", 2000);
+    fadeInImage = new FadeInImage(this, "assets/duck_game_logo.png", 2000);
     fadeInImage->start();
 
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     QFont customFont(fontFamily);
 

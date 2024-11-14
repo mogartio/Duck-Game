@@ -7,10 +7,10 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
+    keyPressSound = new QSound("assets/Retro3.wav", this);
     
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 
@@ -48,7 +48,7 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     backButton->setFont(customFont);
     backButton->setGeometry(385, 200, 160, 80);
 
-    QPixmap goBackIcon("client/menu/assets/Left-Arrow.png");
+    QPixmap goBackIcon("assets/Left-Arrow.png");
     QPixmap goBackIconScaled = goBackIcon.scaled(30, 30);
     QPixmap transparentIcon(goBackIconScaled.size());
     transparentIcon.fill(Qt::transparent);
@@ -82,7 +82,7 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     refreshButton->setGeometry(1375, 200, 240, 80);
 
     // Add refresh icon
-    QPixmap refreshIcon("client/menu/assets/refresh_button.png");
+    QPixmap refreshIcon("assets/refresh_button.png");
     QPixmap refreshIconScaled = refreshIcon.scaled(40, 40);
     QPixmap transparentRefreshIcon(refreshIconScaled.size());
     transparentRefreshIcon.fill(Qt::transparent);
