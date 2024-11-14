@@ -34,6 +34,7 @@ enum ActionId : uint8_t {
 namespace ProjectilesId {
 
 enum ProjectileId : uint8_t {
+    UNARMED = 0x00,
     GRENADE = 0x01,
     BANANA = 0x02,
     PEW_PEW_LASER = 0x03,
@@ -47,8 +48,9 @@ enum ProjectileId : uint8_t {
     HELMET = 0x0B,
     CHEST = 0x0C,
     // balas (?)
-    LASER = 0x0D,   // PEW_PEW_LASER y LASER_RIFLE
-    BULLET = 0x0E,  // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    LASER = 0x0D,           // PEW_PEW_LASER y LASER_RIFLE
+    BULLET_PISTOL = 0x0E,   // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    BULLET_SHOTGUN = 0x0F,  // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
 };
 }
 
