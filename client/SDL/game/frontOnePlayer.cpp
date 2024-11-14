@@ -57,8 +57,8 @@ void OnePlayer::play() {
 
     // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
 
-    Map map(win.get_rend(), mapa, tiles);
-    map.makeMap(columnas, filas);
+    Map map(win.get_rend());
+    map.makeMap(columnas, filas, mapa);
 
     // Agrego a cada jugador usando el mensaje de info lobby
     InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
@@ -89,17 +89,40 @@ void OnePlayer::play() {
         bool poped = queueRecive.try_pop(msj);
 
         if (poped) {
-            if (msj->get_header() == GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
-                UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
+            UpdatedPlayerInfoMsg* player = nullptr;
+            uint8_t state = 0;
+            switch (msj->get_header()) {
+            case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
+                player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
                 player_name = player->get_player_name();
                 position = player->get_position();
-                uint8_t state = player->get_state();
+                state = player->get_state();
                 facing_direction = player->get_facing_direction();
                 map.update(player_name, position.first, position.second, DuckState(state),
                            Side(facing_direction - 1));
                 stated_palying = true;
-            } else if (msj->get_header() == GenericMsg::MsgTypeHeader::GAME_ENDED_MSG) {
+            /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
+                // directa de que murio el jugador y de que hay que mostrar la pantalla de muerte
+                UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
+                player_name = player->get_player_name();
+                map.remove(player_name);
+            case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
+                // directa de que hay que mostrar el proyectil (weapon o bullet)
+                ProyectileInfoMsg* proyectile = dynamic_cast<ProyectileInfoMsg*>(msj);
+                uint16_t weapon = proyectile->get_proyectile();
+                map.weaponPlayer(weapon, player_name);
+            case GenericMsg::MsgTypeHeader::PICKUP_SHOOT_MSG:
+                // directa de que hay que mostrar el item que se levanto o disparo  
+
+            case GenericMsg::MsgTypeHeader::DROP_MSG:
+                // directa de que hay que mostrar el item que se tiro
+                // necesito nombre de player y que cosa esta dropeando (weapon, armor, helmet)
+            */
+            case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                 // directa de que termino la partida y de q hay que mostrar la pantalla de fin
+
+            default:
+                break;
             }
         } else if (stated_palying) {
             map.update(player_name, position.first, position.second, DuckState::STANDING,

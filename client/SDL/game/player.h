@@ -6,9 +6,8 @@
 #include "../../../common/duckState/duckState.h"
 
 #include "image.h"
-#include "wingState.h"
-
-enum Color { WHITE, GREY, ORANGE, YELLOW };
+#include "enums.h"
+#include "../../../common/duckState/duckState.h"
 
 class Player {
 private:
@@ -22,6 +21,8 @@ private:
     DuckState state;
 
     bool weaponON;
+    bool armorOn;
+    bool helmetOn;
     int walk;
     bool flapup;
     uint width;
@@ -29,9 +30,12 @@ private:
 
     Image* duck;
     Image* wing;
-    // Weapon weapon;
 
-    void chooseColor(Color color);
+    Image* _armor;
+    Image* _hombro;
+    Image* _helmet;
+    Image* _weapon;
+
     void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
     void initialiceDuckImages(DuckState state);
@@ -39,20 +43,30 @@ private:
 public:
     Player(SDL_Renderer* rend, Color color);
 
-    // El tamaño original de los png son del pato 32x32 y del ala 15x15
+    // El tamaño original de los png son del pato 24x24 y del ala 15x15
     void defineSize(int height, int width);
 
-    // Actualiza la posicion y la imagen
+    // Actualizar posicion e imagen
     void update(int x, int y, DuckState newState, Side side);
 
-    // Dibuja el jugador
-    void fill();
+    // Vacia el inventario
+    void dropEverithing();
 
-    // Agarra o suelta un arma
-    void weapon(/*tipo de arma*/);
-
-    // Dispara el arma
+    // Agarrar un arma
+    void weapon(Image* weapon);
+    // Devolver el arma
+    void dropWeapon();
+    // Disparar arma
     void shoot();
+
+    // Agarrar/Droppear armadura
+    void armor(Image* armor, Image* hombro);
+
+    // Agarrar/Dropear casco
+    void helmet(Image* helmet);
+
+    // Dibujar jugador
+    void fill();
 
     ~Player();
 };
