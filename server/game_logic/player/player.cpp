@@ -23,7 +23,6 @@ void Player::init_for_stage(Stage* stage) {
     is_alive = true;
     current_actions.clear();
     notify_moved();  // los notify hacen que se broadcasteen mensajes
-    pick_weapon(std::make_unique<Unarmed>(*stage));
 }
 
 void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
@@ -31,6 +30,8 @@ void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
     weapon->set_player(this);
     notify_picked_weapon();
 }
+
+void Player::unarm_self() { pick_weapon(std::make_unique<Unarmed>(*stage)); }
 
 Coordinate Player::get_position() { return position->get_position(); }
 

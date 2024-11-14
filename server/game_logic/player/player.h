@@ -48,6 +48,7 @@ public:
     bool lives() { return is_alive; }
     void set_weapon(std::unique_ptr<Weapon> new_weapon) { weapon = std::move(new_weapon); }
     void pick_weapon(std::unique_ptr<Weapon> new_weapon);
+    void unarm_self();
 };
 
 #endif
