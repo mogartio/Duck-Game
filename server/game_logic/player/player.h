@@ -25,6 +25,8 @@ private:
     std::string name;
     bool should_notify;
     Coordinate initial_position;
+    void notify_picked_weapon();
+    void notify_dropped_weapon(uint8_t id);
 
 public:
     int get_id();
@@ -41,7 +43,7 @@ public:
     void shoot();
     void update();
     void Notify() { should_notify = true; }
-    void notify() override;
+    void notify_moved();
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
     void set_weapon(std::unique_ptr<Weapon> new_weapon) { weapon = std::move(new_weapon); }

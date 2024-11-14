@@ -29,7 +29,7 @@ Coordinate Weapon::get_gun_position(int facing_direction) {
     return Coordinate(player_position.x - 1, player_position.y + 1);
 }
 
-Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3, -1) {}
+Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3, 0) {}
 
 Coordinate Unarmed::get_gun_position(int facing_direction) {
     Coordinate player_position = Weapon::get_gun_position(facing_direction);

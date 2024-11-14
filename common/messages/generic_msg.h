@@ -269,7 +269,7 @@ public:
 
     PickupDropMsg();
 
-    explicit PickupDropMsg(uint8_t item_id, std::string player_name);
+    explicit PickupDropMsg(std::string player_name, uint8_t item_id);
 
     void set_item_id(uint8_t item_id);
 

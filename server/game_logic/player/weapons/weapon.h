@@ -33,6 +33,7 @@ public:
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
     virtual void update() {}
+    virtual uint8_t get_id() { return id; }
 };
 
 class Unarmed: public Weapon {

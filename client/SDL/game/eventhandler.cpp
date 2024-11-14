@@ -13,9 +13,9 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_E)] = [this]() {
         return new StartActionMsg(ActionsId::SHOOT, playerName1);
     };
-    key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_R)] = [this]() {
-        return new PickupDropMsg(ID_ITEM, playerName1);
-    };
+    // key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_R)] = [this]() {
+    //     return new PickupDropMsg(ID_ITEM, playerName1);
+    // };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_W)] = [this]() {
         return new StartActionMsg(ActionsId::JUMP, playerName1);
     };
@@ -59,9 +59,9 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_X)] = [this]() {
             return new StartActionMsg(ActionsId::SHOOT, playerName2);
         };
-        key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_C)] = [this]() {
-            return new PickupDropMsg(ID_ITEM, playerName2);
-        };
+        // key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_C)] = [this]() {
+        //     return new PickupDropMsg(ID_ITEM, playerName2);
+        // };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_UP)] = [this]() {
             return new StartActionMsg(ActionsId::JUMP, playerName2);
         };

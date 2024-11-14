@@ -135,7 +135,7 @@ PickupDropMsg::PickupDropMsg():
         item_id(0),
         player_name("") {}
 
-PickupDropMsg::PickupDropMsg(uint8_t item_id, std::string player_name):
+PickupDropMsg::PickupDropMsg(std::string player_name, uint8_t item_id):
         GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
         item_id(item_id),
         player_name(player_name) {}
@@ -339,11 +339,15 @@ void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
 
 ProjectileInfoMsg::ProjectileInfoMsg():
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
-        pos_x(), pos_y(), item() {}
+        pos_x(),
+        pos_y(),
+        item() {}
 
 ProjectileInfoMsg::ProjectileInfoMsg(uint8_t pos_x, uint8_t pos_y, uint8_t item):
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
-        pos_x(pos_x), pos_y(pos_y), item(item) {}
+        pos_x(pos_x),
+        pos_y(pos_y),
+        item(item) {}
 
 void ProjectileInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 

@@ -21,14 +21,15 @@ void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
     is_alive = true;
-    pick_weapon(std::make_unique<Unarmed>(*stage));
     current_actions.clear();
-    notify();  // los notify hacen que se broadcasteen mensajes
+    notify_moved();  // los notify hacen que se broadcasteen mensajes
+    pick_weapon(std::make_unique<Unarmed>(*stage));
 }
 
 void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
     weapon = std::move(new_weapon);
     weapon->set_player(this);
+    notify_picked_weapon();
 }
 
 Coordinate Player::get_position() { return position->get_position(); }
@@ -60,10 +61,13 @@ void Player::remove_action(int& command) {
     }
     if (command == THROW_WEAPON) {
         if (weapon != nullptr) {
+            uint8_t weapon_id = weapon->get_id();
             weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
+            notify_dropped_weapon(weapon_id);
         }
-        weapon = nullptr;
+        pick_weapon(std::make_unique<Unarmed>(
+                *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
     }
 }
 
@@ -99,15 +103,30 @@ void Player::update() {
         weapon->update();
     }
     if (should_notify) {
-        notify();
+        notify_moved();
     }
 }
 
-void Player::notify() {
+void Player::notify_moved() {
     Coordinate current_position = position->get_position();
     for (PlayerObserver* obs: observers) {
         obs->update(name, current_position.x, current_position.y, position->get_state(),
                     position->get_facing_direction());
+    }
+}
+
+void Player::notify_picked_weapon() {
+    std::cout << "entro en la funcion principal" << std::endl;
+    for (PlayerObserver* obs: observers) {
+        std::cout << "entro en el loop" << std::endl;
+        obs->update(name, weapon->get_id());
+    }
+}
+
+
+void Player::notify_dropped_weapon(uint8_t id) {
+    for (PlayerObserver* obs: observers) {
+        obs->update(name, id);
     }
 }
 
