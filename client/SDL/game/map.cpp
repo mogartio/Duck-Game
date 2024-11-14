@@ -25,6 +25,11 @@ Map::Map(SDL_Renderer* rend): rend(rend), tilesImages(3, nullptr) {
         TileType tileType = static_cast<TileType>(i);
         makeTile(tileType);
     }
+
+    prueba.initialize(rend, "img_src/weapons/bullets/laser.png");
+    prueba.queryTexture();
+    prueba.defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    prueba.position(100, 100);
 }
 
 // ----------------- Initialize Images -----------------
@@ -229,6 +234,8 @@ void Map::fill() { // Dibuja de atras para adelante
     for (std::string playerName: playersNamesAlive) {
         players[playerName]->fill();
     }
+
+    prueba.fill();
 }
 
 // ----------------- Destructor -----------------

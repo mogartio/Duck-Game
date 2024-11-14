@@ -38,6 +38,8 @@ private:
 
     Image background;
 
+    Image prueba;
+
     void makeWeapon(Weapon weapon);
     void makeHelmet(Helemts helmet);
     void makeArmor();
