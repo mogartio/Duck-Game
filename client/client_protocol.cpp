@@ -100,10 +100,10 @@ void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
 
 
 void ClientProtocol::handle_recv(PickupDropMsg& msg) {
-    uint8_t item_id = recv_u_int8_t();
-    msg.set_item_id(item_id);
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+    uint8_t item_id = recv_u_int8_t();
+    msg.set_item_id(item_id);
 }
 // void ClientProtocol::handle_send(const PickupDropMsg& msg) {
 //     uint8_t header = msg.get_header();

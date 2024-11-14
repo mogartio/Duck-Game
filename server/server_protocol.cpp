@@ -77,8 +77,8 @@ void ServerProtocol::handle_send(const PickupDropMsg& msg) {
     send_u_int8_t(header);
     uint8_t item_id = msg.get_item_id();
     std::string player_name = msg.get_player_name();
-    send_u_int8_t(item_id);
     send_string(player_name);
+    send_u_int8_t(item_id);
 }
 
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
