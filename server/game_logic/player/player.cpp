@@ -8,7 +8,8 @@
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
-Player::Player(Coordinate& initial_position, int id, std::string name, PlayerObserver& obs):
+Player::Player(Coordinate& initial_position, int id, const std::string name,
+               const PlayerObserver& obs):
         id(id),
         is_alive(true),
         name(name),
@@ -109,14 +110,14 @@ void Player::update() {
 
 void Player::notify_moved() {
     Coordinate current_position = position->get_position();
-    for (PlayerObserver* obs: observers) {
+    for (const PlayerObserver* obs: observers) {
         obs->update(name, current_position.x, current_position.y, position->get_state(),
                     position->get_facing_direction());
     }
 }
 
 void Player::notify_picked_weapon() {
-    for (PlayerObserver* obs: observers) {
+    for (const PlayerObserver* obs: observers) {
         obs->update(name, weapon->get_id());
     }
 }

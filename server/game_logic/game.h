@@ -13,8 +13,8 @@ private:
     std::map<std::string, int> player_points;
     Stage* current_stage;
     std::unique_ptr<GameMain> game_loop;
-    std::map<std::string, Player*> generate_players(std::vector<std::string>& names,
-                                                    PlayerObserver&);
+    std::map<std::string, Player*> generate_players(const std::vector<std::string>& names,
+                                                    const PlayerObserver&);
     bool game_over;
     void send_map();
 

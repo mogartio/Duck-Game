@@ -11,12 +11,12 @@ public:
 };
 class PlayerSubject: public Subject {
 protected:
-    std::list<PlayerObserver*> observers;
+    std::list<const PlayerObserver*> observers;
 
 public:
     PlayerSubject() {}
-    void attach(PlayerObserver& obs) { observers.push_back(&obs); }
-    void dettach(PlayerObserver& obs) { observers.remove(&obs); }
+    void attach(const PlayerObserver& obs) { observers.push_back(&obs); }
+    void dettach(const PlayerObserver& obs) { observers.remove(&obs); }
 };
 
 class ProjectileSubject: public Subject {

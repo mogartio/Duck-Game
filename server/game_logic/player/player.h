@@ -33,7 +33,7 @@ public:
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    Player(Coordinate&, int, std::string, PlayerObserver&);
+    Player(Coordinate&, int, const std::string, const PlayerObserver&);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);
