@@ -19,23 +19,23 @@ ConnectionScreen::ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     setFocusPolicy(Qt::StrongFocus);
 
     // Create ParallaxBackground layers
-    layer0 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = new ParallaxBackground(this, "client/menu/assets/parallax_background_layer_4.png", 1.25f);
+    layer0 = new ParallaxBackground(this, "assets/parallax_background_layer_1.png", 0.5f);
+    layer1 = new ParallaxBackground(this, "assets/parallax_background_layer_2.png", 0.75f);
+    layer2 = new ParallaxBackground(this, "assets/parallax_background_layer_3.png", 1.0f);
+    layer3 = new ParallaxBackground(this, "assets/parallax_background_layer_4.png", 1.25f);
 
     layer0->start();
     layer1->start();
     layer2->start(); 
     layer3->start();
 
-    keyPressSound = new QSound("client/menu/assets/Retro3.wav", this);
+    keyPressSound = new QSound("assets/Retro3.wav", this);
 
     // Center of the screen: (1920 / 2, 1080 / 2) = (960, 540)
     // Top-left corner of the rectangle: (960 - 500 / 2, 540 - 400 / 2) = (710, 340)
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 650, 200, 620, 660, QColor(213, 226, 224, 100), QColor(213, 226, 224, 100));
 
-    int fontId = QFontDatabase::addApplicationFont("client/menu/assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 
