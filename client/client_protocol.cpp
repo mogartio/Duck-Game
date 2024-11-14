@@ -32,7 +32,11 @@ void ClientProtocol::handle_send(const CreateLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
+    std::string lobby_name = msg.get_lobby_name();
+    uint8_t max_players = msg.get_max_players();
     send_string(player_name);
+    send_string(lobby_name);
+    send_u_int8_t(max_players);
 }
 
 void ClientProtocol::handle_send(const GoBackMsg& msg) {
@@ -67,6 +71,12 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
         players.push_back(player);
     }
     msg.set_players(players);
+
+    uint8_t max_players = recv_u_int8_t();
+    msg.set_max_players(max_players);
+
+    uint8_t lobby_id = recv_u_int8_t();
+    msg.set_lobby_id(lobby_id);
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
@@ -83,6 +93,9 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
 
         uint8_t cantidad_de_jugadores = recv_u_int8_t();
         lobby.cantidadJugadores = cantidad_de_jugadores;
+
+        uint8_t max_jugadores = recv_u_int8_t();
+        lobby.maxJugadores = max_jugadores;
 
         lobbies.push_back(lobby);
     }

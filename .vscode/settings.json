@@ -76,10 +76,21 @@
         "future": "cpp",
         "codecvt": "cpp",
         "valarray": "cpp",
+        "qwidget": "cpp",
+        "qpainter": "cpp",
+        "qvboxlayout": "cpp",
+        "qapplication": "cpp",
+        "qfontdatabase": "cpp",
+        "qresizeevent": "cpp",
+        "qmainwindow": "cpp",
         "complex": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "qkeyevent": "cpp",
+        "qpushbutton": "cpp",
+        "qsound": "cpp",
+        "qlabel": "cpp",
+        "qdebug": "cpp",
+        "qlineedit": "cpp"
     },
-    "files.watcherExclude": {
-        "**/target": true
-    }
+    "makefile.configureOnOpen": false
 }

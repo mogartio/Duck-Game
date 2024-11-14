@@ -1,5 +1,5 @@
 #include "protocolo-common.h"
-
+#include <iostream>
 #include <arpa/inet.h>
 
 void ProtocoloCommon::send(GenericMsg* msg) { msg->accept_send(*this); }

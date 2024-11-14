@@ -1,46 +1,25 @@
-#include <iomanip>  // Incluir el encabezado <iomanip> para std::setw y std::setfill
+#include <QApplication>
 #include <iostream>
-#include <list>
-#include <sstream>  // Incluir el encabezado <sstream>
-
-#include "../common/messages/generic_msg.h"
-#include "../common/queue.h"
-#include "SDL/game/frontOnePlaye.h"
-
 #include "client.h"
-#define MAX 1000
+#include "client_protocol.h"
+#include "../client/menu/main_window.h"
+#include "../common/queue.h"
+#include "../common/messages/generic_msg.h"
+#include "../client/menu/create_game_screen.h"
+#include "../client/menu/connection_screen.h"
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
 
-int main(int argc, char const* argv[]) {
+    Queue<GenericMsg*>* send_queue = new Queue<GenericMsg*>(100);
+    Queue<GenericMsg*>* recv_queue = new Queue<GenericMsg*>(100);
 
-    if (argc != 3) {
-        std::cerr << "Bad number of arguments in client side\n";
-        return -1;
+    Client* client = nullptr;
+
+    MainWindow mainWindow(nullptr, send_queue, recv_queue, client);
+    mainWindow.show();
+
+    if (app.exec() == 0) {
+        // se cerro ordenadamente y se tiene que iniciar el render del juego
     }
-
-    Queue<GenericMsg*> send_queue(MAX);
-    Queue<GenericMsg*> recv_queue(MAX);
-
-    Client client1(argv[1], argv[2], &send_queue, &recv_queue);
-    // Client client2(argv[1], argv[2], &send_queue, &recv_queue);
-
-    CreateLobbyMsg* msg2 = new CreateLobbyMsg("pepito");
-    send_queue.push(msg2);
-
-    ChooseLobbyMsg* msg1 = new ChooseLobbyMsg(1, "player2");
-    send_queue.push(msg1);
-
-    for (int i = 0; i < 2; i++) {
-        GenericMsg* msg = recv_queue.pop();
-        std::cout << "recibi header: " << int(msg->get_header()) << std::endl;
-    }
-
-    StartGameMsg msg3;
-    send_queue.push(&msg3);
-
-    OnePlayer front(send_queue, recv_queue, "pepito", "player2");
-    front.play();
-
-    recv_queue.close();
-    client1.stop();
     return 0;
 }

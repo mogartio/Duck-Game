@@ -9,14 +9,17 @@
  *
  * En cambio, con `GNU_SOURCE`, la función retornar un `char*` y no
  * necesariamente podrán el mensaje de error en el buffer sino como retorno.
- * (véase más abajo), lo cual esta claramente mal.
+* (véase más abajo), lo cual esta claramente mal.
  *
  * Estos "un-define" están para forzar el uso de POSIX y sacar `GNU_SOURCE`
  * al menos en este `.cpp`.
  * */
 #undef _GNU_SOURCE
 #undef GNU_SOURCE
+
+#ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200112L  // Define the POSIX version to enable strerror_r
+#endif
 
 #include "liberror.h"
 

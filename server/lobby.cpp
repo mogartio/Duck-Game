@@ -15,44 +15,47 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
     for (auto& pair: players_map) {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
-        descripcionPlayer.color = 0;  // por ahora, despues tenemos que hacer que esto se almacene
+        descripcionPlayer.color = players_colors[pair.first];
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
 }
 
-Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-             Client* first_player, uint& id_lobby, bool is_testing):
+Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing):
         send_queues(send_queues),
         receiver_q(new Queue<GenericMsg*>(200)),
         id_lobby(id_lobby),
         is_testing(is_testing) {
     player1_id = first_player->get_id();
     // players_description[FIRST_PLAYER] = descripcionPlayer;
-    players_map[player_name] = first_player;
+    players_map[player_name] = first_player;    
+    this->lobby_name = lobby_name;
+    this->max_players = max_players;
+    players_colors[player_name] = GenericMsg::DuckColor::WHITE;
 
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
+    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), first_player->get_id());
 }
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     lobby_empty();
-    if (players_map.size() == MAX_PLAYERS) {
-        throw std::runtime_error("Lobby lleno");
+    if (players_map.size() == max_players) {
+        throw std::runtime_error("lobby is full");
     }
     uint cantidadLocalPlayers = 1;
     for (auto& pair: players_map) {
         // Busco los clientes locales (con el mismo id)
-        if (pair.second->get_id() == second_player->get_id()) {
+        if (pair.second->get_id() == second_player->get_id()) { // si es el mismo cliente...
             // Sumo la cantidad de jugadores locales
             cantidadLocalPlayers++;
             // Si la cantidad de jugadores locales supera el maximo permitido
             if (cantidadLocalPlayers > MAX_LOCAL_PLAYERS) {
-                throw std::runtime_error("Maximo de jugadores locales alcanzado");
+                throw std::runtime_error("max local players reached");
             }
         }
         // Si el jugador ya esta en el lobby (por nombre)
         if (pair.first == player_name) {
-            throw std::runtime_error("El jugador ya esta en el lobby");
+            throw std::runtime_error("player already in lobby");
         }
     }
     players_map[player_name] = second_player;
@@ -61,7 +64,9 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            players_colors[player_name] = GenericMsg::DuckColor::GREY;
+            send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                        pair.second->get_id());
         }
     }
@@ -75,7 +80,7 @@ void Lobby::removePlayer(std::string player_name) {
         for (auto& pair: players_map) {
             if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
                 players_ids.insert(pair.second->get_id());
-                send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+                send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                            pair.second->get_id());
             }
         }
@@ -86,7 +91,7 @@ void Lobby::removePlayer(std::string player_name) {
 
 void Lobby::startGame() {
     lobby_empty();
-    // if (players_map.size() != MAX_PLAYERS) {
+    // if (players_map.size() != max_players) {
     //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
     //     necesitados");
     // }
@@ -98,7 +103,7 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description()),
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
                                        pair.second->get_id());
             pair.second->switch_queues(
                     receiver_q);  // aca cambiariamos la queue para definir la que
@@ -122,7 +127,8 @@ uint Lobby::getId() const { return id_lobby; }
 DescripcionLobby Lobby::getDescription() const {
     DescripcionLobby desc;
     desc.idLobby = id_lobby;
-    desc.nombreLobby = "Lobby " + std::to_string(id_lobby);
+    desc.nombreLobby = lobby_name;
     desc.cantidadJugadores = players_map.size();
+    desc.maxJugadores = max_players;
     return desc;
 }

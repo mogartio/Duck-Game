@@ -48,8 +48,9 @@ void Client::handle_read(const ViewLobbiesMsg& msg) {
 
 void Client::handle_read(const CreateLobbyMsg& msg) {
     std::string player_name = msg.get_player_name();
-    std::cout << "player name es: " << player_name << std::endl;
-    lobby_unido_id = lobbys.create(send_queues, player_name, this);
+    std::string lobby_name = msg.get_lobby_name();
+    uint8_t max_players = msg.get_max_players();
+    lobby_unido_id = lobbys.create(send_queues, player_name, lobby_name, max_players, this);
 }
 
 void Client::handle_read(const ChooseLobbyMsg& msg) {

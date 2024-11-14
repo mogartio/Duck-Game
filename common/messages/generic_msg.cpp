@@ -12,8 +12,8 @@ void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
 
 InfoLobbyMsg::InfoLobbyMsg(): GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-InfoLobbyMsg::InfoLobbyMsg(std::list<DescipcionPlayer> players):
-        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players) {}
+InfoLobbyMsg::InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id):
+        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players), max_players(max_players), lobby_id(lobby_id) {}
 
 void InfoLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -22,6 +22,14 @@ void InfoLobbyMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*
 void InfoLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
 void InfoLobbyMsg::set_players(std::list<DescipcionPlayer> players) { this->players = players; }
+
+void InfoLobbyMsg::set_max_players(uint8_t max_players) { this->max_players = max_players; }
+
+void InfoLobbyMsg::set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id; }
+
+uint8_t InfoLobbyMsg::get_max_players() const { return max_players; }
+
+uint8_t InfoLobbyMsg::get_lobby_id() const { return lobby_id; }
 
 std::list<DescipcionPlayer> InfoLobbyMsg::get_players() const { return players; }
 
@@ -84,8 +92,8 @@ void ChooseLobbyMsg::set_player_name(std::string player_name) { this->player_nam
 
 CreateLobbyMsg::CreateLobbyMsg(): GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-CreateLobbyMsg::CreateLobbyMsg(std::string player_name):
-        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name) {}
+CreateLobbyMsg::CreateLobbyMsg(std::string player_name, std::string lobby_name, uint8_t max_players):
+        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name), lobby_name(lobby_name), max_players(max_players) {}
 
 void CreateLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -95,7 +103,15 @@ void CreateLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*
 
 void CreateLobbyMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
+void CreateLobbyMsg::set_lobby_name(std::string lobby_name) { this->lobby_name = lobby_name; }
+
+void CreateLobbyMsg::set_max_players(uint8_t max_players) { this->max_players = max_players; }
+
 std::string CreateLobbyMsg::get_player_name() const { return player_name; }
+
+std::string CreateLobbyMsg::get_lobby_name() const { return lobby_name; }
+
+uint8_t CreateLobbyMsg::get_max_players() const { return max_players; }
 
 GoBackMsg::GoBackMsg(): GenericMsg(GenericMsg::GO_BACK_MSG, GenericMsg::LOBBY_MSG) {}
 
