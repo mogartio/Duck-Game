@@ -24,6 +24,7 @@ protected:
     int id;
     bool despawns_on_contact;
     bool is_lethal;
+    std::vector<std::pair<uint8_t, uint8_t>> trail;
 
 public:
     Projectile(Coordinate& initial_position, int x_direction, int reach, int speed,

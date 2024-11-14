@@ -343,11 +343,13 @@ ProjectileInfoMsg::ProjectileInfoMsg():
         pos_y(),
         item() {}
 
-ProjectileInfoMsg::ProjectileInfoMsg(uint8_t pos_x, uint8_t pos_y, uint8_t item):
+ProjectileInfoMsg::ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t pos_x,
+                                     uint8_t pos_y, uint8_t item):
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
         pos_x(pos_x),
         pos_y(pos_y),
-        item(item) {}
+        item(item),
+        trail(trail) {}
 
 void ProjectileInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -361,8 +363,14 @@ uint8_t ProjectileInfoMsg::get_pos_y() const { return pos_y; }
 
 uint8_t ProjectileInfoMsg::get_item() const { return item; }
 
+std::vector<std::pair<uint8_t, uint8_t>> ProjectileInfoMsg::get_trail() const { return trail; }
+
 void ProjectileInfoMsg::set_pos_x(uint8_t pos_x) { this->pos_x = pos_x; }
 
 void ProjectileInfoMsg::set_pos_y(uint8_t pos_y) { this->pos_y = pos_y; }
 
 void ProjectileInfoMsg::set_item(uint8_t item) { this->item = item; }
+
+void ProjectileInfoMsg::set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail) {
+    this->trail = trail;
+}

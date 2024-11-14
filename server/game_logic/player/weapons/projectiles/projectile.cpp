@@ -45,6 +45,7 @@ bool Projectile::ray_trace(Stage& stage) {
                 notify();
                 return false;
             }
+            trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
             position = bullet_position;
             // coordinates_to_delete.push_back(bullet_position);
             update();
@@ -56,7 +57,10 @@ bool Projectile::ray_trace(Stage& stage) {
 void Projectile::notify() {
 
     for (Observer* obs: observers) {
-        obs->update(static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+        // obs->update(static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+        //             static_cast<uint8_t>(id));
+        obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
                     static_cast<uint8_t>(id));
     }
+    trail.clear();
 }

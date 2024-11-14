@@ -487,6 +487,7 @@ private:
     uint8_t pos_x;
     uint8_t pos_y;
     uint8_t item;
+    std::vector<std::pair<uint8_t, uint8_t>> trail;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -497,7 +498,8 @@ public:
 
     ProjectileInfoMsg();
 
-    explicit ProjectileInfoMsg(uint8_t pos_x, uint8_t pos_y, uint8_t item);
+    explicit ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t pos_x,
+                               uint8_t pos_y, uint8_t item);
 
     uint8_t get_pos_x() const;
 
@@ -505,11 +507,15 @@ public:
 
     uint8_t get_item() const;
 
+    std::vector<std::pair<uint8_t, uint8_t>> get_trail() const;
+
     void set_pos_x(uint8_t pos_x);
 
     void set_pos_y(uint8_t pos_y);
 
     void set_item(uint8_t item);
+
+    void set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail);
 };
 
 

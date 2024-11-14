@@ -140,6 +140,13 @@ void ServerProtocol::handle_send(const ProjectileInfoMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
     // recibo posiciones x e y del proyectil
+    std::vector<std::pair<uint8_t, uint8_t>> trail = msg.get_trail();
+    uint8_t size = trail.size();
+    send_u_int8_t(size);
+    for (std::pair<uint8_t, uint8_t> coord: trail) {  // se manda el x e y de cada coordenada
+        send_u_int8_t(std::get<0>(coord));
+        send_u_int8_t(std::get<1>(coord));
+    }
     uint8_t pos_x = msg.get_pos_x();
     send_u_int8_t(pos_x);
     uint8_t pos_y = msg.get_pos_y();

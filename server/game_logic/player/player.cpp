@@ -116,9 +116,7 @@ void Player::notify_moved() {
 }
 
 void Player::notify_picked_weapon() {
-    std::cout << "entro en la funcion principal" << std::endl;
     for (PlayerObserver* obs: observers) {
-        std::cout << "entro en el loop" << std::endl;
         obs->update(name, weapon->get_id());
     }
 }

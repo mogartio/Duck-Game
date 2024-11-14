@@ -27,6 +27,7 @@ public:
     virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) {}
     virtual void update(uint8_t, uint8_t, uint8_t) {}
     virtual void update(std::string, uint8_t) {}
+    virtual void update(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t, uint8_t, uint8_t) {}
     virtual ~Observer() = default;
 };
 
@@ -49,7 +50,6 @@ public:
         senders.broadcast(porquenecesitounalist);
     }
     virtual void update(std::string name, uint8_t id) override {
-        std::cout << "entro en el obs per se" << std::endl;
         std::list<GenericMsg*> odio;
         PickupDropMsg* msg = new PickupDropMsg(name, id);
         odio.push_back(msg);
@@ -61,31 +61,27 @@ class ProjectileObserver: public Observer {
     using Observer::update;
 
 public:
-    // virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
-    //                     std::pair<uint16_t, uint16_t> final_position, uint8_t id) override {
-    //     ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, final_position, id);
-    //     std::stringstream ss;
-    //     for (auto& coor: trail) {
-    //         ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
-    //            << std::endl;
-    //     }
-    //     // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-    //     //           << std::to_string(std::get<0>(final_position))
-    //     //           << std::to_string(std::get<1>(final_position)) << " con trail: " << ss.str()
-    //     //           << std::endl;
+    virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
+                        uint8_t current_pos_y, uint8_t id) override {
+        ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, current_pos_x, current_pos_y, id);
+        senders.broadcast(msg);
+        std::stringstream ss;
+        for (auto& coor: trail) {
+            ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
+               << std::endl;
+        }
+        std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+                  << std::to_string(current_pos_x) << std::to_string(current_pos_y)
+                  << " con trail: " << ss.str() << std::endl;
+    }
+    ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
+    // virtual void update(uint8_t pos_x, uint8_t pos_y, uint8_t id) override {
+    //     ProjectileInfoMsg* msg = new ProjectileInfoMsg(pos_x, pos_y, id);
     //     std::list<GenericMsg*>
     //             porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
     //     porquenecesitounalist.push_back(msg);
     //     senders.broadcast(porquenecesitounalist);
     // }
-    ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
-    virtual void update(uint8_t pos_x, uint8_t pos_y, uint8_t id) override {
-        ProjectileInfoMsg* msg = new ProjectileInfoMsg(pos_x, pos_y, id);
-        std::list<GenericMsg*>
-                porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
-        porquenecesitounalist.push_back(msg);
-        senders.broadcast(porquenecesitounalist);
-    }
 };
 
 #endif

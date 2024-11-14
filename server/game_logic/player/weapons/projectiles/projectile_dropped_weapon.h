@@ -10,6 +10,8 @@
 #include "../weapon.h"
 
 #include "projectile.h"
+
+// Un monton de codigo repetido aca
 class ProjectileThrownWeapon: public Projectile {
 private:
     std::unique_ptr<Weapon> weapon;
@@ -32,6 +34,14 @@ public:
                 deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
     virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
+
+    void notify() override {
+        for (Observer* obs: observers) {
+            obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
+                        static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+                        static_cast<uint8_t>(id));
+        }
+    }
 };
 
 class ProjectileDroppedWeapon: public Projectile {
@@ -45,6 +55,13 @@ public:
             weapon(std::move(weapon)) {}
 
     virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
+    void notify() override {
+        for (Observer* obs: observers) {
+            obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
+                        static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+                        static_cast<uint8_t>(id));
+        }
+    }
 };
 
 class GrenadeProjectile: public ProjectileThrownWeapon {

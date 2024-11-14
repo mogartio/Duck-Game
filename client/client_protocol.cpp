@@ -154,6 +154,13 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
     // recibo la posicion del proyectil
+    std::vector<std::pair<uint8_t, uint8_t>> trail;
+    for (int i = 0; i < recv_u_int8_t(); i++) {
+        uint8_t pos_x = recv_u_int8_t();
+        uint8_t pos_y = recv_u_int8_t();
+        trail.push_back(std::pair<uint8_t, uint8_t>(pos_x, pos_y));
+    }
+    msg.set_trail(trail);
     uint8_t pos_x = recv_u_int8_t();
     uint8_t pos_y = recv_u_int8_t();
     msg.set_pos_x(pos_x);
