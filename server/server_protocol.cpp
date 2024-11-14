@@ -71,6 +71,16 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
     }
 }
 
+
+void ServerProtocol::handle_send(const PickupDropMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t item_id = msg.get_item_id();
+    std::string player_name = msg.get_player_name();
+    send_u_int8_t(item_id);
+    send_string(player_name);
+}
+
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
@@ -93,12 +103,12 @@ void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
     msg.set_player_name(player_name);
 }
 
-void ServerProtocol::handle_recv(PickupDropMsg& msg) {
-    uint8_t item_id = recv_u_int8_t();
-    msg.set_item_id(item_id);
-    std::string player_name = recv_string();
-    msg.set_player_name(player_name);
-}
+// void ServerProtocol::handle_recv(PickupDropMsg& msg) {
+//     uint8_t item_id = recv_u_int8_t();
+//     msg.set_item_id(item_id);
+//     std::string player_name = recv_string();
+//     msg.set_player_name(player_name);
+// }
 
 void ServerProtocol::handle_recv(StartActionMsg& msg) {
     uint8_t action_id = recv_u_int8_t();

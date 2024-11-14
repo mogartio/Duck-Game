@@ -27,6 +27,7 @@ public:
     virtual void handle_send(const ExitFromLobbyMsg& msg) override;
     virtual void handle_send(const StartGameMsg& msg) override;
 
+    virtual void handle_recv(PickupDropMsg& msg) override;
     virtual void handle_recv(InfoLobbyMsg& msg) override;
     virtual void handle_recv(SendLobbiesListMsg& msg) override;
     virtual void handle_recv(SendMapMsg& msg) override;
@@ -35,7 +36,7 @@ public:
     virtual void handle_send(const CustomizedPlayerInfoMsg& msg) override;
 
     // GAME MESSAGES
-    virtual void handle_send(const PickupDropMsg& msg) override;
+    // virtual void handle_send(const PickupDropMsg& msg) override;
     virtual void handle_send(const StartActionMsg& msg) override;
     virtual void handle_send(const StopActionMsg& msg) override;
 

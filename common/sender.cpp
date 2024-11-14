@@ -7,6 +7,9 @@ void Sender::run() {
     while (_keep_running) {
         try {
             GenericMsg* msg = send_queue->pop();
+            if (msg->get_header() == 0x08) {
+                std::cout << "El maldito mensaje pickup llego al sender" << std::endl;
+            }
             protocol->send(msg);
             // delete msg;
             // msg = nullptr;
