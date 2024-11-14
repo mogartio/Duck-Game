@@ -15,8 +15,8 @@ protected:
 
 public:
     PlayerSubject() {}
-    void attach(PlayerObserver* obs) { observers.push_back(obs); }
-    void dettach(PlayerObserver* obs) { observers.remove(obs); }
+    void attach(PlayerObserver& obs) { observers.push_back(&obs); }
+    void dettach(PlayerObserver& obs) { observers.remove(&obs); }
 };
 
 class ProjectileSubject: public Subject {
@@ -25,7 +25,7 @@ protected:
 
 public:
     ProjectileSubject() {}
-    void attach(ProjectileObserver* obs) { observers.push_back(obs); }
-    void dettach(ProjectileObserver* obs) { observers.remove(obs); }
+    void attach(ProjectileObserver& obs) { observers.push_back(&obs); }
+    void dettach(ProjectileObserver& obs) { observers.remove(&obs); }
 };
 #endif

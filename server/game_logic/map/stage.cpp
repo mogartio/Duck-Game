@@ -32,7 +32,7 @@ Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& sende
 void Stage::print() { map.print(); }
 
 void Stage::add_projectile(std::unique_ptr<Projectile>&& projectile) {
-    projectile.get()->attach(&obs);
+    projectile.get()->attach(obs);
     projectiles.push_back(std::move(projectile));
 }
 

@@ -14,6 +14,7 @@ void Weapon::start_throw() {
 }
 void Weapon::finish_throw(int x_direction, bool, std::unique_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
+    throw_started = false;
     /* double deviation_angle = M_PI / 2; */
     // TODO: deberia poder tirar la granada para arriba
     stage.add_projectile(std::move(std::make_unique<ProjectileThrownWeapon>(

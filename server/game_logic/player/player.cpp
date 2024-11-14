@@ -8,7 +8,7 @@
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
-Player::Player(Coordinate& initial_position, int id, std::string name, PlayerObserver* obs):
+Player::Player(Coordinate& initial_position, int id, std::string name, PlayerObserver& obs):
         id(id),
         is_alive(true),
         name(name),

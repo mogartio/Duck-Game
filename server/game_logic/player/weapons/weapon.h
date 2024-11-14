@@ -22,6 +22,8 @@ public:
             stage(stage),
             player(nullptr),
             stopped_holding_trigger(false),
+            throw_started(false),
+            throw_reach(0),
             id(id) {}
     virtual int get_ammo() { return ammo; }
     virtual ~Weapon() = default;
