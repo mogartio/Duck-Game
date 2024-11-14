@@ -61,10 +61,9 @@ void Player::remove_action(int& command) {
     }
     if (command == THROW_WEAPON) {
         if (weapon != nullptr) {
-            uint8_t weapon_id = weapon->get_id();
             weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
-            notify_dropped_weapon(weapon_id);
+            // notify_dropped_weapon(weapon_id);
         }
         pick_weapon(std::make_unique<Unarmed>(
                 *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
@@ -124,11 +123,11 @@ void Player::notify_picked_weapon() {
 }
 
 
-void Player::notify_dropped_weapon(uint8_t id) {
-    for (PlayerObserver* obs: observers) {
-        obs->update(name, id);
-    }
-}
+// void Player::notify_dropped_weapon(uint8_t id) {
+//     for (PlayerObserver* obs: observers) {
+//         obs->update(name, id);
+//     }
+// }
 
 void Player::move(std::set<int>& movements) { position->move(movements); }
 

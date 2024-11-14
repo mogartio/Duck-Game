@@ -66,7 +66,8 @@ void OnePlayer::play() {
     for (uint i = 0; i < players.size(); i++) {
         GenericMsg* jugador = queueRecive.pop();
         if (jugador->get_header() != GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
-            throw("Estoy recibiendo un mensaje que no es de updated player info");
+            throw std::runtime_error(
+                    "Estoy recibiendo un mensaje que no es de updated player info");
         }
         UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
         map.addPlayer(player_info->get_position().first, player_info->get_position().second, 2,
