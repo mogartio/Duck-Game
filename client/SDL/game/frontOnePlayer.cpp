@@ -98,6 +98,9 @@ void OnePlayer::play() {
             if (queueRecive.try_pop(msj)) {
                 UpdatedPlayerInfoMsg* player = nullptr;
                 uint8_t state = 0;
+                ProjectileInfoMsg* projectile = nullptr;
+                uint8_t pos_x, pos_y, item = 0;
+                std::vector<std::pair<uint8_t, uint8_t>> trail;
                 switch (msj->get_header()) {
                     case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
                         player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
@@ -108,6 +111,14 @@ void OnePlayer::play() {
                         map.update(player_name, position.first, position.second, DuckState(state),
                                    Side(facing_direction - 1));
                         stated_palying = true;
+                    case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
+                        projectile = dynamic_cast<ProjectileInfoMsg*>(msj);
+                        pos_x = projectile->get_pos_x();
+                        pos_y = projectile->get_pos_y();
+                        item = projectile->get_item();
+                        trail = projectile->get_trail();  // para el laser
+                        map.newWeapon(pos_x, pos_y, Weapon(item));
+                        break;
                     /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
                         // directa de que murio el jugador y de que hay que mostrar la pantalla de
                     muerte UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
