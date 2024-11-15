@@ -69,6 +69,7 @@ void Client::handle_read(const CustomizedPlayerInfoMsg& msg) {
     lobbys.update_player_info(msg.get_lobby_id(), msg.get_player_name(), msg.get_player_new_name(), msg.get_color());
 }
 
+
 void Client::handle_read(const GoBackMsg& msg) { (void)msg; }
 
 void Client::handle_read(const ExitFromLobbyMsg& msg) {

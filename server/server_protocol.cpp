@@ -173,3 +173,12 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
     uint8_t facing_direction = msg.get_facing_direction();
     send_u_int8_t(facing_direction);
 }
+
+void ServerProtocol::handle_send(const PlayerInfoMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    
+    DescipcionPlayer player = msg.get_player_info();
+    send_string(player.nombre);
+    send_u_int8_t(player.color);
+}

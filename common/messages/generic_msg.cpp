@@ -397,3 +397,24 @@ void ProjectileInfoMsg::set_projectile_trail(
 void ProjectileInfoMsg::set_projectile_final_position(uint16_t x, uint16_t y) {
     this->projectile_final_position = std::make_pair(x, y);
 }
+
+
+PlayerInfoMsg::PlayerInfoMsg() : 
+        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
+        player_info() {}
+
+PlayerInfoMsg::PlayerInfoMsg(DescipcionPlayer player_info) :
+        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
+        player_info(player_info) {}
+
+void PlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void PlayerInfoMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void PlayerInfoMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+DescipcionPlayer PlayerInfoMsg::get_player_info() const { return player_info; }
+
+void PlayerInfoMsg::set_player_info(DescipcionPlayer player_info) {
+    this->player_info = player_info;
+}

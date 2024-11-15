@@ -8,6 +8,7 @@ void HandlerReader::handle_read(const CreateLobbyMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const GoBackMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const ExitFromLobbyMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const StartGameMsg& msg) { (void)msg; }
+void HandlerReader::handle_read(const PlayerInfoMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const PickupDropMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const StartActionMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const StopActionMsg& msg) { (void)msg; }

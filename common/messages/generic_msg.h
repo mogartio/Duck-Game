@@ -53,6 +53,7 @@ public:
         WINNER_MSG = 0x10,
         UPDATED_PLAYER_INFO_MSG = 0x11,
         PROJECTILE_INFO_MSG = 0x12,
+        PLAYER_INFO_MSG = 0x13, // mensaje para enviar info de un jugador especifico
     };
 
     enum Type : uint8_t {
@@ -522,4 +523,24 @@ public:
 };
 
 
+class PlayerInfoMsg: public GenericMsg {
+private:
+    DescipcionPlayer player_info;
+
+public:
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    PlayerInfoMsg();
+
+    explicit PlayerInfoMsg(DescipcionPlayer player_info);
+
+    DescipcionPlayer get_player_info() const;
+
+    void set_player_info(DescipcionPlayer player_info);
+
+};
 #endif
