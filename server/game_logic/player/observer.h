@@ -22,10 +22,12 @@ protected:
     SendQueuesMonitor<GenericMsg*>& senders;
 
 public:
-    Observer(SendQueuesMonitor<GenericMsg*>& queues): senders(queues) {}
-    virtual void update() {}
-    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) {}
-    virtual void update(std::vector<std::pair<uint16_t, uint16_t>>, std::pair<uint16_t, uint16_t>) {
+    explicit Observer(SendQueuesMonitor<GenericMsg*>& queues): senders(queues) {}
+    virtual void update() const {}
+    virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) const {}
+    virtual void update(uint8_t, uint8_t, uint8_t) const {}
+    virtual void update(std::string, uint8_t) const {}
+    virtual void update(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t, uint8_t, uint8_t) const {
     }
     virtual ~Observer() = default;
 };
@@ -34,20 +36,20 @@ class PlayerObserver: public Observer {
     using Observer::update;
 
 public:
-    PlayerObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
+    explicit PlayerObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
     virtual void update(std::string name, uint16_t pos_x, uint16_t pos_y, uint8_t state,
-                        uint8_t facing_direction) override {
-        std::list<GenericMsg*>
-                porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
+                        uint8_t facing_direction) const override {
         UpdatedPlayerInfoMsg* msg = new UpdatedPlayerInfoMsg(name, std::make_pair(pos_x, pos_y),
                                                              state, facing_direction);
-
         // std::cout << "se esta broadcasteando un jugador que es:" << name
         //           << " con pos: " << std::to_string(pos_x) << " , " << std::to_string(pos_y)
         //           << " En estado: " << std::to_string(state) << "mirando a "
         //           << std::to_string(facing_direction) << std::endl;
-        porquenecesitounalist.push_back(msg);
-        senders.broadcast(porquenecesitounalist);
+        senders.broadcast(msg);
+    }
+    virtual void update(std::string name, uint8_t id) const override {
+        PickupDropMsg* msg = new PickupDropMsg(name, id);
+        senders.broadcast(msg);
     }
 };
 
@@ -55,24 +57,30 @@ class ProjectileObserver: public Observer {
     using Observer::update;
 
 public:
-    ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
-    virtual void update(std::vector<std::pair<uint16_t, uint16_t>> trail,
-                        std::pair<uint16_t, uint16_t> final_position) override {
-        ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, final_position);
+    virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
+                        uint8_t current_pos_y, uint8_t id) const override {
+        ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, current_pos_x, current_pos_y, id);
+        senders.broadcast(msg);
         std::stringstream ss;
-        for (auto& coor: trail) {
-            ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
-               << std::endl;
+        if (trail.size() > 0) {
+
+            for (auto& coor: trail) {
+                ss << std::to_string(std::get<0>(coor)) << " , "
+                   << std::to_string(std::get<1>(coor)) << std::endl;
+            }
+            // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+            //           << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
+            //           << " con trail: " << ss.str() << std::endl;
         }
-        // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-        //           << std::to_string(std::get<0>(final_position))
-        //           << std::to_string(std::get<1>(final_position)) << " con trail: " << ss.str()
-        //           << std::endl;
-        std::list<GenericMsg*>
-                porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
-        porquenecesitounalist.push_back(msg);
-        senders.broadcast(porquenecesitounalist);
     }
+    explicit ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
+    // virtual void update(uint8_t pos_x, uint8_t pos_y, uint8_t id) override {
+    //     ProjectileInfoMsg* msg = new ProjectileInfoMsg(pos_x, pos_y, id);
+    //     std::list<GenericMsg*>
+    //             porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
+    //     porquenecesitounalist.push_back(msg);
+    //     senders.broadcast(porquenecesitounalist);
+    // }
 };
 
 #endif

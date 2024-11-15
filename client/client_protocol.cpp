@@ -98,14 +98,21 @@ void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
     send_string(player_name);
 }
 
-void ClientProtocol::handle_send(const PickupDropMsg& msg) {
-    uint8_t header = msg.get_header();
-    send_u_int8_t(header);
-    uint8_t item_id = msg.get_item_id();
-    std::string player_name = msg.get_player_name();
-    send_u_int8_t(item_id);
-    send_string(player_name);
+
+void ClientProtocol::handle_recv(PickupDropMsg& msg) {
+    std::string player_name = recv_string();
+    msg.set_player_name(player_name);
+    uint8_t item_id = recv_u_int8_t();
+    msg.set_item_id(item_id);
 }
+// void ClientProtocol::handle_send(const PickupDropMsg& msg) {
+//     uint8_t header = msg.get_header();
+//     send_u_int8_t(header);
+//     uint8_t item_id = msg.get_item_id();
+//     std::string player_name = msg.get_player_name();
+//     send_u_int8_t(item_id);
+//     send_string(player_name);
+// }
 
 void ClientProtocol::handle_send(const StartActionMsg& msg) {
     uint8_t header = msg.get_header();
@@ -146,21 +153,22 @@ void ClientProtocol::handle_recv(SendMapMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
-    // recibo la cantidad de posiciones que tiene el trail
-    uint16_t trail_size = recv_u_int16_t();
-    // recibo las posiciones del trail
-    std::vector<std::pair<uint16_t, uint16_t>> trail;
+    // recibo la posicion del proyectil
+    std::vector<std::pair<uint8_t, uint8_t>> trail;
+    int trail_size = recv_u_int8_t();
     for (int i = 0; i < trail_size; i++) {
-        uint16_t x = recv_u_int16_t();
-        uint16_t y = recv_u_int16_t();
-        trail.push_back(std::make_pair(x, y));
+        uint8_t pos_x = recv_u_int8_t();
+        uint8_t pos_y = recv_u_int8_t();
+        trail.push_back(std::pair<uint8_t, uint8_t>(pos_x, pos_y));
     }
-    // recibo la posicion final
-    uint16_t x = recv_u_int16_t();
-    uint16_t y = recv_u_int16_t();
-    // seteo los valores en el mensaje
-    msg.set_projectile_trail(trail);
-    msg.set_projectile_final_position(x, y);
+    msg.set_trail(trail);
+    uint8_t pos_x = recv_u_int8_t();
+    uint8_t pos_y = recv_u_int8_t();
+    msg.set_pos_x(pos_x);
+    msg.set_pos_y(pos_y);
+    // recibo el item del proyectil
+    uint8_t item = recv_u_int8_t();
+    msg.set_item(item);
 }
 
 void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {

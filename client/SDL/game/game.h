@@ -7,14 +7,14 @@
 #include "eventhandler.h"
 #include "map.h"
 #include "window.h"
-class OnePlayer {
+class Game {
 private:
     Queue<GenericMsg*>& queueRecive;
     std::atomic<bool> running;
     EventHandler event_handler;
 
 public:
-    OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
+    Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
               std::string playerName1, std::string playerName2 = "");
 
     void play();

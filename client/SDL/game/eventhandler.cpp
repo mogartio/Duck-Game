@@ -14,7 +14,7 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
         return new StartActionMsg(ActionsId::SHOOT, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_R)] = [this]() {
-        return new PickupDropMsg(ID_ITEM, playerName1);
+        return new PickupDropMsg(playerName1, ID_ITEM);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_W)] = [this]() {
         return new StartActionMsg(ActionsId::JUMP, playerName1);
@@ -42,6 +42,9 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_W)] = [this]() {
         return new StopActionMsg(ActionsId::JUMP, playerName1);
     };
+    key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_E)] = [this]() {
+        return new StopActionMsg(ActionsId::SHOOT, playerName1);
+    };
 
     // Inicializo el estado de las teclas
     pressed_keys_state[SDL_SCANCODE_E] = false;
@@ -57,7 +60,7 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
             return new StartActionMsg(ActionsId::SHOOT, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_C)] = [this]() {
-            return new PickupDropMsg(ID_ITEM, playerName2);
+            return new PickupDropMsg(playerName2, ID_ITEM);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_UP)] = [this]() {
             return new StartActionMsg(ActionsId::JUMP, playerName2);
@@ -83,6 +86,9 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
         };
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_UP)] = [this]() {
             return new StopActionMsg(ActionsId::JUMP, playerName2);
+        };
+        key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_X)] = [this]() {
+            return new StopActionMsg(ActionsId::SHOOT, playerName2);
         };
 
         pressed_keys_state[SDL_SCANCODE_X] = false;

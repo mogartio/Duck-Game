@@ -12,6 +12,7 @@ public:
     Image();
 
     void initialize(SDL_Renderer* rend, const std::string& img);
+    
     // fill() para background e imagenes estaticas
     void fill(bool background = false);
     
@@ -23,6 +24,7 @@ public:
 
     void defineSize(int height, int width);
     void position(int x, int y);
+    std::pair<int, int> getPosition() const;
 
     ~Image();
 };

@@ -5,7 +5,7 @@
 
 #include "../common/messages/generic_msg.h"
 #include "../common/queue.h"
-#include "SDL/game/frontOnePlaye.h"
+#include "SDL/game/game.h"
 
 #include "client.h"
 #define MAX 1000
@@ -37,7 +37,7 @@ int main(int argc, char const* argv[]) {
     StartGameMsg msg3;
     send_queue.push(&msg3);
 
-    OnePlayer front(send_queue, recv_queue, "pepito", "player2");
+    Game front(send_queue, recv_queue, "pepito", "player2");
     front.play();
 
     recv_queue.close();

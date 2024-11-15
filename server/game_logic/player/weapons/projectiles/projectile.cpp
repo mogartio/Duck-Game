@@ -21,38 +21,57 @@ bool Projectile::ray_trace(Stage& stage) {
 
         int next_tile = stage.get(bullet_position);
         if (next_tile == -1) {
+            trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
+            notify();
             return true;
         }
         if (next_tile == Config::get_instance()->mapsId["floor"] ||
             next_tile == Config::get_instance()->mapsId["wall"]) {
             speed = 0;
             stage.set(position, id);
+            trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
+            notify();
             return despawns_on_contact;
         }
+        // si la siguiente tile es un pato
         if (next_tile == 1 || next_tile == 2) {
-            stage.kill(next_tile);
-            return true;
+            if (is_lethal) {
+                stage.kill(next_tile);
+            }
+            if (!(initial_position == position)) {
+
+                trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
+                notify();
+            }
+            return is_lethal;
         }
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {
                 stage.set(bullet_position, id);
+                trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
+                                   // its never been this serious
+                notify();
                 return false;
             }
+            trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
             position = bullet_position;
             // coordinates_to_delete.push_back(bullet_position);
-            notify();
             update();
         }
-        trail.push_back(std::pair<uint16_t, uint16_t>(bullet_position.x, bullet_position.y));
     }
-    notify();
+    if (speed == 0) {
+        notify();
+    }
     return false;
 }
 
 void Projectile::notify() {
 
-    for (Observer* obs: observers) {
-        obs->update(trail, std::pair<uint16_t, uint16_t>(position.x, position.y));
+    for (const Observer* obs: observers) {
+        // obs->update(static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+        //             static_cast<uint8_t>(id));
+        obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
+                    static_cast<uint8_t>(id));
     }
     trail.clear();
 }

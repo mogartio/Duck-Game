@@ -13,15 +13,18 @@ protected:
     bool stopped_holding_trigger;
     bool throw_started;
     int throw_reach;
+    int id;
 
 public:
-    Weapon(Stage& stage, int ammo, int reach):
+    Weapon(Stage& stage, int ammo, int reach, int id):
             ammo(ammo),
             reach(reach),
             stage(stage),
             player(nullptr),
-            stopped_holding_trigger(true) {}
-    virtual int get_ammo() { return ammo; }
+            stopped_holding_trigger(false),
+            throw_started(false),
+            throw_reach(0),
+            id(id) {}
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}
     virtual Coordinate get_gun_position(int facing_direction);
@@ -31,6 +34,7 @@ public:
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
     virtual void update() {}
+    virtual uint8_t get_id() { return id; }
 };
 
 class Unarmed: public Weapon {

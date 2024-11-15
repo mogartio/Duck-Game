@@ -32,8 +32,8 @@ public:
     // CUSTOMIZED MESSAGES
     virtual void handle_recv(CustomizedPlayerInfoMsg& msg) override;
 
-    // GAME MESSAGES
-    virtual void handle_recv(PickupDropMsg& msg) override;
+    // // GAME MESSAGES
+    // virtual void handle_recv(PickupDropMsg& msg) override;
     virtual void handle_recv(StartActionMsg& msg) override;
     virtual void handle_recv(StopActionMsg& msg) override;
 
@@ -42,6 +42,7 @@ public:
 
     virtual void handle_send(const ProjectileInfoMsg& msg) override;
     virtual void handle_send(const UpdatedPlayerInfoMsg& msg) override;
+    virtual void handle_send(const PickupDropMsg& msg) override;
 };
 
 #endif  // CLIENT_PROTOCOL_H

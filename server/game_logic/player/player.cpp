@@ -8,7 +8,8 @@
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
-Player::Player(Coordinate& initial_position, int id, std::string name, PlayerObserver* obs):
+Player::Player(Coordinate& initial_position, int id, const std::string& name,
+               const PlayerObserver& obs):
         id(id),
         is_alive(true),
         name(name),
@@ -21,15 +22,17 @@ void Player::init_for_stage(Stage* stage) {
     this->stage = stage;
     this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
     is_alive = true;
-    pick_weapon(std::make_unique<Unarmed>(*stage));
     current_actions.clear();
-    notify();
+    notify_moved();  // los notify hacen que se broadcasteen mensajes
 }
 
 void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
     weapon = std::move(new_weapon);
     weapon->set_player(this);
+    notify_picked_weapon();
 }
+
+void Player::unarm_self() { pick_weapon(std::make_unique<Unarmed>(*stage)); }
 
 Coordinate Player::get_position() { return position->get_position(); }
 
@@ -60,14 +63,16 @@ void Player::remove_action(int& command) {
     }
     if (command == THROW_WEAPON) {
         if (weapon != nullptr) {
-            weapon->finish_throw(position->get_facing_direction(), position->is_aiming_up(),
+            weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
+            // notify_dropped_weapon(weapon_id);
         }
-        weapon = nullptr;
+        pick_weapon(std::make_unique<Unarmed>(
+                *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
     }
 }
 
-void Player::execute(int& command) {
+void Player::execute(const int& command) {
     if (!is_alive) {
         return;
     }
@@ -99,25 +104,38 @@ void Player::update() {
         weapon->update();
     }
     if (should_notify) {
-        notify();
+        notify_moved();
     }
 }
 
-void Player::notify() {
+void Player::notify_moved() {
     Coordinate current_position = position->get_position();
-    for (PlayerObserver* obs: observers) {
+    for (const PlayerObserver* obs: observers) {
         obs->update(name, current_position.x, current_position.y, position->get_state(),
                     position->get_facing_direction());
     }
 }
 
-void Player::move(std::set<int>& movements) { position->move(movements); }
+void Player::notify_picked_weapon() {
+    for (const PlayerObserver* obs: observers) {
+        obs->update(name, weapon->get_id());
+    }
+}
+
+
+// void Player::notify_dropped_weapon(uint8_t id) {
+//     for (PlayerObserver* obs: observers) {
+//         obs->update(name, id);
+//     }
+// }
+
+void Player::move(const std::set<int>& movements) { position->move(movements); }
 
 void Player::shoot() {
     if (weapon == nullptr) {
         return;
     }
-    weapon->shoot(position->get_facing_direction(), position->is_aiming_up());
+    weapon->shoot(position->get_aiming_direction(), position->is_aiming_up());
 }
 
 void Player::die() { is_alive = false; }
