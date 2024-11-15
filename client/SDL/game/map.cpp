@@ -351,6 +351,10 @@ void Map::fill() {  // Dibuja de atras para adelante
 
 Map::~Map() {
 
+    if (parentTexture != nullptr) {
+        SDL_DestroyTexture(parentTexture);
+    }
+
     for (Image* piso: tilesImages) {
         delete piso;
     }

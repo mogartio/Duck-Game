@@ -2,18 +2,18 @@
 
 #include <SDL2/SDL_timer.h>
 
-#include "frontOnePlaye.h"
+#include "game.h"
 #define TILES_TO_PIXELS 16
 
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
-OnePlayer::OnePlayer(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
+Game::Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
                      std::string playerName1, std::string playerName2):
         queueRecive(queueRecive),
         running(true),
         event_handler(queueSend, playerName1, running, playerName2) {}
 
-void OnePlayer::play() {
+void Game::play() {
 
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("Error initializing SDL: %s\n", SDL_GetError());
