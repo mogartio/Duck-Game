@@ -17,7 +17,7 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
-    for (int i = int(ProjectilesId::ProjectileId::GRENADE); i <= int(ProjectilesId::ProjectileId::SNIPER); i++) {
+    for (int i = int(ProjectilesId::ProjectileId::GRENADE); i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
@@ -41,6 +41,9 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_
 // ----------------- Initialize Images -----------------
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
+    if ((id == ProjectilesId::ProjectileId::HELMET) || (id == ProjectilesId::ProjectileId::CHEST) || (id == ProjectilesId::ProjectileId::UNARMED)) {
+        return;
+    }
     Image* weaponImage = new Image();
     std::string path = "img_src/weapons/";
     path += projectile_to_string(id);
@@ -312,6 +315,9 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
         weapons[w.first]->position(w.second.first * tiles, w.second.second * tiles);
         weapons[w.first]->fill(SDL_FLIP_NONE);
+        if (int(w.first) >= int(ProjectilesId::ProjectileId::LASER)) {
+            weapons[w.first]->position(-1, -1);
+        }
     }
 
     for (std::string playerName: playersNamesAlive) {
