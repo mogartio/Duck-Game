@@ -153,9 +153,6 @@ void Game::play() {
                     default:
                         break;
                 }
-            } else if (stated_palying) {
-                map.update(player_name, position.first, position.second, DuckState::STANDING,
-                           Side(facing_direction - 1));
             }
         }
         // Renderiza los objetos en la ventana
@@ -164,6 +161,11 @@ void Game::play() {
             map.fill();
             win.fill();
             last_frame_time = current_time;
+        }
+        
+        if (stated_palying) {
+                map.update(player_name, position.first, position.second, DuckState::STANDING,
+                           Side(facing_direction - 1));
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
