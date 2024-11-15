@@ -201,7 +201,6 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         std::string name = "localPlayer";
         ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(name);
         send_queue->push(exit_from_lobby_msg);
-        localPlayerName = nullptr;
     } else {
         // add local player to lobby
         localPlayerButton->setText("Remove Local Player");
@@ -223,7 +222,6 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         std::string local_player = "localPlayer";
         ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
-        localPlayerName = new std::string(local_player);
     }
 
 }

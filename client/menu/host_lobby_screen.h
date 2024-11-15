@@ -30,8 +30,6 @@ public:
 private slots: 
     void onAddLocalPlayerButtonClicked();
     void updatePlayersInLobby();
-    void onLeftArrowClicked();
-    void onRightArrowClicked();
     void onReadyButtonClicked();
 signals: 
     void playersUpdated();
@@ -46,8 +44,6 @@ private:
     QScrollArea* scrollArea;
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
-    QPixmap *leftIcon;
-    QPixmap *rightIcon;
     uint8_t lobby_id;
     bool isLocalPlayerAdded = false;
     std::list<DescipcionPlayer> players;
