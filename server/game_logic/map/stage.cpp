@@ -97,8 +97,7 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     Coordinate duck_feet(current_position.x, current_position.y + PLAYER_SIZE);
     for (int i = 0; i < PLAYER_SIZE; i++) {
         Coordinate aux(duck_feet.x + i, duck_feet.y);
-        if (map.get(aux) == Config::get_instance()->mapsId["floor"] ||
-            map.get(aux) == Config::get_instance()->mapsId["wall"]) {
+        if (map.get(aux) != Config::get_instance()->mapsId["background"]) {
             return false;
         }
     }
