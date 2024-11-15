@@ -14,14 +14,17 @@ class WeaponSpawnPoint {
 private:
     Coordinate position;
     Stage& stage;
+    bool is_free;
+    int counter;
 
 public:
-    WeaponSpawnPoint(Coordinate position, Stage& stage): position(position), stage(stage) {}
-    void spawn_weapon() {
-        auto weapon = std::make_unique<CowboyGun>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       4, 4, COWBOY_PISTOL));
+    WeaponSpawnPoint(Coordinate position, Stage& stage):
+            position(position), stage(stage), is_free(false), counter(0) {
+        spawn_weapon();
     }
+    void spawn_weapon();
+    void update();
+    void free();
 };
 
 #endif

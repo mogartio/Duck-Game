@@ -19,6 +19,7 @@ std::string GameMain::play_round(Stage& stage) {
     bool round_over = false;
     while (!round_over) {
         steady_clock::time_point t0 = steady_clock::now();  // empieza el timer
+        spawn_weapons();
         process_commands(stage);
         winner = look_for_dead_people_and_do_what_you_must(stage, round_over);
         steady_clock::time_point t1 = steady_clock::now();  // termina el timer!
@@ -30,10 +31,9 @@ std::string GameMain::play_round(Stage& stage) {
 void GameMain::init_round(Stage& stage) {
     std::vector<std::tuple<int, int>> weapon_spawn_sites =
             Config::get_instance()->weapon_spawn_sites;
-
     Coordinate weapon_spawn(std::get<0>(weapon_spawn_sites[0]), std::get<1>(weapon_spawn_sites[0]));
-    WeaponSpawnPoint spawn(weapon_spawn, stage);
-    spawn.spawn_weapon();
+    weapon_spawns.push_back(new WeaponSpawnPoint(weapon_spawn, stage));
+
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
         alive_players.insert(name);
@@ -42,6 +42,12 @@ void GameMain::init_round(Stage& stage) {
     for (auto [name, player]: players) {  // I'll do it again
         player->unarm_self();  // la sangre derramada por este doble loop pesara en la consciencia
                                // de facu
+    }
+}
+
+void GameMain::spawn_weapons() {
+    for (auto& spawn: weapon_spawns) {
+        spawn->update();
     }
 }
 
