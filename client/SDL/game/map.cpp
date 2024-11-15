@@ -222,10 +222,10 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = (max_x - min_x) + 10 * tiles;
-    int new_height = (max_y - min_y) + 10 * tiles;
-    min_x -= 5 * tiles;
-    min_y -= 5 * tiles;
+    int new_width = (max_x - min_x)*3;
+    int new_height = (max_y - min_y)*3;
+    min_x = min_x - new_width / 3;
+    min_y = min_y - new_height / 3;
 
     float proportion_width = float(width_window) / float(new_width);
     float proportion_height = float(height_window) / float(new_height);
@@ -294,7 +294,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
-    
+
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
     //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);

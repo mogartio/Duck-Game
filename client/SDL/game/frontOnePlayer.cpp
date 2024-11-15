@@ -55,8 +55,6 @@ void OnePlayer::play() {
 
     Window win(displayBounds.w, displayBounds.h);
 
-    // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
-
     Map map(win.get_rend(), mapa, tiles, displayBounds.w, displayBounds.h);
     map.makeMap(columnas, filas);
 
