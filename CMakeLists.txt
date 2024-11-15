@@ -28,13 +28,16 @@ find_package(yaml-cpp REQUIRED)
 file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h)
 file(GLOB_RECURSE CLIENT_SOURCES client/*.cpp client/*.h client/menu/*.cpp client/menu/*.h)
 file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h)
-
+# Excluir archivos en los directorios de CMake
+list(FILTER COMMON_SOURCES EXCLUDE REGEX "CMakeFiles")
+list(FILTER CLIENT_SOURCES EXCLUDE REGEX "CMakeFiles")
+list(FILTER SERVER_SOURCES EXCLUDE REGEX "CMakeFiles")
 # Define the common static library
 add_library(common STATIC ${COMMON_SOURCES})
 
 # Add executables 
-add_executable(client ${CLIENT_SOURCES} ${COMMON_SOURCES})
-add_executable(server ${SERVER_SOURCES} ${COMMON_SOURCES})
+add_executable(client ${CLIENT_SOURCES})
+add_executable(server ${SERVER_SOURCES})
 
 # Copy the entire img_src folder, including subdirectories, to the build directory
 add_custom_target(CopyResources ALL
