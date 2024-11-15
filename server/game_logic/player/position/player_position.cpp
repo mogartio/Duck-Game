@@ -20,7 +20,7 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
     air_state = std::move(std::make_unique<Grounded>());
 }
 
-void PlayerPosition::move(std::set<int>& directions) {
+void PlayerPosition::move(const std::set<int>& directions) {
     int x_offset = 0;
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...

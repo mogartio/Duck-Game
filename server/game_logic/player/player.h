@@ -33,20 +33,19 @@ public:
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    Player(Coordinate&, int, std::string, PlayerObserver*);
+    Player(Coordinate&, int, const std::string&, const PlayerObserver&);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);
     void remove_action(int&);
-    void move(std::set<int>&);
-    void execute(int&);
+    void move(const std::set<int>&);
+    void execute(const int&);
     void shoot();
     void update();
     void Notify() { should_notify = true; }
     void notify_moved();
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
-    void set_weapon(std::unique_ptr<Weapon> new_weapon) { weapon = std::move(new_weapon); }
     void pick_weapon(std::unique_ptr<Weapon> new_weapon);
     void unarm_self();
 };

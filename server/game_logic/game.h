@@ -13,12 +13,13 @@ private:
     std::map<std::string, int> player_points;
     Stage* current_stage;
     std::unique_ptr<GameMain> game_loop;
-    std::map<std::string, Player*> generate_players(std::vector<std::string>, PlayerObserver*);
+    std::map<std::string, Player*> generate_players(const std::vector<std::string>& names,
+                                                    const PlayerObserver&);
     bool game_over;
     void send_map();
 
 public:
-    Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, bool is_testing,
+    Game(Queue<GenericMsg*>& recv, const std::vector<std::string>& player_names, bool is_testing,
          SendQueuesMonitor<GenericMsg*>& senders);
     void run() override;
 };

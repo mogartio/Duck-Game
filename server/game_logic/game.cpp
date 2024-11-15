@@ -1,15 +1,15 @@
 #include "game.h"
 
-Game::Game(Queue<GenericMsg*>& recv, std::vector<std::string> player_names, bool is_testing,
+Game::Game(Queue<GenericMsg*>& recv, const std::vector<std::string>& player_names, bool is_testing,
            SendQueuesMonitor<GenericMsg*>& senders):
         senders(senders), game_over(false) {
-    PlayerObserver* player_obs = new PlayerObserver(senders);
-    players = generate_players(player_names, player_obs);
+    const PlayerObserver* player_obs = new PlayerObserver(senders);
+    players = generate_players(player_names, *player_obs);
     game_loop = std::make_unique<GameMain>(recv, players, is_testing, senders);
 }
 
-std::map<std::string, Player*> Game::generate_players(std::vector<std::string> names,
-                                                      PlayerObserver* obs) {
+std::map<std::string, Player*> Game::generate_players(const std::vector<std::string>& names,
+                                                      const PlayerObserver& obs) {
     std::vector<std::tuple<int, int>> coordinates = Config::get_instance()->player_spawn_sites;
     for (size_t i = 0; i < names.size(); i++) {
         Coordinate coordinate(std::get<0>(coordinates[i]), std::get<1>(coordinates[i]));
@@ -27,7 +27,7 @@ void Game::run() {
             std::string winner = game_loop->play_round(*current_stage);
             player_points[winner]++;
         }
-        for (auto [name, points]: player_points) {
+        for (auto& [name, points]: player_points) {
             if (points >= 5) {
                 game_over = true;
             }

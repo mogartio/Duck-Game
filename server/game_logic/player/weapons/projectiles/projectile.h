@@ -39,9 +39,6 @@ public:
             despawns_on_contact(despawns_on_contact),
             is_lethal(is_lethal) {}
     virtual void move(Coordinate new_position) { position = new_position; }
-    virtual int get_x_direction() { return x_direction; }
-    virtual int get_speed() { return speed; }
-    virtual double get_deviation_angle() { return deviation_angle; }
     virtual Coordinate get_position() { return position; }
     virtual ~Projectile() = default;
     virtual int get_id() { return id; }
