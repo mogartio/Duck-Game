@@ -1,18 +1,25 @@
-#include "../../../common/queue.h"
-#include "player.h"
-
 #include <list>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
 #include <SDL2/SDL_render.h>
+#include "../../../common/queue.h"
+
+#include "player.h"
 
 class Map {
 private:
-
     SDL_Renderer* rend;
+
+    std::vector<uint16_t> mapa;
+    uint tiles;
 
     // Imagenes de los tiles
     std::vector<Image*> tilesImages;
     // Posiciones de los tiles
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> tilesPlace;
+    std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
     // Jugadores
     std::unordered_map<std::string, Player*> players;
@@ -47,9 +54,10 @@ private:
 
 
 public:
-    Map(SDL_Renderer* rend);
 
-    void makeMap(int w, int h, std::vector<uint16_t> mapa);
+    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
+
+    void makeMap(int w, int h);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
     void remove(std::string playerName);

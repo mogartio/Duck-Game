@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <list>
 #include <string>
 #include <utility>
 #include <vector>
@@ -30,9 +31,33 @@ enum ActionId : uint8_t {
 
 }
 
+namespace ProjectilesId {
+
+enum ProjectileId : uint8_t {
+    UNARMED = 0x00,
+    GRENADE = 0x01,
+    BANANA = 0x02,
+    PEW_PEW_LASER = 0x03,
+    LASER_RIFLE = 0x04,
+    AK_47 = 0x05,
+    DUEL_PISTOL = 0x06,
+    COWBOY_PISTOL = 0x07,
+    MAGNUM = 0x08,
+    SHOTGUN = 0x09,
+    SNIPER = 0x0A,
+    HELMET = 0x0B,
+    CHEST = 0x0C,
+    // balas (?)
+    LASER = 0x0D,           // PEW_PEW_LASER y LASER_RIFLE
+    BULLET_PISTOL = 0x0E,   // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    BULLET_SHOTGUN = 0x0F,  // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+};
+}
+
 class GenericMsg {
 public:
     enum MsgTypeHeader : uint8_t {
+        INFO_LOBBY_MSG = 0x00,
         CUSTOMIZED_PLAYER_INFO_MSG = 0x01,
         VIEW_LOBBIES_MSG = 0x02,
         CHOOSE_LOBBY_MSG = 0x03,
@@ -64,6 +89,7 @@ public:
         LEFT = 0x02,
     };
 
+
 private:
     MsgTypeHeader header;
     Type type;
@@ -81,6 +107,27 @@ public:
     void set_id_client(int id_client);
     virtual ~GenericMsg() = default;
 };
+
+class InfoLobbyMsg: public GenericMsg {
+private:
+    std::list<DescipcionPlayer> players;
+
+public:
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    InfoLobbyMsg();
+
+    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players);
+
+    void set_players(std::list<DescipcionPlayer> players);
+
+    std::list<DescipcionPlayer> get_players() const;
+};
+
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
@@ -222,7 +269,7 @@ public:
 
     PickupDropMsg();
 
-    explicit PickupDropMsg(uint8_t item_id, std::string player_name);
+    explicit PickupDropMsg(std::string player_name, uint8_t item_id);
 
     void set_item_id(uint8_t item_id);
 
@@ -437,8 +484,10 @@ public:
 
 class ProjectileInfoMsg: public GenericMsg {
 private:
-    std::vector<std::pair<uint16_t, uint16_t>> projectile_trail;
-    std::pair<uint16_t, uint16_t> projectile_final_position;
+    uint8_t pos_x;
+    uint8_t pos_y;
+    uint8_t item;
+    std::vector<std::pair<uint8_t, uint8_t>> trail;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -449,16 +498,24 @@ public:
 
     ProjectileInfoMsg();
 
-    explicit ProjectileInfoMsg(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail,
-                               std::pair<uint16_t, uint16_t> projectile_final_position);
+    explicit ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t pos_x,
+                               uint8_t pos_y, uint8_t item);
 
-    std::vector<std::pair<uint16_t, uint16_t>> get_projectile_trail() const;
+    uint8_t get_pos_x() const;
 
-    std::pair<uint16_t, uint16_t> get_final_position() const;
+    uint8_t get_pos_y() const;
 
-    void set_projectile_trail(std::vector<std::pair<uint16_t, uint16_t>> projectile_trail);
+    uint8_t get_item() const;
 
-    void set_projectile_final_position(uint16_t x, uint16_t y);
+    std::vector<std::pair<uint8_t, uint8_t>> get_trail() const;
+
+    void set_pos_x(uint8_t pos_x);
+
+    void set_pos_y(uint8_t pos_y);
+
+    void set_item(uint8_t item);
+
+    void set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail);
 };
 
 

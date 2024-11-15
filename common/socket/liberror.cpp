@@ -19,6 +19,7 @@
 #ifndef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200112L  // Define the POSIX version to enable strerror_r
 #endif
+
 #include "liberror.h"
 
 #include <cstdarg>

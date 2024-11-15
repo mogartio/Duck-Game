@@ -3,9 +3,9 @@
 #include <iostream>
 #include <algorithm>
 
-#define TILES_TO_PIXELS 16
 
-Map::Map(SDL_Renderer* rend): rend(rend), tilesImages(3, nullptr) {
+Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles):
+        rend(rend), mapa(mapa), tiles(tiles), tilesImages(3, nullptr) {
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
@@ -28,7 +28,7 @@ Map::Map(SDL_Renderer* rend): rend(rend), tilesImages(3, nullptr) {
 
     prueba.initialize(rend, "img_src/weapons/bullets/laser.png");
     prueba.queryTexture();
-    prueba.defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    prueba.defineSize(1 * tiles, 1 * tiles);
     prueba.position(100, 100);
 }
 
@@ -41,9 +41,9 @@ void Map::makeWeapon(Weapon weapon) {
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
     if ((weapon == Weapon::GRANADA) || (weapon == Weapon::DUELOS)) {
-        weaponImage->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+        weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
-        weaponImage->defineSize(1 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+        weaponImage->defineSize(1 * tiles, 2 * tiles);
     }
     weapons[weapon] = weaponImage;
 }
@@ -55,7 +55,7 @@ void Map::makeHelmet(Helemts helmet) {
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
-    mapHelmet->defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+    mapHelmet->defineSize(2 * tiles, 2 * tiles);
     helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
 
     // Creo casco de inventario
@@ -64,7 +64,7 @@ void Map::makeHelmet(Helemts helmet) {
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
-    helmetImage->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); // mismo tamaño que el pato
+    helmetImage->defineSize(3 * tiles, 3 * tiles); // mismo tamaño que el pato
     helmets.push_back(helmetImage);
 }
 
@@ -72,16 +72,16 @@ void Map::makeArmor() {
     // Creo armadura de mapa
     armorOnMap.initialize(rend, "img_src/map/armor.png");
     armorOnMap.queryTexture();
-    armorOnMap.defineSize(2 * TILES_TO_PIXELS, 2 * TILES_TO_PIXELS);
+    armorOnMap.defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
     armor.initialize(rend, "img_src/armor/armor4.png"); 
     armor.queryTexture();
-    armor.defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); // mismo tamaño que el pato
+    armor.defineSize(3 * tiles, 3 * tiles); // mismo tamaño que el pato
 
     hombro.initialize(rend, "img_src/armor/hombro4.png");
     hombro.queryTexture();
-    hombro.defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS); //mismo tamaño q el pato
+    hombro.defineSize(3 * tiles, 3 * tiles); //mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
@@ -90,15 +90,13 @@ void Map::makeTile(TileType tileType) {
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
     tile->queryTexture();
-    tile->defineSize(1 * TILES_TO_PIXELS, 1 * TILES_TO_PIXELS);
+    tile->defineSize(1 * tiles, 1 * tiles);
     tile->position(0, 0);
     tilesImages[int(tileType)] = tile;
 }
 
-// ----------------- Make Map -----------------
-
-void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
-    
+void Map::makeMap(int columnas, int filas) {
+ 
     std::vector<std::vector<int>> matriz(filas, std::vector<int>(columnas, 0));
 
     int filaActual = 0;
@@ -108,26 +106,28 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
             columnaActual = 0;
             filaActual++;
         }
-        
+
         if (filaActual >= filas) {
             break;
         }
 
         switch (i) {
-            case 5: // piso
+            case 5:  // piso
                 matriz[filaActual][columnaActual] = i;
-                if (matriz[filaActual-1][columnaActual] == i) {
-                    tilesPlace[tilesImages[int(TileType::ROCK)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+
+                if (matriz[filaActual - 1][columnaActual] == i) {
+                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
                 } else {
-                    tilesPlace[tilesImages[int(TileType::GRASS)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+                    tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
                 }
                 break;
-            case 6: // pared
-                matriz[filaActual][columnaActual] = i; // este proximamente va a servir para cuando las columnas tengan tope inferior
-                tilesPlace[tilesImages[int(TileType::COLUMN)]].push_back(std::pair(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS));
+            case 6:                                     // pared
+                matriz[filaActual][columnaActual] = i;  // este proximamente va a servir para cuando
+                                                        // las columnas tengan tope inferior
+                tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
                 break;
-            case 13: // caja                
-            case 14: // caja rota
+            case 13:  // caja
+            case 14:  // caja rota
                 break;
             default:
                 break;
@@ -140,8 +140,8 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(3 * TILES_TO_PIXELS, 3 * TILES_TO_PIXELS);
-    player->update(columnaActual * TILES_TO_PIXELS, filaActual * TILES_TO_PIXELS,
+    player->defineSize(3 * tiles, 3 * tiles);
+    player->update(columnaActual * tiles, filaActual * tiles,
                    DuckState::STANDING, RIGHT);
     player->armor(&armor, &hombro);
     player->weapon(weapons[Weapon::MAGNUM]);
@@ -155,17 +155,13 @@ void Map::remove(std::string playerName) {
 }
 
 void Map::update(std::string player, int x, int y, DuckState state, Side side) {
-    if (std::find(playersNamesAlive.begin(), playersNamesAlive.end(), player) == playersNamesAlive.end()) {
-        players[player]->dropEverithing();
-        playersNamesAlive.push_back(player);
-    }
-    players[player]->update(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS, state, side);
+    players[player]->update(x * tiles, y * tiles, state, side);
 }
 
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, Weapon weapon) {
-    weaponsMap[weapon].push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    weaponsMap[weapon].push_back(std::pair(x, y));
 }
 
 void Map::weaponPlayer(Weapon weapon, std::string playerName) {
@@ -180,7 +176,7 @@ void Map::dropWeapon(std::string playerName) {
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, Helemts newHelmet) {
-    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair(x, y));
 }
 
 void Map::helmetPlayer(Helemts helmet, std::string playerName) {
@@ -190,7 +186,7 @@ void Map::helmetPlayer(Helemts helmet, std::string playerName) {
 // ----------------- Armor -----------------
 
 void Map::newArmor(int x, int y) {
-    armorMap.push_back(std::pair(x * TILES_TO_PIXELS, y * TILES_TO_PIXELS));
+    armorMap.push_back(std::pair(x, y));
 }
 
 void Map::armorPlayer(std::string playerName) {
@@ -203,30 +199,30 @@ void Map::fill() { // Dibuja de atras para adelante
 
     background.fill(true);
 
-    for(const auto& tilePair: tilesPlace) {
-        if (tilePair.first != nullptr) {
+    for (const auto& tilePair: tilesPlace) {
+        if (tilesImages[int(tilePair.first)] != nullptr) {
             for (const auto& pair: tilePair.second) {
-                tilePair.first->position(pair.first, pair.second);
-                tilePair.first->fill();
+                tilesImages[int(tilePair.first)]->position(pair.first * tiles, pair.second * tiles);
+                tilesImages[int(tilePair.first)]->fill();
             }
         }
     }
 
     for (const auto& pair : helmetsMap) {
         for (const auto& helmet: pair.second) {
-            pair.first->position(helmet.first, helmet.second);
+            pair.first->position(helmet.first * tiles, helmet.second * tiles);
             pair.first->fill();
         }
     }
 
     for (std::pair armorPos: armorMap) {
-        armorOnMap.position(armorPos.first, armorPos.second);
+        armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
     
     for (const auto& pair : weaponsMap) {
         for (const auto& weapon: pair.second) {
-            weapons[pair.first]->position(weapon.first, weapon.second);
+            weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
             weapons[pair.first]->fill();
         }
     }
@@ -241,6 +237,7 @@ void Map::fill() { // Dibuja de atras para adelante
 // ----------------- Destructor -----------------
 
 Map::~Map() {
+
     for (Image* piso: tilesImages) {
         delete piso;
     }
@@ -261,4 +258,3 @@ Map::~Map() {
         delete pair.second;
     }
 }
-

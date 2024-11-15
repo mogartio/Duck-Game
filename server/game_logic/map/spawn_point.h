@@ -4,7 +4,10 @@
 #include <utility>
 
 #include "../../../common/coordinate.h"
-#include "../player/projectile_dropped_weapon.h"
+#include "../../../common/messages/generic_msg.h"
+#include "../player/weapons/pistols.h"
+#include "../player/weapons/projectiles/projectile_dropped_weapon.h"
+using namespace ProjectilesId;
 
 #include "stage.h"
 class WeaponSpawnPoint {
@@ -17,7 +20,7 @@ public:
     void spawn_weapon() {
         auto weapon = std::make_unique<CowboyGun>(stage);
         stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       2, 1, 50, 0));
+                                                                       4, 4, COWBOY_PISTOL));
     }
 };
 

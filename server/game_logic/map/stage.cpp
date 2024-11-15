@@ -6,13 +6,17 @@
 #include <vector>
 
 #include "../player/player.h"
+#define FREE 0
+#define OCCUPIED 1
+#define DEATH -1
 #define FLOOR 1
 #define BACKGROUND 0
 #define PLAYER_SIZE 3
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
-#include "../player/projectile.h"
+#include "../player/weapons/projectiles/projectile.h"
+#include "../player/weapons/projectiles/projectile_dropped_weapon.h"
 
 #include "csv_reader.h"
 #include "csv_writer.h"
@@ -41,11 +45,17 @@ void Stage::remove_projectile(std::unique_ptr<Projectile>& projectile) {
     }
 }
 
+void Stage::kill(int id) { players[id]->die(); }
+
 void Stage::update() {
     for (auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
     }
+    coordinates_to_delete.clear();
     for (auto iterator = projectiles.begin(); iterator != projectiles.end();) {
+        if (*iterator == nullptr) {
+            continue;
+        }
         bool projectile_was_erased =
                 (*iterator)->ray_trace(*this);  // *iterator = unique_ptr(projectile)
         if (projectile_was_erased) {
@@ -56,7 +66,12 @@ void Stage::update() {
     }
 }
 
+void Stage::add_player(Player* player, int id) { players[id] = player; }
+
 void Stage::draw_player(Player& player) {
+    if (!player.lives()) {
+        return;
+    }
     Coordinate init_position = player.get_position();
     int x = init_position.x;
     int y = init_position.y;
@@ -72,7 +87,8 @@ void Stage::draw_player(Player& player) {
 void Stage::delete_player_from_stage(Player& player) {
     std::vector<Coordinate> occupied = player.get_occupied();
     for (auto& coordinate: occupied) {
-        map.set(coordinate, BACKGROUND);
+        map.set(coordinate,
+                BACKGROUND);  //  TODO: eliminar todo esto y usar lo de coordenadas a borrar
     }
 }
 
@@ -89,20 +105,45 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     return true;
 }
 
-bool Stage::is_valid_position(Coordinate position, int color) {
+// color seria el id del personaje
+int Stage::is_valid_position(Coordinate position, int color) {
     for (int i = 0; i < PLAYER_SIZE; i++) {
         for (int j = 0; j < PLAYER_SIZE; j++) {
             Coordinate aux(position.x + j, position.y + i);
             if (map.out_of_range(aux)) {
-                return false;
+                return DEATH;
             }
             int value = map.get(aux);
             if (value != BACKGROUND && value != color) {
-                return false;
+                return OCCUPIED;
             }
         }
     }
-    return true;
+    return FREE;
+}
+
+std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
+    for (auto& projectile: projectiles) {
+        if (ProjectileDroppedWeapon* weaponProjectile =
+                    dynamic_cast<ProjectileDroppedWeapon*>(projectile.get())) {
+            if (weaponProjectile->get_position() == position) {
+                std::unique_ptr new_weapon = (weaponProjectile->get_weapon());
+                coordinates_to_delete.push_back(position);
+                remove_projectile(projectile);
+                return new_weapon;
+            }
+        }
+        if (ProjectileThrownWeapon* weaponProjectile =
+                    dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
+            if (weaponProjectile->get_position() == position) {
+                std::unique_ptr new_weapon = weaponProjectile->get_weapon();
+                coordinates_to_delete.push_back(position);
+                remove_projectile(projectile);
+                return new_weapon;
+            }
+        }
+    }
+    return nullptr;
 }
 
 void Stage::set(const Coordinate& coor, const int value) {

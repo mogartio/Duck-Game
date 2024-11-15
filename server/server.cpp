@@ -9,7 +9,7 @@ Server::Server(const char* port, bool is_testing):
 
 void Server::run() {
     // pongo a correr el acceptor
-    Acceptor acceptor(port);
+    Acceptor acceptor(port, is_testing);
     acceptor.start();
 
     while (_keep_running) {
@@ -22,5 +22,4 @@ void Server::run() {
 
     acceptor.stop();
     acceptor.join();
-
 }

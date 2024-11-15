@@ -61,6 +61,8 @@ Player::Player(SDL_Renderer* rend, Color color):
 // ----------------- Player -----------------
 
 void Player::defineSize(int height, int width) {
+    this->height = height;
+    this->width = width;
     for (const auto& pair: ducks) {
         const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
         for (Image* pato: patos) {
@@ -102,7 +104,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
     this->state = state;
 
     // Actualizo la imagen del pato y su posicion
-    if (state == DuckState::WALK){
+    if (state == DuckState::WALK) {
         duck = ducks[state][this->walk];
         if (this->walk == 4) {
             this->walk = 0;

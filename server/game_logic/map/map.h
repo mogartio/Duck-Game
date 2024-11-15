@@ -44,13 +44,13 @@ public:
         for (int i = 0; i < rows; i++) {
             std::stringstream stream;
             for (int j = 0; j < columns; j++) {
-                if (matrix[j][i] == 2) {
+                if (matrix[j][i] == 2 || matrix[j][i] == 1) {
                     stream << "\033[31m"
                            << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 5 || matrix[j][i] == 6) {
                     stream << "\033[34m"
                            << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 8 || matrix[j][i] == 9) {
+                } else if (matrix[j][i] == 8 || matrix[j][i] == 7) {
                     stream << "\033[33m"
                            << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 4) {

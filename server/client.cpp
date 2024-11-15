@@ -1,7 +1,7 @@
 #include "client.h"
 
 Client::Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
-               LobbysMonitor& lobbys):
+               LobbysMonitor& lobbys, bool is_testing):
         client_skt(std::move(client_skt)),
         send_queue(100),
         recv_queue(),
@@ -10,7 +10,8 @@ Client::Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& sen
         protocol(this->client_skt),
         receiver(recv_queue, &protocol, this),
         sender(&send_queue, &protocol),
-        lobbys(lobbys) {
+        lobbys(lobbys),
+        is_testing(is_testing) {
     send_queues.add(&send_queue, id);
     start_client();
 }

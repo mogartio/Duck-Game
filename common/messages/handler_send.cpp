@@ -1,5 +1,6 @@
 #include "handler_send.h"
 
+void HandlerSender::handle_send(const InfoLobbyMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const CustomizedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const ViewLobbiesMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const ChooseLobbyMsg& msg) { (void)msg; }

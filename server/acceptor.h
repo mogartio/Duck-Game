@@ -15,6 +15,7 @@ private:
     std::list<Client> clients;
     SendQueuesMonitor<GenericMsg*> send_queues;
     LobbysMonitor lobbys;
+    bool is_testing;
 
     void run() override;
 
@@ -27,7 +28,7 @@ private:
     const int Q_MAX_SIZE = 100;
 
 public:
-    explicit Acceptor(const char* port);
+    explicit Acceptor(const char* port, bool);
 
     void stop() override;
 

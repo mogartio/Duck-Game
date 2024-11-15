@@ -2,6 +2,7 @@
 #define SERVER_PROTOCOL_H
 
 #include <functional>
+#include <list>
 #include <map>
 
 #include "../common/protocolo-common.h"
@@ -24,14 +25,15 @@ public:
     virtual void handle_recv(StartGameMsg& msg) override;
     virtual void handle_recv(ExitFromLobbyMsg& msg) override;
 
+    virtual void handle_send(const InfoLobbyMsg& msg) override;
     virtual void handle_send(const SendLobbiesListMsg& msg) override;
     virtual void handle_send(const SendMapMsg& msg) override;
 
     // CUSTOMIZED MESSAGES
     virtual void handle_recv(CustomizedPlayerInfoMsg& msg) override;
 
-    // GAME MESSAGES
-    virtual void handle_recv(PickupDropMsg& msg) override;
+    // // GAME MESSAGES
+    // virtual void handle_recv(PickupDropMsg& msg) override;
     virtual void handle_recv(StartActionMsg& msg) override;
     virtual void handle_recv(StopActionMsg& msg) override;
 
@@ -40,6 +42,7 @@ public:
 
     virtual void handle_send(const ProjectileInfoMsg& msg) override;
     virtual void handle_send(const UpdatedPlayerInfoMsg& msg) override;
+    virtual void handle_send(const PickupDropMsg& msg) override;
 };
 
 #endif  // CLIENT_PROTOCOL_H
