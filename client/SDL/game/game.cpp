@@ -1,14 +1,14 @@
+#include "game.h"
+
 #include <map>
 
 #include <SDL2/SDL_timer.h>
-
-#include "game.h"
 #define TILES_TO_PIXELS 16
 
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
-Game::Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
-                     std::string playerName1, std::string playerName2):
+Game::Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive, std::string playerName1,
+           std::string playerName2):
         queueRecive(queueRecive),
         running(true),
         event_handler(queueSend, playerName1, running, playerName2) {}
@@ -130,9 +130,10 @@ void Game::play() {
                         item = projectile->get_item();
                         trail = projectile->get_trail();  // para el laser
                         // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                        //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), trail);
+                        //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                        //     trail);
                         // } else {
-                            map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
+                        map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
                         // }
                         break;
                     /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
@@ -155,15 +156,14 @@ void Game::play() {
             } else if (stated_palying) {
                 map.update(player_name, position.first, position.second, DuckState::STANDING,
                            Side(facing_direction - 1));
-                }
-
-            // Renderiza los objetos en la ventana
-            if (elapsed_time >= frame_rate) {
-                win.clear();
-                map.fill();
-                win.fill();
-                last_frame_time = current_time;
             }
+        }
+        // Renderiza los objetos en la ventana
+        if (elapsed_time >= frame_rate) {
+            win.clear();
+            map.fill();
+            win.fill();
+            last_frame_time = current_time;
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
