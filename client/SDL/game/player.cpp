@@ -37,7 +37,7 @@ void Player::initialiceDuckImages(DuckState state) {
 
 Player::Player(SDL_Renderer* rend, Color color):
         rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
-    
+
     walk = 0;
     file += color_to_string(color);
 
@@ -146,7 +146,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
 void Player::dropEverithing() {
     weaponON = false;
     armorOn = false;
-    helmetOn = false; 
+    helmetOn = false;
 }
 
 // ----------------- Weapon -----------------
@@ -208,7 +208,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     if (helmetOn) {
         _helmet->fill(flip);
     }
-    
+
     // Dibujo la armadura que tiene el pato
     if (armorOn) {
         _armor->fill(flip);
@@ -228,6 +228,12 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     if (armorOn) {
         _hombro->fill(flip);
     }
+}
+
+// ----------------- Get Position -----------------
+
+std::pair<int, int> Player::getPosition() const {
+    return duck->getPosition();
 }
 
 // ----------------- Destructor -----------------

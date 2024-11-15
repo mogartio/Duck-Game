@@ -57,12 +57,18 @@ void OnePlayer::play() {
 
     // Window win(columnas * TILES_TO_PIXELS, filas * TILES_TO_PIXELS);
 
-    Map map(win.get_rend(), mapa, tiles);
+    Map map(win.get_rend(), mapa, tiles, displayBounds.w, displayBounds.h);
     map.makeMap(columnas, filas);
 
-    // Agrego a cada jugador usando el mensaje de info lobby
+    // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
     InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
     std::list<DescipcionPlayer> players = info_lobby->get_players();
+    std::map<std::string, uint8_t> players_info;
+    for (auto& player: players) {
+        players_info[player.nombre] = player.color;
+    }
+
+    // Agrego a cada jugador usando el mensaje de info lobby
     for (uint i = 0; i < players.size(); i++) {
         GenericMsg* jugador = queueRecive.pop();
         if (jugador->get_header() != GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
@@ -70,8 +76,8 @@ void OnePlayer::play() {
                     "Estoy recibiendo un mensaje que no es de updated player info");
         }
         UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
-        map.addPlayer(player_info->get_position().first, player_info->get_position().second, 2,
-                      player_info->get_player_name());
+        map.addPlayer(player_info->get_position().first, player_info->get_position().second,
+                      players_info[player_info->get_player_name()], player_info->get_player_name());
     }
 
     const Uint32 frame_rate = 1000 / 30;      // 30 FPS
@@ -110,12 +116,13 @@ void OnePlayer::play() {
                     case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
 
                         break;
+
                     case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
                         projectile = dynamic_cast<ProjectileInfoMsg*>(msj);
                         pos_x = projectile->get_pos_x();
                         pos_y = projectile->get_pos_y();
                         item = projectile->get_item();
-                        trail = projectile->get_trail(); // para el laser
+                        trail = projectile->get_trail();  // para el laser
                         map.newWeapon(pos_x, pos_y, Weapon(item));
                         break;
                     /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
