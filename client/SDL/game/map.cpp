@@ -173,7 +173,7 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
 
 void Map::newWeapon(int x, int y, Weapon weapon) {
     // weaponsMap[weapon].push_back(std::pair(x, y));
-    weapons[weapon]->position(x * tiles, y * tiles);
+    weaponsPos[weapon] = std::pair(x, y);
 }
 
 void Map::weaponPlayer(Weapon weapon, std::string playerName) {
@@ -294,7 +294,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
-
+    
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
     //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
@@ -302,8 +302,9 @@ void Map::fill() {  // Dibuja de atras para adelante
     //     }
     // }
 
-    for (const auto& w: weapons) {
-        w.second->fill();
+    for (const auto& w: weaponsPos) {
+        weapons[w.first]->position(w.second.first * tiles, w.second.second * tiles);
+        weapons[w.first]->fill(SDL_FLIP_NONE);
     }
 
     for (std::string playerName: playersNamesAlive) {

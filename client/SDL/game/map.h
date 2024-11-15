@@ -39,7 +39,9 @@ private:
 
     // Imagenes de las armas
     std::unordered_map<Weapon, Image*> weapons;
+    std::unordered_map<Weapon, std::pair<int, int>> weaponsPos;
     // Posiciones de las armas
+
     // std::unordered_map<Weapon, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables

@@ -204,18 +204,23 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
     duck->fill(flip);
 
+    std::pair<int, int> position = duck->getPosition();
+
     // Dibujo el casco que tiene el pato
     if (helmetOn) {
+        _helmet->position(position.first, position.second - 8);
         _helmet->fill(flip);
     }
 
     // Dibujo la armadura que tiene el pato
     if (armorOn) {
+        _armor->position(position.first, position.second);
         _armor->fill(flip);
     }
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
+        _weapon->position(position.first, position.second);
         _weapon->fill(flip);
     }
 
@@ -226,6 +231,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el hombro de la armadura
     if (armorOn) {
+        _hombro->position(position.first, position.second);
         _hombro->fill(flip);
     }
 }
