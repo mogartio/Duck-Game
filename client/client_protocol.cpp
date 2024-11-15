@@ -194,13 +194,9 @@ void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(PlayerInfoMsg& msg) {
-    DescipcionPlayer player;
-
     std::string player_name = recv_string();
     uint8_t color = recv_u_int8_t();
 
-    player.nombre = player_name;
-    player.color = color;
-
-    msg.set_player_info(player);
+    msg.set_player_name(player_name);
+    msg.set_color(color);
 }

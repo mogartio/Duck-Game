@@ -399,13 +399,15 @@ void ProjectileInfoMsg::set_projectile_final_position(uint16_t x, uint16_t y) {
 }
 
 
-PlayerInfoMsg::PlayerInfoMsg() : 
+PlayerInfoMsg::PlayerInfoMsg() :
         GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
-        player_info() {}
+        player_name(""),
+        color(0) {}
 
-PlayerInfoMsg::PlayerInfoMsg(DescipcionPlayer player_info) :
+PlayerInfoMsg::PlayerInfoMsg(std::string player_name, uint8_t color) :
         GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
-        player_info(player_info) {}
+        player_name(player_name),
+        color(color) {}
 
 void PlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -413,8 +415,13 @@ void PlayerInfoMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(
 
 void PlayerInfoMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-DescipcionPlayer PlayerInfoMsg::get_player_info() const { return player_info; }
+std::string PlayerInfoMsg::get_player_name() const { return player_name; }
 
-void PlayerInfoMsg::set_player_info(DescipcionPlayer player_info) {
-    this->player_info = player_info;
-}
+uint8_t PlayerInfoMsg::get_color() const { return color; }
+
+void PlayerInfoMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
+
+void PlayerInfoMsg::set_color(uint8_t color) { this->color = color; }   
+
+
+

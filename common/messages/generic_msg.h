@@ -525,7 +525,8 @@ public:
 
 class PlayerInfoMsg: public GenericMsg {
 private:
-    DescipcionPlayer player_info;
+    std::string player_name;
+    uint8_t color; 
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -536,11 +537,14 @@ public:
 
     PlayerInfoMsg();
 
-    explicit PlayerInfoMsg(DescipcionPlayer player_info);
+    explicit PlayerInfoMsg(std::string player_name, uint8_t color);
 
-    DescipcionPlayer get_player_info() const;
+    std::string get_player_name() const;
 
-    void set_player_info(DescipcionPlayer player_info);
+    uint8_t get_color() const;
 
+    void set_player_name(std::string player_name);
+
+    void set_color(uint8_t color);
 };
 #endif

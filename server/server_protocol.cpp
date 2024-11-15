@@ -177,8 +177,9 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
 void ServerProtocol::handle_send(const PlayerInfoMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
-    
-    DescipcionPlayer player = msg.get_player_info();
-    send_string(player.nombre);
-    send_u_int8_t(player.color);
+
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+    uint8_t color = msg.get_color();
+    send_u_int8_t(color);
 }
