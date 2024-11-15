@@ -16,7 +16,6 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
         descripcionPlayer.color = players_colors[pair.first];
-        descripcionPlayer.id = pair.second->get_id();
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
@@ -136,6 +135,10 @@ DescripcionLobby Lobby::getDescription() const {
 }
 
 void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color) {
+    // if the name is already someone else's name, throw error
+    if (players_map.find(new_name) != players_map.end()) {
+        throw std::runtime_error("name already in use");
+    }
     // remove old player name key from map and color. First save Client ptr
     Client* client = players_map[player_name];
     players_map.erase(player_name);
