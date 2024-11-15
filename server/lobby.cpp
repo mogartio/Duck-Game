@@ -16,6 +16,7 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
         descripcionPlayer.color = players_colors[pair.first];
+        descripcionPlayer.id = pair.second->get_id();
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
@@ -59,15 +60,16 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
         }
     }
     players_map[player_name] = second_player;
-
+    // when adding a new player, pick a color from the available colors
+    uint8_t color = *available_colors.begin();
+    available_colors.erase(color);
+    players_colors[player_name] = color;
     std::set<uint> players_ids;
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            players_colors[player_name] = GenericMsg::DuckColor::GREY;
             send_queues.send_to_client(new EverythingOkMsg, pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
-                                       pair.second->get_id());
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
         }
     }
     // players_description[SECOND_PLAYER] = descripcionPlayer;
@@ -75,6 +77,8 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
 
 void Lobby::removePlayer(std::string player_name) {
     lobby_empty();
+    // re-add the color to the available colors
+    available_colors.insert(players_colors[player_name]);
     if (players_map.erase(player_name) != 0) {
         std::set<uint> players_ids;
         for (auto& pair: players_map) {
@@ -129,4 +133,14 @@ DescripcionLobby Lobby::getDescription() const {
     desc.cantidadJugadores = players_map.size();
     desc.maxJugadores = max_players;
     return desc;
+}
+
+void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color) {
+    // remove old player name key from map and color. First save Client ptr
+    Client* client = players_map[player_name];
+    players_map.erase(player_name);
+    players_colors.erase(player_name);
+    // add new player name key to map and color
+    players_map[new_name] = client;
+    players_colors[new_name] = new_color;
 }

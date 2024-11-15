@@ -57,6 +57,7 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
     for (auto& player: players_from_lobby) {
         send_string(player.nombre);
         send_u_int8_t(player.color);
+        send_u_int16_t(player.id);
     }
 
     uint8_t max_players = msg.get_max_players();
@@ -98,10 +99,14 @@ void ServerProtocol::handle_send(const SendMapMsg& msg) {
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
+    uint8_t lobby_id = recv_u_int8_t();
+    msg.set_lobby_id(lobby_id);
     uint8_t color = recv_u_int8_t();
     msg.set_color(color);
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+    std::string new_name = recv_string();
+    msg.set_player_new_name(new_name);
 }
 
 void ServerProtocol::handle_recv(PickupDropMsg& msg) {

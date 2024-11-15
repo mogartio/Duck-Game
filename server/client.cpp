@@ -66,7 +66,7 @@ void Client::handle_read(const ChooseLobbyMsg& msg) {
 
 void Client::handle_read(const CustomizedPlayerInfoMsg& msg) {
     (void)msg;
-    // lobbys.update_player(lobby_unido_id, std::make_tuple(msg.get_player_name(), id));
+    lobbys.update_player_info(msg.get_lobby_id(), msg.get_player_name(), msg.get_player_new_name(), msg.get_color());
 }
 
 void Client::handle_read(const GoBackMsg& msg) { (void)msg; }

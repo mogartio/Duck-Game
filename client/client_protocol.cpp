@@ -62,11 +62,15 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
 
     for (int i = 0; i < players_size; i++) {
         DescipcionPlayer player;
+
         std::string nombre = recv_string();
         player.nombre = nombre;
 
         uint8_t color = recv_u_int8_t();
         player.color = color;
+
+        uint16_t id = recv_u_int16_t();
+        player.id = id;
 
         players.push_back(player);
     }
@@ -105,10 +109,14 @@ void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {
 void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    uint8_t lobby_id = msg.get_lobby_id();
+    send_u_int8_t(lobby_id);
     uint8_t color = msg.get_color();
     std::string player_name = msg.get_player_name();
     send_u_int8_t(color);
     send_string(player_name);
+    std::string new_name = msg.get_player_new_name();   
+    send_string(new_name);
 }
 
 void ClientProtocol::handle_send(const PickupDropMsg& msg) {

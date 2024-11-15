@@ -28,7 +28,7 @@ private:
     std::map<std::string, Client*> players_map;
     std::map<std::string, uint8_t> players_colors;
     SendQueuesMonitor<GenericMsg*>& send_queues;
-
+    std::set <uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW, GenericMsg::DuckColor::ORANGE, GenericMsg::DuckColor::GREY};
     Queue<GenericMsg*>* receiver_q;
 
     std::unique_ptr<Game> game;
@@ -80,6 +80,11 @@ public:
      * Metodo que devuelve la descripcion del lobby
      */
     DescripcionLobby getDescription() const;
+
+    /*
+     * Metodo que actualiza la informacion de un jugador
+     */
+    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color);
 
     // ------------------ Desabilitamos -----------------------
 

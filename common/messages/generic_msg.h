@@ -124,8 +124,10 @@ public:
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
+    uint8_t lobby_id;
     uint8_t color;
     std::string player_name;
+    std::string player_new_name;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -136,15 +138,23 @@ public:
 
     CustomizedPlayerInfoMsg();
 
-    explicit CustomizedPlayerInfoMsg(uint8_t color, std::string player_name);
+    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name);
+
+    void set_lobby_id(uint8_t lobby_id);
+
+    uint8_t get_lobby_id() const;
+
+    void set_color(uint8_t color);
 
     uint8_t get_color() const;
 
     std::string get_player_name() const;
 
-    void set_color(uint8_t color);
-
     void set_player_name(std::string player_name);
+
+    std::string get_player_new_name() const;
+
+    void set_player_new_name(std::string player_new_name);
 };
 
 class ViewLobbiesMsg: public GenericMsg {
