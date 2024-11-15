@@ -161,7 +161,8 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, Weapon weapon) {
-    weaponsMap[weapon].push_back(std::pair(x, y));
+    // weaponsMap[weapon].push_back(std::pair(x, y));
+    weapons[weapon]->position(x * tiles, y * tiles);
 }
 
 void Map::weaponPlayer(Weapon weapon, std::string playerName) {
@@ -220,11 +221,15 @@ void Map::fill() { // Dibuja de atras para adelante
         armorOnMap.fill();
     }
     
-    for (const auto& pair : weaponsMap) {
-        for (const auto& weapon: pair.second) {
-            weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
-            weapons[pair.first]->fill();
-        }
+    // for (const auto& pair : weaponsMap) {
+    //     for (const auto& weapon: pair.second) {
+    //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
+    //         weapons[pair.first]->fill();
+    //     }
+    // }
+
+    for (const auto& w: weapons) {
+        w.second->fill();
     }
 
     for (std::string playerName: playersNamesAlive) {
