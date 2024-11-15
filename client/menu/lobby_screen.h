@@ -28,20 +28,29 @@ public:
 
 
 private slots: 
-    //void onReceivedMsg(); // updatea la lista de jugadores en el lobby
+    void updatePlayersInLobby();
+    void onReadyButtonClicked();
+    void onSaveButtonClicked(std::string player_name);
+signals: 
+    void playersUpdated();
 
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
+    std::string myPlayerName;
+    std::map<std::string, QLineEdit*> playerNameEdits;
     QFont customFont;
+    QPixmap *saveIcon;
     QSound *keyPressSound;
     QScrollArea* scrollArea;
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
     uint8_t lobby_id;
-    // la key del map es el nombre inicial del jugador, el value es el nombre actual y el color
-    std::map<std::string, std::pair<std::string, uint8_t>> players; 
-
+    std::list<DescipcionPlayer> players;
+    std::vector<QWidget*> lobbyWidgets;
+    // color de pato y su imagen
+    std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
+    void processIncomingMessages();
 };  
 
 #endif // LOBBY_SCREEN_H

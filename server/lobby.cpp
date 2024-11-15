@@ -72,7 +72,8 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
             send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
         }
     }
-    // players_description[SECOND_PLAYER] = descripcionPlayer;
+    // send the newly added player his info 
+    send_queues.send_to_client(new PlayerInfoMsg(player_name, color), second_player->get_id());
 }
 
 void Lobby::removePlayer(std::string player_name) {
@@ -147,4 +148,9 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     // add new player name key to map and color
     players_map[new_name] = client;
     players_colors[new_name] = new_color;
+
+    //send all player the updated info
+    for (auto& pair: players_map) {
+        send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
+    }
 }

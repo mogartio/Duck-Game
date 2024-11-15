@@ -81,7 +81,6 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
 void HostLobbyScreen::processIncomingMessages() {
     while (true) {
         GenericMsg* msg = recv_queue->pop();
-        std::cout << "MESSAGE IN THREAD 0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(msg->get_header())<< std::endl;
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
             InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
             lobby_id = info_lobby_msg->get_lobby_id();
@@ -97,12 +96,23 @@ void HostLobbyScreen::processIncomingMessages() {
             std::cout << error << std::endl;
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
             continue;
+        } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
+            PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
+            myLocalPlayerName = player_info_msg->get_player_name();
         }
     }
 }
 
 
 void HostLobbyScreen::updatePlayersInLobby() {
+    std::map<std::string, QString> playerNameMap;
+    for (auto player : players) {
+        std::string player_name = player.nombre;
+        if (playerNameEdits.find(player_name) != playerNameEdits.end()) {
+            playerNameMap[player_name] = playerNameEdits[player_name]->text();
+        }
+    }
+
     // Clear scroll area
     QLayoutItem* item;
     while ((item = scrollLayout->takeAt(0)) != nullptr) {
@@ -112,16 +122,54 @@ void HostLobbyScreen::updatePlayersInLobby() {
     // Draw players in lobby
     for (auto player : players) {
         std::string player_name = player.nombre;
-        QLabel *playerLabel = new QLabel(player_name.c_str(), this);
+        // Create a QLineEdit to be able to edit the player name. IF the player is myself the input is enabled and the save icon is visible. Otherwise the input is disabled and the save icon is hidden.
+        // Create QLineEdit and set its text from the map if it exists
+        QLineEdit *playerLabel = new QLineEdit(QString::fromStdString(player_name), this);
+        if (playerNameMap.find(player_name) != playerNameMap.end()) {
+            playerLabel->setText(playerNameMap[player_name]);
+        }
         playerLabel->setStyleSheet(
-            "QLabel {"
+            "QLineEdit {"
+            "background-color: rgba(0, 0, 0, 0);"
             "color: #ced4da;"
             "font-size: 32px;"
             "border: 0px solid #555555;"
+            "border-radius: 15px;"
+            "padding: 10px;"
+            "text-align: center;"
+            "}"
+            "QLineEdit:disabled {"
+            "background-color: rgba(0, 0, 0, 0);"
+            "color: #ced4da;"
+            "font-size: 32px;"
+            "border: 0px solid #555555;"
+            "border-radius: 15px;"
+            "padding: 10px;"
+            "text-align: center;"
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(250);
+        playerLabel->setFixedWidth(200);
+        if (player_name != myLocalPlayerName && player_name != myPlayerName) {
+            playerLabel->setDisabled(true);
+        }
+
+        playerNameEdits[player_name] = playerLabel;
+        
+        // Create save button 
+        QPushButton *saveButton = new QPushButton(this);
+        saveButton->setIcon(QIcon(*saveIcon));
+        saveButton->setIconSize(QSize(50, 50));
+        saveButton->setStyleSheet("border: none;");
+        saveButton->setFixedWidth(50);
+        // if the player is myself, the save button is visible
+        if (player_name == myLocalPlayerName || player_name == myPlayerName) {
+            saveButton->setVisible(true);
+        } else {
+            saveButton->setVisible(false);
+        }
+
+        connect(saveButton, &QPushButton::clicked, [this, player_name](){onSaveButtonClicked(player_name);});
 
         // create duck image
         QLabel *duckLabel = new QLabel(this);
@@ -170,6 +218,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
         playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
+        playerLayout->addWidget(saveButton, 0, Qt::AlignLeft);
         playerLayout->addWidget(duckLabel);
         playerLayout->addWidget(readyButton);
         playerWidget->setLayout(playerLayout);
@@ -230,4 +279,26 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
 void HostLobbyScreen::onReadyButtonClicked() {
     keyPressSound->play();
     std::cout << "Ready button clicked" << std::endl;
+}
+
+void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
+    keyPressSound->play();
+    if (playerNameEdits.find(player_name) != playerNameEdits.end()) {
+        std::string new_name = playerNameEdits[player_name]->text().toStdString();
+        if (new_name != player_name) {
+            uint8_t color = 0;
+            for (auto player : players) {
+                if (player.nombre == player_name) {
+                    color = player.color;
+                }
+            }
+            // update player name
+            myPlayerName = new_name;
+            playerNameEdits[player_name]->setText(QString::fromStdString(new_name));
+            playerNameEdits[new_name] = playerNameEdits[player_name];
+            playerNameEdits.erase(player_name);
+            CustomizedPlayerInfoMsg* msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name);
+            send_queue->push(msg);
+        }
+    }
 }

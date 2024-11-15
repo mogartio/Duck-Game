@@ -31,12 +31,16 @@ private slots:
     void onAddLocalPlayerButtonClicked();
     void updatePlayersInLobby();
     void onReadyButtonClicked();
+    void onSaveButtonClicked(std::string player_name);
 signals: 
     void playersUpdated();
 
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
+    std::string myPlayerName = "Player1";
+    std::string myLocalPlayerName = "LocalPlayer";
+    std::map<std::string, QLineEdit*> playerNameEdits;
     QFont customFont;
     QPixmap *saveIcon;
     QSound *keyPressSound;

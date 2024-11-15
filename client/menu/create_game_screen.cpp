@@ -233,7 +233,7 @@ void CreateGameScreen::onCreateGameButtonClicked() {
     }
     // Send a create game message to the server. 
     // Nombre default del que crea el server:
-    std::string playerName = "Player 1";
+    std::string playerName = "Player1";
     uint8_t maxPlayers = this->maxPlayers;
     CreateLobbyMsg* createLobbyMsg = new CreateLobbyMsg(playerName, lobbyNameStr, maxPlayers);
     send_queue->push(createLobbyMsg);
