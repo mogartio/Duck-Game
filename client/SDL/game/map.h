@@ -79,6 +79,8 @@ public:
 
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
+    // Pone a todos los jugadores en estado de parados
+    void allStanding();
 
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);

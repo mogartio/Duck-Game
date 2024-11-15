@@ -167,6 +167,12 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
     players[player]->update(x * tiles, y * tiles, state, side);
 }
 
+void Map::allStanding() {
+    for (std::string name: playersNamesAlive) {
+        players[name]->standing();
+    }
+}
+
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {

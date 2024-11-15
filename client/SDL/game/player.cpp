@@ -144,6 +144,13 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 }
 
+void Player::standing() {
+    std::pair<int, int> position = duck->getPosition();
+    state = DuckState::STANDING;
+    duck = ducks[state][0];
+    duck->position(position.first, position.second);
+}
+
 void Player::dropEverithing() {
     weaponON = false;
     armorOn = false;

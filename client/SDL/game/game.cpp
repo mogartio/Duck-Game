@@ -164,8 +164,7 @@ void Game::play() {
         }
         
         if (stated_palying) {
-                map.update(player_name, position.first, position.second, DuckState::STANDING,
-                           Side(facing_direction - 1));
+                map.allStanding();
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)

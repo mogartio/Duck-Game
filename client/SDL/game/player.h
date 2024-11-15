@@ -48,6 +48,7 @@ public:
 
     // Actualizar posicion e imagen
     void update(int x, int y, DuckState newState, Side side);
+    void standing();
 
     // Vacia el inventario
     void dropEverithing();
