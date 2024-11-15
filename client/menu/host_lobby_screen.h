@@ -40,6 +40,7 @@ private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
     QFont customFont;
+    QPixmap *saveIcon;
     QSound *keyPressSound;
     QPushButton *localPlayerButton;
     QScrollArea* scrollArea;

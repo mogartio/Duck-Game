@@ -2,7 +2,7 @@
 #include <thread>
 
 HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
-setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
+    setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
     keyPressSound = new QSound("assets/Retro3.wav", this);
@@ -58,12 +58,10 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     connect(localPlayerButton, &QPushButton::clicked, this, &HostLobbyScreen::onAddLocalPlayerButtonClicked);
 
-    // Load images for ducks and icons 
-    leftIcon = new QPixmap("assets/Chevron-Arrow-Left.png");
-    *leftIcon = leftIcon->scaled(50, 50, Qt::KeepAspectRatio);
-    rightIcon = new QPixmap("assets/Chevron-Arrow-Right.png");
-    *rightIcon = rightIcon->scaled(50, 50, Qt::KeepAspectRatio);
+    // Load save icon image
+    saveIcon = new QPixmap("assets/Floppy-Drive.png");
 
+    // Load ducks images
     ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, new QPixmap("assets/white_duck_head.png")));
     ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, new QPixmap("assets/yellow_duck_head.png")));
     ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, new QPixmap("assets/orange_duck_head.png")));
@@ -72,14 +70,6 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     // Scale images
     for (auto& duck : ducks_images) {
         *duck.second = duck.second->scaled(100, 100, Qt::KeepAspectRatio);
-    }
-    // Receive initial info
-    GenericMsg* msg = recv_queue->pop();
-    if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-        InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
-        lobby_id = info_lobby_msg->get_lobby_id();
-        players = info_lobby_msg->get_players();
-        emit playersUpdated();
     }
 
     connect(this, &HostLobbyScreen::playersUpdated, this, &HostLobbyScreen::updatePlayersInLobby);
@@ -94,6 +84,7 @@ void HostLobbyScreen::processIncomingMessages() {
         std::cout << "MESSAGE IN THREAD 0x" << std::hex << std::setw(2) << std::setfill('0')<< static_cast<int>(msg->get_header())<< std::endl;
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
             InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
+            lobby_id = info_lobby_msg->get_lobby_id();
             players = info_lobby_msg->get_players();
             // Update scroll area
             for (auto player : players) {
@@ -109,6 +100,7 @@ void HostLobbyScreen::processIncomingMessages() {
         }
     }
 }
+
 
 void HostLobbyScreen::updatePlayersInLobby() {
     // Clear scroll area
@@ -142,19 +134,6 @@ void HostLobbyScreen::updatePlayersInLobby() {
                 duckLabel->setStyleSheet("border: 0px solid #555555;");
             }
         }
-
-        // create arrows
-        QPushButton *leftArrow = new QPushButton(this);
-        leftArrow->setIcon(QIcon(*leftIcon));
-        leftArrow->setIconSize(QSize(30, 30));
-        leftArrow->setStyleSheet("border: 0px solid #555555;");
-        connect(leftArrow, &QPushButton::clicked, this, &HostLobbyScreen::onLeftArrowClicked);
-        
-        QPushButton *rightArrow = new QPushButton(this);
-        rightArrow->setIcon(QIcon(*rightIcon));
-        rightArrow->setIconSize(QSize(30, 30));
-        rightArrow->setStyleSheet("border: 0px solid #555555;");
-        connect(rightArrow, &QPushButton::clicked, this, &HostLobbyScreen::onRightArrowClicked);
 
         // create ready button
         QPushButton *readyButton = new QPushButton("Ready", this);
@@ -191,9 +170,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
         playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
-        playerLayout->addWidget(leftArrow, 0, Qt::AlignRight);
         playerLayout->addWidget(duckLabel);
-        playerLayout->addWidget(rightArrow);
         playerLayout->addWidget(readyButton);
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);
@@ -224,6 +201,7 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         std::string name = "localPlayer";
         ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(name);
         send_queue->push(exit_from_lobby_msg);
+        localPlayerName = nullptr;
     } else {
         // add local player to lobby
         localPlayerButton->setText("Remove Local Player");
@@ -245,20 +223,11 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         std::string local_player = "localPlayer";
         ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
+        localPlayerName = new std::string(local_player);
     }
 
 }
 
-
-void HostLobbyScreen::onLeftArrowClicked() {
-    keyPressSound->play();
-    std::cout << "Left arrow clicked" << std::endl;
-}
-
-void HostLobbyScreen::onRightArrowClicked() {
-    keyPressSound->play();
-    std::cout << "Right arrow clicked" << std::endl;
-}
 
 void HostLobbyScreen::onReadyButtonClicked() {
     keyPressSound->play();
