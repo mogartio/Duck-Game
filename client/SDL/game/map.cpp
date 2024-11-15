@@ -316,7 +316,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         weapons[w.first]->position(w.second.first * tiles, w.second.second * tiles);
         weapons[w.first]->fill(SDL_FLIP_NONE);
         if (int(w.first) >= int(ProjectilesId::ProjectileId::LASER)) {
-            weapons[w.first]->position(-1, -1);
+            weaponsPos[w.first] = std::pair(-1, -1);
         }
     }
 
