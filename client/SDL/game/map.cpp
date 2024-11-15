@@ -207,8 +207,8 @@ SDL_Rect Map::adjustMapZoom() {
     for (const auto& pair: players) {
         std::pair<int, int> position = pair.second->getPosition();
         // seteamos los valores maximos de x e y
-        max_x < position.first ? max_x = position.first : max_x;
-        max_y < position.second ? max_y = position.second : max_y;
+        max_x < position.first ? max_x = position.first + 3 * tiles : max_x;
+        max_y < position.second ? max_y = position.second + 3 * tiles : max_y;
 
         // seteamos los valores minimos de x e y
         if (position.first < min_x || min_x == 0) {
@@ -218,12 +218,23 @@ SDL_Rect Map::adjustMapZoom() {
             min_y = position.second;
         }
     }
-    int distancia = 3 * tiles;
-    min_x < distancia ? min_x = 0 : min_x -= distancia;
-    min_y < distancia ? min_y = 0 : min_y -= distancia;
 
-    int new_width = (max_x - min_x) + 6 * tiles;
-    int new_height = (max_y - min_y) + 6 * tiles;
+    int new_width = (max_x - min_x) + 10 * tiles;
+    int new_height = (max_y - min_y) + 10 * tiles;
+    min_x -= 5 * tiles;
+    min_y -= 5 * tiles;
+
+    float proportion_width = float(width_window) / float(new_width);
+    float proportion_height = float(height_window) / float(new_height);
+    float proportion = 1 / std::min(proportion_width, proportion_height);
+
+    int centro_x = min_x + new_width / 2;
+    int centro_y = min_y + new_height / 2;
+
+    new_width = proportion * width_window;
+    new_height = proportion * height_window;
+    min_x = centro_x - new_width / 2;
+    min_y = centro_y - new_height / 2;
 
     zoomRect = {min_x, min_y, new_width, new_height};
     return zoomRect;
@@ -298,17 +309,18 @@ void Map::fill() {  // Dibuja de atras para adelante
     SDL_SetRenderTarget(rend, nullptr);
 
     // Usando zoom
-    /*
     // Generamos el rectangulo de zoom
     SDL_Rect zoomRect = adjustMapZoom();
 
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
-    */
 
+
+    /*
     // Sin usar zoom
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, nullptr, nullptr);
+    */
 }
 
 // ----------------- Destructor -----------------
