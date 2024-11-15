@@ -62,13 +62,16 @@ public:
         ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, current_pos_x, current_pos_y, id);
         senders.broadcast(msg);
         std::stringstream ss;
-        for (auto& coor: trail) {
-            ss << std::to_string(std::get<0>(coor)) << " , " << std::to_string(std::get<1>(coor))
-               << std::endl;
+        if (trail.size() > 0) {
+
+            for (auto& coor: trail) {
+                ss << std::to_string(std::get<0>(coor)) << " , "
+                   << std::to_string(std::get<1>(coor)) << std::endl;
+            }
+            std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+                      << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
+                      << " con trail: " << ss.str() << std::endl;
         }
-        std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-                  << std::to_string(current_pos_x) << std::to_string(current_pos_y)
-                  << " con trail: " << ss.str() << std::endl;
     }
     explicit ProjectileObserver(SendQueuesMonitor<GenericMsg*>& queues): Observer(queues) {}
     // virtual void update(uint8_t pos_x, uint8_t pos_y, uint8_t id) override {

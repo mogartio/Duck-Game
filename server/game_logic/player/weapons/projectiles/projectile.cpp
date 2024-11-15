@@ -21,6 +21,7 @@ bool Projectile::ray_trace(Stage& stage) {
 
         int next_tile = stage.get(bullet_position);
         if (next_tile == -1) {
+            trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
             notify();
             return true;
         }
@@ -28,6 +29,7 @@ bool Projectile::ray_trace(Stage& stage) {
             next_tile == Config::get_instance()->mapsId["wall"]) {
             speed = 0;
             stage.set(position, id);
+            trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
             notify();
             return despawns_on_contact;
         }
@@ -37,6 +39,8 @@ bool Projectile::ray_trace(Stage& stage) {
                 stage.kill(next_tile);
             }
             if (!(initial_position == position)) {
+
+                trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
                 notify();
             }
             return is_lethal;
@@ -44,6 +48,8 @@ bool Projectile::ray_trace(Stage& stage) {
         if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
             if (i == speed - 1) {
                 stage.set(bullet_position, id);
+                trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
+                                   // its never been this serious
                 notify();
                 return false;
             }
