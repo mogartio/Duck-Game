@@ -30,6 +30,7 @@ bool Projectile::ray_trace(Stage& stage) {
             notify();
             return despawns_on_contact;
         }
+        // si la siguiente tile es un pato
         if (next_tile == 1 || next_tile == 2) {
             if (is_lethal) {
                 stage.kill(next_tile);
@@ -50,6 +51,9 @@ bool Projectile::ray_trace(Stage& stage) {
             // coordinates_to_delete.push_back(bullet_position);
             update();
         }
+    }
+    if (speed == 0) {
+        notify();
     }
     return false;
 }
