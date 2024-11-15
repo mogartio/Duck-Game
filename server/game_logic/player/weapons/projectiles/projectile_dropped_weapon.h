@@ -65,7 +65,7 @@ public:
         }
     }
     virtual std::unique_ptr<Weapon> get_weapon() {
-        spawn->free();
+        //        spawn->free();
         return std::move(weapon);
     }
 };

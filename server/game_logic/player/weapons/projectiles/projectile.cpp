@@ -21,6 +21,7 @@ bool Projectile::ray_trace(Stage& stage) {
 
         int next_tile = stage.get(bullet_position);
         if (next_tile == -1) {
+            notify();
             return true;
         }
         if (next_tile == Config::get_instance()->mapsId["floor"] ||
