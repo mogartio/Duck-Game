@@ -17,8 +17,8 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
-    for (int i = int(Weapon::MAGNUM); i <= int(Weapon::SNIPER); i++) {
-        Weapon weapon = static_cast<Weapon>(i);
+    for (int i = int(ProjectilesId::ProjectileId::GRENADE); i <= int(ProjectilesId::ProjectileId::SNIPER); i++) {
+        ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
 
@@ -34,29 +34,24 @@ Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_
         makeTile(tileType);
     }
 
-    prueba.initialize(rend, "img_src/weapons/bullets/laser.png");
-    prueba.queryTexture();
-    prueba.defineSize(1 * tiles, 1 * tiles);
-    prueba.position(100, 100);
-
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
 }
 
 // ----------------- Initialize Images -----------------
 
-void Map::makeWeapon(Weapon weapon) {
+void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     Image* weaponImage = new Image();
     std::string path = "img_src/weapons/";
-    path += weapon_to_string(weapon);
+    path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
-    if ((weapon == Weapon::GRANADA) || (weapon == Weapon::DUELOS)) {
+    if ((id == ProjectilesId::ProjectileId::GRENADE) || (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
         weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
         weaponImage->defineSize(1 * tiles, 2 * tiles);
     }
-    weapons[weapon] = weaponImage;
+    weapons[id] = weaponImage;
 }
 
 void Map::makeHelmet(Helemts helmet) {
@@ -156,9 +151,9 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
     Player* player = new Player(rend, Color(color));
     player->defineSize(3 * tiles, 3 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
-    player->armor(&armor, &hombro);
-    player->weapon(weapons[Weapon::MAGNUM]);
-    player->helmet(helmets[int(Helemts::TINFOIL)]);
+    // player->armor(&armor, &hombro);
+    // player->weapon(weapons[Weapon::MAGNUM]);
+    // player->helmet(helmets[int(Helemts::TINFOIL)]);
     players[name] = player;
     playersNamesAlive.push_back(name);
 }
@@ -171,14 +166,23 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
 
 // ----------------- Weapon -----------------
 
-void Map::newWeapon(int x, int y, Weapon weapon) {
-    // weaponsMap[weapon].push_back(std::pair(x, y));
-    weaponsPos[weapon] = std::pair(x, y);
+void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
+    // weaponsMap[id].push_back(std::pair(x, y));
+    weaponsPos[id] = std::pair(x, y);
 }
 
-void Map::weaponPlayer(Weapon weapon, std::string playerName) {
+void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail) {
+    laser.push_back(std::pair(x, y));
+}
+
+void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     // Si el jugador ya tiene un arma, entonces dispara
-    players[playerName]->weapon(weapons[weapon]);
+    if (id == ProjectilesId::ProjectileId::UNARMED) {
+        players[playerName]->dropWeapon();
+        return;
+    }
+    players[playerName]->weapon(weapons[id]);
+    weaponsPos[id] = std::pair(-1, -1);
 }
 
 void Map::dropWeapon(std::string playerName) { players[playerName]->dropWeapon(); }
@@ -303,6 +307,9 @@ void Map::fill() {  // Dibuja de atras para adelante
     // }
 
     for (const auto& w: weaponsPos) {
+        if (w.second.first == -1) {
+            continue;
+        }
         weapons[w.first]->position(w.second.first * tiles, w.second.second * tiles);
         weapons[w.first]->fill(SDL_FLIP_NONE);
     }
@@ -311,7 +318,10 @@ void Map::fill() {  // Dibuja de atras para adelante
         players[playerName]->fill();
     }
 
-    prueba.fill();
+    for (std::pair laserPos: laser) {
+        weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles, laserPos.second * tiles);
+        weapons[ProjectilesId::ProjectileId::LASER]->fill();
+    }
 
     // Cambiamos el render target al renderer
     SDL_SetRenderTarget(rend, nullptr);
@@ -323,7 +333,7 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
 
-
+    laser.clear();
     /*
     // Sin usar zoom
     // Dibujamos el parentTexture

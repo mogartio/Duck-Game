@@ -1,3 +1,4 @@
+#include <cassert>
 #include "player.h"
 
 #include <iostream>
@@ -158,6 +159,7 @@ void Player::weapon(Image* weapon) {
 
 void Player::dropWeapon() {
     weaponON = false;
+
 }
 
 void Player::shoot() {
@@ -220,7 +222,11 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        _weapon->position(position.first, position.second);
+        if (flip == SDL_FLIP_HORIZONTAL) {
+            _weapon->position(position.first, position.second + 26);
+        } else {
+            _weapon->position(position.first + 20, position.second + 26);
+        }
         _weapon->fill(flip);
     }
 

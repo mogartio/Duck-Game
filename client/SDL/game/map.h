@@ -38,10 +38,10 @@ private:
     std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
-    std::unordered_map<Weapon, Image*> weapons;
-    std::unordered_map<Weapon, std::pair<int, int>> weaponsPos;
+    std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
+    std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> weaponsPos;
+    std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
-
     // std::unordered_map<Weapon, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
@@ -61,7 +61,7 @@ private:
 
     Image prueba;
 
-    void makeWeapon(Weapon weapon);
+    void makeWeapon(ProjectilesId::ProjectileId id);
     void makeHelmet(Helemts helmet);
     void makeArmor();
     void makeTile(TileType tileType);
@@ -81,9 +81,11 @@ public:
     void update(std::string player, int x, int y, DuckState state, Side side);
 
     // Agrega un nuevo arma al mapa
-    void newWeapon(int x, int y, Weapon newWeapon);
+    void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
+    // Balas
+    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
-    void weaponPlayer(Weapon weapon, std::string playerName);  // si ya tiene arma tonces dispara
+    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
     void dropWeapon(std::string playerName);
 

@@ -100,6 +100,10 @@ void OnePlayer::play() {
                 ProjectileInfoMsg* projectile = nullptr;
                 uint8_t pos_x, pos_y, item = 0;
                 std::vector<std::pair<uint8_t, uint8_t>> trail;
+
+                PickupDropMsg* pickup_drop = nullptr;
+                uint8_t item_id = 0;
+
                 switch (msj->get_header()) {
                     case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
                         player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
@@ -111,8 +115,12 @@ void OnePlayer::play() {
                                    Side(facing_direction - 1));
                         stated_palying = true;
                         break;
-                    case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
 
+                    case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
+                        pickup_drop = dynamic_cast<PickupDropMsg*>(msj);
+                        player_name = pickup_drop->get_player_name();
+                        item_id = pickup_drop->get_item_id();
+                        map.weaponPlayer(ProjectilesId::ProjectileId(item_id), player_name);
                         break;
 
                     case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
@@ -121,25 +129,21 @@ void OnePlayer::play() {
                         pos_y = projectile->get_pos_y();
                         item = projectile->get_item();
                         trail = projectile->get_trail();  // para el laser
-                        map.newWeapon(pos_x, pos_y, Weapon(item));
+                        // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
+                        //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), trail);
+                        // } else {
+                            map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
+                        // }
                         break;
                     /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
                         // directa de que murio el jugador y de que hay que mostrar la pantalla de
                     muerte UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
                         player_name = player->get_player_name();
                         map.remove(player_name);
-                    case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
-                        // directa de que hay que mostrar el proyectil (weapon o bullet)
-                        ProyectileInfoMsg* proyectile = dynamic_cast<ProyectileInfoMsg*>(msj);
-                        uint16_t weapon = proyectile->get_proyectile();
-                        map.weaponPlayer(weapon, player_name);
-                    case GenericMsg::MsgTypeHeader::PICKUP_SHOOT_MSG:
+
+                    case GenericMsg::MsgTypeHeader::SHOOT_MSG:
                         // directa de que hay que mostrar el item que se levanto o disparo
 
-                    case GenericMsg::MsgTypeHeader::DROP_MSG:
-                        // directa de que hay que mostrar el item que se tiro
-                        // necesito nombre de player y que cosa esta dropeando (weapon, armor,
-                    helmet)
                     */
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                         // directa de que termino la partida y de q hay que mostrar la pantalla de
@@ -151,7 +155,7 @@ void OnePlayer::play() {
             } else if (stated_palying) {
                 map.update(player_name, position.first, position.second, DuckState::STANDING,
                            Side(facing_direction - 1));
-            }
+                }
 
             // Renderiza los objetos en la ventana
             if (elapsed_time >= frame_rate) {
