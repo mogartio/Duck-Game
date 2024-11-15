@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <SDL2/SDL_render.h>
+
 #include "../../../common/queue.h"
 
 #include "player.h"
@@ -13,8 +14,19 @@ class Map {
 private:
     SDL_Renderer* rend;
 
+    // Textura del mapa completo (las cosas constantes)
+    SDL_Texture* mapTexture;
+    // Textura padre para renderizar todo
+    SDL_Texture* parentTexture;
+
     std::vector<uint16_t> mapa;
+
+    // Numeros para calculos y variaciones de tamaños
     uint tiles;
+    uint width_window;
+    uint height_window;
+    uint columnas;
+    uint filas;
 
     // Imagenes de los tiles
     std::vector<Image*> tilesImages;
@@ -34,7 +46,7 @@ private:
     std::vector<Image*> helmets;
     // Posiciones de los cascos en el mapa
     std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
-    
+
     // Imagen de armadura usable
     Image armor;
     Image hombro;
@@ -51,11 +63,12 @@ private:
     void makeHelmet(Helemts helmet);
     void makeArmor();
     void makeTile(TileType tileType);
+    SDL_Rect adjustMapZoom();
 
 
 public:
-
-    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles);
+    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_window,
+        uint height_window);
 
     void makeMap(int w, int h);
 
@@ -68,7 +81,7 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, Weapon newWeapon);
     // Asignar arma a un jugador
-    void weaponPlayer(Weapon weapon, std::string playerName); // si ya tiene arma tonces dispara
+    void weaponPlayer(Weapon weapon, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
     void dropWeapon(std::string playerName);
 
