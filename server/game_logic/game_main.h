@@ -13,6 +13,7 @@
 #include "../send_queues_monitor.h"
 #include "config/config.h"
 #include "map/csv_writer.h"
+#include "map/spawn_point.h"
 #include "map/stage.h"
 #include "player/player.h"
 
@@ -28,6 +29,8 @@ private:
     std::string look_for_dead_people_and_do_what_you_must(Stage& stage, bool& round_over);
     void sleep_for_round(std::chrono::steady_clock::time_point t0,
                          std::chrono::steady_clock::time_point t1);
+    std::vector<WeaponSpawnPoint*> weapon_spawns;
+    void spawn_weapons();
 
     void init_round(Stage& stage);
 
