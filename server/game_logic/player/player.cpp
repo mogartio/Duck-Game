@@ -8,7 +8,7 @@
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
-Player::Player(Coordinate& initial_position, int id, const std::string name,
+Player::Player(Coordinate& initial_position, int id, const std::string& name,
                const PlayerObserver& obs):
         id(id),
         is_alive(true),
@@ -72,7 +72,7 @@ void Player::remove_action(int& command) {
     }
 }
 
-void Player::execute(int& command) {
+void Player::execute(const int& command) {
     if (!is_alive) {
         return;
     }
@@ -129,7 +129,7 @@ void Player::notify_picked_weapon() {
 //     }
 // }
 
-void Player::move(std::set<int>& movements) { position->move(movements); }
+void Player::move(const std::set<int>& movements) { position->move(movements); }
 
 void Player::shoot() {
     if (weapon == nullptr) {

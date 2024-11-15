@@ -36,7 +36,7 @@ public:
     virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     void notify() override {
-        for (Observer* obs: observers) {
+        for (const Observer* obs: observers) {
             obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
                         static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
                         static_cast<uint8_t>(id));
@@ -56,7 +56,7 @@ public:
 
     virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
     void notify() override {
-        for (Observer* obs: observers) {
+        for (const Observer* obs: observers) {
             obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
                         static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
                         static_cast<uint8_t>(id));

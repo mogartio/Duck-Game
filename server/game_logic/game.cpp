@@ -1,9 +1,9 @@
 #include "game.h"
 
-Game::Game(Queue<GenericMsg*>& recv, std::vector<std::string>& player_names, bool is_testing,
+Game::Game(Queue<GenericMsg*>& recv, const std::vector<std::string>& player_names, bool is_testing,
            SendQueuesMonitor<GenericMsg*>& senders):
         senders(senders), game_over(false) {
-    PlayerObserver* player_obs = new PlayerObserver(senders);
+    const PlayerObserver* player_obs = new PlayerObserver(senders);
     players = generate_players(player_names, *player_obs);
     game_loop = std::make_unique<GameMain>(recv, players, is_testing, senders);
 }

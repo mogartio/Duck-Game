@@ -21,11 +21,11 @@ public:
 
 class ProjectileSubject: public Subject {
 protected:
-    std::list<ProjectileObserver*> observers;
+    std::list<const ProjectileObserver*> observers;
 
 public:
     ProjectileSubject() {}
-    void attach(ProjectileObserver& obs) { observers.push_back(&obs); }
-    void dettach(ProjectileObserver& obs) { observers.remove(&obs); }
+    void attach(const ProjectileObserver& obs) { observers.push_back(&obs); }
+    void dettach(const ProjectileObserver& obs) { observers.remove(&obs); }
 };
 #endif

@@ -25,7 +25,6 @@ public:
             throw_started(false),
             throw_reach(0),
             id(id) {}
-    virtual int get_ammo() { return ammo; }
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}
     virtual Coordinate get_gun_position(int facing_direction);

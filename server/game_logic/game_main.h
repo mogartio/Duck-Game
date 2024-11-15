@@ -35,13 +35,12 @@ public:
     explicit GameMain(Queue<GenericMsg*>&, std::map<std::string, Player*>, bool,
                       SendQueuesMonitor<GenericMsg*>&);
 
-    GenericMsg* create_msg(std::string command);
+    GenericMsg* create_msg(const std::string& command);
     void run();
     std::string play_round(Stage&);
 
     using HandlerReader::handle_read;
 
-    void handle_read(const PickupDropMsg& msg) override;
 
     void handle_read(const StartActionMsg& msg) override;
 

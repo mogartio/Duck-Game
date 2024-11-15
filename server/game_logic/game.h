@@ -19,7 +19,7 @@ private:
     void send_map();
 
 public:
-    Game(Queue<GenericMsg*>& recv, std::vector<std::string>& player_names, bool is_testing,
+    Game(Queue<GenericMsg*>& recv, const std::vector<std::string>& player_names, bool is_testing,
          SendQueuesMonitor<GenericMsg*>& senders);
     void run() override;
 };

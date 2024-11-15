@@ -21,13 +21,15 @@ public:
         file.open(file_name);
         std::string line;
         std::vector<std::string> sizes;
-        if (std::getline(file, line)) {
-            std::stringstream ss(line);
-            std::string value;
-            while (std::getline(ss, value, ',')) {
-                sizes.push_back(value);
-            }
+        if (!std::getline(file, line)) {
+            return;
         }
+        std::stringstream ss(line);
+        std::string value;
+        while (std::getline(ss, value, ',')) {
+            sizes.push_back(value);
+        }
+
         rows = std::stoi(sizes[0]);
         columns = std::stoi(sizes[1]);
         map = Map(rows, columns);

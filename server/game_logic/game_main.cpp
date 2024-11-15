@@ -102,7 +102,6 @@ void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_p
             duration<int, std::milli>(TARGET_TIME) - (time_span % TARGET_TIME);
     std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
 }
-void GameMain::handle_read(const PickupDropMsg&) {}
 
 void GameMain::handle_read(const StartActionMsg& msg) {
     int action = msg.get_action_id();
@@ -120,7 +119,7 @@ void GameMain::handle_read(const StopActionMsg& msg) {
 // El peor codigo que escribi en este tp hasta ahora
 // pero funciona
 // no lo toquen
-GenericMsg* GameMain::create_msg(std::string command) {
+GenericMsg* GameMain::create_msg(const std::string& command) {
     // Lo hice todavia mas feo somehow
     // its never been this serious
     std::string player_name1;

@@ -28,7 +28,7 @@ private:
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);
     void set_state(std::unique_ptr<AirState>, uint8_t);
-    void move(std::set<int>&);
+    void move(const std::set<int>&);
     Coordinate get_position();
     uint8_t get_state() { return state; }
     void occupy(Coordinate&);
