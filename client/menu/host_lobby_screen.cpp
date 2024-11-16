@@ -87,7 +87,7 @@ void HostLobbyScreen::processIncomingMessages() {
             emit playersUpdated();
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
             PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
-            myPlayerName = player_info_msg->get_player_name();
+            myLocalPlayerName = player_info_msg->get_player_name();
         }
     }
 }
@@ -116,7 +116,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(200);
+        playerLabel->setFixedWidth(300);
 
         // Create save button 
         QPushButton *saveButton = new QPushButton(this);
@@ -124,12 +124,13 @@ void HostLobbyScreen::updatePlayersInLobby() {
         saveButton->setIconSize(QSize(50, 50));
         saveButton->setStyleSheet("border: none;");
         saveButton->setFixedWidth(50);
-        // if the player is myself, the save button is visible
-        if (player_name == myLocalPlayerName || player_name == myPlayerName) {
+        
+        if (player_name == myPlayerName || player_name == myLocalPlayerName) {
             saveButton->setVisible(true);
         } else {
             saveButton->setVisible(false);
         }
+
         connect(saveButton, &QPushButton::clicked, [this, player_name](){onSaveButtonClicked(player_name);});
         // create duck image
         QLabel *duckLabel = new QLabel(this);

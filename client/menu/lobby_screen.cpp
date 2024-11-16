@@ -128,7 +128,7 @@ void LobbyScreen::updatePlayersInLobby() {
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(200);
+        playerLabel->setFixedWidth(300);
 
         // Create save button 
         QPushButton *saveButton = new QPushButton(this);
@@ -192,10 +192,10 @@ void LobbyScreen::updatePlayersInLobby() {
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
          
-        playerLayout->addWidget(playerLabel);
+        playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
         playerLayout->addWidget(saveButton, 0, Qt::AlignLeft);
-        playerLayout->addWidget(duckLabel);
-        playerLayout->addWidget(readyButton);
+        playerLayout->addWidget(duckLabel, 0, Qt::AlignRight);
+        playerLayout->addWidget(readyButton, 0, Qt::AlignRight);
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);
     }
