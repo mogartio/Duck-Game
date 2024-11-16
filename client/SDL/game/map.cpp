@@ -4,12 +4,11 @@
 #include <iostream>
 
 
-Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_window,
+Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
          uint height_window):
         rend(rend),
         mapTexture(nullptr),
         parentTexture(nullptr),
-        mapa(mapa),
         tiles(tiles),
         width_window(width_window),
         height_window(height_window),
@@ -105,7 +104,19 @@ void Map::makeTile(TileType tileType) {
     tilesImages[int(tileType)] = tile;
 }
 
-void Map::makeMap(int columnas, int filas) {
+void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
+    // Limpiar mapa
+    tilesPlace.clear();
+    weaponsPos.clear();
+    helmetsMap.clear();
+    armorMap.clear();
+    playersNamesAlive.clear();
+
+    for (const auto& pair: players) {
+        pair.second->dropEverithing();
+        playersNamesAlive.push_back(pair.first);
+    }
+
     this->columnas = columnas;
     this->filas = filas;
 

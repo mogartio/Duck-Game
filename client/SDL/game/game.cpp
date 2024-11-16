@@ -37,11 +37,12 @@ void Game::play() {
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
+    SendMapMsg* newMap;
     if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
-        SendMapMsg* map = dynamic_cast<SendMapMsg*>(matriz);
-        mapa = map->get_map();
-        filas = map->get_filas();
-        columnas = map->get_columnas();
+        newMap = dynamic_cast<SendMapMsg*>(matriz);
+        mapa = newMap->get_map();
+        filas = newMap->get_filas();
+        columnas = newMap->get_columnas();
     } else if (matriz == nullptr) {
         throw("Algo anda mal! Mandaste un msj que nda que ver");
     }
@@ -55,8 +56,8 @@ void Game::play() {
 
     Window win(displayBounds.w, displayBounds.h);
 
-    Map map(win.get_rend(), mapa, tiles, displayBounds.w, displayBounds.h);
-    map.makeMap(columnas, filas);
+    Map map(win.get_rend(), tiles, displayBounds.w, displayBounds.h);
+    map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
     InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
@@ -136,25 +137,36 @@ void Game::play() {
                         map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
                         // }
                         break;
-                    /* case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
-                        // directa de que murio el jugador y de que hay que mostrar la pantalla de
-                    muerte UpdatedPlayerInfoMsg* player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
+
+                    case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                        newMap = dynamic_cast<SendMapMsg*>(msj);
+                        mapa = newMap->get_map();
+                        filas = newMap->get_filas();
+                        columnas = newMap->get_columnas();
+
+                        tiles_w = displayBounds.w / columnas;
+                        tiles_h = displayBounds.h / filas;
+                        tiles = std::min(tiles_w, tiles_h);
+
+                        map.makeMap(columnas, filas, mapa);
+                        break;
+
+                    /* 
+                    case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
+                        player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
                         player_name = player->get_player_name();
                         map.remove(player_name);
-
-                    case GenericMsg::MsgTypeHeader::SHOOT_MSG:
-                        // directa de que hay que mostrar el item que se levanto o disparo
-
                     */
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                         // directa de que termino la partida y de q hay que mostrar la pantalla de
                         // fin
-
+                        return;
                     default:
                         break;
                 }
             }
         }
+
         // Renderiza los objetos en la ventana
         if (elapsed_time >= frame_rate) {
             win.clear();
