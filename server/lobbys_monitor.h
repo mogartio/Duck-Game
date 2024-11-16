@@ -35,7 +35,7 @@ public:
     // Elimina todos los lobbys
     void remove_all();
     // Actualiza la info de un player
-    void update_player_info(uint lobby_id, std::string player_name, std::string new_name, uint8_t color);
+    void update_player_info(uint lobby_id, std::string player_name, std::string new_name, uint8_t color, uint8_t is_ready);
 
     ~LobbysMonitor();
 };

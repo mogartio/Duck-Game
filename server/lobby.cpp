@@ -16,6 +16,7 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
         DescipcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
         descripcionPlayer.color = players_colors[pair.first];
+        descripcionPlayer.is_ready = players_ready[pair.first];
         players_description.push_back(descripcionPlayer);
     }
     return players_description;
@@ -28,7 +29,8 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
         is_testing(is_testing) {
     player1_id = first_player->get_id();
     // players_description[FIRST_PLAYER] = descripcionPlayer;
-    players_map[player_name] = first_player;    
+    players_map[player_name] = first_player;   
+    players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY; 
     this->lobby_name = lobby_name;
     this->max_players = max_players;
     players_colors[player_name] = GenericMsg::DuckColor::WHITE;
@@ -63,6 +65,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     uint8_t color = *available_colors.begin();
     available_colors.erase(color);
     players_colors[player_name] = color;
+    players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY;
     send_queues.send_to_client(new EverythingOkMsg(), second_player->get_id());
     send_queues.send_to_client(new PlayerInfoMsg(player_name, color), second_player->get_id());
     std::set<uint8_t> ids;
@@ -80,6 +83,7 @@ void Lobby::removePlayer(std::string player_name) {
     Client* client = players_map[player_name];
     // re-add the color to the available colors
     available_colors.insert(players_colors[player_name]);
+    players_ready.erase(player_name);
     // remove the player from the lobby
     int removed = players_map.erase(player_name);
     if (removed != 0) {
@@ -100,12 +104,12 @@ void Lobby::removePlayer(std::string player_name) {
 
 void Lobby::startGame() {
     lobby_empty();
-    // if (players_map.size() != max_players) {
-    //     throw std::runtime_error("No se puede iniciar el juego porque menos jugadores de los
-    //     necesitados");
-    // }
-    // Nombres y id de clients
-    // std::map<std::string, uint> names;
+    // only start if all players are ready
+    for (auto& pair: players_ready) {
+        if (pair.second == GenericMsg::PlayerReadyState::NOT_READY) {
+            throw std::runtime_error("not all players are ready");
+        }
+    }
     std::vector<std::string> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
@@ -140,7 +144,7 @@ DescripcionLobby Lobby::getDescription() const {
     return desc;
 }
 
-void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color) {
+void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color, uint8_t is_ready) {
     // if the name is already someone else's name, throw error
     if (players_map.find(new_name) != players_map.end()) {
         throw std::runtime_error("name already in use");
@@ -152,7 +156,7 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     // add new player name key to map and color
     players_map[new_name] = client;
     players_colors[new_name] = new_color;
-
+    players_ready[new_name] = is_ready;
     //send all player the updated info
     for (auto& pair: players_map) {
         send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
