@@ -99,7 +99,6 @@ void LobbyScreen::processIncomingMessages() {
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
             PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
             myPlayerName = player_info_msg->get_player_name();
-            std::cout << "My player name: " << myPlayerName << std::endl;
         }
     }
 }
@@ -213,7 +212,6 @@ void LobbyScreen::onSaveButtonClicked(std::string player_name) {
 
 void LobbyScreen::onExitLobbyButtonClicked() {
     keyPressSound->play();
-    std::cout << "Trying to send ExitFromLobbyMsg" << std::endl;
     ExitFromLobbyMsg* exit_lobby_msg = new ExitFromLobbyMsg(myPlayerName);
     send_queue->push(exit_lobby_msg);
     stopProcessing();

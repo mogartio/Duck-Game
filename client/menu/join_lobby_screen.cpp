@@ -236,7 +236,6 @@ void JoinLobbyScreen::onJoinButtonClicked(uint8_t lobby_id) {
     }
     send_queue->push(new ChooseLobbyMsg(lobby_id, player_name));
     GenericMsg* msg = recv_queue->pop();
-    std::cout << "Received message in join lobby screen: 0x" <<  static_cast<int>(msg->get_header());
     if (msg->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else if (msg->get_header() == GenericMsg::MsgTypeHeader::ERROR_MSG) {
