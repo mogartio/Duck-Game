@@ -14,3 +14,4 @@ build/
 server/game_logic/game
 AtoB.dump
 BtoA.dump
+main_map.csv

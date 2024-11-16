@@ -28,6 +28,7 @@ public:
     MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client); 
     ~MainWindow();
     void handleQuitApplication();
+    void handleGameStart();
     void showLogoScreen();
     void showConnectionScreen();
     void showMainMenuScreen();

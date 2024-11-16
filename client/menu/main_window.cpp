@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     connect(connectionScreen, &ConnectionScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 
     // Connect the signal from ConnectionScreen to switch to MainMenuScreen
-   connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreenWithFade);
+    connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreenWithFade);
 
     // Connect the quit signal from MainMenuScreen to quit the application
     connect(mainMenuScreen, &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
@@ -162,6 +162,53 @@ void MainWindow::showHostLobbyScreen() {
     stackedWidget->addWidget(hostLobbyScreen);
     stackedWidget->setCurrentWidget(hostLobbyScreen);
     slideBackground(-960); // Move to the last third
+    // Connect the start game signal from HostLobbyScreen to handle game start
+    connect(hostLobbyScreen, &HostLobbyScreen::startingGame, this, &MainWindow::handleGameStart);
+}
+
+void MainWindow::handleGameStart() {
+    // Create an overlay widget with a black background
+    QWidget *overlay = new QWidget(this);
+    overlay->setStyleSheet("background-color: black;");
+    overlay->setGeometry(this->rect());
+    overlay->show();
+
+    QFont customFont;
+    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    customFont = QFont(fontFamily);
+
+    // Add a QLabel to display the message "Starting game ..."
+    QLabel *messageLabel = new QLabel("Starting game ...", overlay);
+    messageLabel->setStyleSheet("color: white; font-size: 120px;");
+    messageLabel->setFont(customFont);
+    messageLabel->setAlignment(Qt::AlignCenter);
+    messageLabel->setGeometry(660, 340, 600, 400);
+
+    // Use a QVBoxLayout to center the label within the overlay
+    QVBoxLayout *layout = new QVBoxLayout(overlay);
+    layout->addWidget(messageLabel);
+    layout->setAlignment(messageLabel, Qt::AlignCenter);
+    overlay->setLayout(layout);
+
+    // Apply a QGraphicsOpacityEffect to the overlay
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(this);
+    overlay->setGraphicsEffect(effect);
+
+    // Create a QPropertyAnimation to animate the opacity of the overlay
+    QPropertyAnimation *fadeOut = new QPropertyAnimation(effect, "opacity");
+    fadeOut->setDuration(1000);
+    fadeOut->setStartValue(0);
+    fadeOut->setEndValue(1);
+
+    // Connect the animation's finished signal to quit the application
+    connect(fadeOut, &QPropertyAnimation::finished, [this, overlay]() {
+        QTimer::singleShot(2000, [this]() { // 2000 milliseconds delay
+            QApplication::quit();
+        });
+    });
+
+    fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
 }
 
 MainWindow::~MainWindow() {

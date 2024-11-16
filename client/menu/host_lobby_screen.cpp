@@ -426,6 +426,8 @@ void HostLobbyScreen::onStartGameButtonClicked() {
     keyPressSound->play();
     StartGameMsg* start_game_msg = new StartGameMsg();
     send_queue->push(start_game_msg);
+    // stop thread
+    stopProcessing();
     emit startingGame();
 }
 
