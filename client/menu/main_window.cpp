@@ -3,7 +3,7 @@
 MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client) {
     
     resize(1920, 1080);
-    //setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint);
 
     stackedWidget = new QStackedWidget(this);
     setCentralWidget(stackedWidget);

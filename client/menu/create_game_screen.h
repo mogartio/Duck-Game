@@ -20,7 +20,7 @@
 #include "../../common/messages/generic_msg.h"
 #include "../../common/socket/socket.h"
 #include "../client.h"
-#define MAX_PLAYERS 6
+#define MAX_PLAYERS 4
 #define MIN_PLAYERS 2
 
 class CreateGameScreen : public QWidget {
