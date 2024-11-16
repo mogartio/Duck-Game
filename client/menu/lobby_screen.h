@@ -54,6 +54,7 @@ private:
     uint8_t lobby_id;
     std::list<DescipcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
+    std::map<std::string, std::string> playerEdits;
     // color de pato y su imagen
     std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
     void processIncomingMessages();

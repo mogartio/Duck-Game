@@ -118,10 +118,11 @@ void LobbyScreen::updatePlayersInLobby() {
     // Draw players in lobby
     for (auto player : players) {
         std::string player_name = player.nombre;
-
-        QLabel *playerLabel = new QLabel(player_name.c_str(), this);
+        
+        QLineEdit *playerLabel = new QLineEdit(this);
+        playerLabel->setText(player_name.c_str());
         playerLabel->setStyleSheet(
-            "QLabel {"
+            "QLineEdit {"
             "color: #ced4da;"
             "font-size: 36px;"
             "border: 0px solid #555555;"
@@ -130,12 +131,30 @@ void LobbyScreen::updatePlayersInLobby() {
         playerLabel->setFont(customFont);
         playerLabel->setFixedWidth(300);
 
+        // Restore the text from the map if it exists
+        if (playerEdits.find(player_name) != playerEdits.end()) {
+            playerLabel->setText(playerEdits[player_name].c_str());
+        }
+
+        // Enable or disable the QLineEdit based on the player name
+        if (player_name == myPlayerName) {
+            playerLabel->setEnabled(true);
+        } else {
+            playerLabel->setEnabled(false);
+        }
+
+        // Update the map whenever the text changes
+        connect(playerLabel, &QLineEdit::textChanged, [this, player_name](const QString &text) {
+            playerEdits[player_name] = text.toStdString();
+        });
+
         // Create save button 
         QPushButton *saveButton = new QPushButton(this);
         saveButton->setIcon(QIcon(*saveIcon));
         saveButton->setIconSize(QSize(50, 50));
         saveButton->setStyleSheet("border: none;");
         saveButton->setFixedWidth(50);
+
         // if the player is myself, the save button is visible
         if (player_name == myPlayerName) {
             saveButton->setVisible(true);
@@ -143,7 +162,17 @@ void LobbyScreen::updatePlayersInLobby() {
             saveButton->setVisible(false);
         }
 
-        connect(saveButton, &QPushButton::clicked, [this, player_name](){onSaveButtonClicked(player_name);});
+    connect(saveButton, &QPushButton::clicked, [this, player_name, playerLabel]() {
+        // Check if the QLineEdit is empty
+        if (playerLabel->text().isEmpty()) {
+            playerLabel->setText(QString::fromStdString(playerEdits[player_name]));
+        }
+        // Save the current text
+        onSaveButtonClicked(player_name);
+        // Remove the saved text from the map after saving
+        playerEdits.erase(player_name);
+    });
+
 
         // create duck image
         QLabel *duckLabel = new QLabel(this);
@@ -207,7 +236,21 @@ void LobbyScreen::onReadyButtonClicked() {
 
 void LobbyScreen::onSaveButtonClicked(std::string player_name) {
     keyPressSound->play();
-
+    // Send the updated player info 
+    std::string new_name = playerEdits[player_name];
+    if (new_name.empty()) {
+        return;
+    }
+    uint8_t color = 0;
+    for (auto player : players) {
+        if (player.nombre == player_name) {
+            color = player.color;
+            break;
+        }
+    }
+    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name);
+    send_queue->push(customized_player_info_msg);
+    myPlayerName = new_name;
 }
 
 void LobbyScreen::onExitLobbyButtonClicked() {
