@@ -37,12 +37,13 @@ CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
         player_name("") {}
-CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name):
+CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready):
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         lobby_id(lobby_id),
         color(color),
         player_name(player_name),
-        player_new_name(player_new_name) {}
+        player_new_name(player_new_name),
+        is_ready(is_ready) {}
 
 void CustomizedPlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -69,6 +70,10 @@ std::string CustomizedPlayerInfoMsg::get_player_new_name() const { return player
 void CustomizedPlayerInfoMsg::set_player_new_name(std::string player_new_name) {
     this->player_new_name = player_new_name;
 }
+
+bool CustomizedPlayerInfoMsg::get_is_ready() const { return is_ready; }
+
+void CustomizedPlayerInfoMsg::set_is_ready(uint8_t is_ready) { this->is_ready = is_ready; }
 
 ViewLobbiesMsg::ViewLobbiesMsg(): GenericMsg(GenericMsg::VIEW_LOBBIES_MSG, GenericMsg::LOBBY_MSG) {}
 

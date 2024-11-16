@@ -74,6 +74,11 @@ public:
         GREY = 0x03,
     };
 
+    enum PlayerReadyState : uint8_t {
+        NOT_READY = 0x00,
+        READY = 0x01,
+    };  
+
 private:
     MsgTypeHeader header;
     Type type;
@@ -129,6 +134,7 @@ private:
     uint8_t color;
     std::string player_name;
     std::string player_new_name;
+    uint8_t is_ready;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -139,7 +145,7 @@ public:
 
     CustomizedPlayerInfoMsg();
 
-    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name);
+    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready);
 
     void set_lobby_id(uint8_t lobby_id);
 
@@ -156,6 +162,10 @@ public:
     std::string get_player_new_name() const;
 
     void set_player_new_name(std::string player_new_name);
+
+    bool get_is_ready() const;
+
+    void set_is_ready(uint8_t is_ready);
 };
 
 class ViewLobbiesMsg: public GenericMsg {

@@ -106,6 +106,8 @@ void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
     msg.set_player_name(player_name);
     std::string new_name = recv_string();
     msg.set_player_new_name(new_name);
+    uint8_t is_ready = recv_u_int8_t();
+    msg.set_is_ready(is_ready);
 }
 
 void ServerProtocol::handle_recv(PickupDropMsg& msg) {

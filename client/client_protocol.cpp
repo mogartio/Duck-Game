@@ -114,6 +114,8 @@ void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
     send_string(player_name);
     std::string new_name = msg.get_player_new_name();   
     send_string(new_name);
+    uint8_t is_ready = msg.get_is_ready();
+    send_u_int8_t(is_ready);
 }
 
 void ClientProtocol::handle_send(const PickupDropMsg& msg) {
