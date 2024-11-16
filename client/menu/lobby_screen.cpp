@@ -11,7 +11,7 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
     // Create black opaque background rectangle
-    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 200, 100, 800, 700, QColor(0,0,0, 100), QColor(0,0,0, 100));
+    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 200, 100, 1000, 700, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
     // Create game label
     QLabel *lobbyLabel = new QLabel("Players", this);
@@ -41,11 +41,11 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
         "}"
     );
     exitLobbyButton->setFont(customFont);
-    exitLobbyButton->setGeometry(600, 150, 300, 60);
+    exitLobbyButton->setGeometry(850, 150, 300, 60);
 
     // Add scroll area 
     scrollArea = new QScrollArea(this);
-    scrollArea->setGeometry(250, 230, 700, 700);
+    scrollArea->setGeometry(250, 230, 900, 700);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(0,0,0,100);");
 
@@ -119,17 +119,22 @@ void LobbyScreen::updatePlayersInLobby() {
     for (auto player : players) {
         std::string player_name = player.nombre;
         
+        QWidget *editContainer = new QWidget(this);
+        QHBoxLayout *layout = new QHBoxLayout(editContainer);
+        layout->setContentsMargins(5,5,5,5);
+        layout->setSpacing(5);
+
         QLineEdit *playerLabel = new QLineEdit(this);
         playerLabel->setText(player_name.c_str());
         playerLabel->setStyleSheet(
             "QLineEdit {"
             "color: #ced4da;"
-            "font-size: 36px;"
+            "font-size: 32px;"
             "border: 0px solid #555555;"
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(300);
+        playerLabel->setFixedWidth(350);
 
         // Restore the text from the map if it exists
         if (playerEdits.find(player_name) != playerEdits.end()) {
@@ -158,21 +163,31 @@ void LobbyScreen::updatePlayersInLobby() {
         // if the player is myself, the save button is visible
         if (player_name == myPlayerName) {
             saveButton->setVisible(true);
+            editContainer->setStyleSheet(
+                "QWidget {"
+                "border: 1px solid #ced4da;"
+                "border-radius: 10px;"
+                "padding: 5px;"
+                "}"
+            );
         } else {
             saveButton->setVisible(false);
+            editContainer->setStyleSheet("border: 0px solid #ced4da;");
         }
 
-    connect(saveButton, &QPushButton::clicked, [this, player_name, playerLabel]() {
-        // Check if the QLineEdit is empty
-        if (playerLabel->text().isEmpty()) {
-            playerLabel->setText(QString::fromStdString(playerEdits[player_name]));
-        }
-        // Save the current text
-        onSaveButtonClicked(player_name);
-        // Remove the saved text from the map after saving
-        playerEdits.erase(player_name);
-    });
+        connect(saveButton, &QPushButton::clicked, [this, player_name, playerLabel]() {
+            // Check if the QLineEdit is empty
+            if (playerLabel->text().isEmpty()) {
+                playerLabel->setText(QString::fromStdString(playerEdits[player_name]));
+            }
+            // Save the current text
+            onSaveButtonClicked(player_name);
+            // Remove the saved text from the map after saving
+            playerEdits.erase(player_name);
+        });
 
+        layout->addWidget(playerLabel);
+        layout->addWidget(saveButton);
 
         // create duck image
         QLabel *duckLabel = new QLabel(this);
@@ -221,8 +236,8 @@ void LobbyScreen::updatePlayersInLobby() {
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
          
-        playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
-        playerLayout->addWidget(saveButton, 0, Qt::AlignLeft);
+        
+        playerLayout->addWidget(editContainer, 0, Qt::AlignLeft);
         playerLayout->addWidget(duckLabel, 0, Qt::AlignRight);
         playerLayout->addWidget(readyButton, 0, Qt::AlignRight);
         playerWidget->setLayout(playerLayout);

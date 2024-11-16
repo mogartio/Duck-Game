@@ -10,7 +10,7 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
     // Create black opaque background rectangle
-    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 200, 100, 800, 700, QColor(0,0,0, 100), QColor(0,0,0, 100));
+    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 200, 100, 1000, 700, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
     // Create game label
     QLabel *lobbyLabel = new QLabel("Players", this);
@@ -39,10 +39,10 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
         "}"
     );
     localPlayerButton->setFont(customFont);
-    localPlayerButton->setGeometry(600, 150, 350, 60);
+    localPlayerButton->setGeometry(800, 150, 350, 60);
     // Add scroll area 
     scrollArea = new QScrollArea(this);
-    scrollArea->setGeometry(250, 230, 700, 700);
+    scrollArea->setGeometry(250, 230, 900, 700);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(0,0,0,100);");
 
@@ -107,16 +107,39 @@ void HostLobbyScreen::updatePlayersInLobby() {
     for (auto player : players) {
         std::string player_name = player.nombre;
 
-        QLabel *playerLabel = new QLabel(player_name.c_str(), this);
+        QWidget *editContainer = new QWidget(this);
+        QHBoxLayout *layout = new QHBoxLayout(editContainer);
+        layout->setContentsMargins(5,5,5,5);
+        layout->setSpacing(5);
+
+        QLineEdit *playerLabel = new QLineEdit(this);
+        playerLabel->setText(player_name.c_str());
         playerLabel->setStyleSheet(
-            "QLabel {"
+            "QLineEdit {"
             "color: #ced4da;"
-            "font-size: 36px;"
+            "font-size: 32px;"
             "border: 0px solid #555555;"
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(300);
+        playerLabel->setFixedWidth(350);
+
+        // Restore the text from the map if it exists
+        if (playerEdits.find(player_name) != playerEdits.end()) {
+            playerLabel->setText(playerEdits[player_name].c_str());
+        }
+
+        // Enable or disable the QLineEdit based on the player name
+        if (player_name == myPlayerName || player_name == myLocalPlayerName) {
+            playerLabel->setEnabled(true);
+        } else {
+            playerLabel->setEnabled(false);
+        }
+        
+        // Update the map whenever the text changes
+        connect(playerLabel, &QLineEdit::textChanged, [this, player_name](const QString &text) {
+            playerEdits[player_name] = text.toStdString();
+        });
 
         // Create save button 
         QPushButton *saveButton = new QPushButton(this);
@@ -124,14 +147,37 @@ void HostLobbyScreen::updatePlayersInLobby() {
         saveButton->setIconSize(QSize(50, 50));
         saveButton->setStyleSheet("border: none;");
         saveButton->setFixedWidth(50);
-        
+
+        // if the player is myself or my local player, the save button is visible
         if (player_name == myPlayerName || player_name == myLocalPlayerName) {
             saveButton->setVisible(true);
+            editContainer->setStyleSheet(
+                "QWidget {"
+                "border: 1px solid #ced4da;"
+                "border-radius: 10px;"
+                "padding: 5px;"
+                "}"
+            );
         } else {
             saveButton->setVisible(false);
+            editContainer->setStyleSheet("border: 0px solid #ced4da;");
         }
 
-        connect(saveButton, &QPushButton::clicked, [this, player_name](){onSaveButtonClicked(player_name);});
+
+        connect(saveButton, &QPushButton::clicked, [this, player_name, playerLabel]() {
+        // Check if the QLineEdit is empty
+        if (playerLabel->text().isEmpty()) {
+            playerLabel->setText(QString::fromStdString(playerEdits[player_name]));
+        }
+        // Save the current text
+        onSaveButtonClicked(player_name);
+        // Remove the saved text from the map after saving
+        playerEdits.erase(player_name);
+        });
+
+        layout->addWidget(playerLabel);
+        layout->addWidget(saveButton);
+
         // create duck image
         QLabel *duckLabel = new QLabel(this);
         uint8_t color = player.color;
@@ -176,11 +222,10 @@ void HostLobbyScreen::updatePlayersInLobby() {
         playerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
-         
-        playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
-        playerLayout->addWidget(saveButton, 0, Qt::AlignLeft);
-        playerLayout->addWidget(duckLabel);
-        playerLayout->addWidget(readyButton);
+        
+        playerLayout->addWidget(editContainer, 0, Qt::AlignLeft);
+        playerLayout->addWidget(duckLabel, 0, Qt::AlignRight);
+        playerLayout->addWidget(readyButton, 0, Qt::AlignRight);
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);
     }
@@ -242,7 +287,25 @@ void HostLobbyScreen::onReadyButtonClicked() {
 
 void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
     keyPressSound->play();
-
+    // Send the updated player info
+    std::string new_name = playerEdits[player_name];
+    if (new_name.empty()) {
+        return;
+    }
+    uint8_t color = 0;
+    for (auto player : players) {
+        if (player.nombre == player_name) {
+            color = player.color;
+            break;
+        }
+    }
+    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name);
+    send_queue->push(customized_player_info_msg);
+    if (player_name == myPlayerName) {
+        myPlayerName = new_name;
+    } else if (player_name == myLocalPlayerName) {
+        myLocalPlayerName = new_name;
+    }
 }
 
 void HostLobbyScreen::stopProcessing() {
