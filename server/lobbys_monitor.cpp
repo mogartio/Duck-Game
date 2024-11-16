@@ -57,7 +57,6 @@ void LobbysMonitor::remove_all() {
 
 void LobbysMonitor::update_player_info(uint lobby_id, std::string player_name,std::string new_name, uint8_t color, uint8_t is_ready) {
     std::lock_guard<std::mutex> lock(m);
-    std::cout << "Lobby id: " << lobby_id << " Player name: " << player_name << " New name: " << new_name << " Color: " << (int)color << " Is ready: " << (int)is_ready << std::endl;
     lobbys_disponibles.at(lobby_id)->updatePlayerInfo(player_name, new_name, color, is_ready);
 }
 

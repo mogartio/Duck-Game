@@ -212,7 +212,6 @@ void CreateGameScreen::onUpArrowClicked() {
         maxPlayers++;
         maxPlayersBox->setText(QString::number(maxPlayers));
     }
-    std::cout << maxPlayers << std::endl;
 }
 
 void CreateGameScreen::onDownArrowClicked() {
@@ -221,7 +220,6 @@ void CreateGameScreen::onDownArrowClicked() {
         maxPlayers--;
         maxPlayersBox->setText(QString::number(maxPlayers));
     }
-    std::cout << maxPlayers << std::endl;
 }
 
 void CreateGameScreen::onCreateGameButtonClicked() {
