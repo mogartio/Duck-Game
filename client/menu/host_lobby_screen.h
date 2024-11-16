@@ -60,6 +60,7 @@ private:
     std::thread recv_thread;
     std::list<DescipcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
+    uint8_t is_ready;
     // color de pato y su imagen
     std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
     std::map<std::string, std::string> playerEdits;

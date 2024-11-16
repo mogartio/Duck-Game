@@ -69,6 +69,9 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
         uint8_t color = recv_u_int8_t();
         player.color = color;
 
+        uint8_t is_ready = recv_u_int8_t();
+        player.is_ready = is_ready;
+
         players.push_back(player);
     }
     msg.set_players(players);

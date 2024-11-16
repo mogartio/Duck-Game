@@ -57,6 +57,7 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
     for (auto& player: players_from_lobby) {
         send_string(player.nombre);
         send_u_int8_t(player.color);
+        send_u_int8_t(player.is_ready);
     }
 
     uint8_t max_players = msg.get_max_players();

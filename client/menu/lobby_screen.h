@@ -52,6 +52,7 @@ private:
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
     uint8_t lobby_id;
+    uint8_t is_ready;
     std::list<DescipcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
     std::map<std::string, std::string> playerEdits;

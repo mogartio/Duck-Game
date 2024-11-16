@@ -6,6 +6,7 @@
 struct DescipcionPlayer {
     std::string nombre;
     uint8_t color;
+    uint8_t is_ready;
     // agregar mas en caso de ser necesario
 
     ~DescipcionPlayer() = default;

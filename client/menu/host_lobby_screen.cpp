@@ -299,7 +299,7 @@ void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
             break;
         }
     }
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name);
+    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
     send_queue->push(customized_player_info_msg);
     if (player_name == myPlayerName) {
         myPlayerName = new_name;
