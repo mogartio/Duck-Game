@@ -134,7 +134,7 @@ void LobbyScreen::updatePlayersInLobby() {
             "}"
         );
         playerLabel->setFont(customFont);
-        playerLabel->setFixedWidth(350);
+        playerLabel->setFixedWidth(300);
 
         // Restore the text from the map if it exists
         if (playerEdits.find(player_name) != playerEdits.end()) {
@@ -203,24 +203,48 @@ void LobbyScreen::updatePlayersInLobby() {
 
         // create ready button
         QPushButton *readyButton = new QPushButton("Ready", this);
-        readyButton->setStyleSheet(
-            "QPushButton {"
-            "background-color: rgba(21, 153, 43, 100);"        
-            "color: #ced4da;"                     
-            "font-size: 32px;"                  
-            "border: 0px solid #555555;"        
-            "border-radius: 15px;"              
-            "padding: 10px;"                    
-            "text-align: center;"               
-            "}"
-            "QPushButton:hover {"
-            "background-color: rgba(15, 115, 32, 100);"
-            "}"
-        );
+
+        uint8_t is_ready = player.is_ready;
+
+        if (is_ready == GenericMsg::PlayerReadyState::READY) {
+            readyButton->setStyleSheet(
+                "QPushButton {"
+                "background-color: rgba(47, 133, 28, 100);" // Darker color for READY state
+                "color: #ced4da;"                     
+                "font-size: 32px;"                  
+                "border: 0px solid #555555;"        
+                "border-radius: 15px;"              
+                "padding: 10px;"                    
+                "text-align: center;"               
+                "}"
+            );
+        } else {
+            readyButton->setStyleSheet(
+                "QPushButton {"
+                "background-color: rgba(235, 64, 52, 100);" // Lighter color for not READY state
+                "color: #ced4da;"                     
+                "font-size: 32px;"                  
+                "border: 0px solid #555555;"        
+                "border-radius: 15px;"              
+                "padding: 10px;"                    
+                "text-align: center;"               
+                "}"
+                "QPushButton:hover {"
+                "background-color: rgba(184, 48, 39, 100);" // Darker color on hover
+                "}"
+            );
+        }
         readyButton->setFont(customFont);
         readyButton->setFixedWidth(130);
+        // if it isn't myself, the ready button is disabled
+        if (player_name != myPlayerName) {
+            readyButton->setEnabled(false);
+        } else {
+            readyButton->setEnabled(true);
+        }
 
-        connect(readyButton, &QPushButton::clicked, this, &LobbyScreen::onReadyButtonClicked);
+
+        connect(readyButton, &QPushButton::clicked, [this, player_name]() { onReadyButtonClicked(player_name); });
 
         QWidget *playerWidget = new QWidget(this);
         playerWidget->setStyleSheet(
@@ -245,8 +269,25 @@ void LobbyScreen::updatePlayersInLobby() {
     }
 }
 
-void LobbyScreen::onReadyButtonClicked() {
+void LobbyScreen::onReadyButtonClicked(std::string player_name) {
     keyPressSound->play();
+    uint8_t color; 
+    uint8_t is_ready;
+    for (auto player : players) {
+        if (player.nombre == player_name) {
+            color = player.color;
+            is_ready = player.is_ready;
+            break;
+        } 
+    }
+    if (is_ready == GenericMsg::PlayerReadyState::NOT_READY) {
+        is_ready = GenericMsg::PlayerReadyState::READY;
+    } else {
+        is_ready = GenericMsg::PlayerReadyState::NOT_READY;
+    }
+
+    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    send_queue->push(customized_player_info_msg);
 }
 
 void LobbyScreen::onSaveButtonClicked(std::string player_name) {
@@ -257,9 +298,11 @@ void LobbyScreen::onSaveButtonClicked(std::string player_name) {
         return;
     }
     uint8_t color = 0;
+    uint8_t is_ready = 0;
     for (auto player : players) {
         if (player.nombre == player_name) {
             color = player.color;
+            is_ready = player.is_ready;
             break;
         }
     }

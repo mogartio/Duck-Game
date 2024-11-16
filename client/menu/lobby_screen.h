@@ -32,7 +32,7 @@ public:
     void stopProcessing();
 private slots: 
     void updatePlayersInLobby();
-    void onReadyButtonClicked();
+    void onReadyButtonClicked(std::string player_name);
     void onSaveButtonClicked(std::string player_name);
     void onExitLobbyButtonClicked();
 signals: 

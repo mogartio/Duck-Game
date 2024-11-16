@@ -28,7 +28,6 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
         id_lobby(id_lobby),
         is_testing(is_testing) {
     player1_id = first_player->get_id();
-    // players_description[FIRST_PLAYER] = descripcionPlayer;
     players_map[player_name] = first_player;   
     players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY; 
     this->lobby_name = lobby_name;
@@ -146,9 +145,11 @@ DescripcionLobby Lobby::getDescription() const {
 
 void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color, uint8_t is_ready) {
     // if the name is already someone else's name, throw error
-    if (players_map.find(new_name) != players_map.end()) {
+
+    if (players_map.find(new_name) != players_map.end() && new_name != player_name) {
         throw std::runtime_error("name already in use");
     }
+
     // remove old player name key from map and color. First save Client ptr
     Client* client = players_map[player_name];
     players_map.erase(player_name);
