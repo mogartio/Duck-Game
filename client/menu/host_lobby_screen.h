@@ -12,6 +12,8 @@
 #include <iostream>
 #include <QSound>
 #include <QScrollArea>
+#include <thread>
+
 #include <string>
 #include <QTimer>
 #include <iostream>
@@ -25,7 +27,9 @@ class HostLobbyScreen : public QWidget {
 
 public: 
     HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    ~HostLobbyScreen();
 
+    void stopProcessing();
 
 private slots: 
     void onAddLocalPlayerButtonClicked();
@@ -38,9 +42,8 @@ signals:
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
-    std::string myPlayerName = "Player1";
-    std::string myLocalPlayerName = "LocalPlayer";
-    std::map<std::string, QLineEdit*> playerNameEdits;
+    std::atomic<bool> running;
+
     QFont customFont;
     QPixmap *saveIcon;
     QSound *keyPressSound;
@@ -48,8 +51,12 @@ private:
     QScrollArea* scrollArea;
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
+
     uint8_t lobby_id;
+    std::string myPlayerName = "Player1";
+    std::string myLocalPlayerName = "localPlayer";
     bool isLocalPlayerAdded = false;
+    std::thread recv_thread;
     std::list<DescipcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
     // color de pato y su imagen

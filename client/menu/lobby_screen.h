@@ -9,6 +9,7 @@
 #include <qfontdatabase.h>
 #include <QPushButton>
 #include <QDebug> 
+#include <thread>
 #include <iostream>
 #include <QSound>
 #include <QScrollArea>
@@ -24,21 +25,24 @@ class LobbyScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    explicit LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    ~LobbyScreen();
 
-
+    void stopProcessing();
 private slots: 
     void updatePlayersInLobby();
     void onReadyButtonClicked();
     void onSaveButtonClicked(std::string player_name);
+    void onExitLobbyButtonClicked();
 signals: 
     void playersUpdated();
-
+    void switchToJoinLobbyScreen();
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
+    std::atomic<bool> running;
+    std::thread recv_thread;
     std::string myPlayerName;
-    std::map<std::string, QLineEdit*> playerNameEdits;
     QFont customFont;
     QPixmap *saveIcon;
     QSound *keyPressSound;

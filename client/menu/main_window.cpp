@@ -146,6 +146,9 @@ void MainWindow::showLobbyScreen() {
     stackedWidget->addWidget(lobbyScreen);
     stackedWidget->setCurrentWidget(lobbyScreen);
     slideBackground(-960); // Move to the last third
+
+    // Connect the signal from LobbyScreen to switch to JoinLobbyScreen
+    connect(lobbyScreen, &LobbyScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
 }
 
 void MainWindow::showJoinLobbyScreen() {
