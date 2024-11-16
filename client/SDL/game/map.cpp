@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#define MIN_ZOOM 1000
+
 
 Map::Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_window,
          uint height_window):
@@ -235,7 +237,7 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = (max_x - min_x)*3;
+    int new_width = (max_x - min_x)*3 < MIN_ZOOM ? MIN_ZOOM : (max_x - min_x)*3;
     int new_height = (max_y - min_y)*3;
     min_x = min_x - new_width / 3;
     min_y = min_y - new_height / 3;
@@ -307,7 +309,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
-    
+
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
     //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
