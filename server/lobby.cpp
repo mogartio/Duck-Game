@@ -65,8 +65,13 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     players_colors[player_name] = color;
     send_queues.send_to_client(new EverythingOkMsg(), second_player->get_id());
     send_queues.send_to_client(new PlayerInfoMsg(player_name, color), second_player->get_id());
+    std::set<uint8_t> ids;
     for (auto& pair: players_map) {
+        if (ids.find(pair.second->get_id()) != ids.end()) {
+            continue;
+        }
         send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
+        ids.insert(pair.second->get_id());
     }
 }
 
@@ -78,9 +83,14 @@ void Lobby::removePlayer(std::string player_name) {
     // remove the player from the lobby
     int removed = players_map.erase(player_name);
     if (removed != 0) {
+        std::set<uint8_t> ids;
         for (auto& pair: players_map) {
+            if (ids.find(pair.second->get_id()) != ids.end()) {
+                continue;
+            }
             send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
-        }
+            ids.insert(pair.second->get_id());
+    }
     } else {
         throw std::runtime_error("Jugador no estaba en el lobby");
     }

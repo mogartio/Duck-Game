@@ -13,7 +13,7 @@
 #include <QSound>
 #include <QScrollArea>
 #include <thread>
-
+#include <mutex>
 #include <string>
 #include <QTimer>
 #include <iostream>
@@ -43,6 +43,7 @@ private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
     std::atomic<bool> running;
+    std::mutex players_mutex;
 
     QFont customFont;
     QPixmap *saveIcon;

@@ -15,6 +15,7 @@
 #include <QScrollArea>
 #include <string>
 #include <QTimer>
+#include <mutex>
 #include <iostream>
 #include <map>
 #include "rounded_rectangle.h"
@@ -41,6 +42,7 @@ private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
     std::atomic<bool> running;
+    std::mutex players_mutex;
     std::thread recv_thread;
     std::string myPlayerName;
     QFont customFont;

@@ -82,14 +82,10 @@ void HostLobbyScreen::processIncomingMessages() {
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
             InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
             lobby_id = info_lobby_msg->get_lobby_id();
+            std::lock_guard<std::mutex> lock(players_mutex);
             players = info_lobby_msg->get_players();
-            // if i am not in the lobby, running = false
-            isLocalPlayerAdded = false;
-            for (auto& player: players) {
-                if (player.nombre == myLocalPlayerName) {
-                    isLocalPlayerAdded = true;
-                    break;
-                }
+            for (auto player : players) {
+                std::cout << "EN INFO_LOBBY_MSG ESTA: " << player.nombre << std::endl;
             }
             emit playersUpdated();
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
@@ -101,7 +97,7 @@ void HostLobbyScreen::processIncomingMessages() {
 
 
 void HostLobbyScreen::updatePlayersInLobby() {
-
+    std::lock_guard<std::mutex> lock(players_mutex);
     // Clear scroll area
     QLayoutItem* item;
     while ((item = scrollLayout->takeAt(0)) != nullptr) {
@@ -110,10 +106,12 @@ void HostLobbyScreen::updatePlayersInLobby() {
         }
         delete item;
     }
-
+    std::cout << "\n";
     // Draw players in lobby
     for (auto player : players) {
         std::string player_name = player.nombre;
+
+        std::cout << "Player name: " << player_name << std::endl;
 
         QLabel *playerLabel = new QLabel(player_name.c_str(), this);
         playerLabel->setStyleSheet(
@@ -133,14 +131,15 @@ void HostLobbyScreen::updatePlayersInLobby() {
         saveButton->setStyleSheet("border: none;");
         saveButton->setFixedWidth(50);
         // if the player is myself, the save button is visible
+        std::cout << "llega aca antes del if" << std::endl;
         if (player_name == myLocalPlayerName || player_name == myPlayerName) {
             saveButton->setVisible(true);
         } else {
             saveButton->setVisible(false);
         }
-
+        std::cout << "llega aca despues del if" << std::endl;
         connect(saveButton, &QPushButton::clicked, [this, player_name](){onSaveButtonClicked(player_name);});
-
+        std::cout << "llega aca antes del duck label" << std::endl;
         // create duck image
         QLabel *duckLabel = new QLabel(this);
         uint8_t color = player.color;
@@ -152,7 +151,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
                 duckLabel->setStyleSheet("border: 0px solid #555555;");
             }
         }
-
+        std::cout << "llega aca antes del ready button" << std::endl;
         // create ready button
         QPushButton *readyButton = new QPushButton("Ready", this);
         readyButton->setStyleSheet(
@@ -173,7 +172,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
         readyButton->setFixedWidth(130);
 
         connect(readyButton, &QPushButton::clicked, this, &HostLobbyScreen::onReadyButtonClicked);
-
+        std::cout << "llega aca antes del player widget" << std::endl;
         QWidget *playerWidget = new QWidget(this);
         playerWidget->setStyleSheet(
             "background-color: rgba(0, 0, 0, 0);"
@@ -188,13 +187,14 @@ void HostLobbyScreen::updatePlayersInLobby() {
         QHBoxLayout *playerLayout = new QHBoxLayout(playerWidget);
         playerLayout->setContentsMargins(20, 10, 20, 10);
          
-        playerLayout->addWidget(playerLabel);
+        playerLayout->addWidget(playerLabel, 0, Qt::AlignLeft);
         playerLayout->addWidget(saveButton, 0, Qt::AlignLeft);
         playerLayout->addWidget(duckLabel);
         playerLayout->addWidget(readyButton);
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);
     }
+    std::cout << "\n" << std::endl;
 }
 
 
@@ -218,6 +218,7 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
             "background-color: rgba(232, 89, 12, 100);"
             "}"
         );
+        std::cout << "Using name " << myLocalPlayerName << std::endl;
         ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(myLocalPlayerName);
         send_queue->push(exit_from_lobby_msg);
     } else {
@@ -240,6 +241,7 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         );
         std::string local_player = "localPlayer";
         myLocalPlayerName = local_player;
+        std::cout << "Siquiera llega aca?" << std::endl;
         ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
     }
