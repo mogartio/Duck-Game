@@ -71,6 +71,26 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
         *duck.second = duck.second->scaled(100, 100, Qt::KeepAspectRatio);
     }
 
+    // Draw start game button
+    startGameButton = new QPushButton("Start\nGame", this);
+    startGameButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(235, 64, 52, 100);" // Darker color for READY state
+        "color: #ced4da;"                     
+        "font-size: 65px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 25px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+    );
+    startGameButton->setFont(customFont);
+    startGameButton->setGeometry(1400, 440, 300, 200);
+    // initialially disable start game button
+    startGameButton->setEnabled(false);
+
+    connect(startGameButton, &QPushButton::clicked, this, &HostLobbyScreen::onStartGameButtonClicked);
+
     connect(this, &HostLobbyScreen::playersUpdated, this, &HostLobbyScreen::updatePlayersInLobby);
 
     recv_thread = std::thread(&HostLobbyScreen::processIncomingMessages, this);
@@ -103,6 +123,8 @@ void HostLobbyScreen::updatePlayersInLobby() {
         }
         delete item;
     }
+
+
     // Draw players in lobby
     for (auto player : players) {
         std::string player_name = player.nombre;
@@ -254,6 +276,44 @@ void HostLobbyScreen::updatePlayersInLobby() {
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);
     }
+    updateStartGameButton();
+}
+
+
+void HostLobbyScreen::updateStartGameButton() {
+    // update start game button if necessary
+    for (auto player : players) {
+        if (player.is_ready == GenericMsg::PlayerReadyState::NOT_READY || players.size() < 2) {
+            startGameButton->setStyleSheet(
+                "QPushButton {"
+                "background-color: rgba(235, 64, 52, 100);" // Darker color for READY state
+                "color: #ced4da;"                     
+                "font-size: 65px;"                  
+                "border: 0px solid #555555;"        
+                "border-radius: 25px;"              
+                "padding: 10px;"                    
+                "text-align: center;"               
+                "}"
+            );
+            startGameButton->setEnabled(false);
+            return;
+        }
+    }
+    startGameButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(47, 133, 28, 100);" // Darker color for READY state
+        "color: #ced4da;"                     
+        "font-size: 65px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 25px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(39, 112, 22, 100);" // Darker color on hover
+        "}"
+    );
+    startGameButton->setEnabled(true);
 }
 
 
@@ -327,6 +387,7 @@ void HostLobbyScreen::onReadyButtonClicked(std::string player_name) {
     send_queue->push(customized_player_info_msg);
 }
 
+
 void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
     keyPressSound->play();
     // Send the updated player info
@@ -352,12 +413,22 @@ void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
     }
 }
 
+
 void HostLobbyScreen::stopProcessing() {
     running = false;
     if (recv_thread.joinable()) {
         recv_thread.join();
     }
 }
+
+
+void HostLobbyScreen::onStartGameButtonClicked() {
+    keyPressSound->play();
+    StartGameMsg* start_game_msg = new StartGameMsg();
+    send_queue->push(start_game_msg);
+    emit startingGame();
+}
+
 
 HostLobbyScreen::~HostLobbyScreen() {
     stopProcessing();

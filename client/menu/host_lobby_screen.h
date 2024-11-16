@@ -36,9 +36,10 @@ private slots:
     void updatePlayersInLobby();
     void onReadyButtonClicked(std::string player_name);
     void onSaveButtonClicked(std::string player_name);
+    void onStartGameButtonClicked();
 signals: 
     void playersUpdated();
-
+    void startingGame();
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
@@ -52,6 +53,7 @@ private:
     QScrollArea* scrollArea;
     QWidget* scrollWidget;
     QVBoxLayout* scrollLayout;
+    QPushButton* startGameButton;
 
     uint8_t lobby_id;
     std::string myPlayerName = "Player1";
@@ -65,6 +67,7 @@ private:
     std::map<std::string, std::string> playerEdits;
 
     void processIncomingMessages();
+    void updateStartGameButton();
 };  
 
 #endif // LOBBY_SCREEN_H
