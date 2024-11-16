@@ -76,6 +76,8 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     connect(exitLobbyButton, &QPushButton::clicked, this, &LobbyScreen::onExitLobbyButtonClicked);
 
+    connect(this, &LobbyScreen::starting, this, &LobbyScreen::onStartingGame);
+
     recv_thread = std::thread(&LobbyScreen::processIncomingMessages, this);
 }
 
@@ -96,6 +98,11 @@ void LobbyScreen::processIncomingMessages() {
                 }
             }
             emit playersUpdated();
+            uint8_t starting_game = info_lobby_msg->get_starting_game();
+            if (starting_game == GenericMsg::LobbyState::STARTING) {
+                running = false;
+                emit starting();
+            }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
             PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
             myPlayerName = player_info_msg->get_player_name();
@@ -325,6 +332,11 @@ void LobbyScreen::stopProcessing() {
     if (recv_thread.joinable()) {
         recv_thread.join();
     }
+}
+
+void LobbyScreen::onStartingGame() {
+    stopProcessing();
+    emit startingGame();
 }
 
 LobbyScreen::~LobbyScreen() {

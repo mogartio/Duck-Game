@@ -3,7 +3,7 @@
 MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client) {
     
     resize(1920, 1080);
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     stackedWidget = new QStackedWidget(this);
     setCentralWidget(stackedWidget);
@@ -149,6 +149,8 @@ void MainWindow::showLobbyScreen() {
 
     // Connect the signal from LobbyScreen to switch to JoinLobbyScreen
     connect(lobbyScreen, &LobbyScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
+    // Connect the start game signal from LobbyScreen to handle game start
+    connect(lobbyScreen, &LobbyScreen::startingGame, this, &MainWindow::handleGameStart);
 }
 
 void MainWindow::showJoinLobbyScreen() {

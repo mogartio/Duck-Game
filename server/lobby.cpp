@@ -35,7 +35,7 @@ Lobby::Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_na
     players_colors[player_name] = GenericMsg::DuckColor::WHITE;
 
     send_queues.send_to_client(new EverythingOkMsg, first_player->get_id());
-    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), first_player->get_id());
+    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), first_player->get_id());
 }
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
@@ -72,7 +72,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
         if (ids.find(pair.second->get_id()) != ids.end()) {
             continue;
         }
-        send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
+        send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby,GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
         ids.insert(pair.second->get_id());
     }
 }
@@ -91,14 +91,14 @@ void Lobby::removePlayer(std::string player_name) {
             if (ids.find(pair.second->get_id()) != ids.end()) {
                 continue;
             }
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
             ids.insert(pair.second->get_id());
     }
     } else {
         throw std::runtime_error("Jugador no estaba en el lobby");
     }
     // tell the player he is being removed
-    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), client->get_id());
+    send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), client->get_id());
 }
 
 void Lobby::startGame() {
@@ -114,17 +114,11 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby),
-                                       pair.second->get_id());
-            pair.second->switch_queues(
-                    receiver_q);  // aca cambiariamos la queue para definir la que
-            // se va a pasar a la partida
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::STARTING), pair.second->get_id());
+            pair.second->switch_queues(receiver_q); 
         }
         names.push_back(pair.first);
-        // names[pair.first] = pair.second->get_id();
     }
-    // se inicia el juego
-    // lanzandose el gameloop aqui
     game = std::make_unique<Game>(*receiver_q, names, is_testing, send_queues);
 
     game->start();
@@ -160,6 +154,6 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     players_ready[new_name] = is_ready;
     //send all player the updated info
     for (auto& pair: players_map) {
-        send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby), pair.second->get_id());
+        send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
     }
 }

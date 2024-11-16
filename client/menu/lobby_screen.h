@@ -35,9 +35,13 @@ private slots:
     void onReadyButtonClicked(std::string player_name);
     void onSaveButtonClicked(std::string player_name);
     void onExitLobbyButtonClicked();
+    void onStartingGame();
 signals: 
     void playersUpdated();
     void switchToJoinLobbyScreen();
+    void startingGame();
+    void starting(); 
+    
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 

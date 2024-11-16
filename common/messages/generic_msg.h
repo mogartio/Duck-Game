@@ -79,6 +79,11 @@ public:
         READY = 0x01,
     };  
 
+    enum LobbyState : uint8_t {
+        NOT_STARTING = 0x00,
+        STARTING = 0x01,
+    };
+
 private:
     MsgTypeHeader header;
     Type type;
@@ -102,6 +107,7 @@ private:
     std::list<DescipcionPlayer> players;
     uint8_t max_players;
     uint8_t lobby_id;
+    uint8_t starting_game; // 0x00 no, 0x01 yes
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -112,7 +118,7 @@ public:
 
     InfoLobbyMsg();
 
-    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id);
+    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
 
     void set_players(std::list<DescipcionPlayer> players);
 
@@ -120,11 +126,15 @@ public:
 
     void set_lobby_id(uint8_t lobby_id);
 
+    void set_starting_game(uint8_t starting_game);
+
     std::list<DescipcionPlayer> get_players() const;
 
     uint8_t get_max_players() const;
 
     uint8_t get_lobby_id() const;
+
+    uint8_t get_starting_game() const;
 };
 
 

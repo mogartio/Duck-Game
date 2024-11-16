@@ -81,6 +81,9 @@ void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
 
     uint8_t lobby_id = recv_u_int8_t();
     msg.set_lobby_id(lobby_id);
+
+    uint8_t starting_game = recv_u_int8_t();
+    msg.set_starting_game(starting_game);
 }
 
 void ClientProtocol::handle_recv(SendLobbiesListMsg& msg) {

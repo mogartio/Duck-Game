@@ -65,6 +65,9 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
 
     uint8_t lobby_id = msg.get_lobby_id();
     send_u_int8_t(lobby_id);
+
+    uint8_t starting_game = msg.get_starting_game();
+    send_u_int8_t(starting_game);
 }
 
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
