@@ -9,7 +9,7 @@
  *
  * En cambio, con `GNU_SOURCE`, la función retornar un `char*` y no
  * necesariamente podrán el mensaje de error en el buffer sino como retorno.
- * (véase más abajo), lo cual esta claramente mal.
+* (véase más abajo), lo cual esta claramente mal.
  *
  * Estos "un-define" están para forzar el uso de POSIX y sacar `GNU_SOURCE`
  * al menos en este `.cpp`.

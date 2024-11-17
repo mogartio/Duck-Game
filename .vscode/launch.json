@@ -8,8 +8,10 @@
             "name": "Debuguer server",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/server_exe",
-            "args": ["8080"],
+            "program": "${workspaceRoot}/server",
+            "args": [
+                "8080"
+            ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
@@ -26,8 +28,8 @@
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "visualizerFile": "/home/cpiccin/.config/Code/User/workspaceStorage/ab8a7a61b5fae425b5de12c4e6955de5/tonka3000.qtvsctools/qt.natvis.xml"
         }
-
     ]
 }

@@ -76,6 +76,7 @@ public:
         WINNER_MSG = 0x10,
         UPDATED_PLAYER_INFO_MSG = 0x11,
         PROJECTILE_INFO_MSG = 0x12,
+        PLAYER_INFO_MSG = 0x13, // mensaje para enviar info de un jugador especifico
     };
 
     enum Type : uint8_t {
@@ -89,6 +90,23 @@ public:
         LEFT = 0x02,
     };
 
+
+    enum DuckColor : uint8_t {
+        WHITE = 0x00,
+        YELLOW = 0x01,
+        ORANGE = 0x02,
+        GREY = 0x03,
+    };
+
+    enum PlayerReadyState : uint8_t {
+        NOT_READY = 0x00,
+        READY = 0x01,
+    };  
+
+    enum LobbyState : uint8_t {
+        NOT_STARTING = 0x00,
+        STARTING = 0x01,
+    };
 
 private:
     MsgTypeHeader header;
@@ -111,6 +129,9 @@ public:
 class InfoLobbyMsg: public GenericMsg {
 private:
     std::list<DescipcionPlayer> players;
+    uint8_t max_players;
+    uint8_t lobby_id;
+    uint8_t starting_game; // 0x00 no, 0x01 yes
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -121,18 +142,33 @@ public:
 
     InfoLobbyMsg();
 
-    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players);
+    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
 
     void set_players(std::list<DescipcionPlayer> players);
 
+    void set_max_players(uint8_t max_players);
+
+    void set_lobby_id(uint8_t lobby_id);
+
+    void set_starting_game(uint8_t starting_game);
+
     std::list<DescipcionPlayer> get_players() const;
+
+    uint8_t get_max_players() const;
+
+    uint8_t get_lobby_id() const;
+
+    uint8_t get_starting_game() const;
 };
 
 
 class CustomizedPlayerInfoMsg: public GenericMsg {
 private:
+    uint8_t lobby_id;
     uint8_t color;
     std::string player_name;
+    std::string player_new_name;
+    uint8_t is_ready;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -143,15 +179,27 @@ public:
 
     CustomizedPlayerInfoMsg();
 
-    explicit CustomizedPlayerInfoMsg(uint8_t color, std::string player_name);
+    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready);
+
+    void set_lobby_id(uint8_t lobby_id);
+
+    uint8_t get_lobby_id() const;
+
+    void set_color(uint8_t color);
 
     uint8_t get_color() const;
 
     std::string get_player_name() const;
 
-    void set_color(uint8_t color);
-
     void set_player_name(std::string player_name);
+
+    std::string get_player_new_name() const;
+
+    void set_player_new_name(std::string player_new_name);
+
+    bool get_is_ready() const;
+
+    void set_is_ready(uint8_t is_ready);
 };
 
 class ViewLobbiesMsg: public GenericMsg {
@@ -194,6 +242,8 @@ public:
 class CreateLobbyMsg: public GenericMsg {
 private:
     std::string player_name;
+    std::string lobby_name;
+    uint8_t max_players;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -204,11 +254,19 @@ public:
 
     CreateLobbyMsg();
 
-    explicit CreateLobbyMsg(std::string player_name);
+    CreateLobbyMsg(std::string player_name, std::string lobby_name, uint8_t max_players);
 
     void set_player_name(std::string player_name);
 
+    void set_lobby_name(std::string lobby_name);
+
+    void set_max_players(uint8_t max_players);
+
     std::string get_player_name() const;
+
+    std::string get_lobby_name() const;
+
+    uint8_t get_max_players() const;
 };
 
 class GoBackMsg: public GenericMsg {
@@ -519,4 +577,29 @@ public:
 };
 
 
+
+class PlayerInfoMsg: public GenericMsg {
+private:
+    std::string player_name;
+    uint8_t color; 
+
+public:
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    PlayerInfoMsg();
+
+    explicit PlayerInfoMsg(std::string player_name, uint8_t color);
+
+    std::string get_player_name() const;
+
+    uint8_t get_color() const;
+
+    void set_player_name(std::string player_name);
+
+    void set_color(uint8_t color);
+};
 #endif

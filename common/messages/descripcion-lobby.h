@@ -6,6 +6,7 @@
 struct DescipcionPlayer {
     std::string nombre;
     uint8_t color;
+    uint8_t is_ready;
     // agregar mas en caso de ser necesario
 
     ~DescipcionPlayer() = default;
@@ -15,10 +16,10 @@ struct DescipcionPlayer {
  * Clase que representa la descripcion de un lobby
  */
 struct DescripcionLobby {
-    u_int8_t idLobby;
+    uint8_t idLobby;
     std::string nombreLobby;
-    u_int8_t cantidadJugadores;  // 1 o 2 por ahora (tanto online como local)
-
+    uint8_t cantidadJugadores;  // 1 o 2 por ahora (tanto online como local)
+    uint8_t maxJugadores;  // 2 a 6 por ahora
     /*
      * Destructor del mensaje del lobby
      */

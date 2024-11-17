@@ -1,5 +1,5 @@
 #include "protocolo-common.h"
-
+#include <iostream>
 #include <arpa/inet.h>
 
 void ProtocoloCommon::send(GenericMsg* msg) { msg->accept_send(*this); }
@@ -50,6 +50,8 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
                           [this]() { return new UpdatedPlayerInfoMsg(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG,
                           [this]() { return new ProjectileInfoMsg(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG,
+                          [this]() { return new PlayerInfoMsg(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {

@@ -48,8 +48,9 @@ void Client::handle_read(const ViewLobbiesMsg& msg) {
 
 void Client::handle_read(const CreateLobbyMsg& msg) {
     std::string player_name = msg.get_player_name();
-    std::cout << "player name es: " << player_name << std::endl;
-    lobby_unido_id = lobbys.create(send_queues, player_name, this);
+    std::string lobby_name = msg.get_lobby_name();
+    uint8_t max_players = msg.get_max_players();
+    lobby_unido_id = lobbys.create(send_queues, player_name, lobby_name, max_players, this);
 }
 
 void Client::handle_read(const ChooseLobbyMsg& msg) {
@@ -64,9 +65,14 @@ void Client::handle_read(const ChooseLobbyMsg& msg) {
 }
 
 void Client::handle_read(const CustomizedPlayerInfoMsg& msg) {
-    (void)msg;
-    // lobbys.update_player(lobby_unido_id, std::make_tuple(msg.get_player_name(), id));
+    try {
+        lobbys.update_player_info(msg.get_lobby_id(), msg.get_player_name(), msg.get_player_new_name(), msg.get_color(), msg.get_is_ready());
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error al actualizar la informacion del jugador debido a que: " << e.what() << std::endl;
+        send_queues.send_to_client(new ErrorMsg(e.what()), id);
+    }
 }
+
 
 void Client::handle_read(const GoBackMsg& msg) { (void)msg; }
 

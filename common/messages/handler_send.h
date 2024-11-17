@@ -20,7 +20,7 @@ class GameEndedMsg;
 class WinnerMsg;
 class UpdatedPlayerInfoMsg;
 class ProjectileInfoMsg;
-
+class PlayerInfoMsg;
 // TODO: esto se puede mejorar lanzando mensajes de errores si no se implementan los metodos
 // TODO: en las clases hijas ya que hasta ahora solo haciamos (void)msg
 
@@ -35,6 +35,7 @@ public:
     virtual void handle_send(const GoBackMsg& msg);
     virtual void handle_send(const ExitFromLobbyMsg& msg);
     virtual void handle_send(const StartGameMsg& msg);
+    virtual void handle_send(const PlayerInfoMsg& msg);
     // in-game commands
     virtual void handle_send(const PickupDropMsg& msg);
     virtual void handle_send(const StartActionMsg& msg);

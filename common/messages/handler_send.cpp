@@ -8,6 +8,7 @@ void HandlerSender::handle_send(const CreateLobbyMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const GoBackMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const ExitFromLobbyMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const StartGameMsg& msg) { (void)msg; }
+void HandlerSender::handle_send(const PlayerInfoMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const PickupDropMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const StartActionMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const StopActionMsg& msg) { (void)msg; }
