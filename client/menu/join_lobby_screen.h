@@ -46,13 +46,13 @@ private slots:
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
-    QSound *keyPressSound;
+    std::unique_ptr<QSound> keyPressSound;
     QFont customFont;
     std::vector<DescripcionLobby> lobbies;
-    std::vector<QWidget*> lobbyWidgets;
-    QScrollArea* scrollArea;
-    QWidget* scrollWidget;
-    QVBoxLayout* scrollLayout;
+    std::vector<std::unique_ptr<QWidget>> lobbyWidgets;
+    std::unique_ptr<QScrollArea> scrollArea;
+    std::unique_ptr<QWidget> scrollWidget;
+    std::unique_ptr<QVBoxLayout> scrollLayout;
 };
 
 #endif  // JOIN_LOBBY_SCREEN_H

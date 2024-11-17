@@ -39,7 +39,7 @@ private slots:
     void onDownArrowClicked();
 
 private:
-    QSound *keyPressSound;
+    std::unique_ptr<QSound> keyPressSound;
     QFont customFont;
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;

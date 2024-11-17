@@ -1,28 +1,19 @@
 #include "fade_in_image.h"
-#include <iostream>
 
-FadeInImage::FadeInImage(QWidget *parent, const QString &imagePath, int duration) {
+FadeInImage::FadeInImage(QWidget *parent, const QString &imagePath, int duration)
+    : fadeInLabel(std::make_unique<QLabel>(parent)),
+      opacityEffect(std::make_unique<QGraphicsOpacityEffect>(fadeInLabel.get())),
+      fadeInAnimation(std::make_unique<QPropertyAnimation>(opacityEffect.get(), "opacity")) {
     // Load the logo image with original size or larger
-    fadeInLabel = new QLabel(parent);
     fadeInPixmap.load(imagePath);
-
-    // fadeInPixmap = fadeInPixmap; // Keep the original size
-
-    // Make the logo Larger (e.g., 1.2 times its original size)
     fadeInPixmap = fadeInPixmap.scaled(fadeInPixmap.size() * 1.1, Qt::KeepAspectRatio);
-
     fadeInLabel->setPixmap(fadeInPixmap);
-
     // Set up opacity effect
-    opacityEffect = new QGraphicsOpacityEffect(fadeInLabel);
-    fadeInLabel->setGraphicsEffect(opacityEffect);
-
+    fadeInLabel->setGraphicsEffect(opacityEffect.get());
     // Set up fade-in animation
-    fadeInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
     fadeInAnimation->setDuration(duration);
     fadeInAnimation->setStartValue(0.0);
     fadeInAnimation->setEndValue(1.0);
-
     // Center the image initially
     resize();
 }

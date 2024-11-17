@@ -7,7 +7,7 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
     
     // Load custom font
     int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
@@ -97,18 +97,18 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     connect(refreshButton, &QPushButton::clicked, this, &JoinLobbyScreen::onRefreshButtonClicked);
 
     // Create scroll area for lobbies
-    scrollArea = new QScrollArea(this);
+    scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setGeometry(635, 325, 650, 500);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(255,0,0,0);");
 
-    scrollWidget = new QWidget();
+    scrollWidget = std::make_unique<QWidget>();
     scrollWidget->setStyleSheet("background: transparent;");
-    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidget(scrollWidget.get());
 
-    scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout = std::make_unique<QVBoxLayout>(scrollWidget.get());
     scrollLayout->setSpacing(20); // Set spacing between widgets
-    scrollWidget->setLayout(scrollLayout);
+    scrollWidget->setLayout(scrollLayout.get());
     scrollLayout->setAlignment(Qt::AlignTop);
 
 }; 
@@ -220,7 +220,7 @@ void JoinLobbyScreen::onRefreshButtonClicked() {
             lobbyLayout->addWidget(joinButton);
             lobbyWidget->setLayout(lobbyLayout);
             scrollLayout->addWidget(lobbyWidget);
-            lobbyWidgets.push_back(lobbyWidget);
+            lobbyWidgets.push_back(std::unique_ptr<QWidget>(lobbyWidget));
         }
     }
 }

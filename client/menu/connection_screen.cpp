@@ -18,18 +18,20 @@ ConnectionScreen::ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     // Set focus policy to receive key events
     setFocusPolicy(Qt::StrongFocus);
 
+    keyPressSound = std::make_unique<QSound>("assets/Retro8.wav", this);
+
     // Create ParallaxBackground layers
-    layer0 = new ParallaxBackground(this, "assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = new ParallaxBackground(this, "assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = new ParallaxBackground(this, "assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = new ParallaxBackground(this, "assets/parallax_background_layer_4.png", 1.25f);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layer0 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_1.png", 0.5f);
+    layer1 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_2.png", 0.75f);
+    layer2 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_3.png", 1.0f);
+    layer3 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_4.png", 1.25f);
 
     layer0->start();
     layer1->start();
-    layer2->start(); 
+    layer2->start();
     layer3->start();
-
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    setLayout(layout);
 
     // Center of the screen: (1920 / 2, 1080 / 2) = (960, 540)
     // Top-left corner of the rectangle: (960 - 500 / 2, 540 - 400 / 2) = (710, 340)
@@ -57,8 +59,9 @@ ConnectionScreen::ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     baseRectangle->setParent(this);
 
     // Create the input fields
-    hostname = new QLineEdit(this);
-    port = new QLineEdit(this);
+    hostname = std::make_unique<QLineEdit>(this);
+    port = std::make_unique<QLineEdit>(this);
+
     hostname->setGeometry(710, 400, 500, 50);
     port->setGeometry(710, 500, 500, 50);
 

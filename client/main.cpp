@@ -24,6 +24,13 @@ int main(int argc, char *argv[]) {
 
 
     if (app.exec() == 0) {
+        if (local_players->size() == 0) {
+            recv_queue.close();
+            send_queue.close();
+            delete local_players;
+            delete client;
+            return 0;
+        }
     } else {
         return 1;
     }
@@ -36,5 +43,6 @@ int main(int argc, char *argv[]) {
     game.play();
     recv_queue.close();
     send_queue.close();
+    delete local_players;
     return 0;
 }

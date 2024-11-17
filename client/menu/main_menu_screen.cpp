@@ -7,7 +7,7 @@ MainMenuScreen::MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
 
     // Create black opaque background rectangle
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 710, 260, 500, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));

@@ -51,19 +51,19 @@ private:
     std::thread recv_thread;
     std::string myPlayerName;
     QFont customFont;
-    QPixmap *saveIcon;
-    QSound *keyPressSound;
-    QScrollArea* scrollArea;
-    QWidget* scrollWidget;
-    QVBoxLayout* scrollLayout;
+    std::unique_ptr<QPixmap> saveIcon;
+    std::unique_ptr<QSound> keyPressSound;
+    std::unique_ptr<QScrollArea> scrollArea;
+    std::unique_ptr<QWidget> scrollWidget;
+    std::unique_ptr<QVBoxLayout> scrollLayout;
     uint8_t lobby_id;
     uint8_t is_ready;
     std::list<DescipcionPlayer> players;
-    std::vector<QWidget*> lobbyWidgets;
+    std::vector<std::unique_ptr<QWidget>> lobbyWidgets;
     std::map<std::string, std::string> playerEdits;
     // color de pato y su imagen
-    std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
+    std::list<std::pair<uint8_t, std::unique_ptr<QPixmap>>> ducks_images;
     void processIncomingMessages();
-};  
+};   
 
 #endif // LOBBY_SCREEN_H

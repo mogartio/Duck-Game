@@ -48,13 +48,13 @@ private:
     std::mutex players_mutex;
 
     QFont customFont;
-    QPixmap *saveIcon;
-    QSound *keyPressSound;
+    std::unique_ptr<QPixmap> saveIcon;
+    std::unique_ptr<QSound> keyPressSound;
     QPushButton *localPlayerButton;
-    QScrollArea* scrollArea;
-    QWidget* scrollWidget;
-    QVBoxLayout* scrollLayout;
-    QPushButton* startGameButton;
+    std::unique_ptr<QScrollArea> scrollArea;
+    std::unique_ptr<QWidget> scrollWidget;
+    std::unique_ptr<QVBoxLayout> scrollLayout;
+    QPushButton *startGameButton;
 
     uint8_t lobby_id;
     std::string myPlayerName = "Player1";
@@ -62,13 +62,13 @@ private:
     bool isLocalPlayerAdded = false;
     std::thread recv_thread;
     std::list<DescipcionPlayer> players;
-    std::vector<QWidget*> lobbyWidgets;
+    std::vector<std::unique_ptr<QWidget>> lobbyWidgets;
     // color de pato y su imagen
-    std::list<std::pair<uint8_t, QPixmap*>> ducks_images;
+    std::list<std::pair<uint8_t, std::unique_ptr<QPixmap>>> ducks_images;
     std::map<std::string, std::string> playerEdits;
 
     void processIncomingMessages();
     void updateStartGameButton();
-};  
+};
 
 #endif // LOBBY_SCREEN_H

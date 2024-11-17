@@ -10,6 +10,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QApplication>
 #include <iostream>
+#include <memory>
 #include "logo_screen.h"
 #include "connection_screen.h"
 #include "main_menu_screen.h"
@@ -26,7 +27,6 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players); 
-    ~MainWindow();
     void handleQuitApplication();
     void handleGameStart();
     void showLogoScreen();
@@ -42,19 +42,19 @@ signals:
     void joinLobbyScreenShown();
 
 private:
-    QStackedWidget *stackedWidget;
-    LogoScreen *logoScreen;
-    ConnectionScreen *connectionScreen;
-    MainMenuScreen *mainMenuScreen;
-    CreateGameScreen *createGameScreen;
-    LobbyScreen *lobbyScreen;
-    JoinLobbyScreen *joinLobbyScreen;
-    HostLobbyScreen *hostLobbyScreen;
+    std::unique_ptr<QStackedWidget> stackedWidget;
+    std::unique_ptr<LogoScreen> logoScreen;
+    std::unique_ptr<ConnectionScreen> connectionScreen;
+    std::unique_ptr<MainMenuScreen> mainMenuScreen;
+    std::unique_ptr<CreateGameScreen> createGameScreen;
+    std::unique_ptr<LobbyScreen> lobbyScreen;
+    std::unique_ptr<JoinLobbyScreen> joinLobbyScreen;
+    std::unique_ptr<HostLobbyScreen> hostLobbyScreen;
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue;
     Client* client;
-    QLabel *backgroundLabel;
-    std::list<std::string>* local_players;
+    std::unique_ptr<QLabel> backgroundLabel;
+    std::list<std::string> *local_players;
     
     void setupBackground();
     void slideBackground(int targetX);

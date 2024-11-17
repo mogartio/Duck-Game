@@ -5,7 +5,7 @@ LobbyScreen::LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* rec
 setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
     // Load custom font
     int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
@@ -44,28 +44,28 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     exitLobbyButton->setGeometry(850, 150, 300, 60);
 
     // Add scroll area 
-    scrollArea = new QScrollArea(this);
+    scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setGeometry(250, 230, 900, 700);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(0,0,0,100);");
 
-    scrollWidget = new QWidget();
+    scrollWidget = std::make_unique<QWidget>();
     scrollWidget->setStyleSheet("background: transparent;");
-    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidget(scrollWidget.get());
 
-    scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout = std::make_unique<QVBoxLayout>(scrollWidget.get());
     scrollLayout->setSpacing(20); // Set spacing between widgets
-    scrollWidget->setLayout(scrollLayout);
+    scrollWidget->setLayout(scrollLayout.get());
     scrollLayout->setAlignment(Qt::AlignTop);
 
     // Load save icon image
-    saveIcon = new QPixmap("assets/Floppy-Drive.png");
+    saveIcon = std::make_unique<QPixmap>("assets/Floppy-Drive.png");
 
     // Load ducks images
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, new QPixmap("assets/white_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, new QPixmap("assets/yellow_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, new QPixmap("assets/orange_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, new QPixmap("assets/grey_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, std::make_unique<QPixmap>("assets/white_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, std::make_unique<QPixmap>("assets/yellow_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, std::make_unique<QPixmap>("assets/orange_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, std::make_unique<QPixmap>("assets/grey_duck_head.png")));
 
     // Scale images
     for (auto& duck : ducks_images) {
@@ -198,12 +198,13 @@ void LobbyScreen::updatePlayersInLobby() {
         // create duck image
         QLabel *duckLabel = new QLabel(this);
         uint8_t color = player.color;
-        for (auto duck : ducks_images) {
+        for (const auto& duck : ducks_images) {
             if (duck.first == color) {
-                QPixmap *duckImage = duck.second;
+                QPixmap *duckImage = duck.second.get();
                 duckLabel->setPixmap(*duckImage);
                 duckLabel->setFixedWidth(100);
                 duckLabel->setStyleSheet("border: 0px solid #555555;");
+                break; // Exit the loop once the correct duck image is found
             }
         }
 

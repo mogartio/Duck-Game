@@ -33,7 +33,7 @@ private slots:
     void onQuitButtonClicked();
 
 private:
-    QSound *keyPressSound;
+    std::unique_ptr<QSound> keyPressSound;
     QFont customFont;
     QPixmap background;
     Queue<GenericMsg*>* send_queue;
