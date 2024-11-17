@@ -428,7 +428,9 @@ void HostLobbyScreen::onStartGameButtonClicked() {
     send_queue->push(start_game_msg);
     // set local players list
     local_players->push_back(myPlayerName);
-    local_players->push_back(myLocalPlayerName);
+    if (isLocalPlayerAdded) {
+        local_players->push_back(myLocalPlayerName);
+    }
     // stop thread
     stopProcessing();
     emit startingGame();

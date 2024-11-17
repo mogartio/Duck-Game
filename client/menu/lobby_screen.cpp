@@ -110,7 +110,6 @@ void LobbyScreen::processIncomingMessages() {
     }
 }
 
-
 void LobbyScreen::updatePlayersInLobby() {
     std::lock_guard<std::mutex> lock(players_mutex);
     // Clear scroll area
