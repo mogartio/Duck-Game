@@ -116,6 +116,7 @@ void Lobby::startGame() {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
             send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::STARTING), pair.second->get_id());
+            send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::STARTING), pair.second->get_id());        
         }
         names.push_back(pair.first);
     }
