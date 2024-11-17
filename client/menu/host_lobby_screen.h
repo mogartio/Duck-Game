@@ -26,7 +26,7 @@ class HostLobbyScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players);
     ~HostLobbyScreen();
 
     void stopProcessing();
@@ -43,6 +43,7 @@ signals:
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
+    std::list<std::string>* local_players;
     std::atomic<bool> running;
     std::mutex players_mutex;
 

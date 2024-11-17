@@ -1,7 +1,7 @@
 #include "lobby_screen.h"
 
 
-LobbyScreen::LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue), running(true) {
+LobbyScreen::LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
 setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
@@ -336,6 +336,7 @@ void LobbyScreen::stopProcessing() {
 
 void LobbyScreen::onStartingGame() {
     stopProcessing();
+    local_players->push_back(myPlayerName);
     emit startingGame();
 }
 

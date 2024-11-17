@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client); 
+    MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players); 
     ~MainWindow();
     void handleQuitApplication();
     void handleGameStart();
@@ -54,6 +54,7 @@ private:
     Queue<GenericMsg*>* recv_queue;
     Client* client;
     QLabel *backgroundLabel;
+    std::list<std::string>* local_players;
     
     void setupBackground();
     void slideBackground(int targetX);

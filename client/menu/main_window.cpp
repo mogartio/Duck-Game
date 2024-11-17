@@ -1,6 +1,6 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client) {
+MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players) {
     
     resize(1920, 1080);
     setWindowFlags(Qt::FramelessWindowHint);
@@ -143,7 +143,7 @@ void MainWindow::showCreateGameScreen() {
 }
 
 void MainWindow::showLobbyScreen() {
-    lobbyScreen = new LobbyScreen(send_queue, recv_queue);
+    lobbyScreen = new LobbyScreen(send_queue, recv_queue, local_players);
     stackedWidget->addWidget(lobbyScreen);
     stackedWidget->setCurrentWidget(lobbyScreen);
     slideBackground(-960); // Move to the last third
@@ -161,7 +161,7 @@ void MainWindow::showJoinLobbyScreen() {
 }
 
 void MainWindow::showHostLobbyScreen() {
-    hostLobbyScreen = new HostLobbyScreen(send_queue, recv_queue);
+    hostLobbyScreen = new HostLobbyScreen(send_queue, recv_queue, local_players);
     stackedWidget->addWidget(hostLobbyScreen);
     stackedWidget->setCurrentWidget(hostLobbyScreen);
     slideBackground(-960); // Move to the last third

@@ -26,7 +26,7 @@ class LobbyScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    explicit LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    explicit LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players);
     ~LobbyScreen();
 
     void stopProcessing();
@@ -45,6 +45,7 @@ signals:
 private:
     Queue<GenericMsg*>* send_queue;
     Queue<GenericMsg*>* recv_queue; 
+    std::list<std::string>* local_players;
     std::atomic<bool> running;
     std::mutex players_mutex;
     std::thread recv_thread;

@@ -15,20 +15,20 @@ int main(int argc, char *argv[]) {
 
     Client* client = nullptr;
 
-    MainWindow mainWindow(nullptr, send_queue, recv_queue, client);
+    std::list<std::string>* local_players = new std::list<std::string>();
+
+    MainWindow mainWindow(nullptr, send_queue, recv_queue, client, local_players);
     mainWindow.show();
 
-    std::list<std::string> names;
 
     if (app.exec() == 0) {
-        // se cerro ordenadamente y se tiene que iniciar el render del juego
-        GenericMsg* msg = recv_queue->pop();
-        if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            InfoLobbyMsg* info_msg = dynamic_cast<InfoLobbyMsg*>(msg);
-            for (auto& player: info_msg->get_players()) {
-                names.push_back(player.nombre);
-            }
+        // se cerro ordenadamente y aca se tiene que iniciar el render del juego
+        // te printeo la lista de players :)
+        for (auto player : *local_players) {
+            std::cout << player << std::endl;
         }
+    } else {
+        return 1;
     }
     return 0;
 }

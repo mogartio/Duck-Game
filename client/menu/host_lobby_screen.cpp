@@ -1,6 +1,6 @@
 #include "host_lobby_screen.h"
 
-HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue), running(true) {
+HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
@@ -426,6 +426,9 @@ void HostLobbyScreen::onStartGameButtonClicked() {
     keyPressSound->play();
     StartGameMsg* start_game_msg = new StartGameMsg();
     send_queue->push(start_game_msg);
+    // set local players list
+    local_players->push_back(myPlayerName);
+    local_players->push_back(myLocalPlayerName);
     // stop thread
     stopProcessing();
     emit startingGame();
