@@ -19,8 +19,6 @@ private:
     // Textura padre para renderizar todo
     SDL_Texture* parentTexture;
 
-    std::vector<uint16_t> mapa;
-
     // Numeros para calculos y variaciones de tamaños
     uint tiles;
     uint width_window;
@@ -69,10 +67,10 @@ private:
 
 
 public:
-    Map(SDL_Renderer* rend, std::vector<uint16_t> mapa, uint tiles, uint width_window,
+    Map(SDL_Renderer* rend, uint tiles, uint width_window,
         uint height_window);
 
-    void makeMap(int w, int h);
+    void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
     void addPlayer(int columnaActual, int filaActual, int color, std::string name);
     void remove(std::string playerName);

@@ -8,6 +8,7 @@ void HandlerReceiver::handle_recv(CreateLobbyMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(GoBackMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(ExitFromLobbyMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(StartGameMsg& msg) { (void)msg; }
+void HandlerReceiver::handle_recv(PlayerInfoMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(PickupDropMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(StartActionMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(StopActionMsg& msg) { (void)msg; }

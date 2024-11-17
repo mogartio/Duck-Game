@@ -31,6 +31,10 @@ void ServerProtocol::handle_recv(ChooseLobbyMsg& msg) {
 void ServerProtocol::handle_recv(CreateLobbyMsg& msg) {
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+    std::string lobby_name = recv_string();
+    msg.set_lobby_name(lobby_name);
+    uint8_t max_players = recv_u_int8_t();
+    msg.set_max_players(max_players);
 }
 
 void ServerProtocol::handle_recv(GoBackMsg& msg) { (void)msg; }
@@ -53,7 +57,17 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
     for (auto& player: players_from_lobby) {
         send_string(player.nombre);
         send_u_int8_t(player.color);
+        send_u_int8_t(player.is_ready);
     }
+
+    uint8_t max_players = msg.get_max_players();
+    send_u_int8_t(max_players);
+
+    uint8_t lobby_id = msg.get_lobby_id();
+    send_u_int8_t(lobby_id);
+
+    uint8_t starting_game = msg.get_starting_game();
+    send_u_int8_t(starting_game);
 }
 
 void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
@@ -68,6 +82,7 @@ void ServerProtocol::handle_send(const SendLobbiesListMsg& msg) {
         send_u_int8_t(lobby.idLobby);
         send_string(lobby.nombreLobby);
         send_u_int8_t(lobby.cantidadJugadores);
+        send_u_int8_t(lobby.maxJugadores);
     }
 }
 
@@ -97,10 +112,16 @@ void ServerProtocol::handle_send(const SendMapMsg& msg) {
 }
 
 void ServerProtocol::handle_recv(CustomizedPlayerInfoMsg& msg) {
+    uint8_t lobby_id = recv_u_int8_t();
+    msg.set_lobby_id(lobby_id);
     uint8_t color = recv_u_int8_t();
     msg.set_color(color);
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+    std::string new_name = recv_string();
+    msg.set_player_new_name(new_name);
+    uint8_t is_ready = recv_u_int8_t();
+    msg.set_is_ready(is_ready);
 }
 
 // void ServerProtocol::handle_recv(PickupDropMsg& msg) {
@@ -168,4 +189,14 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
     send_u_int8_t(state);
     uint8_t facing_direction = msg.get_facing_direction();
     send_u_int8_t(facing_direction);
+}
+
+void ServerProtocol::handle_send(const PlayerInfoMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
+    uint8_t color = msg.get_color();
+    send_u_int8_t(color);
 }

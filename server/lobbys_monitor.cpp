@@ -13,13 +13,11 @@ std::vector<DescripcionLobby> LobbysMonitor::get_lobbys() {
     return lobbys_disponibles_descripcion;
 }
 
-uint LobbysMonitor::create(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-                           Client* first_player) {
+uint LobbysMonitor::create(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player) {
     std::lock_guard<std::mutex> lock(m);
     contador_id_lobbys++;
     lobbys_disponibles.emplace(contador_id_lobbys,
-                               std::make_unique<Lobby>(send_queues, player_name, first_player,
-                                                       contador_id_lobbys, is_testing));
+                               std::make_unique<Lobby>(send_queues, player_name, lobby_name, max_players, first_player ,contador_id_lobbys, is_testing));
     return contador_id_lobbys;
 }
 
@@ -55,6 +53,11 @@ void LobbysMonitor::remove_dead_lobbys() {
 void LobbysMonitor::remove_all() {
     std::lock_guard<std::mutex> lock(m);
     lobbys_disponibles.clear();
+}
+
+void LobbysMonitor::update_player_info(uint lobby_id, std::string player_name,std::string new_name, uint8_t color, uint8_t is_ready) {
+    std::lock_guard<std::mutex> lock(m);
+    lobbys_disponibles.at(lobby_id)->updatePlayerInfo(player_name, new_name, color, is_ready);
 }
 
 LobbysMonitor::~LobbysMonitor() { remove_all(); }

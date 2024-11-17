@@ -12,8 +12,9 @@ void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
 
 InfoLobbyMsg::InfoLobbyMsg(): GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-InfoLobbyMsg::InfoLobbyMsg(std::list<DescipcionPlayer> players):
-        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players) {}
+InfoLobbyMsg::InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game):
+        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players), max_players(max_players), lobby_id(lobby_id),
+        starting_game(starting_game) {}
 
 void InfoLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -23,16 +24,31 @@ void InfoLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*th
 
 void InfoLobbyMsg::set_players(std::list<DescipcionPlayer> players) { this->players = players; }
 
+void InfoLobbyMsg::set_max_players(uint8_t max_players) { this->max_players = max_players; }
+
+void InfoLobbyMsg::set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id; }
+
+void InfoLobbyMsg::set_starting_game(uint8_t starting_game) { this->starting_game = starting_game; }
+
+uint8_t InfoLobbyMsg::get_max_players() const { return max_players; }
+
+uint8_t InfoLobbyMsg::get_lobby_id() const { return lobby_id; }
+
 std::list<DescipcionPlayer> InfoLobbyMsg::get_players() const { return players; }
+
+uint8_t InfoLobbyMsg::get_starting_game() const { return starting_game; }
 
 CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
         player_name("") {}
-CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t color, std::string player_name):
+CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready):
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
+        lobby_id(lobby_id),
         color(color),
-        player_name(player_name) {}
+        player_name(player_name),
+        player_new_name(player_new_name),
+        is_ready(is_ready) {}
 
 void CustomizedPlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -40,16 +56,29 @@ void CustomizedPlayerInfoMsg::accept_recv(HandlerReceiver& handler) { handler.ha
 
 void CustomizedPlayerInfoMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
+void CustomizedPlayerInfoMsg::set_lobby_id(uint8_t lobby_id) { this->lobby_id = lobby_id; }
+
+void CustomizedPlayerInfoMsg::set_color(uint8_t color) { this->color = color; }
+
+uint8_t CustomizedPlayerInfoMsg::get_lobby_id() const { return lobby_id; }
+
 uint8_t CustomizedPlayerInfoMsg::get_color() const { return color; }
 
 std::string CustomizedPlayerInfoMsg::get_player_name() const { return player_name; }
-
-void CustomizedPlayerInfoMsg::set_color(uint8_t color) { this->color = color; }
 
 void CustomizedPlayerInfoMsg::set_player_name(std::string player_name) {
     this->player_name = player_name;
 }
 
+std::string CustomizedPlayerInfoMsg::get_player_new_name() const { return player_new_name; }
+
+void CustomizedPlayerInfoMsg::set_player_new_name(std::string player_new_name) {
+    this->player_new_name = player_new_name;
+}
+
+bool CustomizedPlayerInfoMsg::get_is_ready() const { return is_ready; }
+
+void CustomizedPlayerInfoMsg::set_is_ready(uint8_t is_ready) { this->is_ready = is_ready; }
 
 ViewLobbiesMsg::ViewLobbiesMsg(): GenericMsg(GenericMsg::VIEW_LOBBIES_MSG, GenericMsg::LOBBY_MSG) {}
 
@@ -84,8 +113,8 @@ void ChooseLobbyMsg::set_player_name(std::string player_name) { this->player_nam
 
 CreateLobbyMsg::CreateLobbyMsg(): GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-CreateLobbyMsg::CreateLobbyMsg(std::string player_name):
-        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name) {}
+CreateLobbyMsg::CreateLobbyMsg(std::string player_name, std::string lobby_name, uint8_t max_players):
+        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name), lobby_name(lobby_name), max_players(max_players) {}
 
 void CreateLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -95,7 +124,15 @@ void CreateLobbyMsg::accept_read(HandlerReader& handler) { handler.handle_read(*
 
 void CreateLobbyMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
+void CreateLobbyMsg::set_lobby_name(std::string lobby_name) { this->lobby_name = lobby_name; }
+
+void CreateLobbyMsg::set_max_players(uint8_t max_players) { this->max_players = max_players; }
+
 std::string CreateLobbyMsg::get_player_name() const { return player_name; }
+
+std::string CreateLobbyMsg::get_lobby_name() const { return lobby_name; }
+
+uint8_t CreateLobbyMsg::get_max_players() const { return max_players; }
 
 GoBackMsg::GoBackMsg(): GenericMsg(GenericMsg::GO_BACK_MSG, GenericMsg::LOBBY_MSG) {}
 
@@ -374,3 +411,31 @@ void ProjectileInfoMsg::set_item(uint8_t item) { this->item = item; }
 void ProjectileInfoMsg::set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail) {
     this->trail = trail;
 }
+
+
+PlayerInfoMsg::PlayerInfoMsg() :
+        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
+        player_name(""),
+        color(0) {}
+
+PlayerInfoMsg::PlayerInfoMsg(std::string player_name, uint8_t color) :
+        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
+        player_name(player_name),
+        color(color) {}
+
+void PlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void PlayerInfoMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void PlayerInfoMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+std::string PlayerInfoMsg::get_player_name() const { return player_name; }
+
+uint8_t PlayerInfoMsg::get_color() const { return color; }
+
+void PlayerInfoMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
+
+void PlayerInfoMsg::set_color(uint8_t color) { this->color = color; }   
+
+
+

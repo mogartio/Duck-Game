@@ -17,7 +17,6 @@
 
 #include "send_queues_monitor.h"
 
-#define MAX_PLAYERS 2
 #define MAX_LOCAL_PLAYERS 2
 #define EMPTY_PLAYERS 0
 #define FIRST_PLAYER 0
@@ -26,11 +25,12 @@ class Client;
 
 class Lobby {
 private:
-    std::array<DescipcionPlayer, MAX_PLAYERS> players_description;
     std::map<std::string, Client*> players_map;
+    std::map<std::string, uint8_t> players_colors;
+    std::map<std::string, uint8_t> players_ready;
 
     SendQueuesMonitor<GenericMsg*>& send_queues;
-
+    std::set <uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW, GenericMsg::DuckColor::ORANGE, GenericMsg::DuckColor::GREY};
     Queue<GenericMsg*>* receiver_q;
 
     std::unique_ptr<Game> game;
@@ -38,6 +38,9 @@ private:
     uint player1_id;
 
     uint id_lobby;
+
+    std::string lobby_name;
+    uint8_t max_players;
 
     void lobby_empty();
     bool is_testing;
@@ -48,8 +51,7 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name,
-                   Client* first_player, uint& id_lobby, bool is_testing);
+    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby
@@ -80,6 +82,11 @@ public:
      * Metodo que devuelve la descripcion del lobby
      */
     DescripcionLobby getDescription() const;
+
+    /*
+     * Metodo que actualiza la informacion de un jugador
+     */
+    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color, uint8_t is_ready);
 
     // ------------------ Desabilitamos -----------------------
 
