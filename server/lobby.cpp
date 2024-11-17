@@ -109,6 +109,7 @@ void Lobby::startGame() {
             throw std::runtime_error("not all players are ready");
         }
     }
+
     std::vector<std::string> names;
     std::set<uint> players_ids;  // para no mandarle el mensaje a un jugador dos veces
     for (auto& pair: players_map) {
@@ -148,12 +149,18 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     Client* client = players_map[player_name];
     players_map.erase(player_name);
     players_colors.erase(player_name);
+    players_ready.erase(player_name);
     // add new player name key to map and color
     players_map[new_name] = client;
     players_colors[new_name] = new_color;
     players_ready[new_name] = is_ready;
     //send all player the updated info
+    std::set<uint8_t> ids;
     for (auto& pair: players_map) {
+        if (ids.find(pair.second->get_id()) != ids.end()) {
+            continue;
+        }
         send_queues.send_to_client(new InfoLobbyMsg(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
+        ids.insert(pair.second->get_id());
     }
 }
