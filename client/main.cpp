@@ -24,11 +24,6 @@ int main(int argc, char *argv[]) {
 
 
     if (app.exec() == 0) {
-        // se cerro ordenadamente y aca se tiene que iniciar el render del juego
-        // te printeo la lista de players :)
-        for (auto player : *local_players) {
-            std::cout << player << std::endl;
-        }
     } else {
         return 1;
     }
@@ -39,6 +34,7 @@ int main(int argc, char *argv[]) {
     local_players->pop_front();
     Game game(send_queue, recv_queue, first_player, local_players->front());
     game.play();
-    
+    recv_queue.close();
+    send_queue.close();
     return 0;
 }

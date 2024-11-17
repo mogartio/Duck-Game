@@ -105,6 +105,7 @@ void MainWindow::showConnectionScreen() {
 
 void MainWindow::handleQuitApplication() {
     // crashea aca
+    std::cout << "Attempting to quit application" << std::endl;
     QApplication::quit();
 }
 

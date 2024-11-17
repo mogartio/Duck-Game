@@ -130,7 +130,7 @@ void EventHandler::run() {
             try {
                 msg = key_accion_map.at(std::make_tuple(event.type, event.key.keysym.scancode))();
                 if (msg_posible_a_liberar != nullptr && !mensajeEnviado) {
-                    delete msg_posible_a_liberar;
+                    //delete msg_posible_a_liberar;
                 }
                 mensajeEnviado = false;
             } catch (std::out_of_range& e) {
