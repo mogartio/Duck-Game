@@ -120,9 +120,13 @@ void Player::update(int x, int y, DuckState state, Side side) {
 
     if (side == LEFT) {
         flip = SDL_FLIP_HORIZONTAL;
-    } else {
+    } else if (side == RIGHT) {
         flip = SDL_FLIP_NONE;
+    } else if (side == UP) {
+        flip = SDL_RendererFlip(flip | SDL_FLIP_VERTICAL);
     }
+
+
 
     // Actualizo la image del ala y su posicion
     updateWing(x, y);

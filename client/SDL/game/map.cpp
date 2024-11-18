@@ -196,7 +196,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<st
 }
 
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
-    // Si el jugador ya tiene un arma, entonces dispara
+    // Si el jugador ya tiene un arma, entonces la suelta
     if (id == ProjectilesId::ProjectileId::UNARMED) {
         players[playerName]->dropWeapon();
         return;
