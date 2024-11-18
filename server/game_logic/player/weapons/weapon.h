@@ -35,6 +35,7 @@ public:
     virtual void deset_player() { player = nullptr; }
     virtual void update() {}
     virtual uint8_t get_id() { return id; }
+    virtual bool is_unarmed() { return false; }
 };
 
 class Unarmed: public Weapon {
@@ -42,6 +43,7 @@ public:
     explicit Unarmed(Stage&);
     virtual void shoot(int, bool) override;
     virtual Coordinate get_gun_position(int) override;
+    virtual bool is_unarmed() override { return true; }
 };
 
 #endif

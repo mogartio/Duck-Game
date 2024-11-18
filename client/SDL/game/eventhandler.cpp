@@ -110,13 +110,13 @@ EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::s
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_SPACE)] = [this]() {
             return std::make_shared<StopActionMsg>(ActionsId::JUMP, playerName2);
         };
-        key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_N)] = [this]() {
+        key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_N)] = [this]() {
             return std::make_shared<StopActionMsg>(ActionsId::THROW_WEAPON, playerName2);
         };
 
         pressed_keys_state[SDL_SCANCODE_M] = false;
         pressed_keys_state[SDL_SCANCODE_SPACE] = false;
-        pressed_keys_state[SDL_SCANCODE_N] = false;    
+        pressed_keys_state[SDL_SCANCODE_N] = false;
         pressed_keys_state[SDL_SCANCODE_UP] = false;
         pressed_keys_state[SDL_SCANCODE_DOWN] = false;
         pressed_keys_state[SDL_SCANCODE_LEFT] = false;
@@ -154,7 +154,7 @@ void EventHandler::run() {
             try {
                 msg = key_accion_map.at(std::make_tuple(event.type, event.key.keysym.scancode))();
                 if (msg_posible_a_liberar != nullptr && !mensajeEnviado) {
-                    //delete msg_posible_a_liberar;
+                    // delete msg_posible_a_liberar;
                 }
                 mensajeEnviado = false;
             } catch (std::out_of_range& e) {

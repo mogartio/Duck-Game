@@ -27,6 +27,7 @@ private:
     Coordinate initial_position;
     void notify_picked_weapon();
     void notify_dropped_weapon(uint8_t id);
+    bool is_unarmed;
 
 public:
     int get_id();
