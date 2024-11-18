@@ -62,13 +62,13 @@ void Player::remove_action(int& command) {
         weapon->stop_shooting();
     }
     if (command == THROW_WEAPON) {
-        if (weapon != nullptr) {
+        if (typeid(weapon) != typeid(Unarmed)) {
             weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
             // notify_dropped_weapon(weapon_id);
+            pick_weapon(std::make_unique<Unarmed>(
+                    *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
         }
-        pick_weapon(std::make_unique<Unarmed>(
-                *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
     }
 }
 
@@ -81,7 +81,7 @@ void Player::execute(const int& command) {
         return;
     }
     if (command == THROW_WEAPON) {
-        if (weapon != nullptr) {
+        if (typeid(weapon) != typeid(Unarmed)) {
             weapon->start_throw();
         }
     }
