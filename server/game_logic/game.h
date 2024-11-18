@@ -6,7 +6,8 @@
 #include "player/player.h"
 
 #include "game_main.h"
-class Game: public Thread {
+class Lobby;
+class Game {
 private:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
     std::map<std::string, Player*> players;
@@ -17,11 +18,12 @@ private:
                                                     const PlayerObserver&);
     bool game_over;
     void send_map();
+    Lobby& lobby;
 
 public:
-    Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names, bool is_testing,
-         SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders);
-    void run() override;
+    Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
+         bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders, Lobby& lobby);
+    void run();
 };
 
 #endif

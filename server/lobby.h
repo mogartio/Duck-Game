@@ -23,14 +23,16 @@
 #define SECOND_PLAYER 1
 class Client;
 
-class Lobby {
+class Lobby: public Thread {
 private:
     std::map<std::string, Client*> players_map;
     std::map<std::string, uint8_t> players_colors;
     std::map<std::string, uint8_t> players_ready;
 
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues;
-    std::set <uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW, GenericMsg::DuckColor::ORANGE, GenericMsg::DuckColor::GREY};
+    std::set<uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW,
+                                          GenericMsg::DuckColor::ORANGE,
+                                          GenericMsg::DuckColor::GREY};
     Queue<std::shared_ptr<GenericMsg>>* receiver_q;
 
     std::shared_ptr<Game> game;
@@ -44,6 +46,8 @@ private:
 
     void lobby_empty();
     bool is_testing;
+    bool is_dead;
+    bool game_ended;
 
     std::list<DescipcionPlayer> get_players_description();
 
@@ -51,8 +55,14 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
+    explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues,
+                   std::string& player_name, std::string& lobby_name, uint8_t max_players,
+                   Client* first_player, uint& id_lobby, bool is_testing);
 
+
+    void kill_game();
+    bool died();
+    void run() override;
     /*
      * Metodo que agrega un jugador al lobby
      */
@@ -86,7 +96,8 @@ public:
     /*
      * Metodo que actualiza la informacion de un jugador
      */
-    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color, uint8_t is_ready);
+    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color,
+                          uint8_t is_ready);
 
     // ------------------ Desabilitamos -----------------------
 
