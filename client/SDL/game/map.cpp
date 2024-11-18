@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
+#define MIN_ZOOM 1000
+
 
 Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
          uint height_window):
@@ -196,7 +198,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<st
 }
 
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
-    // Si el jugador ya tiene un arma, entonces dispara
+    // Si el jugador ya tiene un arma, entonces la suelta
     if (id == ProjectilesId::ProjectileId::UNARMED) {
         players[playerName]->dropWeapon();
         return;
@@ -246,7 +248,7 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = (max_x - min_x)*3;
+    int new_width = (max_x - min_x)*3 < MIN_ZOOM ? MIN_ZOOM : (max_x - min_x)*3;
     int new_height = (max_y - min_y)*3;
     min_x = min_x - new_width / 3;
     min_y = min_y - new_height / 3;
@@ -318,7 +320,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
-    
+
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
     //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
