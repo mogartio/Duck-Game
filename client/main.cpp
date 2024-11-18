@@ -123,7 +123,6 @@ int main(int argc, char* argv[]) {
                     std::dynamic_pointer_cast<InfoLobbyMsg>(recv_queue.pop());
             if (msg8->get_players().size() == 3) {
                 recv_queue.pop();
-                recv_queue.pop();
             }
             std::cout << "Juego iniciado" << std::endl;
 
