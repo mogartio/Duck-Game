@@ -5,9 +5,9 @@
 
 class ReceiverClient: public Receiver {
 protected:
-    virtual void executeMsg(GenericMsg* msg) override;
+    virtual void executeMsg(std::shared_ptr<GenericMsg> msg) override;
 
 public:
-    explicit ReceiverClient(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol);
+    explicit ReceiverClient(Queue<std::shared_ptr<GenericMsg>>* recv_queue, ProtocoloCommon* protocol);
 };
 #endif  // RECEIVER_H

@@ -8,8 +8,8 @@
 #define TARGET_TIME 35
 using namespace std::chrono;
 
-GameMain::GameMain(Queue<GenericMsg*>& q, std::map<std::string, Player*> players, bool is_testing,
-                   SendQueuesMonitor<GenericMsg*>& senders):
+GameMain::GameMain(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players, bool is_testing,
+                   SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders):
         receiver_q(q), is_testing(is_testing), players(players), senders(senders) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
@@ -56,7 +56,7 @@ void GameMain::process_commands(Stage& stage) {
         if (is_testing) {
             create_command();
         }
-        GenericMsg* msg;
+        std::shared_ptr<GenericMsg> msg;
         if (receiver_q.try_pop(msg)) {
             msg->accept_read(*this);  // esta linea ejecuta el comando
         }
@@ -125,9 +125,7 @@ void GameMain::handle_read(const StopActionMsg& msg) {
 // El peor codigo que escribi en este tp hasta ahora
 // pero funciona
 // no lo toquen
-GenericMsg* GameMain::create_msg(const std::string& command) {
-    // Lo hice todavia mas feo somehow
-    // its never been this serious
+std::shared_ptr<GenericMsg> GameMain::create_msg(const std::string& command) {
     std::string player_name1;
     std::string player_name2;
     auto it = players.begin();
@@ -139,48 +137,47 @@ GenericMsg* GameMain::create_msg(const std::string& command) {
         player_name2 = it->first;
     }
     std::map<std::string, uint8_t> command_map{
-            {"a", 0x01},
-            {"d", 0x02},
-            {"j", 0x03},
-            {"x", 0x04},
-            //{"a", 0x05},
-            {"w", 0x06},
-            {"t", 0x07},
+        {"a", 0x01},
+        {"d", 0x02},
+        {"j", 0x03},
+        {"x", 0x04},
+        {"w", 0x06},
+        {"t", 0x07},
     };
     if (command.size() != 3) {
         return nullptr;
     }
     if (command.substr(0, 1) == "s") {
-        static StartActionMsg msg;
+        auto msg = std::make_unique<StartActionMsg>();
         if (command.substr(2, 1) == "0") {
-            msg.set_player_name(player_name1);
+            msg->set_player_name(player_name1);
         } else if (command.substr(2, 1) == "1") {
-            msg.set_player_name(player_name2);
+            msg->set_player_name(player_name2);
         } else {
             return nullptr;
         }
         try {
-            msg.set_action_id(command_map[command.substr(1, 1)]);
+            msg->set_action_id(command_map.at(command.substr(1, 1)));
         } catch (...) {
             return nullptr;
         }
-        return &msg;
+        return msg;
     }
     if (command.substr(0, 1) == "x") {
-        static StopActionMsg msg;
+        auto msg = std::make_unique<StopActionMsg>();
         if (command.substr(2, 1) == "0") {
-            msg.set_player_name(player_name1);
+            msg->set_player_name(player_name1);
         } else if (command.substr(2, 1) == "1") {
-            msg.set_player_name(player_name2);
+            msg->set_player_name(player_name2);
         } else {
             return nullptr;
         }
         try {
-            msg.set_action_id(command_map[command.substr(1, 1)]);
+            msg->set_action_id(command_map.at(command.substr(1, 1)));
         } catch (...) {
             return nullptr;
         }
-        return &msg;
+        return msg;
     }
     return nullptr;
 }
@@ -188,7 +185,7 @@ GenericMsg* GameMain::create_msg(const std::string& command) {
 void GameMain::create_command() {
     std::string command;
     std::getline(std::cin, command);
-    GenericMsg* new_msg = create_msg(command);
+    std::shared_ptr<GenericMsg> new_msg = create_msg(command);
     if (new_msg != nullptr) {
         receiver_q.push(new_msg);
     }

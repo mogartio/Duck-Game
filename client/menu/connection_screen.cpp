@@ -12,7 +12,7 @@
 #include <QSound>
 #include <string>
 #include <iostream>
-ConnectionScreen::ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client) : send_queue(send_queue), recv_queue(recv_queue), client(client) {
+ConnectionScreen::ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client) : send_queue(send_queue), recv_queue(recv_queue), client(client) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events

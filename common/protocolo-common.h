@@ -3,6 +3,7 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <memory>
 
 #include "./messages/generic_msg.h"
 #include "./messages/handler_recv.h"
@@ -16,7 +17,7 @@ private:
 
     Socket& socket;
 
-    std::map<GenericMsg::MsgTypeHeader, std::function<GenericMsg*()>> recv_handlers;
+    std::map<GenericMsg::MsgTypeHeader, std::function<std::shared_ptr<GenericMsg>()>> recv_handlers;
 
     // ------------------- Métodos privados -------------------
 
@@ -65,9 +66,9 @@ protected:
 public:
     // ------------------- Métodos públicos -------------------
 
-    void send(GenericMsg* msg);
+    void send(std::shared_ptr<GenericMsg> msg);
 
-    GenericMsg* receive();
+    std::shared_ptr<GenericMsg> receive();
 
     // ------------------- Constructor -------------------
     /*

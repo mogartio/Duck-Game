@@ -6,44 +6,44 @@
 
 #define ID_ITEM 0x05
 
-EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
+EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::string& p1,
                            std::atomic<bool>& running, std::string p2):
         queueSend(queueSend), playerName1(p1), running(running), playerName2(p2) {
     // Key down actions
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_E)] = [this]() {
-        return new StartActionMsg(ActionsId::SHOOT, playerName1);
+        return std::make_unique<StartActionMsg>(ActionsId::SHOOT, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_R)] = [this]() {
-        return new PickupDropMsg(playerName1, ID_ITEM);
+        return std::make_unique<PickupDropMsg>(playerName1, ID_ITEM);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_W)] = [this]() {
-        return new StartActionMsg(ActionsId::JUMP, playerName1);
+        return std::make_unique<StartActionMsg>(ActionsId::JUMP, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_S)] = [this]() {
-        return new StartActionMsg(ActionsId::PLAY_DEAD, playerName1);
+        return std::make_unique<StartActionMsg>(ActionsId::PLAY_DEAD, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_A)] = [this]() {
-        return new StartActionMsg(ActionsId::MOVE_LEFT, playerName1);
+        return std::make_unique<StartActionMsg>(ActionsId::MOVE_LEFT, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_D)] = [this]() {
-        return new StartActionMsg(ActionsId::MOVE_RIGHT, playerName1);
+        return std::make_unique<StartActionMsg>(ActionsId::MOVE_RIGHT, playerName1);
     };
 
     // Key up actions
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_S)] = [this]() {
-        return new StopActionMsg(ActionsId::PLAY_DEAD, playerName1);
+        return std::make_unique<StopActionMsg>(ActionsId::PLAY_DEAD, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_A)] = [this]() {
-        return new StopActionMsg(ActionsId::MOVE_LEFT, playerName1);
+        return std::make_unique<StopActionMsg>(ActionsId::MOVE_LEFT, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_D)] = [this]() {
-        return new StopActionMsg(ActionsId::MOVE_RIGHT, playerName1);
+        return std::make_unique<StopActionMsg>(ActionsId::MOVE_RIGHT, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_W)] = [this]() {
-        return new StopActionMsg(ActionsId::JUMP, playerName1);
+        return std::make_unique<StopActionMsg>(ActionsId::JUMP, playerName1);
     };
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_E)] = [this]() {
-        return new StopActionMsg(ActionsId::SHOOT, playerName1);
+        return std::make_unique<StopActionMsg>(ActionsId::SHOOT, playerName1);
     };
 
     // Inicializo el estado de las teclas
@@ -57,38 +57,38 @@ EventHandler::EventHandler(Queue<GenericMsg*>& queueSend, std::string& p1,
     // Si hay un segundo jugador, se agregan las teclas correspondientes
     if (playerName2 != "") {
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_X)] = [this]() {
-            return new StartActionMsg(ActionsId::SHOOT, playerName2);
+            return std::make_unique<StartActionMsg>(ActionsId::SHOOT, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_C)] = [this]() {
-            return new PickupDropMsg(playerName2, ID_ITEM);
+            return std::make_unique<PickupDropMsg>(playerName2, ID_ITEM);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_UP)] = [this]() {
-            return new StartActionMsg(ActionsId::JUMP, playerName2);
+            return std::make_unique<StartActionMsg>(ActionsId::JUMP, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_DOWN)] = [this]() {
-            return new StartActionMsg(ActionsId::PLAY_DEAD, playerName2);
+            return std::make_unique<StartActionMsg>(ActionsId::PLAY_DEAD, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_LEFT)] = [this]() {
-            return new StartActionMsg(ActionsId::MOVE_LEFT, playerName2);
+            return std::make_unique<StartActionMsg>(ActionsId::MOVE_LEFT, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_RIGHT)] = [this]() {
-            return new StartActionMsg(ActionsId::MOVE_RIGHT, playerName2);
+            return std::make_unique<StartActionMsg>(ActionsId::MOVE_RIGHT, playerName2);
         };
 
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_DOWN)] = [this]() {
-            return new StopActionMsg(ActionsId::PLAY_DEAD, playerName2);
+            return std::make_unique<StopActionMsg>(ActionsId::PLAY_DEAD, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_LEFT)] = [this]() {
-            return new StopActionMsg(ActionsId::MOVE_LEFT, playerName2);
+            return std::make_unique<StopActionMsg>(ActionsId::MOVE_LEFT, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_RIGHT)] = [this]() {
-            return new StopActionMsg(ActionsId::MOVE_RIGHT, playerName2);
+            return std::make_unique<StopActionMsg>(ActionsId::MOVE_RIGHT, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_UP)] = [this]() {
-            return new StopActionMsg(ActionsId::JUMP, playerName2);
+            return std::make_unique<StopActionMsg>(ActionsId::JUMP, playerName2);
         };
         key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_X)] = [this]() {
-            return new StopActionMsg(ActionsId::SHOOT, playerName2);
+            return std::make_unique<StopActionMsg>(ActionsId::SHOOT, playerName2);
         };
 
         pressed_keys_state[SDL_SCANCODE_X] = false;
@@ -107,7 +107,7 @@ bool EventHandler::corroboraciones(SDL_Event& event) {
 
 void EventHandler::run() {
     // Mientras el thread siga corriendo
-    GenericMsg* msg;
+    std::shared_ptr<GenericMsg> msg;
     bool mensajeEnviado = false;
     while (running) {
         SDL_Event event;
@@ -126,7 +126,7 @@ void EventHandler::run() {
                     event.type ==
                     SDL_KEYDOWN;  // si es un evento de tecla soltada, el valor pasa a ser false
 
-            GenericMsg* msg_posible_a_liberar = msg;
+            std::shared_ptr<GenericMsg> msg_posible_a_liberar = msg;
             try {
                 msg = key_accion_map.at(std::make_tuple(event.type, event.key.keysym.scancode))();
                 if (msg_posible_a_liberar != nullptr && !mensajeEnviado) {

@@ -19,10 +19,10 @@
 
 class GameMain: public HandlerReader {
 private:
-    Queue<GenericMsg*>& receiver_q;
+    Queue<std::shared_ptr<GenericMsg>>& receiver_q;
     bool is_testing;
     std::map<std::string, Player*> players;
-    SendQueuesMonitor<GenericMsg*>& senders;
+    SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
     void create_command();
     std::set<std::string> alive_players;
     void process_commands(Stage& stage);
@@ -35,10 +35,10 @@ private:
     void init_round(Stage& stage);
 
 public:
-    explicit GameMain(Queue<GenericMsg*>&, std::map<std::string, Player*>, bool,
-                      SendQueuesMonitor<GenericMsg*>&);
+    explicit GameMain(Queue<std::shared_ptr<GenericMsg>>&, std::map<std::string, Player*>, bool,
+                      SendQueuesMonitor<std::shared_ptr<GenericMsg>>&);
 
-    GenericMsg* create_msg(const std::string& command);
+    std::shared_ptr<GenericMsg> create_msg(const std::string& command);
     void run();
     std::string play_round(Stage&);
 

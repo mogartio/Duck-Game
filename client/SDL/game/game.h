@@ -9,12 +9,12 @@
 #include "window.h"
 class Game {
 private:
-    Queue<GenericMsg*>& queueRecive;
+    Queue<std::shared_ptr<GenericMsg>>& queueRecive;
     std::atomic<bool> running;
     EventHandler event_handler;
 
 public:
-    Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive,
+    Game(Queue<std::shared_ptr<GenericMsg>>& queueSend, Queue<std::shared_ptr<GenericMsg>>& queueRecive,
               std::string playerName1, std::string playerName2 = "");
 
     void play();

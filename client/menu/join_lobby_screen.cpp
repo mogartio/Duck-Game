@@ -1,6 +1,6 @@
 #include "join_lobby_screen.h" 
 
-JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+JoinLobbyScreen::JoinLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
@@ -128,10 +128,10 @@ void JoinLobbyScreen::onBackButtonClicked() {
 
 void JoinLobbyScreen::onRefreshButtonClicked() {
     keyPressSound->play();
-    send_queue->push(new ViewLobbiesMsg());
-    GenericMsg* msg = recv_queue->pop();
+    send_queue->push(std::make_unique<ViewLobbiesMsg>());
+    std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG) {
-        SendLobbiesListMsg* lobbyListMsg = dynamic_cast<SendLobbiesListMsg*>(msg);
+        std::shared_ptr<SendLobbiesListMsg> lobbyListMsg(dynamic_cast<SendLobbiesListMsg*>(msg.get()));
         lobbies = lobbyListMsg->get_lobbies();
 
         QLayoutItem* item;
@@ -220,7 +220,7 @@ void JoinLobbyScreen::onRefreshButtonClicked() {
             lobbyLayout->addWidget(joinButton);
             lobbyWidget->setLayout(lobbyLayout);
             scrollLayout->addWidget(lobbyWidget);
-            lobbyWidgets.push_back(std::unique_ptr<QWidget>(lobbyWidget));
+            lobbyWidgets.push_back(std::shared_ptr<QWidget>(lobbyWidget));
         }
     }
 }
@@ -234,12 +234,12 @@ void JoinLobbyScreen::onJoinButtonClicked(uint8_t lobby_id) {
             break;
         }
     }
-    send_queue->push(new ChooseLobbyMsg(lobby_id, player_name));
-    GenericMsg* msg = recv_queue->pop();
+    send_queue->push(std::make_unique<ChooseLobbyMsg>(lobby_id, player_name));
+    std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else if (msg->get_header() == GenericMsg::MsgTypeHeader::ERROR_MSG) {
-        ErrorMsg* errorMsg = dynamic_cast<ErrorMsg*>(msg);
+        std::shared_ptr<ErrorMsg> errorMsg(dynamic_cast<ErrorMsg*>(msg.get()));
         // draw error message
         QLabel *errorLabel = new QLabel(errorMsg->get_error_msg().c_str(), this);
         errorLabel->setStyleSheet("QLabel { color: #800404; font-size: 24px; }");

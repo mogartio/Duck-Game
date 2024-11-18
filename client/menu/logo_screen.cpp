@@ -4,7 +4,7 @@
 #include <chrono>
 #include <QSound>
 
-LogoScreen::LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : keyPressSound(std::make_unique<QSound>("assets/Retro8.wav", this)) , send_queue(send_queue), recv_queue(recv_queue) {
+LogoScreen::LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : keyPressSound(std::make_unique<QSound>("assets/Retro8.wav", this)) , send_queue(send_queue), recv_queue(recv_queue) {
     //setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events

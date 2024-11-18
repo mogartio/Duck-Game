@@ -65,7 +65,7 @@ void PlayerPosition::move_horizontally(int offset) {
 }
 
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
-void PlayerPosition::set_state(std::unique_ptr<AirState> new_state, uint8_t state_code) {
+void PlayerPosition::set_state(std::shared_ptr<AirState> new_state, uint8_t state_code) {
     air_state = std::move(new_state);
     state = state_code;
     player.Notify();

@@ -1,7 +1,7 @@
 #include "lobby_screen.h"
 
 
-LobbyScreen::LobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
+LobbyScreen::LobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
 setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
@@ -83,9 +83,10 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
 void LobbyScreen::processIncomingMessages() {
     while (running) {
-        GenericMsg* msg = recv_queue->pop();
+        std::shared_ptr<GenericMsg> msg = recv_queue->pop();
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
+            // InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
+            std::shared_ptr<InfoLobbyMsg> info_lobby_msg(dynamic_cast<InfoLobbyMsg*>(msg.get()));
             lobby_id = info_lobby_msg->get_lobby_id();
             std::lock_guard<std::mutex> lock(players_mutex);
             players = info_lobby_msg->get_players();
@@ -104,7 +105,8 @@ void LobbyScreen::processIncomingMessages() {
                 emit starting();
             }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
-            PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
+            // PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
+            std::shared_ptr<PlayerInfoMsg> player_info_msg(dynamic_cast<PlayerInfoMsg*>(msg.get()));
             myPlayerName = player_info_msg->get_player_name();
         }
     }
@@ -293,7 +295,8 @@ void LobbyScreen::onReadyButtonClicked(std::string player_name) {
         is_ready = GenericMsg::PlayerReadyState::NOT_READY;
     }
 
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, player_name, is_ready);
     send_queue->push(customized_player_info_msg);
 }
 
@@ -313,14 +316,16 @@ void LobbyScreen::onSaveButtonClicked(std::string player_name) {
             break;
         }
     }
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, new_name, is_ready);
     send_queue->push(customized_player_info_msg);
     myPlayerName = new_name;
 }
 
 void LobbyScreen::onExitLobbyButtonClicked() {
     keyPressSound->play();
-    ExitFromLobbyMsg* exit_lobby_msg = new ExitFromLobbyMsg(myPlayerName);
+    // ExitFromLobbyMsg* exit_lobby_msg = new ExitFromLobbyMsg(myPlayerName);
+    std::shared_ptr<ExitFromLobbyMsg> exit_lobby_msg = std::make_shared<ExitFromLobbyMsg>(myPlayerName);
     send_queue->push(exit_lobby_msg);
     stopProcessing();
 

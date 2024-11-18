@@ -17,7 +17,7 @@ class MainMenuScreen : public QWidget {
     Q_OBJECT
 
 public:
-    MainMenuScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    MainMenuScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
 
 signals:
     void switchToJoinLobbyScreen();
@@ -33,10 +33,10 @@ private slots:
     void onQuitButtonClicked();
 
 private:
-    std::unique_ptr<QSound> keyPressSound;
+    std::shared_ptr<QSound> keyPressSound;
     QFont customFont;
     QPixmap background;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
 };
 #endif

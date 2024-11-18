@@ -1,6 +1,6 @@
 #include "host_lobby_screen.h"
 
-HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
+HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
@@ -98,15 +98,17 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
 
 void HostLobbyScreen::processIncomingMessages() {
     while (running) {
-        GenericMsg* msg = recv_queue->pop();
+        std::shared_ptr<GenericMsg> msg = recv_queue->pop();
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
+            // InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
+            std::shared_ptr<InfoLobbyMsg> info_lobby_msg(dynamic_cast<InfoLobbyMsg*>(msg.get()));
             lobby_id = info_lobby_msg->get_lobby_id();
             std::lock_guard<std::mutex> lock(players_mutex);
             players = info_lobby_msg->get_players();
             emit playersUpdated();
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
-            PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
+            // PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
+            std::shared_ptr<PlayerInfoMsg> player_info_msg(dynamic_cast<PlayerInfoMsg*>(msg.get()));
             myLocalPlayerName = player_info_msg->get_player_name();
         }
     }
@@ -337,7 +339,8 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
             "background-color: rgba(232, 89, 12, 100);"
             "}"
         );
-        ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(myLocalPlayerName);
+        // ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(myLocalPlayerName);
+        std::shared_ptr<ExitFromLobbyMsg> exit_from_lobby_msg = std::make_shared<ExitFromLobbyMsg>(myLocalPlayerName);
         send_queue->push(exit_from_lobby_msg);
     } else {
         // add local player to lobby
@@ -359,7 +362,8 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         );
         std::string local_player = "localPlayer";
         myLocalPlayerName = local_player;
-        ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
+        // ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
+        std::shared_ptr<ChooseLobbyMsg> choose_lobby_msg = std::make_shared<ChooseLobbyMsg>(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
     }
 
@@ -383,7 +387,8 @@ void HostLobbyScreen::onReadyButtonClicked(std::string player_name) {
         is_ready = GenericMsg::PlayerReadyState::NOT_READY;
     }
 
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, player_name, is_ready);
     send_queue->push(customized_player_info_msg);
 }
 
@@ -404,7 +409,8 @@ void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
             break;
         }
     }
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, new_name, is_ready);
     send_queue->push(customized_player_info_msg);
     if (player_name == myPlayerName) {
         myPlayerName = new_name;
@@ -424,7 +430,8 @@ void HostLobbyScreen::stopProcessing() {
 
 void HostLobbyScreen::onStartGameButtonClicked() {
     keyPressSound->play();
-    StartGameMsg* start_game_msg = new StartGameMsg();
+    // StartGameMsg* start_game_msg = new StartGameMsg();
+    std::shared_ptr<StartGameMsg> start_game_msg = std::make_shared<StartGameMsg>();
     send_queue->push(start_game_msg);
     // set local players list
     local_players->push_back(myPlayerName);

@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players); 
+    MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players); 
     void handleQuitApplication();
     void handleGameStart();
     void showLogoScreen();
@@ -42,18 +42,18 @@ signals:
     void joinLobbyScreenShown();
 
 private:
-    std::unique_ptr<QStackedWidget> stackedWidget;
-    std::unique_ptr<LogoScreen> logoScreen;
-    std::unique_ptr<ConnectionScreen> connectionScreen;
-    std::unique_ptr<MainMenuScreen> mainMenuScreen;
-    std::unique_ptr<CreateGameScreen> createGameScreen;
-    std::unique_ptr<LobbyScreen> lobbyScreen;
-    std::unique_ptr<JoinLobbyScreen> joinLobbyScreen;
-    std::unique_ptr<HostLobbyScreen> hostLobbyScreen;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    std::shared_ptr<QStackedWidget> stackedWidget;
+    std::shared_ptr<LogoScreen> logoScreen;
+    std::shared_ptr<ConnectionScreen> connectionScreen;
+    std::shared_ptr<MainMenuScreen> mainMenuScreen;
+    std::shared_ptr<CreateGameScreen> createGameScreen;
+    std::shared_ptr<LobbyScreen> lobbyScreen;
+    std::shared_ptr<JoinLobbyScreen> joinLobbyScreen;
+    std::shared_ptr<HostLobbyScreen> hostLobbyScreen;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     Client* client;
-    std::unique_ptr<QLabel> backgroundLabel;
+    std::shared_ptr<QLabel> backgroundLabel;
     std::list<std::string> *local_players;
     
     void setupBackground();

@@ -10,11 +10,11 @@ private:
     Client* client;
 
 protected:
-    virtual void executeMsg(GenericMsg* msg) override;
+    virtual void executeMsg(std::shared_ptr<GenericMsg> msg) override;
 
 public:
-    explicit ReceiverServer(Queue<GenericMsg*>* recv_queue_game, ProtocoloCommon* protocol,
+    explicit ReceiverServer(Queue<std::shared_ptr<GenericMsg>>* recv_queue_game, ProtocoloCommon* protocol,
                             Client* client);
-    void switch_q(Queue<GenericMsg*>* q) { this->recv_queue = q; };
+    void switch_q(Queue<std::shared_ptr<GenericMsg>>* q) { this->recv_queue = q; };
 };
 #endif  // RECEIVER_H

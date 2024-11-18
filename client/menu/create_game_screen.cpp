@@ -1,7 +1,7 @@
 #include "create_game_screen.h"
 #include <QSpinBox>
 
-CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+CreateGameScreen::CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
@@ -233,9 +233,9 @@ void CreateGameScreen::onCreateGameButtonClicked() {
     // Nombre default del que crea el server:
     std::string playerName = "Player1";
     uint8_t maxPlayers = this->maxPlayers;
-    CreateLobbyMsg* createLobbyMsg = new CreateLobbyMsg(playerName, lobbyNameStr, maxPlayers);
+    std::shared_ptr<CreateLobbyMsg> createLobbyMsg = std::make_unique<CreateLobbyMsg>(playerName, lobbyNameStr, maxPlayers);
     send_queue->push(createLobbyMsg);
-    GenericMsg* response = recv_queue->pop();
+    std::shared_ptr<GenericMsg> response = recv_queue->pop();
     if (response->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else {

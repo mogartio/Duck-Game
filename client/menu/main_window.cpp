@@ -1,6 +1,6 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players)
+MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players)
     : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players) {
 
     resize(1920, 1080);

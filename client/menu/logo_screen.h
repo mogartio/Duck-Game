@@ -18,7 +18,7 @@ class LogoScreen : public QWidget {
     Q_OBJECT
 
 public:
-    LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
     ~LogoScreen() = default;
 signals:
     void switchToConnectionScreen();
@@ -31,16 +31,16 @@ private slots:
     void toggleTextVisibility();
 
 private:
-    std::unique_ptr<ParallaxBackground> layer0;
-    std::unique_ptr<ParallaxBackground> layer1;
-    std::unique_ptr<ParallaxBackground> layer2;
-    std::unique_ptr<ParallaxBackground> layer3;
-    std::unique_ptr<FadeInImage> fadeInImage;
-    std::unique_ptr<QLabel> flickeringText;
-    std::unique_ptr<QTimer> timer;
-    std::unique_ptr<QSound> keyPressSound;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    std::shared_ptr<ParallaxBackground> layer0;
+    std::shared_ptr<ParallaxBackground> layer1;
+    std::shared_ptr<ParallaxBackground> layer2;
+    std::shared_ptr<ParallaxBackground> layer3;
+    std::shared_ptr<FadeInImage> fadeInImage;
+    std::shared_ptr<QLabel> flickeringText;
+    std::shared_ptr<QTimer> timer;
+    std::shared_ptr<QSound> keyPressSound;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     bool initialized = false;
 };
 

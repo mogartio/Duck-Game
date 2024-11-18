@@ -15,9 +15,9 @@
 class Client: public HandlerReader {
 private:
     Socket client_skt;
-    Queue<GenericMsg*> send_queue;
-    Queue<GenericMsg*>* recv_queue;
-    SendQueuesMonitor<GenericMsg*>& send_queues;
+    Queue<std::shared_ptr<GenericMsg>> send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
+    SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues;
     uint id;  // a chequear, para la funcionalidad futura
     ServerProtocol protocol;
     ReceiverServer receiver;
@@ -29,14 +29,14 @@ private:
     void start_client();
 
 public:
-    Client(Socket&& client_skt, uint id, SendQueuesMonitor<GenericMsg*>& send_queues,
+    Client(Socket&& client_skt, uint id, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues,
            LobbysMonitor& lobbys, bool is_testing);
     bool operator==(const Client* other) const;
 
     void stop();
     bool is_alive();
     uint get_id() const;
-    void switch_queues(Queue<GenericMsg*>* recv_queue);
+    void switch_queues(Queue<std::shared_ptr<GenericMsg>>* recv_queue);
 
     using HandlerReader::handle_read;
 

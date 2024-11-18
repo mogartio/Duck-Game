@@ -1,7 +1,7 @@
 #include "game.h"
 
-Game::Game(Queue<GenericMsg*>& recv, const std::vector<std::string>& player_names, bool is_testing,
-           SendQueuesMonitor<GenericMsg*>& senders):
+Game::Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names, bool is_testing,
+           SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders):
         senders(senders), game_over(false) {
     const PlayerObserver* player_obs = new PlayerObserver(senders);
     players = generate_players(player_names, *player_obs);
@@ -37,9 +37,9 @@ void Game::run() {
 
 void Game::send_map() {
     std::vector<uint16_t> map = current_stage->get_vector_representation();
-    SendMapMsg* map_msg = new SendMapMsg(map, Config::get_instance()->rows_map,
-                                         Config::get_instance()->columns_map);
-    std::list<GenericMsg*> dejenmepasarleunmensajedirectoporfavor;
+    std::shared_ptr<SendMapMsg> map_msg = std::make_shared<SendMapMsg>(map, Config::get_instance()->rows_map,
+                                                                      Config::get_instance()->columns_map);
+    std::list<std::shared_ptr<GenericMsg>> dejenmepasarleunmensajedirectoporfavor;
     dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
     senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
 }

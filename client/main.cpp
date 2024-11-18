@@ -12,8 +12,8 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    Queue<GenericMsg*> send_queue(100);
-    Queue<GenericMsg*> recv_queue(100);
+    Queue<std::shared_ptr<GenericMsg>> send_queue(100);
+    Queue<std::shared_ptr<GenericMsg>> recv_queue(100);
 
     Client* client = nullptr;
 

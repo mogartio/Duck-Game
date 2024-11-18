@@ -12,7 +12,7 @@ class ConnectionScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    ConnectionScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client);
+    ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client);
     
 signals:
     void switchToMainMenuScreen();
@@ -28,16 +28,16 @@ private slots:
     void onQuitButtonClicked();
     
 private:
-    std::unique_ptr<ParallaxBackground> layer0;
-    std::unique_ptr<ParallaxBackground> layer1;
-    std::unique_ptr<ParallaxBackground> layer2;
-    std::unique_ptr<ParallaxBackground> layer3;
-    std::unique_ptr<QSound> keyPressSound;
-    std::unique_ptr<QLineEdit> hostname;
-    std::unique_ptr<QLineEdit> port;
+    std::shared_ptr<ParallaxBackground> layer0;
+    std::shared_ptr<ParallaxBackground> layer1;
+    std::shared_ptr<ParallaxBackground> layer2;
+    std::shared_ptr<ParallaxBackground> layer3;
+    std::shared_ptr<QSound> keyPressSound;
+    std::shared_ptr<QLineEdit> hostname;
+    std::shared_ptr<QLineEdit> port;
     QFont customFont;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     Client* client;
 };
 

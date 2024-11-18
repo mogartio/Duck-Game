@@ -26,7 +26,7 @@ class HostLobbyScreen : public QWidget {
     Q_OBJECT
 
 public: 
-    HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players);
+    HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, std::list<std::string>* local_players);
     ~HostLobbyScreen();
 
     void stopProcessing();
@@ -41,19 +41,19 @@ signals:
     void playersUpdated();
     void startingGame();
 private:
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue; 
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue; 
     std::list<std::string>* local_players;
     std::atomic<bool> running;
     std::mutex players_mutex;
 
     QFont customFont;
-    std::unique_ptr<QPixmap> saveIcon;
-    std::unique_ptr<QSound> keyPressSound;
+    std::shared_ptr<QPixmap> saveIcon;
+    std::shared_ptr<QSound> keyPressSound;
     QPushButton *localPlayerButton;
-    std::unique_ptr<QScrollArea> scrollArea;
-    std::unique_ptr<QWidget> scrollWidget;
-    std::unique_ptr<QVBoxLayout> scrollLayout;
+    std::shared_ptr<QScrollArea> scrollArea;
+    std::shared_ptr<QWidget> scrollWidget;
+    std::shared_ptr<QVBoxLayout> scrollLayout;
     QPushButton *startGameButton;
 
     uint8_t lobby_id;
@@ -62,9 +62,9 @@ private:
     bool isLocalPlayerAdded = false;
     std::thread recv_thread;
     std::list<DescipcionPlayer> players;
-    std::vector<std::unique_ptr<QWidget>> lobbyWidgets;
+    std::vector<std::shared_ptr<QWidget>> lobbyWidgets;
     // color de pato y su imagen
-    std::list<std::pair<uint8_t, std::unique_ptr<QPixmap>>> ducks_images;
+    std::list<std::pair<uint8_t, std::shared_ptr<QPixmap>>> ducks_images;
     std::map<std::string, std::string> playerEdits;
 
     void processIncomingMessages();

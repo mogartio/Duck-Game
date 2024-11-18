@@ -22,7 +22,7 @@
 #include "csv_writer.h"
 #include "stage.h"
 
-Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& senders):
+Stage::Stage(const std::string& file_name, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders):
         map(0, 0), senders(senders), obs(this->senders) {
     CSVWriter::write_map("main_map.csv");
     CSVReader reader(file_name);
@@ -31,15 +31,15 @@ Stage::Stage(const std::string& file_name, SendQueuesMonitor<GenericMsg*>& sende
 
 void Stage::print() { map.print(); }
 
-void Stage::add_projectile(std::unique_ptr<Projectile>&& projectile) {
+void Stage::add_projectile(std::shared_ptr<Projectile>&& projectile) {
     projectile.get()->attach(obs);
     projectiles.push_back(std::move(projectile));
 }
 
-void Stage::remove_projectile(std::unique_ptr<Projectile>& projectile) {
+void Stage::remove_projectile(std::shared_ptr<Projectile>& projectile) {
     auto position_to_delete = std::find_if(
             projectiles.begin(), projectiles.end(),
-            [&](const std::unique_ptr<Projectile>& p) { return p.get() == projectile.get(); });
+            [&](const std::shared_ptr<Projectile>& p) { return p.get() == projectile.get(); });
     if (position_to_delete != projectiles.end()) {  // si se encontro borrar, sino se encontro... no
         projectiles.erase(position_to_delete);
     }
@@ -121,12 +121,12 @@ int Stage::is_valid_position(Coordinate position, int color) {
     return FREE;
 }
 
-std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
+std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
     for (auto& projectile: projectiles) {
         if (ProjectileDroppedWeapon* weaponProjectile =
                     dynamic_cast<ProjectileDroppedWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
-                std::unique_ptr new_weapon = (weaponProjectile->get_weapon());
+                std::shared_ptr new_weapon = (weaponProjectile->get_weapon());
                 coordinates_to_delete.push_back(position);
                 remove_projectile(projectile);
                 return new_weapon;
@@ -135,7 +135,7 @@ std::unique_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
         if (ProjectileThrownWeapon* weaponProjectile =
                     dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
-                std::unique_ptr new_weapon = weaponProjectile->get_weapon();
+                std::shared_ptr new_weapon = weaponProjectile->get_weapon();
                 coordinates_to_delete.push_back(position);
                 remove_projectile(projectile);
                 return new_weapon;

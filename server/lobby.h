@@ -29,11 +29,11 @@ private:
     std::map<std::string, uint8_t> players_colors;
     std::map<std::string, uint8_t> players_ready;
 
-    SendQueuesMonitor<GenericMsg*>& send_queues;
+    SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues;
     std::set <uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW, GenericMsg::DuckColor::ORANGE, GenericMsg::DuckColor::GREY};
-    Queue<GenericMsg*>* receiver_q;
+    Queue<std::shared_ptr<GenericMsg>>* receiver_q;
 
-    std::unique_ptr<Game> game;
+    std::shared_ptr<Game> game;
 
     uint player1_id;
 
@@ -51,7 +51,7 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
+    explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby
