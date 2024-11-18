@@ -11,8 +11,8 @@
 class Client {
 private:
     Socket client_skt;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     ClientProtocol protocol;
     ReceiverClient receiver;
     Sender sender;
@@ -20,7 +20,7 @@ private:
     void start_client();
 
 public:
-    Client(Socket&& skt, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    Client(Socket&& skt, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
 
     void stop();
     bool is_alive();

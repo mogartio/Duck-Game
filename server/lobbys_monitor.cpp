@@ -13,11 +13,11 @@ std::vector<DescripcionLobby> LobbysMonitor::get_lobbys() {
     return lobbys_disponibles_descripcion;
 }
 
-uint LobbysMonitor::create(SendQueuesMonitor<GenericMsg*>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player) {
+uint LobbysMonitor::create(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player) {
     std::lock_guard<std::mutex> lock(m);
     contador_id_lobbys++;
     lobbys_disponibles.emplace(contador_id_lobbys,
-                               std::make_unique<Lobby>(send_queues, player_name, lobby_name, max_players, first_player ,contador_id_lobbys, is_testing));
+                               std::make_shared<Lobby>(send_queues, player_name, lobby_name, max_players, first_player ,contador_id_lobbys, is_testing));
     return contador_id_lobbys;
 }
 

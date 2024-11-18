@@ -13,7 +13,7 @@ class Acceptor: public Thread {
 private:
     Socket srv;
     std::list<Client> clients;
-    SendQueuesMonitor<GenericMsg*> send_queues;
+    SendQueuesMonitor<std::shared_ptr<GenericMsg>> send_queues;
     LobbysMonitor lobbys;
     bool is_testing;
 

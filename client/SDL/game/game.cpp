@@ -7,7 +7,7 @@
 
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
-Game::Game(Queue<GenericMsg*>& queueSend, Queue<GenericMsg*>& queueRecive, std::string playerName1,
+Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend, Queue<std::shared_ptr<GenericMsg>>& queueRecive, std::string playerName1,
            std::string playerName2):
         queueRecive(queueRecive),
         running(true),
@@ -26,26 +26,30 @@ void Game::play() {
         throw("Error al obtener los limites de la pantalla");
     }
 
-    GenericMsg* msg_players_info = queueRecive.pop();
+    std::shared_ptr<GenericMsg> msg_players_info = queueRecive.pop();
 
     if (msg_players_info->get_header() != GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
         throw("Estoy recibiendo un mensaje que no es de info lobby");
     }
 
-    GenericMsg* matriz = queueRecive.pop();
-
+    std::shared_ptr<GenericMsg> matriz = queueRecive.pop();
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
-    SendMapMsg* newMap;
+    std::shared_ptr<SendMapMsg> newMap;
     if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
-        newMap = dynamic_cast<SendMapMsg*>(matriz);
-        mapa = newMap->get_map();
-        filas = newMap->get_filas();
-        columnas = newMap->get_columnas();
-    } else if (matriz == nullptr) {
-        throw("Algo anda mal! Mandaste un msj que nda que ver");
-    }
+        std::shared_ptr<GenericMsg> shared_matriz = std::move(matriz);
+            newMap = std::dynamic_pointer_cast<SendMapMsg>(shared_matriz);
+            if (newMap) {
+                mapa = newMap->get_map();
+                filas = newMap->get_filas();
+                columnas = newMap->get_columnas();
+            } else {
+                throw std::runtime_error("Failed to cast GenericMsg to SendMapMsg");
+            }
+        } else if (!matriz) {
+            throw std::runtime_error("Algo anda mal! Mandaste un msj que nda que ver");
+        }
 
     uint tiles_w = displayBounds.w / columnas;
     uint tiles_h = displayBounds.h / filas;
@@ -60,7 +64,7 @@ void Game::play() {
     map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
-    InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
+    std::shared_ptr<InfoLobbyMsg> info_lobby = std::dynamic_pointer_cast<InfoLobbyMsg>(msg_players_info);
     std::list<DescipcionPlayer> players = info_lobby->get_players();
     std::map<std::string, uint8_t> players_info;
     for (auto& player: players) {
@@ -69,12 +73,12 @@ void Game::play() {
 
     // Agrego a cada jugador usando el mensaje de info lobby
     for (uint i = 0; i < players.size(); i++) {
-        GenericMsg* jugador = queueRecive.pop();
+        std::shared_ptr<GenericMsg> jugador = queueRecive.pop();
         if (jugador->get_header() != GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG) {
             throw std::runtime_error(
                     "Estoy recibiendo un mensaje que no es de updated player info");
         }
-        UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
+        std::shared_ptr<UpdatedPlayerInfoMsg> player_info = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(jugador);
         map.addPlayer(player_info->get_position().first, player_info->get_position().second,
                       players_info[player_info->get_player_name()], player_info->get_player_name());
     }
@@ -91,76 +95,91 @@ void Game::play() {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
 
-        GenericMsg* msj;
+        std::shared_ptr<GenericMsg> msj;
 
         for (int i = 0; i < 15; i++) {
             if (queueRecive.try_pop(msj)) {
-                UpdatedPlayerInfoMsg* player = nullptr;
+                std::shared_ptr<UpdatedPlayerInfoMsg> player = nullptr;
                 uint8_t state = 0;
 
-                ProjectileInfoMsg* projectile = nullptr;
+                std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
                 uint8_t pos_x, pos_y, item = 0;
                 std::vector<std::pair<uint8_t, uint8_t>> trail;
 
-                PickupDropMsg* pickup_drop = nullptr;
+                std::shared_ptr<PickupDropMsg> pickup_drop = nullptr;
                 uint8_t item_id = 0;
+
+                std::shared_ptr<SendMapMsg> newMap = nullptr;
+                std::vector<uint16_t> mapa;
+                uint16_t filas;
+                uint16_t columnas;
 
                 switch (msj->get_header()) {
                     case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
-                        player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
-                        player_name = player->get_player_name();
-                        position = player->get_position();
-                        state = player->get_state();
-                        facing_direction = player->get_facing_direction();
-                        map.update(player_name, position.first, position.second, DuckState(state),
-                                   Side(facing_direction - 1));
-                        stated_palying = true;
+                        player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
+                        if (player) {
+                            player_name = player->get_player_name();
+                            position = player->get_position();
+                            state = player->get_state();
+                            facing_direction = player->get_facing_direction();
+                            map.update(player_name, position.first, position.second, DuckState(state),
+                                    Side(facing_direction - 1));
+                            stated_palying = true;
+                        }
                         break;
 
                     case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
-                        pickup_drop = dynamic_cast<PickupDropMsg*>(msj);
-                        player_name = pickup_drop->get_player_name();
-                        item_id = pickup_drop->get_item_id();
-                        map.weaponPlayer(ProjectilesId::ProjectileId(item_id), player_name);
+                        pickup_drop = std::dynamic_pointer_cast<PickupDropMsg>(msj);
+                        if (pickup_drop) {
+                            player_name = pickup_drop->get_player_name();
+                            item_id = pickup_drop->get_item_id();
+                            map.weaponPlayer(ProjectilesId::ProjectileId(item_id), player_name);
+                        }
                         break;
 
                     case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
-                        projectile = dynamic_cast<ProjectileInfoMsg*>(msj);
-                        pos_x = projectile->get_pos_x();
-                        pos_y = projectile->get_pos_y();
-                        item = projectile->get_item();
-                        trail = projectile->get_trail();  // para el laser
-                        // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                        //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
-                        //     trail);
-                        // } else {
-                        map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
-                        // }
+                        projectile = std::dynamic_pointer_cast<ProjectileInfoMsg>(msj);
+                        if (projectile) {
+                            pos_x = projectile->get_pos_x();
+                            pos_y = projectile->get_pos_y();
+                            item = projectile->get_item();
+                            trail = projectile->get_trail();  // para el laser
+                            // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
+                            //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), trail);
+                            // } else {
+                            map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
+                            // }
+                        }
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
-                        newMap = dynamic_cast<SendMapMsg*>(msj);
-                        mapa = newMap->get_map();
-                        filas = newMap->get_filas();
-                        columnas = newMap->get_columnas();
+                        newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
+                        if (newMap) {
+                            mapa = newMap->get_map();
+                            filas = newMap->get_filas();
+                            columnas = newMap->get_columnas();
 
-                        tiles_w = displayBounds.w / columnas;
-                        tiles_h = displayBounds.h / filas;
-                        tiles = std::min(tiles_w, tiles_h);
+                            tiles_w = displayBounds.w / columnas;
+                            tiles_h = displayBounds.h / filas;
+                            tiles = std::min(tiles_w, tiles_h);
 
-                        map.makeMap(columnas, filas, mapa);
+                            map.makeMap(columnas, filas, mapa);
+                        }
                         break;
 
                     /* 
                     case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
-                        player = dynamic_cast<UpdatedPlayerInfoMsg*>(msj);
-                        player_name = player->get_player_name();
-                        map.remove(player_name);
+                        player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
+                        if (player) {
+                            player_name = player->get_player_name();
+                            map.remove(player_name);
+                        }
+                        break;
                     */
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
-                        // directa de que termino la partida y de q hay que mostrar la pantalla de
-                        // fin
+                        // directa de que termino la partida y de q hay que mostrar la pantalla de fin
                         return;
+
                     default:
                         break;
                 }

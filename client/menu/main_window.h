@@ -10,6 +10,7 @@
 #include <QGraphicsOpacityEffect>
 #include <QApplication>
 #include <iostream>
+#include <memory>
 #include "logo_screen.h"
 #include "connection_screen.h"
 #include "main_menu_screen.h"
@@ -25,8 +26,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players); 
-    ~MainWindow();
+    MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players); 
     void handleQuitApplication();
     void handleGameStart();
     void showLogoScreen();
@@ -42,19 +42,19 @@ signals:
     void joinLobbyScreenShown();
 
 private:
-    QStackedWidget *stackedWidget;
-    LogoScreen *logoScreen;
-    ConnectionScreen *connectionScreen;
-    MainMenuScreen *mainMenuScreen;
-    CreateGameScreen *createGameScreen;
-    LobbyScreen *lobbyScreen;
-    JoinLobbyScreen *joinLobbyScreen;
-    HostLobbyScreen *hostLobbyScreen;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    std::shared_ptr<QStackedWidget> stackedWidget;
+    std::shared_ptr<LogoScreen> logoScreen;
+    std::shared_ptr<ConnectionScreen> connectionScreen;
+    std::shared_ptr<MainMenuScreen> mainMenuScreen;
+    std::shared_ptr<CreateGameScreen> createGameScreen;
+    std::shared_ptr<LobbyScreen> lobbyScreen;
+    std::shared_ptr<JoinLobbyScreen> joinLobbyScreen;
+    std::shared_ptr<HostLobbyScreen> hostLobbyScreen;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     Client* client;
-    QLabel *backgroundLabel;
-    std::list<std::string>* local_players;
+    std::shared_ptr<QLabel> backgroundLabel;
+    std::list<std::string> *local_players;
     
     void setupBackground();
     void slideBackground(int targetX);

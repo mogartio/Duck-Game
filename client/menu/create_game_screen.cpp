@@ -1,17 +1,17 @@
 #include "create_game_screen.h"
 #include <QSpinBox>
 
-CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+CreateGameScreen::CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
 
     // Create black opaque background rectangle
-    RoundedRectangle * baseRectangle = new RoundedRectangle(this, 635, 260, 650, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
+    auto baseRectangle = std::make_unique<RoundedRectangle>(this, 635, 260, 650, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
     
     // Load custom font
@@ -31,23 +31,25 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     createGameLabel->setGeometry(780, 285, 500, 100);
 
     // Create back button
-    QPushButton *backButton = new QPushButton("Back", this);
+    auto backButton = std::make_unique<QPushButton>("Back", this);
     backButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
-        "font-size: 42px;"                  
-        "border: 0px solid #555555;"        
-        "border-radius: 15px;"              
-        "padding: 10px;"                    
-        "text-align: center;"               
+        "background-color: rgba(240, 140, 0, 100);"
+        "color: #ced4da;"
+        "font-size: 42px;"
+        "border: 0px solid #555555;"
+        "border-radius: 15px;"
+        "padding: 10px;"
+        "text-align: center;"
         "}"
         "QPushButton:hover {"
         "background-color: rgba(232, 89, 12, 100);"
         "}"
     );
     backButton->setFont(customFont);
-    backButton->setGeometry(460, 260, 160, 80);
+    backButton->setGeometry(780, 400, 200, 100);
+    connect(backButton.get(), &QPushButton::clicked, this, &CreateGameScreen::onBackButtonClicked);
+
 
     // Load the original icon
     QPixmap goBackIcon("assets/Left-Arrow.png");
@@ -66,8 +68,6 @@ CreateGameScreen::CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<Generic
     // Set the resulting QPixmap as the icon of the QPushButton
     backButton->setIcon(QIcon(transparentIcon));
     backButton->setIconSize(QSize(30, 30));
-
-    connect(backButton, &QPushButton::clicked, this, &CreateGameScreen::onBackButtonClicked);
 
     // Create game name label
     QLabel *gameNameLabel = new QLabel("enter lobby Name", this);
@@ -233,9 +233,9 @@ void CreateGameScreen::onCreateGameButtonClicked() {
     // Nombre default del que crea el server:
     std::string playerName = "Player1";
     uint8_t maxPlayers = this->maxPlayers;
-    CreateLobbyMsg* createLobbyMsg = new CreateLobbyMsg(playerName, lobbyNameStr, maxPlayers);
+    std::shared_ptr<CreateLobbyMsg> createLobbyMsg = std::make_unique<CreateLobbyMsg>(playerName, lobbyNameStr, maxPlayers);
     send_queue->push(createLobbyMsg);
-    GenericMsg* response = recv_queue->pop();
+    std::shared_ptr<GenericMsg> response = recv_queue->pop();
     if (response->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else {

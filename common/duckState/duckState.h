@@ -16,7 +16,8 @@ std::string duckState_to_string(DuckState state);  // Declaración
 
 enum Side {
     RIGHT,
-    LEFT
+    LEFT,
+    UP
 };
 #endif // DUCKSTATE_H
 

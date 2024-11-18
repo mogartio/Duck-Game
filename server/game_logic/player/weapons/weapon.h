@@ -30,7 +30,7 @@ public:
     virtual Coordinate get_gun_position(int facing_direction);
     virtual void stop_shooting() { stopped_holding_trigger = true; }
     virtual void start_throw();
-    virtual void finish_throw(int, bool, std::unique_ptr<Weapon>);
+    virtual void finish_throw(int, bool, std::shared_ptr<Weapon>);
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
     virtual void update() {}

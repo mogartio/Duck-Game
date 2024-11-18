@@ -26,7 +26,7 @@ void Player::init_for_stage(Stage* stage) {
     notify_moved();  // los notify hacen que se broadcasteen mensajes
 }
 
-void Player::pick_weapon(std::unique_ptr<Weapon> new_weapon) {
+void Player::pick_weapon(std::shared_ptr<Weapon> new_weapon) {
     weapon = std::move(new_weapon);
     weapon->set_player(this);
     notify_picked_weapon();

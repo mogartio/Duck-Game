@@ -16,7 +16,7 @@ private:
     Coordinate position;
     std::vector<Coordinate> occupied;  // Las coordenadas que esta ocupando
     Player& player;
-    std::unique_ptr<AirState> air_state;
+    std::shared_ptr<AirState> air_state;
     Stage& stage;
     uint8_t facing_direction;  // para disparar
     int aiming_direction;      // para disparar
@@ -27,7 +27,7 @@ private:
 
 public:
     PlayerPosition(Coordinate&, Player&, Stage&);
-    void set_state(std::unique_ptr<AirState>, uint8_t);
+    void set_state(std::shared_ptr<AirState>, uint8_t);
     void move(const std::set<int>&);
     Coordinate get_position();
     uint8_t get_state() { return state; }

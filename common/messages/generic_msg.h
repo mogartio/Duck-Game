@@ -142,7 +142,7 @@ public:
 
     InfoLobbyMsg();
 
-    InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
+    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
 
     void set_players(std::list<DescipcionPlayer> players);
 

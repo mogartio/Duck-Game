@@ -1,6 +1,6 @@
 #include "client.h"
 
-Client::Client(Socket&& skt, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) :
+Client::Client(Socket&& skt, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) :
     client_skt(std::move(skt)),
     send_queue(send_queue),
     recv_queue(recv_queue),

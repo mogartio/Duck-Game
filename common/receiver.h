@@ -10,15 +10,15 @@
 
 class Receiver: public Thread {
 protected:
-    Queue<GenericMsg*>* recv_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     ProtocoloCommon* protocol;
 
     void run() override;
 
-    virtual void executeMsg(GenericMsg* msg) = 0;
+    virtual void executeMsg(std::shared_ptr<GenericMsg> msg) = 0;
 
 public:
-    explicit Receiver(Queue<GenericMsg*>* recv_queue, ProtocoloCommon* protocol);
+    explicit Receiver(Queue<std::shared_ptr<GenericMsg>>* recv_queue, ProtocoloCommon* protocol);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.

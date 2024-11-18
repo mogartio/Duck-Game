@@ -28,7 +28,7 @@ class JoinLobbyScreen : public QWidget {
     Q_OBJECT
 
 public:
-    JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    JoinLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
     void resizeEvent(QResizeEvent *event) override;
 
 signals:
@@ -44,15 +44,15 @@ private slots:
     void onRefreshButtonClicked();
 
 private:
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
-    QSound *keyPressSound;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
+    std::shared_ptr<QSound> keyPressSound;
     QFont customFont;
     std::vector<DescripcionLobby> lobbies;
     std::vector<QWidget*> lobbyWidgets;
-    QScrollArea* scrollArea;
-    QWidget* scrollWidget;
-    QVBoxLayout* scrollLayout;
+    std::shared_ptr<QScrollArea> scrollArea;
+    std::shared_ptr<QWidget> scrollWidget;
+    std::shared_ptr<QVBoxLayout> scrollLayout;
 };
 
 #endif  // JOIN_LOBBY_SCREEN_H

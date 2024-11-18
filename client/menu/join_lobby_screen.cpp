@@ -1,13 +1,13 @@
 #include "join_lobby_screen.h" 
 
-JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
+JoinLobbyScreen::JoinLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
     
     // Load custom font
     int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
@@ -97,18 +97,18 @@ JoinLobbyScreen::JoinLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     connect(refreshButton, &QPushButton::clicked, this, &JoinLobbyScreen::onRefreshButtonClicked);
 
     // Create scroll area for lobbies
-    scrollArea = new QScrollArea(this);
+    scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setGeometry(635, 325, 650, 500);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(255,0,0,0);");
 
-    scrollWidget = new QWidget();
+    scrollWidget = std::make_unique<QWidget>();
     scrollWidget->setStyleSheet("background: transparent;");
-    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidget(scrollWidget.get());
 
-    scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout = std::make_unique<QVBoxLayout>(scrollWidget.get());
     scrollLayout->setSpacing(20); // Set spacing between widgets
-    scrollWidget->setLayout(scrollLayout);
+    scrollWidget->setLayout(scrollLayout.get());
     scrollLayout->setAlignment(Qt::AlignTop);
 
 }; 
@@ -128,10 +128,10 @@ void JoinLobbyScreen::onBackButtonClicked() {
 
 void JoinLobbyScreen::onRefreshButtonClicked() {
     keyPressSound->play();
-    send_queue->push(new ViewLobbiesMsg());
-    GenericMsg* msg = recv_queue->pop();
+    send_queue->push(std::make_shared<ViewLobbiesMsg>());
+    std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG) {
-        SendLobbiesListMsg* lobbyListMsg = dynamic_cast<SendLobbiesListMsg*>(msg);
+        std::shared_ptr<SendLobbiesListMsg> lobbyListMsg = std::dynamic_pointer_cast<SendLobbiesListMsg>(msg);
         lobbies = lobbyListMsg->get_lobbies();
 
         QLayoutItem* item;
@@ -234,12 +234,12 @@ void JoinLobbyScreen::onJoinButtonClicked(uint8_t lobby_id) {
             break;
         }
     }
-    send_queue->push(new ChooseLobbyMsg(lobby_id, player_name));
-    GenericMsg* msg = recv_queue->pop();
+    send_queue->push(std::make_shared<ChooseLobbyMsg>(lobby_id, player_name));
+    std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else if (msg->get_header() == GenericMsg::MsgTypeHeader::ERROR_MSG) {
-        ErrorMsg* errorMsg = dynamic_cast<ErrorMsg*>(msg);
+        std::shared_ptr<ErrorMsg> errorMsg = std::dynamic_pointer_cast<ErrorMsg>(msg);
         // draw error message
         QLabel *errorLabel = new QLabel(errorMsg->get_error_msg().c_str(), this);
         errorLabel->setStyleSheet("QLabel { color: #800404; font-size: 24px; }");

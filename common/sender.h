@@ -10,13 +10,13 @@
 
 class Sender: public Thread {
 private:
-    Queue<GenericMsg*>* send_queue;  // tiene que ser un puntero para poder cambiar la referencia
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;  // tiene que ser un puntero para poder cambiar la referencia
     ProtocoloCommon* protocol;
 
     void run() override;
 
 public:
-    Sender(Queue<GenericMsg*>* send_queue, ProtocoloCommon* protocol);
+    Sender(Queue<std::shared_ptr<GenericMsg>>* send_queue, ProtocoloCommon* protocol);
 
     /*
      * Detiene la ejecución del hilo seteando _keep_running en false.

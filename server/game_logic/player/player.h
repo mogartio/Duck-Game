@@ -17,10 +17,10 @@
 class Player: public PlayerSubject {
 private:
     int id;
-    std::unique_ptr<PlayerPosition> position;
+    std::shared_ptr<PlayerPosition> position;
     bool is_alive;
     Stage* stage;
-    std::unique_ptr<Weapon> weapon;
+    std::shared_ptr<Weapon> weapon;
     std::set<int> current_actions;
     std::string name;
     bool should_notify;
@@ -46,7 +46,7 @@ public:
     void notify_moved();
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
-    void pick_weapon(std::unique_ptr<Weapon> new_weapon);
+    void pick_weapon(std::shared_ptr<Weapon> new_weapon);
     void unarm_self();
 };
 

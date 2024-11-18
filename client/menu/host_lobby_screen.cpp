@@ -1,10 +1,10 @@
 #include "host_lobby_screen.h"
 
-HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
+HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, std::list<std::string>* local_players) : send_queue(send_queue), recv_queue(recv_queue), local_players(local_players), running(true) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
-    keyPressSound = new QSound("assets/Retro3.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
     // Load custom font
     int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
@@ -41,30 +41,30 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
     localPlayerButton->setFont(customFont);
     localPlayerButton->setGeometry(800, 150, 350, 60);
     // Add scroll area 
-    scrollArea = new QScrollArea(this);
+    scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setGeometry(250, 230, 900, 700);
     scrollArea->setWidgetResizable(true);
     scrollArea->setStyleSheet("background-color: rgba(0,0,0,100);");
 
-    scrollWidget = new QWidget();
+    scrollWidget = std::make_unique<QWidget>();
     scrollWidget->setStyleSheet("background: transparent;");
-    scrollArea->setWidget(scrollWidget);
+    scrollArea->setWidget(scrollWidget.get());
 
-    scrollLayout = new QVBoxLayout(scrollWidget);
+    scrollLayout = std::make_unique<QVBoxLayout>(scrollWidget.get());
     scrollLayout->setSpacing(20); // Set spacing between widgets
-    scrollWidget->setLayout(scrollLayout);
+    scrollWidget->setLayout(scrollLayout.get());
     scrollLayout->setAlignment(Qt::AlignTop);
 
     connect(localPlayerButton, &QPushButton::clicked, this, &HostLobbyScreen::onAddLocalPlayerButtonClicked);
 
     // Load save icon image
-    saveIcon = new QPixmap("assets/Floppy-Drive.png");
+    saveIcon = std::make_unique<QPixmap>("assets/Floppy-Drive.png");
 
     // Load ducks images
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, new QPixmap("assets/white_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, new QPixmap("assets/yellow_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, new QPixmap("assets/orange_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, new QPixmap("assets/grey_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, std::make_unique<QPixmap>("assets/white_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, std::make_unique<QPixmap>("assets/yellow_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, std::make_unique<QPixmap>("assets/orange_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, std::make_unique<QPixmap>("assets/grey_duck_head.png")));
 
     // Scale images
     for (auto& duck : ducks_images) {
@@ -98,16 +98,28 @@ HostLobbyScreen::HostLobbyScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMs
 
 void HostLobbyScreen::processIncomingMessages() {
     while (running) {
-        GenericMsg* msg = recv_queue->pop();
+        std::shared_ptr<GenericMsg> msg = recv_queue->pop();
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
-            lobby_id = info_lobby_msg->get_lobby_id();
-            std::lock_guard<std::mutex> lock(players_mutex);
-            players = info_lobby_msg->get_players();
-            emit playersUpdated();
+            // Ensure dynamic_cast is successful
+            std::shared_ptr<InfoLobbyMsg> info_lobby_msg = std::dynamic_pointer_cast<InfoLobbyMsg>(msg);
+            if (info_lobby_msg) {
+                lobby_id = info_lobby_msg->get_lobby_id();
+                std::lock_guard<std::mutex> lock(players_mutex);
+                players = info_lobby_msg->get_players();
+                emit playersUpdated();
+            } else {
+                // Handle the error if dynamic_cast fails
+                std::cerr << "Failed to cast to InfoLobbyMsg" << std::endl;
+            }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
-            PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
-            myLocalPlayerName = player_info_msg->get_player_name();
+            // Ensure dynamic_cast is successful
+            std::shared_ptr<PlayerInfoMsg> player_info_msg = std::dynamic_pointer_cast<PlayerInfoMsg>(msg);
+            if (player_info_msg) {
+                myLocalPlayerName = player_info_msg->get_player_name();
+            } else {
+                // Handle the error if dynamic_cast fails
+                std::cerr << "Failed to cast to PlayerInfoMsg" << std::endl;
+            }
         }
     }
 }
@@ -200,15 +212,15 @@ void HostLobbyScreen::updatePlayersInLobby() {
         layout->addWidget(playerLabel);
         layout->addWidget(saveButton);
 
-        // create duck image
         QLabel *duckLabel = new QLabel(this);
         uint8_t color = player.color;
-        for (auto duck : ducks_images) {
+        for (const auto& duck : ducks_images) {
             if (duck.first == color) {
-                QPixmap *duckImage = duck.second;
+                QPixmap *duckImage = duck.second.get();
                 duckLabel->setPixmap(*duckImage);
                 duckLabel->setFixedWidth(100);
                 duckLabel->setStyleSheet("border: 0px solid #555555;");
+                break; // Exit the loop once the correct duck image is found
             }
         }
         // create ready button
@@ -337,7 +349,8 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
             "background-color: rgba(232, 89, 12, 100);"
             "}"
         );
-        ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(myLocalPlayerName);
+        // ExitFromLobbyMsg* exit_from_lobby_msg = new ExitFromLobbyMsg(myLocalPlayerName);
+        std::shared_ptr<ExitFromLobbyMsg> exit_from_lobby_msg = std::make_shared<ExitFromLobbyMsg>(myLocalPlayerName);
         send_queue->push(exit_from_lobby_msg);
     } else {
         // add local player to lobby
@@ -359,7 +372,8 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         );
         std::string local_player = "localPlayer";
         myLocalPlayerName = local_player;
-        ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
+        // ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
+        std::shared_ptr<ChooseLobbyMsg> choose_lobby_msg = std::make_shared<ChooseLobbyMsg>(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
     }
 
@@ -383,7 +397,8 @@ void HostLobbyScreen::onReadyButtonClicked(std::string player_name) {
         is_ready = GenericMsg::PlayerReadyState::NOT_READY;
     }
 
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, player_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, player_name, is_ready);
     send_queue->push(customized_player_info_msg);
 }
 
@@ -404,7 +419,8 @@ void HostLobbyScreen::onSaveButtonClicked(std::string player_name) {
             break;
         }
     }
-    CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    // CustomizedPlayerInfoMsg* customized_player_info_msg = new CustomizedPlayerInfoMsg(lobby_id, color, player_name, new_name, is_ready);
+    std::shared_ptr<CustomizedPlayerInfoMsg> customized_player_info_msg = std::make_shared<CustomizedPlayerInfoMsg>(lobby_id, color, player_name, new_name, is_ready);
     send_queue->push(customized_player_info_msg);
     if (player_name == myPlayerName) {
         myPlayerName = new_name;
@@ -424,11 +440,14 @@ void HostLobbyScreen::stopProcessing() {
 
 void HostLobbyScreen::onStartGameButtonClicked() {
     keyPressSound->play();
-    StartGameMsg* start_game_msg = new StartGameMsg();
+    // StartGameMsg* start_game_msg = new StartGameMsg();
+    std::shared_ptr<StartGameMsg> start_game_msg = std::make_shared<StartGameMsg>();
     send_queue->push(start_game_msg);
     // set local players list
     local_players->push_back(myPlayerName);
-    local_players->push_back(myLocalPlayerName);
+    if (isLocalPlayerAdded) {
+        local_players->push_back(myLocalPlayerName);
+    }
     // stop thread
     stopProcessing();
     emit startingGame();

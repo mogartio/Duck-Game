@@ -27,7 +27,7 @@ class CreateGameScreen : public QWidget {
     Q_OBJECT
 
 public:
-    CreateGameScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
+    CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
     void resizeEvent(QResizeEvent *event) override;
 signals:
     void switchToMainMenuScreen();
@@ -39,10 +39,10 @@ private slots:
     void onDownArrowClicked();
 
 private:
-    QSound *keyPressSound;
+    std::shared_ptr<QSound> keyPressSound;
     QFont customFont;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     QLineEdit *lobbyName;
     QLabel *maxPlayersBox;
     int maxPlayers = MIN_PLAYERS;

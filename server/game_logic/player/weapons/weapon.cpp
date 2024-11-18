@@ -12,7 +12,7 @@ void Weapon::start_throw() {
     throw_started = true;
     throw_reach += 3;
 }
-void Weapon::finish_throw(int x_direction, bool, std::unique_ptr<Weapon> weapon) {
+void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
     throw_started = false;
     /* double deviation_angle = M_PI / 2; */
@@ -45,7 +45,7 @@ void Unarmed::shoot(int x_direction, bool) {
             Coordinate checking(init_position.x + i * handle_direction, init_position.y + j);
             if (stage.get(checking) > 0 &&
                 stage.get(checking) < 11) {  // TODO: Definir bien cuales son los pickables
-                std::unique_ptr<Weapon> weapon = stage.pick_weapon(checking);
+                std::shared_ptr<Weapon> weapon = stage.pick_weapon(checking);
                 if (weapon != nullptr) {
                     player->pick_weapon(std::move(weapon));
                 }

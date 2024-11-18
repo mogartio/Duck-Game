@@ -15,12 +15,12 @@
 // Un monton de codigo repetido aca
 class ProjectileThrownWeapon: public Projectile {
 private:
-    std::unique_ptr<Weapon> weapon;
+    std::shared_ptr<Weapon> weapon;
     int current_angle_index;
     std::vector<double> deviation_angles{};
 
 public:
-    ProjectileThrownWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
+    ProjectileThrownWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                            int x_direction, int reach, int id):
             Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, id, false, false),
             weapon(std::move(weapon)),
@@ -34,7 +34,7 @@ public:
         deviation_angle =
                 deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
-    virtual std::unique_ptr<Weapon> get_weapon() { return std::move(weapon); }
+    virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     void notify() override {
         for (const Observer* obs: observers) {
@@ -47,11 +47,11 @@ public:
 
 class ProjectileDroppedWeapon: public Projectile {
 private:
-    std::unique_ptr<Weapon> weapon;
+    std::shared_ptr<Weapon> weapon;
     WeaponSpawnPoint* spawn;
 
 public:
-    ProjectileDroppedWeapon(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
+    ProjectileDroppedWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                             int reach, int id, WeaponSpawnPoint* spawn):
             Projectile(initial_position, 1, reach, speed, 0, id, false, false),
             weapon(std::move(weapon)),
@@ -64,7 +64,7 @@ public:
                         static_cast<uint8_t>(id));
         }
     }
-    virtual std::unique_ptr<Weapon> get_weapon() {
+    virtual std::shared_ptr<Weapon> get_weapon() {
         //        spawn->free();
         return std::move(weapon);
     }
@@ -75,7 +75,7 @@ class GrenadeProjectile: public ProjectileThrownWeapon {
     Stage& stage;
 
 public:
-    GrenadeProjectile(std::unique_ptr<Weapon> weapon, Coordinate initial_position, int speed,
+    GrenadeProjectile(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                       int x_direction, int reach, int counter, Stage& stage, int id):
             ProjectileThrownWeapon(std::move(weapon), initial_position, speed, x_direction, reach,
                                    id),

@@ -7,17 +7,18 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QFontDatabase>
+#include <memory>
 #include "parallax_background.h"
 #include "fade_in_image.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 #include <QSound>
+
 class LogoScreen : public QWidget {
     Q_OBJECT
 
 public:
-    LogoScreen(Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue);
-
+    LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
 signals:
     void switchToConnectionScreen();
 
@@ -29,16 +30,16 @@ private slots:
     void toggleTextVisibility();
 
 private:
-    ParallaxBackground *layer0;
-    ParallaxBackground *layer1;
-    ParallaxBackground *layer2;
-    ParallaxBackground *layer3;
-    FadeInImage *fadeInImage;
-    QLabel *flickeringText;
-    QTimer *timer;
-    QSound *keyPressSound;
-    Queue<GenericMsg*>* send_queue;
-    Queue<GenericMsg*>* recv_queue;
+    std::shared_ptr<ParallaxBackground> layer0;
+    std::shared_ptr<ParallaxBackground> layer1;
+    std::shared_ptr<ParallaxBackground> layer2;
+    std::shared_ptr<ParallaxBackground> layer3;
+    std::shared_ptr<FadeInImage> fadeInImage;
+    std::shared_ptr<QLabel> flickeringText;
+    std::shared_ptr<QTimer> timer;
+    std::shared_ptr<QSound> keyPressSound;
+    Queue<std::shared_ptr<GenericMsg>>* send_queue;
+    Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     bool initialized = false;
 };
 

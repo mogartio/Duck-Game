@@ -12,8 +12,8 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    Queue<GenericMsg*> send_queue(100);
-    Queue<GenericMsg*> recv_queue(100);
+    Queue<std::shared_ptr<GenericMsg>> send_queue(100);
+    Queue<std::shared_ptr<GenericMsg>> recv_queue(100);
 
     Client* client = nullptr;
 
@@ -24,10 +24,12 @@ int main(int argc, char *argv[]) {
 
 
     if (app.exec() == 0) {
-        // se cerro ordenadamente y aca se tiene que iniciar el render del juego
-        // te printeo la lista de players :)
-        for (auto player : *local_players) {
-            std::cout << player << std::endl;
+        if (local_players->size() == 0) {
+            recv_queue.close();
+            send_queue.close();
+            delete local_players;
+            delete client;
+            return 0;
         }
     } else {
         return 1;
@@ -39,6 +41,8 @@ int main(int argc, char *argv[]) {
     local_players->pop_front();
     Game game(send_queue, recv_queue, first_player, local_players->front());
     game.play();
-    
+    recv_queue.close();
+    send_queue.close();
+    delete local_players;
     return 0;
 }

@@ -11,19 +11,19 @@
 
 class EventHandler: public Thread {
 private:
-    Queue<GenericMsg*>& queueSend;
+    Queue<std::shared_ptr<GenericMsg>>& queueSend;
     std::string playerName1;
     std::atomic<bool>& running;
     std::string playerName2;
 
-    std::map<std::tuple<Uint32, SDL_Scancode>, std::function<GenericMsg*(void)>> key_accion_map;
+    std::map<std::tuple<Uint32, SDL_Scancode>, std::function<std::shared_ptr<GenericMsg>(void)>> key_accion_map;
 
     std::map<SDL_Scancode, bool> pressed_keys_state;
 
     bool corroboraciones(SDL_Event& event);
 
 public:
-    EventHandler(Queue<GenericMsg*>& queueSend, std::string& playerName1,
+    EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::string& playerName1,
                  std::atomic<bool>& running, std::string playerName2 = "");
 
     void run() override;

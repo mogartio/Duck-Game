@@ -13,9 +13,9 @@ public:
     void resize();  // Method to center the image when window is resized
 
 private:
-    QLabel *fadeInLabel;
-    QGraphicsOpacityEffect *opacityEffect;
-    QPropertyAnimation *fadeInAnimation;
+    std::shared_ptr<QLabel> fadeInLabel;
+    std::shared_ptr<QGraphicsOpacityEffect> opacityEffect;
+    std::shared_ptr<QPropertyAnimation> fadeInAnimation;
     QPixmap fadeInPixmap;
 };
 

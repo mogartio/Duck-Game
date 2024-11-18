@@ -1,29 +1,30 @@
 #include "main_window.h"
 
-MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<GenericMsg*>* recv_queue, Client* client, std::list<std::string>* local_players) : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players) {
-    
+MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players)
+    : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players) {
+
     resize(1920, 1080);
     setWindowFlags(Qt::FramelessWindowHint);
 
-    stackedWidget = new QStackedWidget(this);
-    setCentralWidget(stackedWidget);
+    stackedWidget = std::make_unique<QStackedWidget>(this);
+    setCentralWidget(stackedWidget.get());
 
     // Setup the background
     setupBackground();
     
     // Create screens
-    logoScreen = new LogoScreen(send_queue, recv_queue);
-    connectionScreen = new ConnectionScreen(send_queue, recv_queue, client);
-    mainMenuScreen = new MainMenuScreen(send_queue, recv_queue);
-    createGameScreen = new CreateGameScreen(send_queue, recv_queue);
-    joinLobbyScreen = new JoinLobbyScreen(send_queue, recv_queue);
+    logoScreen = std::make_unique<LogoScreen>(send_queue, recv_queue);
+    connectionScreen = std::make_unique<ConnectionScreen>(send_queue, recv_queue, client);
+    mainMenuScreen = std::make_unique<MainMenuScreen>(send_queue, recv_queue);
+    createGameScreen = std::make_unique<CreateGameScreen>(send_queue, recv_queue);
+    joinLobbyScreen = std::make_unique<JoinLobbyScreen>(send_queue, recv_queue);
 
     // Add screens to stacked widget
-    stackedWidget->addWidget(logoScreen);
-    stackedWidget->addWidget(connectionScreen);
-    stackedWidget->addWidget(mainMenuScreen);
-    stackedWidget->addWidget(createGameScreen);
-    stackedWidget->addWidget(joinLobbyScreen);
+    stackedWidget->addWidget(logoScreen.get());
+    stackedWidget->addWidget(connectionScreen.get());
+    stackedWidget->addWidget(mainMenuScreen.get());
+    stackedWidget->addWidget(createGameScreen.get());
+    stackedWidget->addWidget(joinLobbyScreen.get());
 
     // Ensure the screens are resized to fit the QMainWindow
     logoScreen->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -36,41 +37,41 @@ MainWindow::MainWindow(QWidget *parent, Queue<GenericMsg*>* send_queue, Queue<Ge
     showLogoScreen();
 
     // Connect the signal from LogoScreen to switch to ConnectionScreen
-    connect(logoScreen, &LogoScreen::switchToConnectionScreen, this, &MainWindow::showConnectionScreen);
+    connect(logoScreen.get(), &LogoScreen::switchToConnectionScreen, this, &MainWindow::showConnectionScreen);
 
-    // Connect the quir signal from ConnectionScreen to quit the application
-    connect(connectionScreen, &ConnectionScreen::quitApplication, this, &MainWindow::handleQuitApplication);
+    // Connect the quit signal from ConnectionScreen to quit the application
+    connect(connectionScreen.get(), &ConnectionScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 
     // Connect the signal from ConnectionScreen to switch to MainMenuScreen
-    connect(connectionScreen, &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreenWithFade);
+    connect(connectionScreen.get(), &ConnectionScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreenWithFade);
 
     // Connect the quit signal from MainMenuScreen to quit the application
-    connect(mainMenuScreen, &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
+    connect(mainMenuScreen.get(), &MainMenuScreen::quitApplication, this, &MainWindow::handleQuitApplication);
 
     // Connect the signal from MainMenuScreen to switch to CreateGameScreen
-    connect(mainMenuScreen, &MainMenuScreen::switchToCreateGameScreen, this, &MainWindow::showCreateGameScreen);
+    connect(mainMenuScreen.get(), &MainMenuScreen::switchToCreateGameScreen, this, &MainWindow::showCreateGameScreen);
 
     // Connect the signal from CreateGameScreen to switch to MainMenuScreen
-    connect(createGameScreen, &CreateGameScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+    connect(createGameScreen.get(), &CreateGameScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 
     // Connect the signal from CreateGameScreen to switch to LobbyScreen
-    connect(createGameScreen, &CreateGameScreen::switchToLobbyScreen, this, &MainWindow::showHostLobbyScreen);
+    connect(createGameScreen.get(), &CreateGameScreen::switchToLobbyScreen, this, &MainWindow::showHostLobbyScreen);
 
     // Connect the signal from MainMenuScreen to switch to JoinLobbyScreen
-    connect(mainMenuScreen, &MainMenuScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
+    connect(mainMenuScreen.get(), &MainMenuScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
 
     // Connect the signal from JoinLobbyScreen to switch to MainMenuScreen
-    connect(joinLobbyScreen, &JoinLobbyScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+    connect(joinLobbyScreen.get(), &JoinLobbyScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
 
     // Connect the signal from JoinLobbyScreen to switch to LobbyScreen
-    connect(joinLobbyScreen, &JoinLobbyScreen::switchToLobbyScreen, this, &MainWindow::showLobbyScreen);
+    connect(joinLobbyScreen.get(), &JoinLobbyScreen::switchToLobbyScreen, this, &MainWindow::showLobbyScreen);
 
     // Connect the signal to trigger refresh when JoinLobbyScreen is shown
-    connect(this, &MainWindow::joinLobbyScreenShown, joinLobbyScreen, &JoinLobbyScreen::triggerRefresh);
+    connect(this, &MainWindow::joinLobbyScreenShown, joinLobbyScreen.get(), &JoinLobbyScreen::triggerRefresh);
 }
 
 void MainWindow::setupBackground() {
-    backgroundLabel = new QLabel(this);
+    backgroundLabel = std::make_unique<QLabel>(this);
     QPixmap backgroundPixmap("assets/sliding_background.png"); // Load your image
     backgroundLabel->setPixmap(backgroundPixmap);
     backgroundLabel->setScaledContents(true); // Optional: scale the image to fit the window
@@ -82,7 +83,7 @@ void MainWindow::setupBackground() {
 }
 
 void MainWindow::slideBackground(int targetX) {
-    QPropertyAnimation *animation = new QPropertyAnimation(backgroundLabel, "pos");
+    QPropertyAnimation *animation = new QPropertyAnimation(backgroundLabel.get(), "pos");
     animation->setDuration(1000); // Set duration for the sliding effect
     animation->setStartValue(backgroundLabel->pos());
     animation->setEndValue(QPoint(targetX, backgroundLabel->y()));
@@ -91,20 +92,19 @@ void MainWindow::slideBackground(int targetX) {
 }
 
 void MainWindow::showMainMenuScreen() {
-    stackedWidget->setCurrentWidget(mainMenuScreen);
+    stackedWidget->setCurrentWidget(mainMenuScreen.get());
     slideBackground(0); // Move to the first third
 }
 
 void MainWindow::showLogoScreen() {
-    stackedWidget->setCurrentWidget(logoScreen);
+    stackedWidget->setCurrentWidget(logoScreen.get());
 }
 
 void MainWindow::showConnectionScreen() {
-    stackedWidget->setCurrentWidget(connectionScreen);
+    stackedWidget->setCurrentWidget(connectionScreen.get());
 }
 
 void MainWindow::handleQuitApplication() {
-    // crashea aca
     QApplication::quit();
 }
 
@@ -123,7 +123,7 @@ void MainWindow::showMainMenuScreenWithFade() {
     fadeOut->setEndValue(1);
 
     connect(fadeOut, &QPropertyAnimation::finished, [this, overlay]() {
-        stackedWidget->setCurrentWidget(mainMenuScreen);
+        stackedWidget->setCurrentWidget(mainMenuScreen.get());
         slideBackground(0); // Move to the first third
         QPropertyAnimation *fadeIn = new QPropertyAnimation(overlay->graphicsEffect(), "opacity");
         fadeIn->setDuration(1000);
@@ -138,35 +138,35 @@ void MainWindow::showMainMenuScreenWithFade() {
 }
 
 void MainWindow::showCreateGameScreen() {
-    stackedWidget->setCurrentWidget(createGameScreen);
+    stackedWidget->setCurrentWidget(createGameScreen.get());
     slideBackground(-480); // Move to the second third
 }
 
 void MainWindow::showLobbyScreen() {
-    lobbyScreen = new LobbyScreen(send_queue, recv_queue, local_players);
-    stackedWidget->addWidget(lobbyScreen);
-    stackedWidget->setCurrentWidget(lobbyScreen);
+    lobbyScreen = std::make_unique<LobbyScreen>(send_queue, recv_queue, local_players);
+    stackedWidget->addWidget(lobbyScreen.get());
+    stackedWidget->setCurrentWidget(lobbyScreen.get());
     slideBackground(-960); // Move to the last third
 
     // Connect the signal from LobbyScreen to switch to JoinLobbyScreen
-    connect(lobbyScreen, &LobbyScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
+    connect(lobbyScreen.get(), &LobbyScreen::switchToJoinLobbyScreen, this, &MainWindow::showJoinLobbyScreen);
     // Connect the start game signal from LobbyScreen to handle game start
-    connect(lobbyScreen, &LobbyScreen::startingGame, this, &MainWindow::handleGameStart);
+    connect(lobbyScreen.get(), &LobbyScreen::startingGame, this, &MainWindow::handleGameStart);
 }
 
 void MainWindow::showJoinLobbyScreen() {
-    stackedWidget->setCurrentWidget(joinLobbyScreen);
+    stackedWidget->setCurrentWidget(joinLobbyScreen.get());
     slideBackground(-480); // Move to the last third
     emit joinLobbyScreenShown();
 }
 
 void MainWindow::showHostLobbyScreen() {
-    hostLobbyScreen = new HostLobbyScreen(send_queue, recv_queue, local_players);
-    stackedWidget->addWidget(hostLobbyScreen);
-    stackedWidget->setCurrentWidget(hostLobbyScreen);
+    hostLobbyScreen = std::make_unique<HostLobbyScreen>(send_queue, recv_queue, local_players);
+    stackedWidget->addWidget(hostLobbyScreen.get());
+    stackedWidget->setCurrentWidget(hostLobbyScreen.get());
     slideBackground(-960); // Move to the last third
     // Connect the start game signal from HostLobbyScreen to handle game start
-    connect(hostLobbyScreen, &HostLobbyScreen::startingGame, this, &MainWindow::handleGameStart);
+    connect(hostLobbyScreen.get(), &HostLobbyScreen::startingGame, this, &MainWindow::handleGameStart);
 }
 
 void MainWindow::handleGameStart() {
@@ -212,8 +212,4 @@ void MainWindow::handleGameStart() {
     });
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
-}
-
-MainWindow::~MainWindow() {
-    delete connectionScreen;
 }
