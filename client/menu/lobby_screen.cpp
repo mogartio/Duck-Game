@@ -85,8 +85,7 @@ void LobbyScreen::processIncomingMessages() {
     while (running) {
         std::shared_ptr<GenericMsg> msg = recv_queue->pop();
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            // InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
-            std::shared_ptr<InfoLobbyMsg> info_lobby_msg(dynamic_cast<InfoLobbyMsg*>(msg.get()));
+            std::shared_ptr<InfoLobbyMsg> info_lobby_msg = std::dynamic_pointer_cast<InfoLobbyMsg>(msg);
             lobby_id = info_lobby_msg->get_lobby_id();
             std::lock_guard<std::mutex> lock(players_mutex);
             players = info_lobby_msg->get_players();
@@ -105,8 +104,7 @@ void LobbyScreen::processIncomingMessages() {
                 emit starting();
             }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
-            // PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
-            std::shared_ptr<PlayerInfoMsg> player_info_msg(dynamic_cast<PlayerInfoMsg*>(msg.get()));
+            std::shared_ptr<PlayerInfoMsg> player_info_msg = std::dynamic_pointer_cast<PlayerInfoMsg>(msg);
             myPlayerName = player_info_msg->get_player_name();
         }
     }

@@ -5,7 +5,7 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::stri
         senders(senders), game_over(false) {
     const PlayerObserver* player_obs = new PlayerObserver(senders);
     players = generate_players(player_names, *player_obs);
-    game_loop = std::make_unique<GameMain>(recv, players, is_testing, senders);
+    game_loop = std::make_shared<GameMain>(recv, players, is_testing, senders);
 }
 
 std::map<std::string, Player*> Game::generate_players(const std::vector<std::string>& names,

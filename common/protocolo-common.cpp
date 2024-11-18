@@ -13,45 +13,45 @@ std::shared_ptr<GenericMsg> ProtocoloCommon::receive() {
 
 ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(false) {
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG,
-                          [this]() { return std::make_unique<InfoLobbyMsg>(); });
+                          [this]() { return std::make_shared<InfoLobbyMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::CUSTOMIZED_PLAYER_INFO_MSG,
-                          [this]() { return std::make_unique<CustomizedPlayerInfoMsg>(); });
+                          [this]() { return std::make_shared<CustomizedPlayerInfoMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::VIEW_LOBBIES_MSG,
-                          [this]() { return std::make_unique<ViewLobbiesMsg>(); });
+                          [this]() { return std::make_shared<ViewLobbiesMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::CHOOSE_LOBBY_MSG,
-                          [this]() { return std::make_unique<ChooseLobbyMsg>(); });
+                          [this]() { return std::make_shared<ChooseLobbyMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::CREATE_LOBBY_MSG,
-                          [this]() { return std::make_unique<CreateLobbyMsg>(); });
+                          [this]() { return std::make_shared<CreateLobbyMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::GO_BACK_MSG,
-                          [this]() { return std::make_unique<GoBackMsg>(); });
+                          [this]() { return std::make_shared<GoBackMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::EXIT_FROM_LOBBY_MSG,
-                          [this]() { return std::make_unique<ExitFromLobbyMsg>(); });
+                          [this]() { return std::make_shared<ExitFromLobbyMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::START_GAME_MSG,
-                          [this]() { return std::make_unique<StartGameMsg>(); });
+                          [this]() { return std::make_shared<StartGameMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG,
-                          [this]() { return std::make_unique<PickupDropMsg>(); });
+                          [this]() { return std::make_shared<PickupDropMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::START_ACTION_MSG,
-                          [this]() { return std::make_unique<StartActionMsg>(); });
+                          [this]() { return std::make_shared<StartActionMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::STOP_ACTION_MSG,
-                          [this]() { return std::make_unique<StopActionMsg>(); });
+                          [this]() { return std::make_shared<StopActionMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG,
-                          [this]() { return std::make_unique<SendLobbiesListMsg>(); });
+                          [this]() { return std::make_shared<SendLobbiesListMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG,
-                          [this]() { return std::make_unique<EverythingOkMsg>(); });
+                          [this]() { return std::make_shared<EverythingOkMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::ERROR_MSG,
-                          [this]() { return std::make_unique<ErrorMsg>(); });
+                          [this]() { return std::make_shared<ErrorMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::SEND_MAP_MSG,
-                          [this]() { return std::make_unique<SendMapMsg>(); });
+                          [this]() { return std::make_shared<SendMapMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::GAME_ENDED_MSG,
-                          [this]() { return std::make_unique<GameEndedMsg>(); });
+                          [this]() { return std::make_shared<GameEndedMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::WINNER_MSG,
-                          [this]() { return std::make_unique<WinnerMsg>(); });
+                          [this]() { return std::make_shared<WinnerMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG,
-                          [this]() { return std::make_unique<UpdatedPlayerInfoMsg>(); });
+                          [this]() { return std::make_shared<UpdatedPlayerInfoMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG,
-                          [this]() { return std::make_unique<ProjectileInfoMsg>(); });
+                          [this]() { return std::make_shared<ProjectileInfoMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG,
-                          [this]() { return std::make_unique<PlayerInfoMsg>(); });
+                          [this]() { return std::make_shared<PlayerInfoMsg>(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {

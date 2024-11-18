@@ -100,16 +100,26 @@ void HostLobbyScreen::processIncomingMessages() {
     while (running) {
         std::shared_ptr<GenericMsg> msg = recv_queue->pop();
         if (msg->get_header() == GenericMsg::MsgTypeHeader::INFO_LOBBY_MSG) {
-            // InfoLobbyMsg* info_lobby_msg = dynamic_cast<InfoLobbyMsg*>(msg);
-            std::shared_ptr<InfoLobbyMsg> info_lobby_msg(dynamic_cast<InfoLobbyMsg*>(msg.get()));
-            lobby_id = info_lobby_msg->get_lobby_id();
-            std::lock_guard<std::mutex> lock(players_mutex);
-            players = info_lobby_msg->get_players();
-            emit playersUpdated();
+            // Ensure dynamic_cast is successful
+            std::shared_ptr<InfoLobbyMsg> info_lobby_msg = std::dynamic_pointer_cast<InfoLobbyMsg>(msg);
+            if (info_lobby_msg) {
+                lobby_id = info_lobby_msg->get_lobby_id();
+                std::lock_guard<std::mutex> lock(players_mutex);
+                players = info_lobby_msg->get_players();
+                emit playersUpdated();
+            } else {
+                // Handle the error if dynamic_cast fails
+                std::cerr << "Failed to cast to InfoLobbyMsg" << std::endl;
+            }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
-            // PlayerInfoMsg* player_info_msg = dynamic_cast<PlayerInfoMsg*>(msg);
-            std::shared_ptr<PlayerInfoMsg> player_info_msg(dynamic_cast<PlayerInfoMsg*>(msg.get()));
-            myLocalPlayerName = player_info_msg->get_player_name();
+            // Ensure dynamic_cast is successful
+            std::shared_ptr<PlayerInfoMsg> player_info_msg = std::dynamic_pointer_cast<PlayerInfoMsg>(msg);
+            if (player_info_msg) {
+                myLocalPlayerName = player_info_msg->get_player_name();
+            } else {
+                // Handle the error if dynamic_cast fails
+                std::cerr << "Failed to cast to PlayerInfoMsg" << std::endl;
+            }
         }
     }
 }

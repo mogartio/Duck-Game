@@ -62,7 +62,7 @@ private:
     bool isLocalPlayerAdded = false;
     std::thread recv_thread;
     std::list<DescipcionPlayer> players;
-    std::vector<std::shared_ptr<QWidget>> lobbyWidgets;
+    std::vector<QWidget*> lobbyWidgets;
     // color de pato y su imagen
     std::list<std::pair<uint8_t, std::shared_ptr<QPixmap>>> ducks_images;
     std::map<std::string, std::string> playerEdits;

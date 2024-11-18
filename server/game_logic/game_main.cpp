@@ -148,7 +148,7 @@ std::shared_ptr<GenericMsg> GameMain::create_msg(const std::string& command) {
         return nullptr;
     }
     if (command.substr(0, 1) == "s") {
-        auto msg = std::make_unique<StartActionMsg>();
+        auto msg = std::make_shared<StartActionMsg>();
         if (command.substr(2, 1) == "0") {
             msg->set_player_name(player_name1);
         } else if (command.substr(2, 1) == "1") {
@@ -164,7 +164,7 @@ std::shared_ptr<GenericMsg> GameMain::create_msg(const std::string& command) {
         return msg;
     }
     if (command.substr(0, 1) == "x") {
-        auto msg = std::make_unique<StopActionMsg>();
+        auto msg = std::make_shared<StopActionMsg>();
         if (command.substr(2, 1) == "0") {
             msg->set_player_name(player_name1);
         } else if (command.substr(2, 1) == "1") {

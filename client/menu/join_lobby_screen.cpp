@@ -128,10 +128,10 @@ void JoinLobbyScreen::onBackButtonClicked() {
 
 void JoinLobbyScreen::onRefreshButtonClicked() {
     keyPressSound->play();
-    send_queue->push(std::make_unique<ViewLobbiesMsg>());
+    send_queue->push(std::make_shared<ViewLobbiesMsg>());
     std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::SEND_LOBBIES_LIST_MSG) {
-        std::shared_ptr<SendLobbiesListMsg> lobbyListMsg(dynamic_cast<SendLobbiesListMsg*>(msg.get()));
+        std::shared_ptr<SendLobbiesListMsg> lobbyListMsg = std::dynamic_pointer_cast<SendLobbiesListMsg>(msg);
         lobbies = lobbyListMsg->get_lobbies();
 
         QLayoutItem* item;
@@ -220,7 +220,7 @@ void JoinLobbyScreen::onRefreshButtonClicked() {
             lobbyLayout->addWidget(joinButton);
             lobbyWidget->setLayout(lobbyLayout);
             scrollLayout->addWidget(lobbyWidget);
-            lobbyWidgets.push_back(std::shared_ptr<QWidget>(lobbyWidget));
+            lobbyWidgets.push_back(lobbyWidget);
         }
     }
 }
@@ -234,12 +234,12 @@ void JoinLobbyScreen::onJoinButtonClicked(uint8_t lobby_id) {
             break;
         }
     }
-    send_queue->push(std::make_unique<ChooseLobbyMsg>(lobby_id, player_name));
+    send_queue->push(std::make_shared<ChooseLobbyMsg>(lobby_id, player_name));
     std::shared_ptr<GenericMsg> msg = recv_queue->pop();
     if (msg->get_header() == GenericMsg::MsgTypeHeader::EVERYTHING_OK_MSG) {
         emit switchToLobbyScreen();
     } else if (msg->get_header() == GenericMsg::MsgTypeHeader::ERROR_MSG) {
-        std::shared_ptr<ErrorMsg> errorMsg(dynamic_cast<ErrorMsg*>(msg.get()));
+        std::shared_ptr<ErrorMsg> errorMsg = std::dynamic_pointer_cast<ErrorMsg>(msg);
         // draw error message
         QLabel *errorLabel = new QLabel(errorMsg->get_error_msg().c_str(), this);
         errorLabel->setStyleSheet("QLabel { color: #800404; font-size: 24px; }");

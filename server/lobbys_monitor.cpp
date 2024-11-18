@@ -17,7 +17,7 @@ uint LobbysMonitor::create(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_
     std::lock_guard<std::mutex> lock(m);
     contador_id_lobbys++;
     lobbys_disponibles.emplace(contador_id_lobbys,
-                               std::make_unique<Lobby>(send_queues, player_name, lobby_name, max_players, first_player ,contador_id_lobbys, is_testing));
+                               std::make_shared<Lobby>(send_queues, player_name, lobby_name, max_players, first_player ,contador_id_lobbys, is_testing));
     return contador_id_lobbys;
 }
 

@@ -49,7 +49,7 @@ private:
     std::shared_ptr<QSound> keyPressSound;
     QFont customFont;
     std::vector<DescripcionLobby> lobbies;
-    std::vector<std::shared_ptr<QWidget>> lobbyWidgets;
+    std::vector<QWidget*> lobbyWidgets;
     std::shared_ptr<QScrollArea> scrollArea;
     std::shared_ptr<QWidget> scrollWidget;
     std::shared_ptr<QVBoxLayout> scrollLayout;

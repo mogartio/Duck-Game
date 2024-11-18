@@ -59,7 +59,7 @@ private:
     uint8_t lobby_id;
     uint8_t is_ready;
     std::list<DescipcionPlayer> players;
-    std::vector<std::shared_ptr<QWidget>> lobbyWidgets;
+    std::vector<QWidget*> lobbyWidgets;
     std::map<std::string, std::string> playerEdits;
     // color de pato y su imagen
     std::list<std::pair<uint8_t, std::shared_ptr<QPixmap>>> ducks_images;

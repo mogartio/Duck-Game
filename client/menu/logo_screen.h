@@ -19,7 +19,6 @@ class LogoScreen : public QWidget {
 
 public:
     LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
-    ~LogoScreen() = default;
 signals:
     void switchToConnectionScreen();
 

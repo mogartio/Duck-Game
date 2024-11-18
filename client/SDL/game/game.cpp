@@ -64,8 +64,7 @@ void Game::play() {
     map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
-    // InfoLobbyMsg* info_lobby = dynamic_cast<InfoLobbyMsg*>(msg_players_info);
-    std::shared_ptr<InfoLobbyMsg> info_lobby(dynamic_cast<InfoLobbyMsg*>(msg_players_info.get()));
+    std::shared_ptr<InfoLobbyMsg> info_lobby = std::dynamic_pointer_cast<InfoLobbyMsg>(msg_players_info);
     std::list<DescipcionPlayer> players = info_lobby->get_players();
     std::map<std::string, uint8_t> players_info;
     for (auto& player: players) {
@@ -79,8 +78,7 @@ void Game::play() {
             throw std::runtime_error(
                     "Estoy recibiendo un mensaje que no es de updated player info");
         }
-        // UpdatedPlayerInfoMsg* player_info = dynamic_cast<UpdatedPlayerInfoMsg*>(jugador);
-        std::shared_ptr<UpdatedPlayerInfoMsg> player_info(dynamic_cast<UpdatedPlayerInfoMsg*>(jugador.get()));
+        std::shared_ptr<UpdatedPlayerInfoMsg> player_info = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(jugador);
         map.addPlayer(player_info->get_position().first, player_info->get_position().second,
                       players_info[player_info->get_player_name()], player_info->get_player_name());
     }
