@@ -22,20 +22,26 @@ std::list<DescipcionPlayer> Lobby::get_players_description() {
     return players_description;
 }
 
-Lobby::Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing):
+Lobby::Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name,
+             std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby,
+             bool is_testing):
         send_queues(send_queues),
         receiver_q(new Queue<std::shared_ptr<GenericMsg>>(200)),
         id_lobby(id_lobby),
-        is_testing(is_testing) {
+        is_testing(is_testing),
+        is_dead(false) {
     player1_id = first_player->get_id();
-    players_map[player_name] = first_player;   
-    players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY; 
+    players_map[player_name] = first_player;
+    players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY;
     this->lobby_name = lobby_name;
     this->max_players = max_players;
     players_colors[player_name] = GenericMsg::DuckColor::WHITE;
 
     send_queues.send_to_client(std::make_shared<EverythingOkMsg>(), first_player->get_id());
-    send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), first_player->get_id());
+    send_queues.send_to_client(
+            std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                           GenericMsg::LobbyState::NOT_STARTING),
+            first_player->get_id());
 }
 
 void Lobby::addPlayer(std::string& player_name, Client* second_player) {
@@ -46,7 +52,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     uint cantidadLocalPlayers = 1;
     for (auto& pair: players_map) {
         // Busco los clientes locales (con el mismo id)
-        if (pair.second->get_id() == second_player->get_id()) { // si es el mismo cliente...
+        if (pair.second->get_id() == second_player->get_id()) {  // si es el mismo cliente...
             // Sumo la cantidad de jugadores locales
             cantidadLocalPlayers++;
             // Si la cantidad de jugadores locales supera el maximo permitido
@@ -66,13 +72,17 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     players_colors[player_name] = color;
     players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY;
     send_queues.send_to_client(std::make_shared<EverythingOkMsg>(), second_player->get_id());
-    send_queues.send_to_client(std::make_shared<PlayerInfoMsg>(player_name, color), second_player->get_id());
+    send_queues.send_to_client(std::make_shared<PlayerInfoMsg>(player_name, color),
+                               second_player->get_id());
     std::set<uint8_t> ids;
     for (auto& pair: players_map) {
         if (ids.find(pair.second->get_id()) != ids.end()) {
             continue;
         }
-        send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), second_player->get_id());
+        send_queues.send_to_client(
+                std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                               GenericMsg::LobbyState::NOT_STARTING),
+                second_player->get_id());
         ids.insert(pair.second->get_id());
     }
 }
@@ -91,14 +101,20 @@ void Lobby::removePlayer(std::string player_name) {
             if (ids.find(pair.second->get_id()) != ids.end()) {
                 continue;
             }
-            send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
+            send_queues.send_to_client(
+                    std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                                   GenericMsg::LobbyState::NOT_STARTING),
+                    pair.second->get_id());
             ids.insert(pair.second->get_id());
-    }
+        }
     } else {
         throw std::runtime_error("Jugador no estaba en el lobby");
     }
     // tell the player he is being removed
-    send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), client->get_id());
+    send_queues.send_to_client(
+            std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                           GenericMsg::LobbyState::NOT_STARTING),
+            client->get_id());
 }
 
 void Lobby::startGame() {
@@ -115,9 +131,15 @@ void Lobby::startGame() {
     for (auto& pair: players_map) {
         if (players_ids.find(pair.second->get_id()) == players_ids.end()) {
             players_ids.insert(pair.second->get_id());
-            send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::STARTING), pair.second->get_id());
-            send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::STARTING), pair.second->get_id());
-            pair.second->switch_queues(receiver_q);      
+            send_queues.send_to_client(
+                    std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                                   GenericMsg::LobbyState::STARTING),
+                    pair.second->get_id());
+            send_queues.send_to_client(
+                    std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                                   GenericMsg::LobbyState::STARTING),
+                    pair.second->get_id());
+            pair.second->switch_queues(receiver_q);
         }
         names.push_back(pair.first);
     }
@@ -139,7 +161,8 @@ DescripcionLobby Lobby::getDescription() const {
     return desc;
 }
 
-void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color, uint8_t is_ready) {
+void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint8_t new_color,
+                             uint8_t is_ready) {
     // if the name is already someone else's name, throw error
 
     if (players_map.find(new_name) != players_map.end() && new_name != player_name) {
@@ -155,13 +178,27 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     players_map[new_name] = client;
     players_colors[new_name] = new_color;
     players_ready[new_name] = is_ready;
-    //send all player the updated info
+    // send all player the updated info
     std::set<uint8_t> ids;
     for (auto& pair: players_map) {
         if (ids.find(pair.second->get_id()) != ids.end()) {
             continue;
         }
-        send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
+        send_queues.send_to_client(
+                std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby,
+                                               GenericMsg::LobbyState::NOT_STARTING),
+                pair.second->get_id());
         ids.insert(pair.second->get_id());
     }
+}
+
+void Lobby::kill() {
+    if (is_dead) {
+        return;
+    }
+    is_dead = true;
+    game->stop();
+    game->join();
+    players_map.clear();
+    // aca se elimina al game
 }
