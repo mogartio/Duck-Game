@@ -19,7 +19,7 @@ void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon)
     throw_started = false;
     /* double deviation_angle = M_PI / 2; */
     // TODO: deberia poder tirar la granada para arriba
-    std::cout << "la velocidad del nuevo arma es de:" << std::to_string(throw_reach) << std::endl;
+    // std::cout << "la velocidad del nuevo arma es de:" << std::to_string(throw_reach) << std::endl;
     int speed = throw_reach / 10;
     throw_reach = 30;
     stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
