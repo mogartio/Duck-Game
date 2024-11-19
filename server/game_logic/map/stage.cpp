@@ -62,6 +62,7 @@ void Stage::update() {
             remove_projectile(*iterator);
             continue;
         }
+        (*iterator)->update();
         iterator++;
     }
 }

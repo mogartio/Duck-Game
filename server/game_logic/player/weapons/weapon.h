@@ -23,7 +23,7 @@ public:
             player(nullptr),
             stopped_holding_trigger(false),
             throw_started(false),
-            throw_reach(0),
+            throw_reach(30),
             id(id) {}
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}

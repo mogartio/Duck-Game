@@ -24,8 +24,13 @@ public:
                            int x_direction, int reach, int id):
             Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, id, false, false),
             weapon(std::move(weapon)),
-            current_angle_index(0),
-            deviation_angles({M_PI / 4, M_PI / 2, 9 * M_PI / 4}) {}
+            current_angle_index(0) {
+        deviation_angles.push_back(M_PI / 4);
+        for (int i = 0; i < speed; i++) {
+            deviation_angles.push_back(M_PI / 2);
+        }
+        deviation_angles.push_back(9 * M_PI / 4);
+    }
     void update() override {
         if (static_cast<size_t>(current_angle_index) == deviation_angles.size() - 1) {
             return;

@@ -10,15 +10,21 @@
 #define PLAYER_SIZE 3
 void Weapon::start_throw() {
     throw_started = true;
-    throw_reach += 3;
+    if (throw_reach < 1000) {
+        throw_reach += 3;
+    }
 }
 void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
     throw_started = false;
     /* double deviation_angle = M_PI / 2; */
     // TODO: deberia poder tirar la granada para arriba
+    std::cout << "la velocidad del nuevo arma es de:" << std::to_string(throw_reach) << std::endl;
+    int speed = throw_reach / 10;
+    throw_reach = 30;
+    stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
     stage.add_projectile(std::move(std::make_unique<ProjectileThrownWeapon>(
-            std::move(weapon), gun_position, throw_reach, x_direction, 80, id)));
+            std::move(weapon), gun_position, speed, x_direction, 80, id)));
 }
 
 // aim_direction en el eje x
