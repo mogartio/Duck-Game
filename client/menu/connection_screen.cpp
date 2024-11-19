@@ -6,14 +6,14 @@ ConnectionScreen::ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queu
     // Set focus policy to receive key events
     setFocusPolicy(Qt::StrongFocus);
 
-    keyPressSound = std::make_unique<QSound>("assets/Retro8.wav", this);
+    keyPressSound = std::make_unique<QSound>("assets/menu_assets/Retro8.wav", this);
 
     // Create ParallaxBackground layers
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layer0 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_4.png", 1.25f);
+    layer0 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_1.png", 0.5f);
+    layer1 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_2.png", 0.75f);
+    layer2 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_3.png", 1.0f);
+    layer3 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_4.png", 1.25f);
 
     layer0->start();
     layer1->start();
@@ -25,7 +25,7 @@ ConnectionScreen::ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queu
     // Top-left corner of the rectangle: (960 - 500 / 2, 540 - 400 / 2) = (710, 340)
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 650, 200, 620, 660, QColor(213, 226, 224, 100), QColor(213, 226, 224, 100));
 
-    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 

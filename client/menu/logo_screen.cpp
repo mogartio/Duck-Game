@@ -4,7 +4,7 @@
 #include <chrono>
 #include <QSound>
 
-LogoScreen::LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : keyPressSound(std::make_unique<QSound>("assets/Retro8.wav", this)) , send_queue(send_queue), recv_queue(recv_queue) {
+LogoScreen::LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : keyPressSound(std::make_unique<QSound>("assets/menu_assets/Retro8.wav", this)) , send_queue(send_queue), recv_queue(recv_queue) {
     //setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     // Set focus policy to receive key events
@@ -12,10 +12,10 @@ LogoScreen::LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std
 
     // Create ParallaxBackground layers
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layer0 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = std::make_unique<ParallaxBackground>(this, "assets/parallax_background_layer_4.png", 1.25f);
+    layer0 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_1.png", 0.5f);
+    layer1 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_2.png", 0.75f);
+    layer2 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_3.png", 1.0f);
+    layer3 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_4.png", 1.25f);
 
     layer0->start();
     layer1->start();
@@ -24,11 +24,11 @@ LogoScreen::LogoScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std
     setLayout(layout);
 
     // Create FadeInImage
-    fadeInImage = std::make_unique<FadeInImage>(this, "assets/duck_game_logo.png", 2000);
+    fadeInImage = std::make_unique<FadeInImage>(this, "assets/menu_assets/duck_game_logo.png", 2000);
     fadeInImage->start();
 
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     QFont customFont(fontFamily);
 

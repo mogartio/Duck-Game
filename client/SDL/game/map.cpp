@@ -16,7 +16,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
         height_window(height_window),
         tilesImages(3, nullptr) {
     // Deberia llegarme la info del fondo
-    background.initialize(rend, "img_src/background/day.png");
+    background.initialize(rend, "assets/game_assets/background/day.png");
 
     for (int i = int(ProjectilesId::ProjectileId::GRENADE); i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
@@ -46,7 +46,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
         return;
     }
     Image* weaponImage = new Image();
-    std::string path = "img_src/weapons/";
+    std::string path = "assets/game_assets/weapons/";
     path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
@@ -61,7 +61,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
 void Map::makeHelmet(Helemts helmet) {
     // Creo casco de mapa
     Image* mapHelmet = new Image();
-    std::string mapPath = "img_src/map/";
+    std::string mapPath = "assets/game_assets/map/";
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
@@ -70,7 +70,7 @@ void Map::makeHelmet(Helemts helmet) {
 
     // Creo casco de inventario
     Image* helmetImage = new Image();
-    std::string path = "img_src/helmets/";
+    std::string path = "assets/game_assets/helmets/";
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
@@ -80,23 +80,23 @@ void Map::makeHelmet(Helemts helmet) {
 
 void Map::makeArmor() {
     // Creo armadura de mapa
-    armorOnMap.initialize(rend, "img_src/map/armor.png");
+    armorOnMap.initialize(rend, "assets/game_assets/map/armor.png");
     armorOnMap.queryTexture();
     armorOnMap.defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
-    armor.initialize(rend, "img_src/armor/armor4.png");
+    armor.initialize(rend, "assets/game_assets/armor/armor4.png");
     armor.queryTexture();
     armor.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño que el pato
 
-    hombro.initialize(rend, "img_src/armor/hombro4.png");
+    hombro.initialize(rend, "assets/game_assets/armor/hombro4.png");
     hombro.queryTexture();
     hombro.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
     Image* tile = new Image();
-    std::string path = "img_src/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
+    std::string path = "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
                                                    // me mande el server (dia, noche)
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
