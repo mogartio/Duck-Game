@@ -92,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
 
     // Connect the signal to trigger refresh when JoinLobbyScreen is shown
     connect(this, &MainWindow::joinLobbyScreenShown, joinLobbyScreen.get(), &JoinLobbyScreen::triggerRefresh);
+
 }
 
 void MainWindow::setupBackground() {
@@ -208,6 +209,9 @@ void MainWindow::showHostLobbyScreen() {
     slideBackground(-960); // Move to the last third
     // Connect the start game signal from HostLobbyScreen to handle game start
     connect(hostLobbyScreen.get(), &HostLobbyScreen::startingGame, this, &MainWindow::handleGameStart);
+    // Connect the signal from HostLobbyScreen to switch to MainMenuScreen
+    connect(hostLobbyScreen.get(), &HostLobbyScreen::switchToMainMenuScreen, this, &MainWindow::showMainMenuScreen);
+
 }
 
 void MainWindow::handleGameStart() {

@@ -10,6 +10,7 @@
 #include <QScrollArea>
 #include <thread>
 #include <mutex>
+#include <QTimer>
 #include <map>
 #include "rounded_rectangle.h"
 #include "../../common/queue.h"
@@ -30,9 +31,12 @@ private slots:
     void onReadyButtonClicked(std::string player_name);
     void onSaveButtonClicked(std::string player_name);
     void onStartGameButtonClicked();
+    void onCloseLobbyButtonClicked();
 signals: 
     void playersUpdated();
     void startingGame();
+    void switchToMainMenuScreen();
+
 private:
     Queue<std::shared_ptr<GenericMsg>>* send_queue;
     Queue<std::shared_ptr<GenericMsg>>* recv_queue; 

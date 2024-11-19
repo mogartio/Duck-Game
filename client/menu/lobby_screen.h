@@ -34,6 +34,7 @@ signals:
     void switchToJoinLobbyScreen();
     void startingGame();
     void starting(); 
+    void iHaveToLeave();
     
 private:
     Queue<std::shared_ptr<GenericMsg>>* send_queue;

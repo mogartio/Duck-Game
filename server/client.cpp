@@ -61,6 +61,7 @@ void Client::handle_read(const ChooseLobbyMsg& msg) {
     } catch (const std::runtime_error& e) {
         std::cout << "Error al unirse al lobby debido a que: " << e.what() << std::endl;
         send_queues.send_to_client(std::make_shared<ErrorMsg>(e.what()), id);
+        std::cout << "Envio el error al cliente" << std::endl;
     }
 }
 

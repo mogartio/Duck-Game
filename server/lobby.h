@@ -35,7 +35,8 @@ private:
 
     std::shared_ptr<Game> game;
 
-    uint player1_id;
+    uint host_id;
+    std::string host_name;
 
     uint id_lobby;
 

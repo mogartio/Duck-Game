@@ -22,7 +22,7 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
     );
     lobbyLabel->setFont(customFont);
     lobbyLabel->setGeometry(250, 130, 500, 100);
-    // Add button
+    // Add local player button
     localPlayerButton = new QPushButton("Add Local Player", this);
     localPlayerButton->setStyleSheet(
         "QPushButton {"
@@ -40,6 +40,8 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
     );
     localPlayerButton->setFont(customFont);
     localPlayerButton->setGeometry(800, 150, 350, 60);
+
+
     // Add scroll area 
     scrollArea = std::make_unique<QScrollArea>(this);
     scrollArea->setGeometry(250, 230, 900, 700);
@@ -88,6 +90,27 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
     startGameButton->setGeometry(1400, 440, 300, 200);
     // initialially disable start game button
     startGameButton->setEnabled(false);
+
+    // Add close lobby button
+    QPushButton *closeLobbyButton = new QPushButton("Close Lobby", this);
+    closeLobbyButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);" 
+        "color: #ced4da;"                     
+        "font-size: 38px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    closeLobbyButton->setFont(customFont);
+    closeLobbyButton->setGeometry(600, 850, 300, 80);
+
+    connect(closeLobbyButton, &QPushButton::clicked, this, &HostLobbyScreen::onCloseLobbyButtonClicked);
 
     connect(startGameButton, &QPushButton::clicked, this, &HostLobbyScreen::onStartGameButtonClicked);
 
@@ -370,7 +393,6 @@ void HostLobbyScreen::onAddLocalPlayerButtonClicked() {
         );
         std::string local_player = "localPlayer";
         myLocalPlayerName = local_player;
-        // ChooseLobbyMsg* choose_lobby_msg = new ChooseLobbyMsg(lobby_id, local_player);
         std::shared_ptr<ChooseLobbyMsg> choose_lobby_msg = std::make_shared<ChooseLobbyMsg>(lobby_id, local_player);
         send_queue->push(choose_lobby_msg);
     }
@@ -451,6 +473,21 @@ void HostLobbyScreen::onStartGameButtonClicked() {
     emit startingGame();
 }
 
+
+void HostLobbyScreen::onCloseLobbyButtonClicked() {
+    keyPressSound->play();
+    // first, remove the local if it was added
+    if (isLocalPlayerAdded) {
+        std::shared_ptr<ExitFromLobbyMsg> exit_from_lobby_msg = std::make_shared<ExitFromLobbyMsg>(myLocalPlayerName);
+        send_queue->push(exit_from_lobby_msg);
+    }
+    // then, close the lobby
+    std::shared_ptr<ExitFromLobbyMsg> exit_from_lobby_msg = std::make_shared<ExitFromLobbyMsg>(myPlayerName);
+    send_queue->push(exit_from_lobby_msg);
+    // wait for response and then switch to main menu
+    stopProcessing();
+    emit switchToMainMenuScreen();
+}
 
 HostLobbyScreen::~HostLobbyScreen() {
     stopProcessing();

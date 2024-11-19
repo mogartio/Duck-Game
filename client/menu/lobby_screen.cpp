@@ -78,6 +78,8 @@ setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
     connect(this, &LobbyScreen::starting, this, &LobbyScreen::onStartingGame);
 
+    connect(this, &LobbyScreen::iHaveToLeave, this, &LobbyScreen::onExitLobbyButtonClicked);
+
     recv_thread = std::thread(&LobbyScreen::processIncomingMessages, this);
 }
 
@@ -90,6 +92,10 @@ void LobbyScreen::processIncomingMessages() {
             std::lock_guard<std::mutex> lock(players_mutex);
             players = info_lobby_msg->get_players();
             running = false;
+            // if the lobby closed
+            if (players.empty()) {
+                emit iHaveToLeave();
+            }
             // if i am not in the lobby, running = false
             for (auto& player: players) {
                 if (player.nombre == myPlayerName) {

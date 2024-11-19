@@ -27,7 +27,8 @@ Lobby::Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::s
         receiver_q(new Queue<std::shared_ptr<GenericMsg>>(200)),
         id_lobby(id_lobby),
         is_testing(is_testing) {
-    player1_id = first_player->get_id();
+    host_id = first_player->get_id();
+    host_name = player_name;
     players_map[player_name] = first_player;   
     players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY; 
     this->lobby_name = lobby_name;
@@ -80,6 +81,8 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
 
 void Lobby::removePlayer(std::string player_name) {
     lobby_empty();
+
+
     Client* client = players_map[player_name];
     // re-add the color to the available colors
     available_colors.insert(players_colors[player_name]);
@@ -101,6 +104,14 @@ void Lobby::removePlayer(std::string player_name) {
     }
     // tell the player he is being removed
     send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), client->get_id());
+
+        // If the player is the host, close the lobby
+    if (player_name == host_name) {
+        for (auto& pair: players_map) {
+            // make a InfoLobbyMsg without any player so the players know the lobby is closed
+            send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(std::list<DescripcionPlayer>(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
+        }
+    }
 }
 
 void Lobby::startGame() {
@@ -147,7 +158,9 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
     if (players_map.find(new_name) != players_map.end() && new_name != player_name) {
         throw std::runtime_error("name already in use");
     }
-
+    if (player_name == host_name) {
+        host_name = new_name;
+    }
     // remove old player name key from map and color. First save Client ptr
     Client* client = players_map[player_name];
     players_map.erase(player_name);
