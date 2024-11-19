@@ -4,7 +4,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
     : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players), isMuted(false) {
 
     resize(1920, 1080);
-    //setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint);
 
     stackedWidget = std::make_unique<QStackedWidget>(this);
     setCentralWidget(stackedWidget.get());
