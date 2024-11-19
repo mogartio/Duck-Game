@@ -9,7 +9,10 @@
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include <QApplication>
+#include <QMediaPlayer>
 #include <iostream>
+#include <vector>
+#include <QDir>
 #include <memory>
 #include "logo_screen.h"
 #include "connection_screen.h"
@@ -27,6 +30,12 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players); 
+
+signals:
+    void joinLobbyScreenShown();
+    void soundButtonClicked();
+
+private slots:
     void handleQuitApplication();
     void handleGameStart();
     void showLogoScreen();
@@ -37,11 +46,10 @@ public:
     void showJoinLobbyScreen();
     void showLobbyScreen();
     void showHostLobbyScreen();
-
-signals:
-    void joinLobbyScreenShown();
-
+    void onSoundButtonClicked();
+    void onStateChanged(QMediaPlayer::State state);
 private:
+    // screens 
     std::shared_ptr<QStackedWidget> stackedWidget;
     std::shared_ptr<LogoScreen> logoScreen;
     std::shared_ptr<ConnectionScreen> connectionScreen;
@@ -50,14 +58,27 @@ private:
     std::shared_ptr<LobbyScreen> lobbyScreen;
     std::shared_ptr<JoinLobbyScreen> joinLobbyScreen;
     std::shared_ptr<HostLobbyScreen> hostLobbyScreen;
+    std::shared_ptr<QLabel> backgroundLabel;
+    // cosas del main y del juego
     Queue<std::shared_ptr<GenericMsg>>* send_queue;
     Queue<std::shared_ptr<GenericMsg>>* recv_queue;
     Client* client;
-    std::shared_ptr<QLabel> backgroundLabel;
     std::list<std::string> *local_players;
+    // cosas del sonido
+    QPushButton *soundButton;
+    std::shared_ptr<QPixmap> soundOnIcon;
+    std::shared_ptr<QPixmap> soundOffIcon;
+    bool isMuted;
+    bool menuMusicPlaying = false;
+    QMediaPlayer* mediaPlayer;
+    QString logoConnectionSongPath;
+    std::vector<QString> menuSongsPaths;
     
     void setupBackground();
     void slideBackground(int targetX);
+    void playLogoConnectionMusic();
+    void playMenuMusic();
+    void toggleSound();
 };
 
 #endif // MAIN_WINDOW_H

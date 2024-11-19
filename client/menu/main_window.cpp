@@ -1,10 +1,10 @@
 #include "main_window.h"
 
 MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client, std::list<std::string>* local_players)
-    : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players) {
+    : QMainWindow(parent), send_queue(send_queue), recv_queue(recv_queue), client(client), local_players(local_players), isMuted(false) {
 
     resize(1920, 1080);
-    setWindowFlags(Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::FramelessWindowHint);
 
     stackedWidget = std::make_unique<QStackedWidget>(this);
     setCentralWidget(stackedWidget.get());
@@ -12,6 +12,30 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
     // Setup the background
     setupBackground();
     
+    // Initialize media player
+    mediaPlayer = new QMediaPlayer(this);
+    connect(mediaPlayer, &QMediaPlayer::stateChanged, this, &MainWindow::onStateChanged);
+
+    // Initialize sound button
+    soundOnIcon = std::make_shared<QPixmap>("assets/Speaker-0.png");
+    soundOffIcon = std::make_shared<QPixmap>("assets/Speaker-Crossed.png");
+    soundButton = new QPushButton(this);
+    soundButton->setStyleSheet("background-color: rgba(0, 0, 0, 0); border: none;");
+    soundButton->setIcon(QIcon(*soundOnIcon));
+    soundButton->setIconSize(QSize(50, 50));
+    soundButton->setGeometry(10, 10, 50, 50);
+
+    connect(soundButton, &QPushButton::clicked, this, &MainWindow::onSoundButtonClicked);
+
+    // Convert relative paths to absolute paths
+    logoConnectionSongPath = QDir::currentPath() + "/assets/Duck Game - Title.wav";
+    menuSongsPaths = {
+        QDir::currentPath() + "/assets/Duck Game - DontFWithDuck.wav",
+        QDir::currentPath() + "/assets/Duck Game - DrDuck.wav",
+        QDir::currentPath() + "/assets/Duck Game - SynthRock.wav",
+        QDir::currentPath() + "/assets/Duck Game - TechnoFreak.wav"
+    };
+
     // Create screens
     logoScreen = std::make_unique<LogoScreen>(send_queue, recv_queue);
     connectionScreen = std::make_unique<ConnectionScreen>(send_queue, recv_queue, client);
@@ -97,10 +121,20 @@ void MainWindow::showMainMenuScreen() {
 }
 
 void MainWindow::showLogoScreen() {
+    // hide the sound button
+    soundButton->hide();
+    // start playing the logo connection song
+    mediaPlayer->setMedia(QUrl::fromLocalFile(logoConnectionSongPath));
+    mediaPlayer->setVolume(20);
+    mediaPlayer->play();
+    isMuted = false;
+
     stackedWidget->setCurrentWidget(logoScreen.get());
 }
 
 void MainWindow::showConnectionScreen() {
+    // show the sound button
+    soundButton->show();
     stackedWidget->setCurrentWidget(connectionScreen.get());
 }
 
@@ -109,6 +143,13 @@ void MainWindow::handleQuitApplication() {
 }
 
 void MainWindow::showMainMenuScreenWithFade() {
+    // play the menu songs
+    mediaPlayer->stop();
+    mediaPlayer->setMedia(QUrl::fromLocalFile(menuSongsPaths[rand() % menuSongsPaths.size()]));
+    mediaPlayer->setVolume(20);
+    mediaPlayer->play();
+    menuMusicPlaying = true;
+
     QWidget *overlay = new QWidget(this);
     overlay->setStyleSheet("background-color: black;");
     overlay->setGeometry(this->rect());
@@ -213,3 +254,29 @@ void MainWindow::handleGameStart() {
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
 }
+
+void MainWindow::onSoundButtonClicked() {
+    if (isMuted) {
+        mediaPlayer->setVolume(20);
+        soundButton->setIcon(QIcon(*soundOnIcon));
+        isMuted = false; // se desmuteo
+    } else if (!isMuted) {
+        mediaPlayer->setVolume(0);
+        soundButton->setIcon(QIcon(*soundOffIcon));
+        isMuted = true; // se muteo
+    }
+}
+
+void MainWindow::onStateChanged(QMediaPlayer::State state) {
+    if (state == QMediaPlayer::StoppedState) {
+        if (menuMusicPlaying) {
+            mediaPlayer->setMedia(QUrl::fromLocalFile(menuSongsPaths[rand() % menuSongsPaths.size()]));
+            mediaPlayer->setVolume(20);
+            mediaPlayer->play();
+        }
+        mediaPlayer->play();
+    } else if (state == QMediaPlayer::PlayingState) {
+        mediaPlayer->setVolume(20);
+    }
+}
+
