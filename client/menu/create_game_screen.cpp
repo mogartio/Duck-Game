@@ -10,7 +10,7 @@ CreateGameScreen::CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queu
     keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
 
     // Create black opaque background rectangle
-    auto baseRectangle = std::make_unique<RoundedRectangle>(this, 635, 260, 650, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
+    auto baseRectangle = new RoundedRectangle(this, 635, 260, 650, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
     
     // Load custom font
@@ -29,44 +29,37 @@ CreateGameScreen::CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queu
     createGameLabel->setFont(customFont);
     createGameLabel->setGeometry(780, 285, 500, 100);
 
-    // Create back button
-    auto backButton = std::make_unique<QPushButton>("Back", this);
+    // Create go back button
+    QPushButton *backButton = new QPushButton("Back", this);
     backButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"
-        "color: #ced4da;"
-        "font-size: 42px;"
-        "border: 0px solid #555555;"
-        "border-radius: 15px;"
-        "padding: 10px;"
-        "text-align: center;"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 42px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
         "}"
         "QPushButton:hover {"
         "background-color: rgba(232, 89, 12, 100);"
         "}"
     );
     backButton->setFont(customFont);
-    backButton->setGeometry(780, 400, 200, 100);
-    connect(backButton.get(), &QPushButton::clicked, this, &CreateGameScreen::onBackButtonClicked);
+    backButton->setGeometry(450, 285, 160, 80);
 
-
-    // Load the original icon
     QPixmap goBackIcon("assets/Left-Arrow.png");
     QPixmap goBackIconScaled = goBackIcon.scaled(30, 30);
-
-    // Create a transparent QPixmap
     QPixmap transparentIcon(goBackIconScaled.size());
     transparentIcon.fill(Qt::transparent);
-
-    // Use QPainter to draw the original icon with opacity
     QPainter painter(&transparentIcon);
-    painter.setOpacity(0.75); // Set the desired opacity (0.0 to 1.0)
+    painter.setOpacity(0.75);
     painter.drawPixmap(0, 0, goBackIconScaled);
     painter.end();
 
-    // Set the resulting QPixmap as the icon of the QPushButton
     backButton->setIcon(QIcon(transparentIcon));
     backButton->setIconSize(QSize(30, 30));
+    connect(backButton, &QPushButton::clicked, this, &CreateGameScreen::onBackButtonClicked);
 
     // Create game name label
     QLabel *gameNameLabel = new QLabel("enter lobby Name", this);
