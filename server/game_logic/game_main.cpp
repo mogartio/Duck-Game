@@ -9,8 +9,8 @@
 using namespace std::chrono;
 
 GameMain::GameMain(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
-                   bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders):
-        receiver_q(q), is_testing(is_testing), players(players), senders(senders) {}
+                   bool is_testing):
+        receiver_q(q), is_testing(is_testing), players(players) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
 std::string GameMain::play_round(Stage& stage) {
