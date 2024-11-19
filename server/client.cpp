@@ -43,6 +43,7 @@ bool Client::operator==(const Client* other) const { return id == other->id; }
 
 void Client::handle_read(const ViewLobbiesMsg& msg) {
     (void)msg;
+    lobbys.remove_dead_lobbys();
     send_queues.send_to_client(std::make_shared<SendLobbiesListMsg>(lobbys.get_lobbys()), id);
 }
 
