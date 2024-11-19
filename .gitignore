@@ -11,6 +11,7 @@ CTestTestfile.cmake
 *.txt
 
 build/
+SDL2/
 server/game_logic/game
 AtoB.dump
 BtoA.dump

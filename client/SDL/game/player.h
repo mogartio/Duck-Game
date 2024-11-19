@@ -20,11 +20,16 @@ private:
 
     DuckState state;
 
+    Side side;
+
     bool weaponON;
     bool armorOn;
     bool helmetOn;
     int walk;
     bool flapup;
+
+    double weaponAngle;
+
     uint width;
     uint height;
 

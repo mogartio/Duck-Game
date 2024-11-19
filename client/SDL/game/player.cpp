@@ -120,13 +120,19 @@ void Player::update(int x, int y, DuckState state, Side side) {
 
     if (side == LEFT) {
         flip = SDL_FLIP_HORIZONTAL;
+        this->side = LEFT;
     } else if (side == RIGHT) {
         flip = SDL_FLIP_NONE;
-    } else if (side == UP) {
-        flip = SDL_RendererFlip(flip | SDL_FLIP_VERTICAL);
+        this->side = RIGHT;
     }
 
-
+    if ((side == UP) && (this->side == RIGHT)) {
+        weaponAngle = -90.0;
+    } else if ((side == UP) && (this->side == LEFT)) {
+        weaponAngle = 90.0;
+    } else {
+        weaponAngle = 0.0;
+    }
 
     // Actualizo la image del ala y su posicion
     updateWing(x, y);
@@ -166,6 +172,7 @@ void Player::dropEverithing() {
 void Player::weapon(Image* weapon) {
     _weapon = weapon;
     weaponON = true;
+    weaponAngle = 0.0;
 }
 
 void Player::dropWeapon() {
@@ -233,12 +240,24 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
+        int wx = position.first;
+        int wy = position.second;
         if (flip == SDL_FLIP_HORIZONTAL) {
-            _weapon->position(position.first, position.second + 26);
+            wy += 26;
+            if (weaponAngle != 0.0) {
+                wy -= 10;
+                wx += 5;
+            }
         } else {
-            _weapon->position(position.first + 20, position.second + 26);
+            wx += 20;
+            wy += 26;
+            if (weaponAngle != 0.0) {
+                wx -= 3;
+                wy -= 7;
+            }
         }
-        _weapon->fill(flip);
+        _weapon->position(wx, wy);
+        _weapon->fill(weaponAngle, flip);
     }
 
     // Dibujo el ala del pato

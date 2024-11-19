@@ -19,6 +19,9 @@ public:
     // fill(SDL_RendererFlip flip) para imagenes no estaticas
     void fill(SDL_RendererFlip flip);
 
+    // fill(double angle, SDL_RendererFlip flip) para imagenes rotadas
+    void fill(double angle, SDL_RendererFlip flip);
+
     //Query the attributes of a texture.
     void queryTexture();
 

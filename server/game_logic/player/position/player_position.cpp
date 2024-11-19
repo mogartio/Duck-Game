@@ -35,7 +35,9 @@ void PlayerPosition::move(const std::set<int>& directions) {
         } else if (direction == JUMP) {
             air_state->jump(*this);
         } else if (direction == 6) {
+            facing_direction = AIM_UP;
             aiming_up = true;
+            player.Notify();
         } else {
             continue;
         }

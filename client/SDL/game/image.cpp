@@ -27,6 +27,10 @@ void Image::fill(SDL_RendererFlip flip) {
     SDL_RenderCopyEx(rend, imgTex, NULL, &dest, 0, NULL, flip); // Dibuja
 }
 
+void Image::fill(double angle, SDL_RendererFlip flip) {
+    SDL_RenderCopyEx(rend, imgTex, NULL, &dest, angle, NULL, flip); // Dibuja
+}
+
 void Image::queryTexture() {
     SDL_QueryTexture(imgTex, NULL, NULL, &dest.w, &dest.h);
 }
