@@ -45,7 +45,7 @@ private:
     void lobby_empty();
     bool is_testing;
 
-    std::list<DescipcionPlayer> get_players_description();
+    std::list<DescripcionPlayer> get_players_description();
 
 public:
     /*

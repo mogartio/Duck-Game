@@ -7,7 +7,12 @@
 #include <QLineEdit>
 #include <memory>
 #include "parallax_background.h"
-
+#include "rounded_rectangle.h"
+#include <QResizeEvent>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <string>
 class ConnectionScreen : public QWidget {
     Q_OBJECT
 
@@ -20,6 +25,7 @@ signals:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     void drawEmptyFieldsError();
     void drawConnectionRefusedError();
 

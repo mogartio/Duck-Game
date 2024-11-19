@@ -1,5 +1,4 @@
 #include "create_game_screen.h"
-#include <QSpinBox>
 
 CreateGameScreen::CreateGameScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue) : send_queue(send_queue), recv_queue(recv_queue) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
@@ -208,7 +207,7 @@ void CreateGameScreen::onBackButtonClicked() {
 
 void CreateGameScreen::onUpArrowClicked() {
     keyPressSound->play();
-    if (maxPlayers < 6) {
+    if (maxPlayers < MAX_PLAYERS) {
         maxPlayers++;
         maxPlayersBox->setText(QString::number(maxPlayers));
     }
@@ -216,7 +215,7 @@ void CreateGameScreen::onUpArrowClicked() {
 
 void CreateGameScreen::onDownArrowClicked() {
     keyPressSound->play();
-    if (maxPlayers > 2) {
+    if (maxPlayers > MIN_PLAYERS) {
         maxPlayers--;
         maxPlayersBox->setText(QString::number(maxPlayers));
     }

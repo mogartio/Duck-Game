@@ -1,17 +1,5 @@
 #include "connection_screen.h"
-#include "rounded_rectangle.h"
-#include <QPainter>
-#include <QResizeEvent>
-#include <qboxlayout.h>
-#include <QLabel>
-#include <QLineEdit>
-#include <qfontdatabase.h>
-#include <QPushButton>
-#include <QDebug> 
-#include <iostream>
-#include <QSound>
-#include <string>
-#include <iostream>
+
 ConnectionScreen::ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client) : send_queue(send_queue), recv_queue(recv_queue), client(client) {
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
 
@@ -150,6 +138,16 @@ void ConnectionScreen::resizeEvent(QResizeEvent *event) {
     layer3->resizeImages();
     update();
 }
+
+void ConnectionScreen::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        onConnectButtonClicked();
+    } else if (event->key() == Qt::Key_Escape) {
+        onQuitButtonClicked();
+    } else {
+        QWidget::keyPressEvent(event);
+    }
+}   
 
 void ConnectionScreen::onConnectButtonClicked() {
     keyPressSound->play();

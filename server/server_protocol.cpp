@@ -50,7 +50,7 @@ void ServerProtocol::handle_send(const InfoLobbyMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
 
-    std::list<DescipcionPlayer> players_from_lobby = msg.get_players();
+    std::list<DescripcionPlayer> players_from_lobby = msg.get_players();
     uint8_t players_size = players_from_lobby.size();
     send_u_int8_t(players_size);
 

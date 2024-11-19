@@ -2,7 +2,6 @@
 #define CREATE_GAME_SCREEN_H
 
 #include <QWidget>
-#include <QPainter>
 #include <QResizeEvent>
 #include <QLineEdit>
 #include <QSound>
@@ -10,16 +9,12 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QPixmap>
+#include <QTimer>
 #include <QKeyEvent>
-#include <iostream>
-#include "logo_screen.h"
-#include "rounded_rectangle.h"
-#include "connection_screen.h"
 #include "main_menu_screen.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
 #include "../../common/socket/socket.h"
-#include "../client.h"
 #define MAX_PLAYERS 4
 #define MIN_PLAYERS 2
 

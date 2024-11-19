@@ -128,7 +128,7 @@ public:
 
 class InfoLobbyMsg: public GenericMsg {
 private:
-    std::list<DescipcionPlayer> players;
+    std::list<DescripcionPlayer> players;
     uint8_t max_players;
     uint8_t lobby_id;
     uint8_t starting_game; // 0x00 no, 0x01 yes
@@ -142,9 +142,9 @@ public:
 
     InfoLobbyMsg();
 
-    explicit InfoLobbyMsg(std::list<DescipcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
+    explicit InfoLobbyMsg(std::list<DescripcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
 
-    void set_players(std::list<DescipcionPlayer> players);
+    void set_players(std::list<DescripcionPlayer> players);
 
     void set_max_players(uint8_t max_players);
 
@@ -152,7 +152,7 @@ public:
 
     void set_starting_game(uint8_t starting_game);
 
-    std::list<DescipcionPlayer> get_players() const;
+    std::list<DescripcionPlayer> get_players() const;
 
     uint8_t get_max_players() const;
 

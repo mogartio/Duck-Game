@@ -58,10 +58,10 @@ void ClientProtocol::handle_send(const StartGameMsg& msg) {
 
 void ClientProtocol::handle_recv(InfoLobbyMsg& msg) {
     uint8_t players_size = recv_u_int8_t();
-    std::list<DescipcionPlayer> players;
+    std::list<DescripcionPlayer> players;
 
     for (int i = 0; i < players_size; i++) {
-        DescipcionPlayer player;
+        DescripcionPlayer player;
 
         std::string nombre = recv_string();
         player.nombre = nombre;

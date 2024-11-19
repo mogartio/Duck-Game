@@ -1,22 +1,15 @@
 #ifndef HOST_LOBBY_SCREEN_H
 #define HOST_LOBBY_SCREEN_H
 
-#include <QPainter>
-#include <QResizeEvent>
 #include <qboxlayout.h>
 #include <QLabel>
 #include <QLineEdit>
 #include <qfontdatabase.h>
 #include <QPushButton>
-#include <QDebug> 
-#include <iostream>
 #include <QSound>
 #include <QScrollArea>
 #include <thread>
 #include <mutex>
-#include <string>
-#include <QTimer>
-#include <iostream>
 #include <map>
 #include "rounded_rectangle.h"
 #include "../../common/queue.h"
@@ -61,7 +54,7 @@ private:
     std::string myLocalPlayerName = "localPlayer";
     bool isLocalPlayerAdded = false;
     std::thread recv_thread;
-    std::list<DescipcionPlayer> players;
+    std::list<DescripcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
     // color de pato y su imagen
     std::list<std::pair<uint8_t, std::shared_ptr<QPixmap>>> ducks_images;

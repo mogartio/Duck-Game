@@ -2,8 +2,6 @@
 #define JOIN_LOBBY_SCREEN_H
 
 #include <QWidget>
-#include <QPainter>
-#include <QResizeEvent>
 #include <QLineEdit>
 #include <QSound>
 #include <QFontDatabase>
@@ -13,14 +11,10 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 #include <QScrollArea>
-#include <iostream>
-#include "logo_screen.h"
+#include <QTimer>
 #include "rounded_rectangle.h"
-#include "connection_screen.h"
-#include "main_menu_screen.h"
 #include "../../common/queue.h"
 #include "../../common/messages/generic_msg.h"
-#include "../../common/socket/socket.h"
 #include "../../common/messages/descripcion-lobby.h"
 #include "../client.h"
 

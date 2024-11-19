@@ -1,22 +1,15 @@
 #ifndef LOBBY_SCREEN_H
 #define LOBBY_SCREEN_H
 
-#include <QPainter>
-#include <QResizeEvent>
 #include <qboxlayout.h>
 #include <QLabel>
 #include <QLineEdit>
 #include <qfontdatabase.h>
 #include <QPushButton>
-#include <QDebug> 
 #include <thread>
-#include <iostream>
 #include <QSound>
 #include <QScrollArea>
-#include <string>
-#include <QTimer>
 #include <mutex>
-#include <iostream>
 #include <map>
 #include "rounded_rectangle.h"
 #include "../../common/queue.h"
@@ -58,7 +51,7 @@ private:
     std::shared_ptr<QVBoxLayout> scrollLayout;
     uint8_t lobby_id;
     uint8_t is_ready;
-    std::list<DescipcionPlayer> players;
+    std::list<DescripcionPlayer> players;
     std::vector<QWidget*> lobbyWidgets;
     std::map<std::string, std::string> playerEdits;
     // color de pato y su imagen

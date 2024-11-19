@@ -10,10 +10,10 @@ void Lobby::lobby_empty() {
     }
 }
 
-std::list<DescipcionPlayer> Lobby::get_players_description() {
-    std::list<DescipcionPlayer> players_description;
+std::list<DescripcionPlayer> Lobby::get_players_description() {
+    std::list<DescripcionPlayer> players_description;
     for (auto& pair: players_map) {
-        DescipcionPlayer descripcionPlayer;
+        DescripcionPlayer descripcionPlayer;
         descripcionPlayer.nombre = pair.first;
         descripcionPlayer.color = players_colors[pair.first];
         descripcionPlayer.is_ready = players_ready[pair.first];

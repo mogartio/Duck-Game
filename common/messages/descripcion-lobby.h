@@ -3,13 +3,13 @@
 #include <cstdint>
 #include <string>
 
-struct DescipcionPlayer {
+struct DescripcionPlayer {
     std::string nombre;
     uint8_t color;
     uint8_t is_ready;
     // agregar mas en caso de ser necesario
 
-    ~DescipcionPlayer() = default;
+    ~DescripcionPlayer() = default;
 };
 
 /*

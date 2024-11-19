@@ -65,7 +65,7 @@ void Game::play() {
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
     std::shared_ptr<InfoLobbyMsg> info_lobby = std::dynamic_pointer_cast<InfoLobbyMsg>(msg_players_info);
-    std::list<DescipcionPlayer> players = info_lobby->get_players();
+    std::list<DescripcionPlayer> players = info_lobby->get_players();
     std::map<std::string, uint8_t> players_info;
     for (auto& player: players) {
         players_info[player.nombre] = player.color;
