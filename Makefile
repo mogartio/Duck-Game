@@ -12,3 +12,4 @@ all: clean run-tests
 
 clean:
 	rm -Rf build build-*/
+	
