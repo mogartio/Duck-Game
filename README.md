@@ -26,7 +26,7 @@ Piccin, Candela
 - Mostrar efectos especiales (sonoros y visuales)
 
 ## Known issues
-- Detalles del menu (manejar excepciones, agregar musica y hacer que el Host pueda salir y echar a todos). No se puede cambiar el color del pato en el menu (del lado del server existe), por ahora estan fijos
+- Detalles del menu (manejar excepciones). No se puede cambiar el color del pato en el menu (del lado del server existe), por ahora estan fijos
 - Ajustar colisiones entre cosas del mapa
 - No se puede mostrar mas de un arma del mismo tipo en el mapa
 - Detalles visuales
