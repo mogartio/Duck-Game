@@ -30,3 +30,4 @@ Piccin, Candela
 - Ajustar colisiones entre cosas del mapa
 - No se puede mostrar mas de un arma del mismo tipo en el mapa
 - Detalles visuales
+- Ajustar desvio de balas
