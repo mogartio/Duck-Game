@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
 
 
     if (app.exec() == 0) {
+        mainWindow.close();
         if (local_players->size() == 0) {
             recv_queue.close();
             send_queue.close();
