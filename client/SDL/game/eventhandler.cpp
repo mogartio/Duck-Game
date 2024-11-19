@@ -52,7 +52,7 @@ EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::s
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_E)] = [this]() {
         return std::make_shared<StopActionMsg>(ActionsId::SHOOT, playerName1);
     };
-    key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_R)] = [this]() {
+    key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_R)] = [this]() {
         return std::make_shared<StopActionMsg>(ActionsId::THROW_WEAPON, playerName1);
     };
 

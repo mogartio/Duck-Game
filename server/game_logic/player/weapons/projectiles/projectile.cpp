@@ -37,15 +37,15 @@ bool Projectile::ray_trace(Stage& stage) {
         if (next_tile == 1 || next_tile == 2) {
             if (is_lethal) {
                 stage.kill(next_tile);
+                return true;
             }
             if (!(initial_position == position)) {
-
                 trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.
                 notify();
             }
-            return is_lethal;
+            continue;
         }
-        if ((next_tile == BACKGROUND || next_tile == id || next_tile == 4)) {
+        if ((next_tile == BACKGROUND || next_tile == id)) {
             if (i == speed - 1) {
                 stage.set(bullet_position, id);
                 trail.pop_back();  // esto es para que no aparezca la posicion actual en el trail.

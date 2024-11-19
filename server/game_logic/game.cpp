@@ -26,6 +26,7 @@ void Game::run() {
             send_map();
             std::string winner = game_loop->play_round(*current_stage);
             player_points[winner]++;
+            delete current_stage;
         }
         for (auto& [name, points]: player_points) {
             if (points >= 5) {

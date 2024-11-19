@@ -15,15 +15,21 @@ private:
     Stage& stage;
     bool is_free;
     int counter;
+    int type_of_weapon;
 
 public:
-    WeaponSpawnPoint(Coordinate position, Stage& stage):
-            position(position), stage(stage), is_free(false), counter(0) {
+    WeaponSpawnPoint(Coordinate position, Stage& stage, int type_of_weapon):
+            position(position),
+            stage(stage),
+            is_free(false),
+            counter(0),
+            type_of_weapon(type_of_weapon) {
         spawn_weapon();
     }
     void spawn_weapon();
     void update();
     void free();
+    void set_weapon(int weapon_id);
 };
 
 #endif
