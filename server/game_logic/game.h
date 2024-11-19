@@ -17,10 +17,12 @@ private:
                                                     const PlayerObserver&);
     bool game_over;
     void send_map();
+    std::shared_ptr<std::set<uint>> ids;
 
 public:
-    Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names, bool is_testing,
-         SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders);
+    Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
+         bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
+         std::shared_ptr<std::set<uint>> ids);
     void run() override;
 };
 
