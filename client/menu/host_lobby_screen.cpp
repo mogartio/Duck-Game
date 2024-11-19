@@ -108,7 +108,6 @@ void HostLobbyScreen::processIncomingMessages() {
                 players = info_lobby_msg->get_players();
                 emit playersUpdated();
             } else {
-                // Handle the error if dynamic_cast fails
                 std::cerr << "Failed to cast to InfoLobbyMsg" << std::endl;
             }
         } else if (msg->get_header() == GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG) {
@@ -117,7 +116,6 @@ void HostLobbyScreen::processIncomingMessages() {
             if (player_info_msg) {
                 myLocalPlayerName = player_info_msg->get_player_name();
             } else {
-                // Handle the error if dynamic_cast fails
                 std::cerr << "Failed to cast to PlayerInfoMsg" << std::endl;
             }
         }
@@ -283,7 +281,7 @@ void HostLobbyScreen::updatePlayersInLobby() {
         playerLayout->setContentsMargins(20, 10, 20, 10);
         
         playerLayout->addWidget(editContainer, 0, Qt::AlignLeft);
-        playerLayout->addWidget(duckLabel, 0, Qt::AlignRight);
+        playerLayout->addWidget(duckLabel, Qt::AlignRight);
         playerLayout->addWidget(readyButton, 0, Qt::AlignRight);
         playerWidget->setLayout(playerLayout);
         scrollLayout->addWidget(playerWidget);

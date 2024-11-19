@@ -65,6 +65,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
     available_colors.erase(color);
     players_colors[player_name] = color;
     players_ready[player_name] = GenericMsg::PlayerReadyState::NOT_READY;
+    // se lo manda al cliente que se acaba de unir
     send_queues.send_to_client(std::make_shared<EverythingOkMsg>(), second_player->get_id());
     send_queues.send_to_client(std::make_shared<PlayerInfoMsg>(player_name, color), second_player->get_id());
     std::set<uint8_t> ids;
@@ -72,7 +73,7 @@ void Lobby::addPlayer(std::string& player_name, Client* second_player) {
         if (ids.find(pair.second->get_id()) != ids.end()) {
             continue;
         }
-        send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), second_player->get_id());
+        send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
         ids.insert(pair.second->get_id());
     }
 }
@@ -86,13 +87,14 @@ void Lobby::removePlayer(std::string player_name) {
     // remove the player from the lobby
     int removed = players_map.erase(player_name);
     if (removed != 0) {
-        std::set<uint8_t> ids;
-        for (auto& pair: players_map) {
-            if (ids.find(pair.second->get_id()) != ids.end()) {
-                continue;
-            }
-            send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
-            ids.insert(pair.second->get_id());
+    //send all player the updated info
+    std::set<uint8_t> ids;
+    for (auto& pair: players_map) {
+        if (ids.find(pair.second->get_id()) != ids.end()) {
+            continue;
+        }
+        send_queues.send_to_client(std::make_shared<InfoLobbyMsg>(get_players_description(), max_players, id_lobby, GenericMsg::LobbyState::NOT_STARTING), pair.second->get_id());
+        ids.insert(pair.second->get_id());
     }
     } else {
         throw std::runtime_error("Jugador no estaba en el lobby");
