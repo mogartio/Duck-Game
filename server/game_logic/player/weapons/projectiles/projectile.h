@@ -54,7 +54,7 @@ public:
 class CowboyBullet: public Projectile {
 public:
     CowboyBullet(Coordinate& initial_position, int x_direction, bool is_aiming_up, int reach):
-            Projectile(initial_position, x_direction, reach, 3, 0, BULLET_PISTOL, true, true) {
+            Projectile(initial_position, x_direction, reach, 6, 0, BULLET_PISTOL, true, true) {
         deviation_angle = M_PI / 2 + (M_PI / 2 * is_aiming_up);
     }
 };
@@ -62,7 +62,7 @@ public:
 class MagnumBullet: public Projectile {
 public:
     MagnumBullet(Coordinate& initial_position, int x_direction, bool is_aiming_up, int reach):
-            Projectile(initial_position, x_direction, reach, 3, 0, BULLET_PISTOL, true, true) {
+            Projectile(initial_position, x_direction, reach, 6, 0, BULLET_PISTOL, true, true) {
 
         deviation_angle = M_PI / 1.92 + (M_PI / 2 * is_aiming_up);
     }
