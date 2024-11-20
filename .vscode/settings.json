@@ -92,7 +92,8 @@
         "qdebug": "cpp",
         "qlineedit": "cpp",
         "qmediaplayer": "cpp",
-        "qmediaplaylist": "cpp"
+        "qmediaplaylist": "cpp",
+        "filesystem": "cpp"
     },
     "makefile.configureOnOpen": false
 }
