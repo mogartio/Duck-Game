@@ -205,6 +205,12 @@ void Map::allStanding() {
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     // weaponsMap[id].push_back(std::pair(x, y));
+
+    // if (id == ProjectilesId::ProjectileId::EXPLOSION) {
+    //     explosion(x, y);
+    //     return;
+    // }
+
     weaponsPos[id] = std::pair(x, y);
 }
 
