@@ -2,6 +2,13 @@
 #define MAP_H
 
 #include <vector>
+#include <string>
+#include <iostream>
+#include <tuple>
+#include <sstream>
+#include <cstdint>
+#include <vector>
+#include <ostream>
 #include "../../../common/coordinate.h"
 
 /*
@@ -24,7 +31,7 @@ public:
     /**
      * @brief Sets the value at the specified position in the matrix.
      */
-    void set_position(const Coordinate& position, const int& value) {
+    void set(const Coordinate& position, const int& value) {
         if (out_of_range(position)) {
             // lanzar excepcion
         }
@@ -34,7 +41,7 @@ public:
     /**
      * @brief Retrieves the value at the specified position in the matrix.
      */
-    int get_position(const Coordinate& position) {
+    int get(const Coordinate& position) {
         if (out_of_range(position)) {
             // lanzar excepcion
         }
@@ -82,6 +89,41 @@ public:
     bool out_of_range(const Coordinate& position) {
         return !(static_cast<size_t>(position.y) < matrix.size() && position.y >= 0 &&
                  static_cast<size_t>(position.x) < matrix[0].size() && position.x >= 0);
+    }
+
+
+    void print() {
+        for (int i = 0; i < rows; i++) {
+            std::stringstream stream;
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == 2 || matrix[i][j] == 1) {
+                    stream << "\033[31m"
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[j][i] == 5 || matrix[i][j] == 6) {
+                    stream << "\033[34m"
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[i][j] == 8 || matrix[i][j] == 7) {
+                    stream << "\033[33m"
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[j][i] == 4) {
+                    stream << "\033[32m"
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else {
+                    stream << "|" << matrix[i][j];  // Imprimir el valor normalmente
+                }
+            }
+            std::cout << stream.str() << std::endl;
+        }
+    }
+
+    std::vector<uint16_t> get_vector_representation() {
+        std::vector<uint16_t> res;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                res.push_back(static_cast<uint16_t>(matrix[i][j]));
+            }
+        }
+        return res;
     }
 
 };
