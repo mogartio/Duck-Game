@@ -44,6 +44,8 @@ public:
     std::shared_ptr<Weapon> pick_weapon(Coordinate);
     void add_player(Player*, int id);
     void kill(int id);
+    void draw(int object, int size, Coordinate init_position);
+    std::set<int> things_projectile_hits(Coordinate position, int size);
 };
 
 #endif

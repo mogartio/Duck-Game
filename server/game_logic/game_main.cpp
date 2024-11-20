@@ -61,6 +61,7 @@ void GameMain::process_commands(Stage& stage) {
     for (int i = 0; i < 10; i++) {
         if (is_testing) {
             create_command();
+            i = 10;
         }
         std::shared_ptr<GenericMsg> msg;
         if (receiver_q.try_pop(msg)) {
@@ -109,6 +110,9 @@ std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
 
 // Duerme lo que le falta para terminar el ciclo actual
 void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_point t1) {
+    if (is_testing) {
+        return;
+    }
     duration<int, std::milli> time_span = duration_cast<duration<int, std::milli>>(t1 - t0);
     duration<int, std::milli> sleep_duration =
             duration<int, std::milli>(TARGET_TIME) - (time_span % TARGET_TIME);

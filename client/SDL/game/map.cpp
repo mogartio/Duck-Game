@@ -6,8 +6,7 @@
 #define MIN_ZOOM 1000
 
 
-Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
-         uint height_window):
+Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         rend(rend),
         mapTexture(nullptr),
         parentTexture(nullptr),
@@ -18,7 +17,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
     // Deberia llegarme la info del fondo
     background.initialize(rend, "img_src/background/day.png");
 
-    for (int i = int(ProjectilesId::ProjectileId::GRENADE); i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
+    for (int i = int(ProjectilesId::ProjectileId::GRENADE);
+         i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
@@ -42,7 +42,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
 // ----------------- Initialize Images -----------------
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
-    if ((id == ProjectilesId::ProjectileId::HELMET) || (id == ProjectilesId::ProjectileId::CHEST) || (id == ProjectilesId::ProjectileId::UNARMED)) {
+    if ((id == ProjectilesId::ProjectileId::HELMET) || (id == ProjectilesId::ProjectileId::CHEST) ||
+        (id == ProjectilesId::ProjectileId::UNARMED)) {
         return;
     }
     Image* weaponImage = new Image();
@@ -50,7 +51,8 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
-    if ((id == ProjectilesId::ProjectileId::GRENADE) || (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
+    if ((id == ProjectilesId::ProjectileId::GRENADE) ||
+        (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
         weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
         weaponImage->defineSize(1 * tiles, 2 * tiles);
@@ -165,7 +167,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(3 * tiles, 3 * tiles);
+    player->defineSize(4 * tiles, 4 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     // player->armor(&armor, &hombro);
     // player->weapon(weapons[Weapon::MAGNUM]);
@@ -193,7 +195,8 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     weaponsPos[id] = std::pair(x, y);
 }
 
-void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail) {
+void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id,
+                    std::vector<std::pair<uint8_t, uint8_t>> trail) {
     laser.push_back(std::pair(x, y));
 }
 
@@ -248,8 +251,8 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = (max_x - min_x)*3 < MIN_ZOOM ? MIN_ZOOM : (max_x - min_x)*3;
-    int new_height = (max_y - min_y)*3;
+    int new_width = (max_x - min_x) * 3 < MIN_ZOOM ? MIN_ZOOM : (max_x - min_x) * 3;
+    int new_height = (max_y - min_y) * 3;
     min_x = min_x - new_width / 3;
     min_y = min_y - new_height / 3;
 
@@ -344,7 +347,8 @@ void Map::fill() {  // Dibuja de atras para adelante
     }
 
     for (std::pair laserPos: laser) {
-        weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles, laserPos.second * tiles);
+        weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles,
+                                                              laserPos.second * tiles);
         weapons[ProjectilesId::ProjectileId::LASER]->fill();
     }
 

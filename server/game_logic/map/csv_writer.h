@@ -15,10 +15,10 @@ public:
         file << ROW_NUMBER << "," << COLUMN_NUMBER << std::endl;  // Mapas de distintos tamanios
         for (int i = 0; i < ROW_NUMBER; i++) {
             for (int j = 0; j < COLUMN_NUMBER; j++) {
-                if (j == 20 && i < 36) {
-                    file << Config::get_instance()->mapsId["wall"] << ",";
-                    continue;
-                }
+                // if (j == 20 && i < 36) {
+                //     file << Config::get_instance()->mapsId["wall"] << ",";
+                //     continue;
+                // }
                 if ((j == 7 || j == 6) && i >= 35) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;

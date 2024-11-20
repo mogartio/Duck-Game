@@ -37,7 +37,8 @@ public:
             distance_covered(0),
             id(id),
             despawns_on_contact(despawns_on_contact),
-            is_lethal(is_lethal) {}
+            is_lethal(is_lethal),
+            trail() {}
     virtual void move(Coordinate new_position) { position = new_position; }
     virtual Coordinate get_position() { return position; }
     virtual ~Projectile() = default;
@@ -45,6 +46,8 @@ public:
     virtual void update() {}
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;
+    virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage);
+    virtual void check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage);
 };
 
 

@@ -19,7 +19,8 @@ void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon)
     throw_started = false;
     /* double deviation_angle = M_PI / 2; */
     // TODO: deberia poder tirar la granada para arriba
-    // std::cout << "la velocidad del nuevo arma es de:" << std::to_string(throw_reach) << std::endl;
+    // std::cout << "la velocidad del nuevo arma es de:" << std::to_string(throw_reach) <<
+    // std::endl;
     int speed = throw_reach / 10;
     throw_reach = 30;
     stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
@@ -31,9 +32,9 @@ void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon)
 Coordinate Weapon::get_gun_position(int facing_direction) {
     Coordinate player_position = player->get_position();
     if (facing_direction == 1) {
-        return Coordinate(player_position.x + 3, player_position.y + 1);
+        return Coordinate(player_position.x + 4, player_position.y + 1);
     }
-    return Coordinate(player_position.x - 1, player_position.y + 1);
+    return Coordinate(player_position.x - 2, player_position.y + 1);
 }
 
 Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3, 0) {}
@@ -54,8 +55,9 @@ void Unarmed::shoot(int x_direction, bool) {
                 std::shared_ptr<Weapon> weapon = stage.pick_weapon(checking);
                 if (weapon != nullptr) {
                     player->pick_weapon(std::move(weapon));
+                    return;
                 }
-                return;
+                continue;
             }
         }
     }

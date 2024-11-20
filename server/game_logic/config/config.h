@@ -36,6 +36,7 @@ private:
         rows_map = config["rows_map"].as<uint16_t>();
         explosion_counter = config["explosion_counter"].as<int>();
         explosion_range = config["explosion_range"].as<int>();
+        bullet_size = config["bullet_size"].as<int>();
         rounds_per_cycle = config["rounds_per_cycle"].as<int>();
         for (const auto& coords: config["weapon_spawn_sites"]) {
             weapon_spawn_sites.push_back(
@@ -67,6 +68,7 @@ public:
     std::vector<std::tuple<int, int>> player_spawn_sites;
     int explosion_counter;
     int explosion_range;
+    int bullet_size;
     static Config* get_instance() {
         if (instance == nullptr) {
             std::lock_guard<std::mutex> lock(mutex);
