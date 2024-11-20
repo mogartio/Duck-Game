@@ -37,6 +37,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window,
 
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
+
+    makeExplosion();
 }
 
 // ----------------- Initialize Images -----------------
@@ -56,6 +58,19 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
         weaponImage->defineSize(1 * tiles, 2 * tiles);
     }
     weapons[id] = weaponImage;
+}
+
+void Map::makeExplosion() {
+    for (int i = 1; i <= 7; i++) {
+        Image* explosion = new Image();
+        std::string path = "assets/game_assets/weapons/bullets/explosion";
+        path += std::to_string(i);
+        path += ".png";
+        explosion->initialize(rend, path);
+        explosion->queryTexture();
+        explosion->defineSize(2 * tiles, 2 * tiles);
+        explosions.push_back(explosion);
+    }
 }
 
 void Map::makeHelmet(Helemts helmet) {
@@ -225,6 +240,14 @@ void Map::newArmor(int x, int y) { armorMap.push_back(std::pair(x, y)); }
 
 void Map::armorPlayer(std::string playerName) { players[playerName]->armor(&armor, &hombro); }
 
+
+// ----------------- Explosion -----------------
+
+void Map::explosion(int x, int y) {
+    explosionsPos.push_back(std::pair(x, y));
+    explosionCounter.push_back(0);
+}
+
 // ----------------- Pre-fill -----------------
 
 SDL_Rect Map::adjustMapZoom() {
@@ -346,6 +369,22 @@ void Map::fill() {  // Dibuja de atras para adelante
     for (std::pair laserPos: laser) {
         weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles, laserPos.second * tiles);
         weapons[ProjectilesId::ProjectileId::LASER]->fill();
+    }
+
+    for (uint8_t i = 0; i < explosionsPos.size(); i++) {
+        if (explosionCounter[i]%4 != 0) {
+            explosionCounter[i]++;
+            explosions[explosionCounter[i]/4]->fill();
+            continue;
+        }
+        std::pair pos = explosionsPos[i];
+        explosions[explosionCounter[i]/4]->position(pos.first, pos.second);
+        explosions[explosionCounter[i]/4]->fill();
+        explosionCounter[i]++;
+        if (explosionCounter[i]/4 == 6) {
+            explosionsPos.erase(explosionsPos.begin() + i);
+            explosionCounter.erase(explosionCounter.begin() + i);
+        }
     }
 
     // Cambiamos el render target al renderer
