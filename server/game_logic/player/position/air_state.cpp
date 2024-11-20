@@ -11,7 +11,9 @@
 using namespace PlayerInfoId;
 
 void Grounded::jump(PlayerPosition& player) {
-    player.set_state(std::make_unique<Jumping>(), JUMPING);
+    if (stopped_jumping) {
+        player.set_state(std::make_unique<Jumping>(), JUMPING);
+    }
 }
 int Grounded::get_offset() { return 0; }
 void Grounded::update(bool could_fall, PlayerPosition& player) {
@@ -19,6 +21,7 @@ void Grounded::update(bool could_fall, PlayerPosition& player) {
         player.set_state(std::make_unique<Falling>(), FALLING);
     }
 }
+void Grounded::stop_jumping(PlayerPosition&) { stopped_jumping = true; }
 
 void Jumping::stop_jumping(PlayerPosition& player) {
     player.set_state(std::make_unique<Falling>(), FALLING);
@@ -34,7 +37,7 @@ void Jumping::update(bool could_fall, PlayerPosition& player) {
             player.set_state(std::make_unique<Falling>(), FALLING);
             return;
         }
-        player.set_state(std::make_unique<Grounded>(), GROUNDED);
+        player.set_state(std::make_unique<Grounded>(!keeps_jumping), GROUNDED);
         return;
     }
     keeps_jumping = false;
@@ -44,18 +47,17 @@ int Jumping::get_offset() { return -2; }
 
 int Falling::get_offset() { return falling_speed; }
 void Falling::jump(PlayerPosition&) {
-    if (didnt_fall_last_frame) {
-        falling_speed = 1;
-        didnt_fall_last_frame = false;
-    } else {
+    if (stopped_jumping) {
         falling_speed = 0;
-        didnt_fall_last_frame = true;
+        stopped_jumping = false;
     }
 }
 void Falling::update(bool could_fall, PlayerPosition& player) {
     if (!could_fall) {
-        player.set_state(std::make_unique<Grounded>(), GROUNDED);
+        player.set_state(std::make_unique<Grounded>(stopped_jumping), GROUNDED);
         return;
     }
     falling_speed = Config::get_instance()->player_falling_speed;
 }
+
+void Falling::stop_jumping(PlayerPosition& player) { stopped_jumping = true; }
