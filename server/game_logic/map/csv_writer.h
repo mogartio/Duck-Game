@@ -4,8 +4,8 @@
 #include "../config/config.h"
 #ifndef CSV_WRITER_H
 
-#define ROW_NUMBER 50
-#define COLUMN_NUMBER 50
+#define ROW_NUMBER 100
+#define COLUMN_NUMBER 100
 // Esta clase se encarga de crear mapas en formato csv
 class CSVWriter {
 public:
@@ -23,11 +23,11 @@ public:
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if ((i == 40 || i == 41) && j > 10 && j < 40) {
+                if ((i == 40 || i == 41) && j > 10 && j < 90) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if ((i > 40) && j > 10 && j < 40) {
+                if ((i > 40) && j > 10 && j < 90) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }

@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#define ROW_NUMBER 50
-#define COLUMN_NUMBER 50
+#define ROW_NUMBER 100
+#define COLUMN_NUMBER 100
 #include <vector>
 
 #include "../player/weapons/projectiles/projectile.h"

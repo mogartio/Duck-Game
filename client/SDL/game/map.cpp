@@ -53,9 +53,9 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     weaponImage->queryTexture();
     if ((id == ProjectilesId::ProjectileId::GRENADE) ||
         (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
-        weaponImage->defineSize(1 * tiles, 1 * tiles);
-    } else {
         weaponImage->defineSize(1 * tiles, 2 * tiles);
+    } else {
+        weaponImage->defineSize(2 * tiles, 3 * tiles);
     }
     weapons[id] = weaponImage;
 }
@@ -167,7 +167,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(4 * tiles, 4 * tiles);
+    player->defineSize(5 * tiles, 5 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     // player->armor(&armor, &hombro);
     // player->weapon(weapons[Weapon::MAGNUM]);
