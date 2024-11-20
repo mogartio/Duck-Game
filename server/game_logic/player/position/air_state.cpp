@@ -43,7 +43,15 @@ int Jumping::get_offset() { return -2; }
 
 
 int Falling::get_offset() { return falling_speed; }
-void Falling::jump(PlayerPosition&) { falling_speed = 1; }
+void Falling::jump(PlayerPosition&) {
+    if (didnt_fall_last_frame) {
+        falling_speed = 1;
+        didnt_fall_last_frame = false;
+    } else {
+        falling_speed = 0;
+        didnt_fall_last_frame = true;
+    }
+}
 void Falling::update(bool could_fall, PlayerPosition& player) {
     if (!could_fall) {
         player.set_state(std::make_unique<Grounded>(), GROUNDED);

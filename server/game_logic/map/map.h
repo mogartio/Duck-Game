@@ -25,7 +25,7 @@ public:
                       << std::endl;
             return;
         }
-        matrix[position.x][position.y] = value;
+        matrix[position.y][position.x] = value;
     }
     int get(const Coordinate& position) {
         if (out_of_range(position)) {
@@ -33,31 +33,31 @@ public:
                       << std::endl;
             return -1;
         }
-        return matrix[position.x][position.y];
+        return matrix[position.y][position.x];
     }
     bool out_of_range(const Coordinate& position) {
-        return !(static_cast<size_t>(position.x) < matrix.size() && position.x >= 0 &&
-                 static_cast<size_t>(position.y) < matrix[0].size() && position.y >= 0);
+        return !(static_cast<size_t>(position.y) < matrix.size() && position.y >= 0 &&
+                 static_cast<size_t>(position.x) < matrix[0].size() && position.x >= 0);
     }
 
     void print() {
         for (int i = 0; i < rows; i++) {
             std::stringstream stream;
             for (int j = 0; j < columns; j++) {
-                if (matrix[j][i] == 2 || matrix[j][i] == 1) {
+                if (matrix[i][j] == 2 || matrix[i][j] == 1) {
                     stream << "\033[31m"
-                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 5 || matrix[j][i] == 6) {
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[j][i] == 5 || matrix[i][j] == 6) {
                     stream << "\033[34m"
-                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 8 || matrix[j][i] == 7) {
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
+                } else if (matrix[i][j] == 8 || matrix[i][j] == 7) {
                     stream << "\033[33m"
-                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[j][i] == 4) {
                     stream << "\033[32m"
-                           << "|" << matrix[j][i] << "\033[0m";  // Rojo para el número 2
+                           << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
                 } else {
-                    stream << "|" << matrix[j][i];  // Imprimir el valor normalmente
+                    stream << "|" << matrix[i][j];  // Imprimir el valor normalmente
                 }
             }
             std::cout << stream.str() << std::endl;
@@ -68,7 +68,7 @@ public:
         std::vector<uint16_t> res;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                res.push_back(static_cast<uint16_t>(matrix[j][i]));
+                res.push_back(static_cast<uint16_t>(matrix[i][j]));
             }
         }
         return res;

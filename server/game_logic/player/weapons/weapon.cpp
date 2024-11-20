@@ -7,7 +7,7 @@
 #include "../player.h"
 #include "projectiles/projectile.h"
 #include "projectiles/projectile_dropped_weapon.h"
-#define PLAYER_SIZE 3
+#define PLAYER_SIZE 6
 void Weapon::start_throw() {
     throw_started = true;
     if (throw_reach < 1000) {
@@ -32,9 +32,9 @@ void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon)
 Coordinate Weapon::get_gun_position(int facing_direction) {
     Coordinate player_position = player->get_position();
     if (facing_direction == 1) {
-        return Coordinate(player_position.x + 5, player_position.y + 2);
+        return Coordinate(player_position.x + 6, player_position.y + 2);
     }
-    return Coordinate(player_position.x - 2, player_position.y + 2);
+    return Coordinate(player_position.x - 3, player_position.y + 2);
 }
 
 Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3, 0) {}

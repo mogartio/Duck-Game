@@ -167,7 +167,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(5 * tiles, 5 * tiles);
+    player->defineSize(6 * tiles, 6 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     // player->armor(&armor, &hombro);
     // player->weapon(weapons[Weapon::MAGNUM]);

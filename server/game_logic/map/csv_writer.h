@@ -4,17 +4,17 @@
 #include "../config/config.h"
 #ifndef CSV_WRITER_H
 
-#define ROW_NUMBER 100
-#define COLUMN_NUMBER 100
 // Esta clase se encarga de crear mapas en formato csv
 class CSVWriter {
 public:
     static void write_map(const std::string& file_name) {
+        int total_rows = Config::get_instance()->rows_map;
+        int total_columns = Config::get_instance()->columns_map;
         std::ofstream file;
         file.open(file_name, std::ios::trunc);
-        file << ROW_NUMBER << "," << COLUMN_NUMBER << std::endl;  // Mapas de distintos tamanios
-        for (int i = 0; i < ROW_NUMBER; i++) {
-            for (int j = 0; j < COLUMN_NUMBER; j++) {
+        file << total_rows << "," << total_columns << std::endl;  // Mapas de distintos tamanios
+        for (int i = 0; i < total_rows; i++) {
+            for (int j = 0; j < total_columns; j++) {
                 // if (j == 20 && i < 36) {
                 //     file << Config::get_instance()->mapsId["wall"] << ",";
                 //     continue;
@@ -23,16 +23,16 @@ public:
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if ((i == 40 || i == 41) && j > 10 && j < 90) {
+                if ((i == 40 || i == 41) && j > 10 && j < 140) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
-                if ((i > 40) && j > 10 && j < 90) {
+                if ((i > 40) && j > 10 && j < 140) {
                     file << Config::get_instance()->mapsId["floor"] << ",";
                     continue;
                 }
                 file << Config::get_instance()->mapsId["background"];
-                if (j != COLUMN_NUMBER - 1) {
+                if (j != total_columns - 1) {
                     file << ",";
                 }
             }

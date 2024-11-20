@@ -11,7 +11,7 @@
 #define DEATH -1
 #define FLOOR 1
 #define BACKGROUND 0
-#define PLAYER_SIZE 5
+#define PLAYER_SIZE 6
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"

@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "../../config/config.h"
-#define INITIAL_FALLING_SPEED 1
-#define NORMAL_FALLING_SPEED 2
-#define TOTAL_JUMPS 3
+#define INITIAL_FALLING_SPEED 0
+#define NORMAL_FALLING_SPEED 1
+#define TOTAL_JUMPS 5
 
 class PlayerPosition;  // Declaracion adelantada para no tener dependencia circularl
 
@@ -28,9 +28,10 @@ public:
 class Falling: public AirState {
 private:
     int falling_speed;
+    bool didnt_fall_last_frame;
 
 public:
-    Falling(): falling_speed(INITIAL_FALLING_SPEED) {}
+    Falling(): falling_speed(INITIAL_FALLING_SPEED), didnt_fall_last_frame(false) {}
     virtual int get_offset() override;
     virtual void jump(PlayerPosition&) override;
     virtual void update(bool, PlayerPosition&) override;
