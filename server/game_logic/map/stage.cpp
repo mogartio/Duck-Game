@@ -22,12 +22,12 @@
 #include "csv_writer.h"
 #include "stage.h"
 
-Stage::Stage(const std::string& file_name, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
+Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
-        map(0, 0), senders(senders), obs(this->senders, ids) {
-    CSVWriter::write_map("main_map.csv");
-    CSVReader reader(file_name);
-    map = std::move(reader.read_map());
+        map(map), senders(senders), obs(this->senders, ids) {
+    // CSVWriter::write_map("main_map.csv");
+    // CSVReader reader(file_name);
+    //  map = std::move(reader.read_map());
 }
 
 void Stage::print() { map.print(); }

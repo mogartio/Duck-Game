@@ -26,7 +26,7 @@ public:
     // Son es para poder mockear la clase mas facilmente
     void draw_player(Player&);
     int is_valid_position(Coordinate, int);
-    Stage(const std::string&, SendQueuesMonitor<std::shared_ptr<GenericMsg>>&,
+    Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>&,
           std::shared_ptr<std::set<uint>> ids);
     void delete_player_from_stage(Player&);
     void print();

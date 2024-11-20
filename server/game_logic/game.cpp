@@ -3,7 +3,7 @@
 Game::Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
            bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
            std::shared_ptr<std::set<uint>> ids):
-        senders(senders), game_over(false), ids(ids) {
+        senders(senders), game_over(false), ids(ids), map_manager() {
     const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
     players = generate_players(player_names, *player_obs);
     game_loop = std::make_shared<GameMain>(recv, players, is_testing);
@@ -23,7 +23,8 @@ std::map<std::string, Player*> Game::generate_players(const std::vector<std::str
 void Game::run() {
     while (!game_over) {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
-            current_stage = new Stage("main_map.csv", senders, ids);
+            Map& map = map_manager.get_random_map();
+            current_stage = new Stage(map, senders, ids);
             send_map();
             std::string winner = game_loop->play_round(*current_stage);
             player_points[winner]++;

@@ -26,32 +26,21 @@ explosion_range: 5
 rounds_per_cycle: 5
 bullet_size: 2
 mapId:
-  - background          # 0
-  - playerA             # 1
-  - playerB             # 2
-  - playerC             # 3
-  - playerD             # 4
-  - floor               # 5
-  - wall                # 6
-  - trail               # 7
-  - bullet              # 8
-  - ray                 # 9
-  - shotgun pellet      # 10
-  - bananaProjectile    # 11
-  - grenadeProjectile   # 12
-  - box                 # 13
-  - brokenBox           # 14
-  - armor               # 15
-  - helmet              # 16
-  - grenade             # 17
-  - banana              # 18
-  - pew_pew_laser       # 19
-  - laser_rifle         # 20
-  - ak_47               # 21
-  - duel_pistol         # 22
-  - cowboy_pistol       # 23
-  - magnum              # 24
-  - shotgun             # 25
-  - sniper              # 26
-  - helmet              # 27
-  - chest               # 28
+  - background # 0
+  - playerA # 1
+  - playerB # 2
+  - playerC # 3
+  - playerD # 4
+  - floor # 5
+  - wall # 6
+  - trail # 7
+  - bullet # 8
+  - ray # 9
+  - shotgun pellet # 10
+  - bananaProjectile # 11
+  - grenadeProjectile # 12
+  - box # 13
+  - brokenBox # 14
+  - armor # 15
+  - helmet # 16
+

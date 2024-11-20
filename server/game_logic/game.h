@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "./map/map_manager.h"
 #include "player/player.h"
 
 #include "game_main.h"
@@ -18,6 +19,7 @@ private:
     bool game_over;
     void send_map();
     std::shared_ptr<std::set<uint>> ids;
+    MapManager map_manager;
 
 public:
     Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
