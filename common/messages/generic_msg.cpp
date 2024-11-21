@@ -12,8 +12,12 @@ void GenericMsg::set_id_client(int id_client) { this->id_client = id_client; }
 
 InfoLobbyMsg::InfoLobbyMsg(): GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-InfoLobbyMsg::InfoLobbyMsg(std::list<DescripcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game):
-        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG), players(players), max_players(max_players), lobby_id(lobby_id),
+InfoLobbyMsg::InfoLobbyMsg(std::list<DescripcionPlayer> players, uint8_t max_players,
+                           uint8_t lobby_id, uint8_t starting_game):
+        GenericMsg(GenericMsg::INFO_LOBBY_MSG, GenericMsg::LOBBY_MSG),
+        players(players),
+        max_players(max_players),
+        lobby_id(lobby_id),
         starting_game(starting_game) {}
 
 void InfoLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
@@ -42,7 +46,9 @@ CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg():
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         color(0),
         player_name("") {}
-CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready):
+CustomizedPlayerInfoMsg::CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color,
+                                                 std::string player_name,
+                                                 std::string player_new_name, uint8_t is_ready):
         GenericMsg(GenericMsg::CUSTOMIZED_PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         lobby_id(lobby_id),
         color(color),
@@ -113,8 +119,12 @@ void ChooseLobbyMsg::set_player_name(std::string player_name) { this->player_nam
 
 CreateLobbyMsg::CreateLobbyMsg(): GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG) {}
 
-CreateLobbyMsg::CreateLobbyMsg(std::string player_name, std::string lobby_name, uint8_t max_players):
-        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG), player_name(player_name), lobby_name(lobby_name), max_players(max_players) {}
+CreateLobbyMsg::CreateLobbyMsg(std::string player_name, std::string lobby_name,
+                               uint8_t max_players):
+        GenericMsg(GenericMsg::CREATE_LOBBY_MSG, GenericMsg::LOBBY_MSG),
+        player_name(player_name),
+        lobby_name(lobby_name),
+        max_players(max_players) {}
 
 void CreateLobbyMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -339,12 +349,14 @@ UpdatedPlayerInfoMsg::UpdatedPlayerInfoMsg():
         facing_direction(0) {}
 UpdatedPlayerInfoMsg::UpdatedPlayerInfoMsg(std::string player_name,
                                            std::pair<uint16_t, uint16_t> position, uint8_t state,
-                                           uint8_t facing_direction):
+                                           uint8_t facing_direction,
+                                           uint8_t facing_direction_second):
         GenericMsg(GenericMsg::UPDATED_PLAYER_INFO_MSG, GenericMsg::GAME_MSG),
         player_name(player_name),
         position(position),
         state(state),
-        facing_direction(facing_direction) {}
+        facing_direction(facing_direction),
+        facing_direction_second(facing_direction_second) {}
 
 void UpdatedPlayerInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -374,6 +386,14 @@ void UpdatedPlayerInfoMsg::set_facing_direction(uint8_t facing_direction) {
     this->facing_direction = facing_direction;
 }
 
+uint8_t UpdatedPlayerInfoMsg::get_facing_direction_second() const {
+    return facing_direction_second;
+}
+
+void UpdatedPlayerInfoMsg::set_facing_direction_second(uint8_t facing_direction_second) {
+    this->facing_direction_second = facing_direction_second;
+}
+
 ProjectileInfoMsg::ProjectileInfoMsg():
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
         pos_x(),
@@ -381,12 +401,15 @@ ProjectileInfoMsg::ProjectileInfoMsg():
         item() {}
 
 ProjectileInfoMsg::ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t pos_x,
-                                     uint8_t pos_y, uint8_t item):
+                                     uint8_t pos_y, uint8_t item, uint8_t facing_direction_first,
+                                     uint8_t facing_direction_second):
         GenericMsg(GenericMsg::PROJECTILE_INFO_MSG, GenericMsg::GAME_MSG),
         pos_x(pos_x),
         pos_y(pos_y),
         item(item),
-        trail(trail) {}
+        trail(trail),
+        facing_direction_first(facing_direction_first),
+        facing_direction_second(facing_direction_second) {}
 
 void ProjectileInfoMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -412,13 +435,22 @@ void ProjectileInfoMsg::set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail
     this->trail = trail;
 }
 
+uint8_t ProjectileInfoMsg::get_facing_direction_first() const { return facing_direction_first; }
 
-PlayerInfoMsg::PlayerInfoMsg() :
-        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
-        player_name(""),
-        color(0) {}
+uint8_t ProjectileInfoMsg::get_facing_direction_second() const { return facing_direction_second; }
 
-PlayerInfoMsg::PlayerInfoMsg(std::string player_name, uint8_t color) :
+void ProjectileInfoMsg::set_facing_direction_first(uint8_t facing_direction_first) {
+    this->facing_direction_first = facing_direction_first;
+}
+
+void ProjectileInfoMsg::set_facing_direction_second(uint8_t facing_direction_second) {
+    this->facing_direction_second = facing_direction_second;
+}
+
+PlayerInfoMsg::PlayerInfoMsg():
+        GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG), player_name(""), color(0) {}
+
+PlayerInfoMsg::PlayerInfoMsg(std::string player_name, uint8_t color):
         GenericMsg(GenericMsg::PLAYER_INFO_MSG, GenericMsg::LOBBY_MSG),
         player_name(player_name),
         color(color) {}
@@ -435,7 +467,54 @@ uint8_t PlayerInfoMsg::get_color() const { return color; }
 
 void PlayerInfoMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
-void PlayerInfoMsg::set_color(uint8_t color) { this->color = color; }   
+void PlayerInfoMsg::set_color(uint8_t color) { this->color = color; }
 
+NotProyectileInfo::NotProyectileInfo():
+        GenericMsg(GenericMsg::NOT_PROJECTILE_INFO, GenericMsg::GAME_MSG),
+        item(0),
+        position_x_y() {}
 
+NotProyectileInfo::NotProyectileInfo(uint8_t item, std::pair<uint8_t, uint8_t> position_x_y):
+        GenericMsg(GenericMsg::NOT_PROJECTILE_INFO, GenericMsg::GAME_MSG),
+        item(item),
+        position_x_y(position_x_y) {}
 
+void NotProyectileInfo::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void NotProyectileInfo::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void NotProyectileInfo::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+void NotProyectileInfo::set_item(uint8_t item) { this->item = item; }
+
+void NotProyectileInfo::set_position_x_y(std::pair<uint8_t, uint8_t> position_x_y) {
+    this->position_x_y = position_x_y;
+}
+
+uint8_t NotProyectileInfo::get_item() const { return item; }
+
+std::pair<uint8_t, uint8_t> NotProyectileInfo::get_position_x_y() const { return position_x_y; }
+
+ShootMsg::ShootMsg():
+        GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG), player_name(""), position_x_y() {}
+
+ShootMsg::ShootMsg(std::string player_name, std::pair<uint8_t, uint8_t> position_x_y):
+        GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG),
+        player_name(player_name),
+        position_x_y(position_x_y) {}
+
+void ShootMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void ShootMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void ShootMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
+
+void ShootMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
+
+void ShootMsg::set_position_x_y(std::pair<uint8_t, uint8_t> position_x_y) {
+    this->position_x_y = position_x_y;
+}
+
+std::string ShootMsg::get_player_name() const { return player_name; }
+
+std::pair<uint8_t, uint8_t> ShootMsg::get_position_x_y() const { return position_x_y; }
