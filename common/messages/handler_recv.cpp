@@ -20,3 +20,5 @@ void HandlerReceiver::handle_recv(GameEndedMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(WinnerMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(UpdatedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerReceiver::handle_recv(ProjectileInfoMsg& msg) { (void)msg; }
+void HandlerReceiver::handle_recv(NotProyectileInfo& msg) { (void)msg; }
+void HandlerReceiver::handle_recv(ShootMsg& msg) { (void)msg; }
