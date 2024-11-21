@@ -7,14 +7,14 @@ MainMenuScreen::MainMenuScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Q
     setFocusPolicy(Qt::StrongFocus);
 
     // Load key press sound
-    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
+    keyPressSound = std::make_unique<QSound>("assets/menu_assets/Retro3.wav");
 
     // Create black opaque background rectangle
     RoundedRectangle * baseRectangle = new RoundedRectangle(this, 710, 260, 500, 560, QColor(0,0,0, 100), QColor(0,0,0, 100));
     baseRectangle->setParent(this);
 
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 

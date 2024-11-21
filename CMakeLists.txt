@@ -42,16 +42,9 @@ add_executable(server ${SERVER_SOURCES})
 # Copy the entire img_src folder, including subdirectories, to the build directory
 add_custom_target(CopyResources ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/client/SDL/img_src ${CMAKE_BINARY_DIR}/img_src
+    ${CMAKE_SOURCE_DIR}/client/assets ${CMAKE_BINARY_DIR}/assets
 )
 
-# Copy the entire assets folder, including subdirectories, to the build directory
-add_custom_target(CopyMenuAssets ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/client/menu/assets ${CMAKE_BINARY_DIR}/assets
-)
-
-add_dependencies(client CopyMenuAssets)
 add_dependencies(client CopyResources)
 
 # Link libraries

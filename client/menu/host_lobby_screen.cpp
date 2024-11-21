@@ -4,9 +4,9 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
     setWindowState(Qt::WindowFullScreen); // Set window to full-screen mode
     setFocusPolicy(Qt::StrongFocus);
     // Load key press sound
-    keyPressSound = std::make_unique<QSound>("assets/Retro3.wav");
+    keyPressSound = std::make_unique<QSound>("assets/menu_assets/Retro3.wav");
     // Load custom font
-    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
     // Create black opaque background rectangle
@@ -60,13 +60,13 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
     connect(localPlayerButton, &QPushButton::clicked, this, &HostLobbyScreen::onAddLocalPlayerButtonClicked);
 
     // Load save icon image
-    saveIcon = std::make_unique<QPixmap>("assets/Floppy-Drive.png");
+    saveIcon = std::make_unique<QPixmap>("assets/menu_assets/Floppy-Drive.png");
 
     // Load ducks images
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, std::make_unique<QPixmap>("assets/white_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, std::make_unique<QPixmap>("assets/yellow_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, std::make_unique<QPixmap>("assets/orange_duck_head.png")));
-    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, std::make_unique<QPixmap>("assets/grey_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::WHITE, std::make_unique<QPixmap>("assets/menu_assets/white_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::YELLOW, std::make_unique<QPixmap>("assets/menu_assets/yellow_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::ORANGE, std::make_unique<QPixmap>("assets/menu_assets/orange_duck_head.png")));
+    ducks_images.push_back(std::make_pair(GenericMsg::DuckColor::GREY, std::make_unique<QPixmap>("assets/menu_assets/grey_duck_head.png")));
 
     // Scale images
     for (auto& duck : ducks_images) {

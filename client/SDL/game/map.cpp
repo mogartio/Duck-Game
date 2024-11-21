@@ -4,6 +4,8 @@
 #include <iostream>
 
 #define MIN_ZOOM 1000
+#define VELOCIDAD_ZOOM 2
+#define TILES_PATIÑOS 3
 
 
 Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
@@ -15,7 +17,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         height_window(height_window),
         tilesImages(3, nullptr) {
     // Deberia llegarme la info del fondo
-    background.initialize(rend, "img_src/background/day.png");
+    background.initialize(rend, "assets/game_assets/background/day.png");
 
     for (int i = int(ProjectilesId::ProjectileId::GRENADE);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
@@ -47,15 +49,15 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
         return;
     }
     Image* weaponImage = new Image();
-    std::string path = "img_src/weapons/";
+    std::string path = "assets/game_assets/weapons/";
     path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
     weaponImage->queryTexture();
     if ((id == ProjectilesId::ProjectileId::GRENADE) ||
         (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
-        weaponImage->defineSize(1 * tiles, 2 * tiles);
+        weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
-        weaponImage->defineSize(2 * tiles, 3 * tiles);
+        weaponImage->defineSize(1 * tiles, 2 * tiles);
     }
     weapons[id] = weaponImage;
 }
@@ -63,7 +65,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
 void Map::makeHelmet(Helemts helmet) {
     // Creo casco de mapa
     Image* mapHelmet = new Image();
-    std::string mapPath = "img_src/map/";
+    std::string mapPath = "assets/game_assets/map/";
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
@@ -72,7 +74,7 @@ void Map::makeHelmet(Helemts helmet) {
 
     // Creo casco de inventario
     Image* helmetImage = new Image();
-    std::string path = "img_src/helmets/";
+    std::string path = "assets/game_assets/helmets/";
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
@@ -82,23 +84,24 @@ void Map::makeHelmet(Helemts helmet) {
 
 void Map::makeArmor() {
     // Creo armadura de mapa
-    armorOnMap.initialize(rend, "img_src/map/armor.png");
+    armorOnMap.initialize(rend, "assets/game_assets/map/armor.png");
     armorOnMap.queryTexture();
     armorOnMap.defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
-    armor.initialize(rend, "img_src/armor/armor4.png");
+    armor.initialize(rend, "assets/game_assets/armor/armor4.png");
     armor.queryTexture();
     armor.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño que el pato
 
-    hombro.initialize(rend, "img_src/armor/hombro4.png");
+    hombro.initialize(rend, "assets/game_assets/armor/hombro4.png");
     hombro.queryTexture();
     hombro.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
     Image* tile = new Image();
-    std::string path = "img_src/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
+    std::string path =
+            "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
                                                    // me mande el server (dia, noche)
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
@@ -240,8 +243,8 @@ SDL_Rect Map::adjustMapZoom() {
     for (const auto& pair: players) {
         std::pair<int, int> position = pair.second->getPosition();
         // seteamos los valores maximos de x e y
-        max_x < position.first ? max_x = position.first + 3 * tiles : max_x;
-        max_y < position.second ? max_y = position.second + 3 * tiles : max_y;
+        max_x < position.first ? max_x = position.first + TILES_PATIÑOS * tiles : max_x;
+        max_y < position.second ? max_y = position.second + TILES_PATIÑOS * tiles : max_y;
 
         // seteamos los valores minimos de x e y
         if (position.first < min_x || min_x == 0) {
@@ -252,17 +255,14 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = (max_x - min_x) * 3 < MIN_ZOOM ? MIN_ZOOM : (max_x - min_x) * 3;
-    int new_height = (max_y - min_y) * 3;
-    min_x = min_x - new_width / 3;
-    min_y = min_y - new_height / 3;
+    int new_width = std::max((max_x - min_x) * VELOCIDAD_ZOOM, MIN_ZOOM);
+    int new_height = (max_y - min_y) * VELOCIDAD_ZOOM;
+    int centro_x = (min_x + max_x) / 2;
+    int centro_y = (min_y + max_y) / 2;
 
     float proportion_width = float(width_window) / float(new_width);
     float proportion_height = float(height_window) / float(new_height);
     float proportion = 1 / std::min(proportion_width, proportion_height);
-
-    int centro_x = min_x + new_width / 2;
-    int centro_y = min_y + new_height / 2;
 
     new_width = proportion * width_window;
     new_height = proportion * height_window;

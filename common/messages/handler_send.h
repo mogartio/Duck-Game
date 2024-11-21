@@ -21,6 +21,8 @@ class WinnerMsg;
 class UpdatedPlayerInfoMsg;
 class ProjectileInfoMsg;
 class PlayerInfoMsg;
+class NotProyectileInfo;
+class ShootMsg;
 // TODO: esto se puede mejorar lanzando mensajes de errores si no se implementan los metodos
 // TODO: en las clases hijas ya que hasta ahora solo haciamos (void)msg
 
@@ -50,6 +52,8 @@ public:
     // in-game from server
     virtual void handle_send(const UpdatedPlayerInfoMsg& msg);
     virtual void handle_send(const ProjectileInfoMsg& msg);
+    virtual void handle_send(const NotProyectileInfo& msg);
+    virtual void handle_send(const ShootMsg& msg);
 
     virtual ~HandlerSender() = default;
 };

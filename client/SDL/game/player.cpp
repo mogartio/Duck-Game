@@ -37,7 +37,7 @@ void Player::initialiceDuckImages(DuckState state) {
 // ----------------- Constructor -----------------
 
 Player::Player(SDL_Renderer* rend, Color color):
-        rend(rend), flip(SDL_FLIP_NONE), file("img_src/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
+        rend(rend), flip(SDL_FLIP_NONE), file("assets/game_assets/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
 
     walk = 0;
     file += color_to_string(color);

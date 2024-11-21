@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
     connect(mediaPlayer, &QMediaPlayer::stateChanged, this, &MainWindow::onStateChanged);
 
     // Initialize sound button
-    soundOnIcon = std::make_shared<QPixmap>("assets/Speaker-0.png");
-    soundOffIcon = std::make_shared<QPixmap>("assets/Speaker-Crossed.png");
+    soundOnIcon = std::make_shared<QPixmap>("assets/menu_assets/Speaker-0.png");
+    soundOffIcon = std::make_shared<QPixmap>("assets/menu_assets/Speaker-Crossed.png");
     soundButton = new QPushButton(this);
     soundButton->setStyleSheet("background-color: rgba(0, 0, 0, 0); border: none;");
     soundButton->setIcon(QIcon(*soundOnIcon));
@@ -28,12 +28,12 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
     connect(soundButton, &QPushButton::clicked, this, &MainWindow::onSoundButtonClicked);
 
     // Convert relative paths to absolute paths
-    logoConnectionSongPath = QDir::currentPath() + "/assets/Duck Game - Title.wav";
+    logoConnectionSongPath = QDir::currentPath() + "/assets/menu_assets/Duck Game - Title.wav";
     menuSongsPaths = {
-        QDir::currentPath() + "/assets/Duck Game - DontFWithDuck.wav",
-        QDir::currentPath() + "/assets/Duck Game - DrDuck.wav",
-        QDir::currentPath() + "/assets/Duck Game - SynthRock.wav",
-        QDir::currentPath() + "/assets/Duck Game - TechnoFreak.wav"
+        QDir::currentPath() + "/assets/menu_assets/Duck Game - DontFWithDuck.wav",
+        QDir::currentPath() + "/assets/menu_assets/Duck Game - DrDuck.wav",
+        QDir::currentPath() + "/assets/menu_assets/Duck Game - SynthRock.wav",
+        QDir::currentPath() + "/assets/menu_assets/Duck Game - TechnoFreak.wav"
     };
 
     // Create screens
@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent, Queue<std::shared_ptr<GenericMsg>>* send
 
 void MainWindow::setupBackground() {
     backgroundLabel = std::make_unique<QLabel>(this);
-    QPixmap backgroundPixmap("assets/sliding_background.png"); // Load your image
+    QPixmap backgroundPixmap("assets/menu_assets/sliding_background.png"); // Load your image
     backgroundLabel->setPixmap(backgroundPixmap);
     backgroundLabel->setScaledContents(true); // Optional: scale the image to fit the window
 
@@ -222,7 +222,7 @@ void MainWindow::handleGameStart() {
     overlay->show();
 
     QFont customFont;
-    int fontId = QFontDatabase::addApplicationFont("assets/HomeVideo-Regular.ttf");
+    int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
     customFont = QFont(fontFamily);
 

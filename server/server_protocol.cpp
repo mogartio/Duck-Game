@@ -175,6 +175,10 @@ void ServerProtocol::handle_send(const ProjectileInfoMsg& msg) {
     // recibo el item del proyectil
     uint8_t item = msg.get_item();
     send_u_int8_t(item);
+    uint8_t facing_direction_first = msg.get_facing_direction_first();
+    send_u_int8_t(facing_direction_first);
+    uint8_t facing_direction_second = msg.get_facing_direction_second();
+    send_u_int8_t(facing_direction_second);
 }
 
 void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
@@ -189,6 +193,8 @@ void ServerProtocol::handle_send(const UpdatedPlayerInfoMsg& msg) {
     send_u_int8_t(state);
     uint8_t facing_direction = msg.get_facing_direction();
     send_u_int8_t(facing_direction);
+    uint8_t facing_direction_second = msg.get_facing_direction_second();
+    send_u_int8_t(facing_direction_second);
 }
 
 void ServerProtocol::handle_send(const PlayerInfoMsg& msg) {
@@ -199,4 +205,21 @@ void ServerProtocol::handle_send(const PlayerInfoMsg& msg) {
     send_string(player_name);
     uint8_t color = msg.get_color();
     send_u_int8_t(color);
+}
+
+void ServerProtocol::handle_send(const NotProyectileInfo& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    uint8_t item = msg.get_item();
+    send_u_int8_t(item);
+    std::pair<uint8_t, uint8_t> position_x_y = msg.get_position_x_y();
+    send_u_int8_t(position_x_y.first);
+    send_u_int8_t(position_x_y.second);
+}
+
+void ServerProtocol::handle_send(const ShootMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    std::string player_name = msg.get_player_name();
+    send_string(player_name);
 }
