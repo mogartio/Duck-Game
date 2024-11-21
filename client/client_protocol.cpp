@@ -118,7 +118,7 @@ void ClientProtocol::handle_send(const CustomizedPlayerInfoMsg& msg) {
     std::string player_name = msg.get_player_name();
     send_u_int8_t(color);
     send_string(player_name);
-    std::string new_name = msg.get_player_new_name();   
+    std::string new_name = msg.get_player_new_name();
     send_string(new_name);
     uint8_t is_ready = msg.get_is_ready();
     send_u_int8_t(is_ready);
@@ -195,6 +195,10 @@ void ClientProtocol::handle_recv(ProjectileInfoMsg& msg) {
     // recibo el item del proyectil
     uint8_t item = recv_u_int8_t();
     msg.set_item(item);
+    uint8_t facing_direction_first = recv_u_int8_t();
+    msg.set_facing_direction_first(facing_direction_first);
+    uint8_t facing_direction_second = recv_u_int8_t();
+    msg.set_facing_direction_second(facing_direction_second);
 }
 
 void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
@@ -203,10 +207,12 @@ void ClientProtocol::handle_recv(UpdatedPlayerInfoMsg& msg) {
     uint16_t y = recv_u_int16_t();
     uint8_t state = recv_u_int8_t();
     uint8_t facing_direction = recv_u_int8_t();
+    uint8_t facing_direction_second = recv_u_int8_t();
     msg.set_player_name(player_name);
     msg.set_position(x, y);
     msg.set_state(state);
     msg.set_facing_direction(facing_direction);
+    msg.set_facing_direction_second(facing_direction_second);
 }
 
 void ClientProtocol::handle_recv(PlayerInfoMsg& msg) {

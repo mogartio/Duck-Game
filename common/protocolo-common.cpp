@@ -1,12 +1,15 @@
 #include "protocolo-common.h"
+
 #include <iostream>
+
 #include <arpa/inet.h>
 
 void ProtocoloCommon::send(std::shared_ptr<GenericMsg> msg) { msg->accept_send(*this); }
 
 std::shared_ptr<GenericMsg> ProtocoloCommon::receive() {
     uint8_t header = recv_u_int8_t();
-    std::shared_ptr<GenericMsg> msg = recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
+    std::shared_ptr<GenericMsg> msg =
+            recv_handlers[static_cast<GenericMsg::MsgTypeHeader>(header)]();
     msg->accept_recv(*this);
     return msg;
 }
@@ -52,6 +55,10 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
                           [this]() { return std::make_shared<ProjectileInfoMsg>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::PLAYER_INFO_MSG,
                           [this]() { return std::make_shared<PlayerInfoMsg>(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO,
+                          [this]() { return std::make_shared<NotProyectileInfo>(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::SHOOT_MSG,
+                          [this]() { return std::make_shared<ShootMsg>(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {
