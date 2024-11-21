@@ -57,7 +57,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
         (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
         weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
-        weaponImage->defineSize(1 * tiles, 2 * tiles);
+        weaponImage->defineSize(2 * tiles, 3 * tiles);
     }
     weapons[id] = weaponImage;
 }
