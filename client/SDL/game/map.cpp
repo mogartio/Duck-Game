@@ -141,8 +141,9 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
         switch (i) {
             case 5:  // piso
                 matriz[filaActual][columnaActual] = i;
-
-                if (matriz[filaActual - 1][columnaActual] == i) {
+                if (filaActual == 0) {
+                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                } else if (matriz[filaActual - 1][columnaActual] == i) {
                     tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
                 } else {
                     tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
