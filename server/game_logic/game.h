@@ -22,6 +22,7 @@ private:
 
     bool game_over;
     bool is_testing;
+    bool players_created;
 
     MapManager map_manager;
 

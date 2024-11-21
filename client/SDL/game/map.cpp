@@ -118,6 +118,10 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     helmetsMap.clear();
     armorMap.clear();
     playersNamesAlive.clear();
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
+    }
+    mapTexture = nullptr;
 
     for (const auto& pair: players) {
         pair.second->dropEverithing();
@@ -377,6 +381,10 @@ Map::~Map() {
 
     if (parentTexture != nullptr) {
         SDL_DestroyTexture(parentTexture);
+    }
+
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
     }
 
     for (Image* piso: tilesImages) {

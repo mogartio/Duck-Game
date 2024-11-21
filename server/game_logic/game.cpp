@@ -3,7 +3,7 @@
 Game::Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
            bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
            std::shared_ptr<std::set<uint>> ids):
-        senders(senders), recv(recv), player_names(player_names), ids(ids), game_over(false), is_testing(is_testing), map_manager() {
+        senders(senders), recv(recv), player_names(player_names), ids(ids), game_over(false), is_testing(is_testing), players_created(false), map_manager() {
 
 }
 
@@ -24,7 +24,7 @@ void Game::run() {
             Map& map = map_manager.get_random_map();
             current_stage = new Stage(map, senders, ids);
             send_map(map);
-
+        
             const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
             players = generate_players(player_names, *player_obs, map);
             game_loop = std::make_shared<GameMain>(recv, players, is_testing);
