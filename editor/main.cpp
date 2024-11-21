@@ -2,7 +2,11 @@
 #include <QApplication>
 #include "editor_main_window.h"
 
-int main(int argc, char const *argv[]) {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    EditorMainWindow mainWindow;
+    mainWindow.show();
+
+    return app.exec();
 }
