@@ -21,19 +21,19 @@ void MapManager::load_maps() {
         std::string new_map_name = config["map_name"].as<std::string>();
         int rows = config["map_rows"].as<int>();
         int columns = config["map_columns"].as<int>();
-        std::vector<std::tuple<Coordinate>> players_spawn_sites;
+        std::vector<Coordinate> players_spawn_sites;
         std::vector<std::tuple<Coordinate, int>> items_spawn_sites;
         std::vector<std::vector<int>> matrix;
 
         // extract player spawn sites
-        for (const auto& spawn: config["players_spawn_sites"]) {
+        for (const auto& spawn: config["map_player_spawn_sites"]) {
             Coordinate spawn_point = Coordinate(spawn[0].as<int>(), spawn[1].as<int>());
-            players_spawn_sites.push_back(std::make_tuple(spawn_point));
+            players_spawn_sites.push_back(spawn_point);
         }
 
         // extract item spawn sites
-        for (const auto& spawn: config["items_spawn_sites"]) {
-            Coordinate spawn_point = Coordinate(spawn[0].as<int>(), spawn[0].as<int>());
+        for (const auto& spawn: config["map_weapon_spawn_sites"]) {
+            Coordinate spawn_point = Coordinate(spawn[0].as<int>(), spawn[1].as<int>());
             int item_id = spawn[2].as<uint>();
             items_spawn_sites.push_back(std::make_tuple(spawn_point, item_id));
         }

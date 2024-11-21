@@ -21,11 +21,11 @@ private:
     int rows;
     int columns;
     std::vector<std::vector<int>> matrix;
-    std::vector<std::tuple<Coordinate>> players_spawn_sites;
+    std::vector<Coordinate> players_spawn_sites;
     std::vector<std::tuple<Coordinate, int>> items_spawn_sites;
 
 public:
-    Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix, std::vector<std::tuple<Coordinate>> players_spawn_sites, std::vector<std::tuple<Coordinate, int>> items_spawn_sites) : name(new_map_name), rows(rows), columns(columns), matrix(matrix), players_spawn_sites(players_spawn_sites), items_spawn_sites(items_spawn_sites) {}
+    Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix, std::vector<Coordinate> players_spawn_sites, std::vector<std::tuple<Coordinate, int>> items_spawn_sites) : name(new_map_name), rows(rows), columns(columns), matrix(matrix), players_spawn_sites(players_spawn_sites), items_spawn_sites(items_spawn_sites) {}
 
     
     /**
@@ -33,7 +33,7 @@ public:
      */
     void set(const Coordinate& position, const int& value) {
         if (out_of_range(position)) {
-            // lanzar excepcion
+            return;
         }
         matrix[position.y][position.x] = value;
     }
@@ -43,7 +43,7 @@ public:
      */
     int get(const Coordinate& position) {
         if (out_of_range(position)) {
-            // lanzar excepcion
+            return -1;
         }
         return matrix[position.y][position.x];
     }
@@ -72,7 +72,7 @@ public:
     /**
      * @brief Returns the players spawn points.
      */
-    std::vector<std::tuple<Coordinate>> get_players_spawn_sites() {
+    std::vector<Coordinate> get_players_spawn_sites() {
         return players_spawn_sites;
     }
 

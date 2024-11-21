@@ -30,14 +30,14 @@ private:
     std::vector<WeaponSpawnPoint*> weapon_spawns;
     void spawn_weapons();
 
-    void init_round(Stage& stage);
+    void init_round(Stage& stage, Map& map);
 
 public:
     explicit GameMain(Queue<std::shared_ptr<GenericMsg>>&, std::map<std::string, Player*>, bool);
 
     std::shared_ptr<GenericMsg> create_msg(const std::string& command);
     void run();
-    std::string play_round(Stage&);
+    std::string play_round(Stage& stage, Map& map);
 
     using HandlerReader::handle_read;
 

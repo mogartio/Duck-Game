@@ -13,8 +13,8 @@ GameMain::GameMain(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, 
         receiver_q(q), is_testing(is_testing), players(players) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
-std::string GameMain::play_round(Stage& stage) {
-    init_round(stage);
+std::string GameMain::play_round(Stage& stage, Map& map) {
+    init_round(stage, map);
     std::string winner;
     bool round_over = false;
     while (!round_over) {
@@ -28,17 +28,14 @@ std::string GameMain::play_round(Stage& stage) {
     return winner;
 }
 
-void GameMain::init_round(Stage& stage) {
-    std::vector<std::tuple<int, int>> weapon_spawn_sites =
-            Config::get_instance()->weapon_spawn_sites;
-    Coordinate weapon_spawnA(std::get<0>(weapon_spawn_sites[0]),
-                             std::get<1>(weapon_spawn_sites[0]));
-    Coordinate weapon_spawnB(std::get<0>(weapon_spawn_sites[1]),
-                             std::get<1>(weapon_spawn_sites[1]));
-    WeaponSpawnPoint spawnA(weapon_spawnA, stage, COWBOY_PISTOL);
-    weapon_spawns.push_back(&spawnA);
-    WeaponSpawnPoint spawnB(weapon_spawnB, stage, MAGNUM);
-    weapon_spawns.push_back(&spawnB);
+void GameMain::init_round(Stage& stage, Map& map) {
+    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
+            map.get_items_spawn_sites();
+
+    for (auto& weapon: weapon_spawn_sites) {
+        WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
+        weapon_spawns.push_back(&spawn);
+    }
 
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
