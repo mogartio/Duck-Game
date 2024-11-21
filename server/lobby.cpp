@@ -28,7 +28,8 @@ Lobby::Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::s
         send_queues(send_queues),
         receiver_q(new Queue<std::shared_ptr<GenericMsg>>(200)),
         id_lobby(id_lobby),
-        is_testing(is_testing) {
+        is_testing(is_testing),
+        is_dead(false) {
     host_id = first_player->get_id();
     host_name = player_name;
     players_map[player_name] = first_player;
@@ -206,4 +207,17 @@ void Lobby::updatePlayerInfo(std::string player_name, std::string new_name, uint
                 pair.second->get_id());
         ids.insert(pair.second->get_id());
     }
+}
+
+void Lobby::kill() {
+    if (is_dead) {
+        return;
+    }
+    // se pone en estado de muerto
+    is_dead = true;
+    // se detiene el juego y se lo joinea
+    game->stop();
+    game->join();
+    // se elimina los jugadores para que despues se remueva el lobby
+    players_map.clear();
 }

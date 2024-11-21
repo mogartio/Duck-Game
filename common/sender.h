@@ -1,5 +1,6 @@
 #ifndef SENDER_H
 #define SENDER_H
+#include <memory>
 #include <string>
 
 #include "../common/queue.h"
@@ -9,11 +10,14 @@
 #include "protocolo-common.h"
 
 class Sender: public Thread {
-private:
-    Queue<std::shared_ptr<GenericMsg>>* send_queue;  // tiene que ser un puntero para poder cambiar la referencia
+protected:
+    Queue<std::shared_ptr<GenericMsg>>*
+            send_queue;  // tiene que ser un puntero para poder cambiar la referencia
     ProtocoloCommon* protocol;
 
     void run() override;
+
+    virtual void execute(std::shared_ptr<GenericMsg> msg);
 
 public:
     Sender(Queue<std::shared_ptr<GenericMsg>>* send_queue, ProtocoloCommon* protocol);
