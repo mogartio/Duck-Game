@@ -3,7 +3,7 @@
 MapManager::MapManager() { load_maps(); }
 
 void MapManager::load_maps() {
-    std::string maps_folder_path = "maps";
+    std::string maps_folder_path = "../maps";
     // for each .yaml found in "maps" folder, extract the info and create a Map instance to add to
     // the maps vector
     for (const auto& entry: std::filesystem::directory_iterator(maps_folder_path)) {
