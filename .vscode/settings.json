@@ -93,7 +93,8 @@
         "qlineedit": "cpp",
         "qmediaplayer": "cpp",
         "qmediaplaylist": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "qpalette": "cpp"
     },
     "makefile.configureOnOpen": false
 }

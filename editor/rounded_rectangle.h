@@ -47,6 +47,16 @@ protected:
         rectColor = originalColor;
         update(); // Trigger a repaint
     }
+
+    void hideRectangle() {
+        rectColor = QColor(0, 0, 0, 0);
+        update();
+    }
+
+    void showRectangle() {
+        rectColor = originalColor;
+        update();
+    }
 };
 
 #endif // ROUNDEDRECTANGLE_H
