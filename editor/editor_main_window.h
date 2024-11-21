@@ -11,9 +11,14 @@
 class EditorMainWindow : public QMainWindow {
     Q_OBJECT
 private:
-    int width; // rows & columns in the grid
-    int height; 
+    int columns; // rows & columns in the grid
+    int rows; 
+    std::string theme; // theme of the grid
+
+    std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps;
+
     void showEditorScreen();
+    void loadImagesGivenTheme(std::string theme);
 
 public:
     EditorMainWindow(QWidget *parent = nullptr);
@@ -24,7 +29,7 @@ private:
     std::shared_ptr<EditorScreen> editorScreen;
 
 private slots:
-    void receiveValues(int width, int height);
+    void receiveValues(int columns, int rows, std::string theme);
 };
 
 

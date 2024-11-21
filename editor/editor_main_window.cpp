@@ -13,20 +13,21 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent) {
 
     stackedWidget->setCurrentWidget(setInitialValuesScreen.get());
 
-    // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to receive width and height values
+    // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to receive columns and rows values
     connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::sendInitialValues, this, &EditorMainWindow::receiveValues);
 
 }
 
-void EditorMainWindow::receiveValues(int width, int height) {
-    this->width = width;
-    this->height = height;
+void EditorMainWindow::receiveValues(int columns, int rows, std::string theme) {
+    this->columns = columns;
+    this->rows = rows;
+    this->theme = theme;
+    loadImagesGivenTheme(theme);
     showEditorScreen();
 }
 
-void EditorMainWindow::showEditorScreen() {
-    
-    editorScreen = std::make_shared<EditorScreen>(width, height);
+void EditorMainWindow::showEditorScreen() {    
+    editorScreen = std::make_shared<EditorScreen>(columns, rows, map_of_maps);
     stackedWidget->addWidget(editorScreen.get());
 
     QWidget *overlay = new QWidget(this);
@@ -54,4 +55,49 @@ void EditorMainWindow::showEditorScreen() {
     });
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
+}
+
+void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
+    // for now only load the light theme + weapons + players
+
+    // load tiles
+    std::map<std::string, std::shared_ptr<QPixmap>> tiles_map;
+    tiles_map["grass"] = std::make_shared<QPixmap>("assets/game_assets/tiles/dayTiles/grass.png");
+    tiles_map["rock"] = std::make_shared<QPixmap>("assets/game_assets/tiles/dayTiles/rock.png");
+    tiles_map["column"] = std::make_shared<QPixmap>("assets/game_assets/tiles/dayTiles/column.png");
+    tiles_map["background"] = std::make_shared<QPixmap>("assets/game_assets/background/day.png");
+
+    map_of_maps["tiles"] = tiles_map;
+
+    // load weapons
+    std::map<std::string, std::shared_ptr<QPixmap>> weapons;
+    weapons["ak47"] = std::make_shared<QPixmap>("assets/game_assets/weapons/ak47.png");
+    weapons["banana"] = std::make_shared<QPixmap>("assets/game_assets/weapons/banana.png");
+    weapons["cowboy"] = std::make_shared<QPixmap>("assets/game_assets/weapons/cowboy.png");
+    weapons["duelos"] = std::make_shared<QPixmap>("assets/game_assets/weapons/duelos.png");
+    weapons["escopeta"] = std::make_shared<QPixmap>("assets/game_assets/weapons/escopeta.png");
+    weapons["granada"] = std::make_shared<QPixmap>("assets/game_assets/weapons/granada.png");
+    weapons["laserRifle"] = std::make_shared<QPixmap>("assets/game_assets/weapons/laserRifle.png");
+    weapons["magnum"] = std::make_shared<QPixmap>("assets/game_assets/weapons/magnum.png");
+    weapons["pewpewlaser"] = std::make_shared<QPixmap>("assets/game_assets/weapons/pewpewlaser.png");
+    weapons["sniper"] = std::make_shared<QPixmap>("assets/game_assets/weapons/sniper.png");
+    
+    map_of_maps["weapons"] = weapons;
+
+    // load armor 
+    std::map<std::string, std::shared_ptr<QPixmap>> armor;
+    armor["armor1"] = std::make_shared<QPixmap>("assets/game_assets/armor/armor.png");
+    armor["knight helmet"] = std::make_shared<QPixmap>("assets/game_assets/helmets/knight.png");
+
+    map_of_maps["armor"] = armor;
+
+    // load player
+    std::map<std::string, std::shared_ptr<QPixmap>> players;
+    players["player1"] = std::make_shared<QPixmap>("assets/game_assets/ducks/white/standing.png");
+    players["player2"] = std::make_shared<QPixmap>("assets/game_assets/ducks/yellow/standing.png");
+    players["player3"] = std::make_shared<QPixmap>("assets/game_assets/ducks/orange/standing.png");
+    players["player4"] = std::make_shared<QPixmap>("assets/game_assets/ducks/grey/standing.png");
+
+    map_of_maps["players"] = players;
+
 }

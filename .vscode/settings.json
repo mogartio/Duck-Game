@@ -94,7 +94,10 @@
         "qmediaplayer": "cpp",
         "qmediaplaylist": "cpp",
         "filesystem": "cpp",
-        "qpalette": "cpp"
+        "qpalette": "cpp",
+        "qstackedwidget": "cpp",
+        "qaction": "cpp",
+        "qmessagebox": "cpp"
     },
     "makefile.configureOnOpen": false
 }
