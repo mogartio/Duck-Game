@@ -18,16 +18,11 @@
 #include "../player/weapons/projectiles/projectile.h"
 #include "../player/weapons/projectiles/projectile_dropped_weapon.h"
 
-#include "csv_reader.h"
-#include "csv_writer.h"
 #include "stage.h"
 
 Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
         map(map), senders(senders), obs(this->senders, ids) {
-    // CSVWriter::write_map("main_map.csv");
-    // CSVReader reader(file_name);
-    //  map = std::move(reader.read_map());
 }
 
 void Stage::print() { map.print(); }

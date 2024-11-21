@@ -25,7 +25,7 @@ void Game::run() {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
             Map& map = map_manager.get_random_map();
             current_stage = new Stage(map, senders, ids);
-            send_map();
+            send_map(map);
             std::string winner = game_loop->play_round(*current_stage);
             player_points[winner]++;
             delete current_stage;
@@ -40,10 +40,10 @@ void Game::run() {
     senders.broadcast(msg);
 }
 
-void Game::send_map() {
-    std::vector<uint16_t> map = current_stage->get_vector_representation();
+void Game::send_map(Map& map) {
+    std::vector<uint16_t> map_vector = current_stage->get_vector_representation();
     std::shared_ptr<SendMapMsg> map_msg = std::make_shared<SendMapMsg>(
-            map, Config::get_instance()->rows_map, Config::get_instance()->columns_map);
+            map_vector, map.get_rows(), map.get_columns());
     std::list<std::shared_ptr<GenericMsg>> dejenmepasarleunmensajedirectoporfavor;
     dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
     senders.broadcast(dejenmepasarleunmensajedirectoporfavor);

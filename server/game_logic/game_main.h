@@ -12,7 +12,6 @@
 #include "../../common/thread.h"
 #include "../send_queues_monitor.h"
 #include "config/config.h"
-#include "map/csv_writer.h"
 #include "map/spawn_point.h"
 #include "map/stage.h"
 #include "player/player.h"

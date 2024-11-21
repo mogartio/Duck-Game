@@ -17,7 +17,7 @@ private:
     std::map<std::string, Player*> generate_players(const std::vector<std::string>& names,
                                                     const PlayerObserver&);
     bool game_over;
-    void send_map();
+    void send_map(Map& map);
     std::shared_ptr<std::set<uint>> ids;
     MapManager map_manager;
 

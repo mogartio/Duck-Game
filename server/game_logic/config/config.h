@@ -32,8 +32,8 @@ private:
         player_falling_speed = config["player_falling_speed"].as<int>();
         player_jumping_height = config["player_jumping_height"].as<int>();
         armor_strength = config["armor_strength"].as<int>();
-        columns_map = config["columns_map"].as<uint16_t>();
-        rows_map = config["rows_map"].as<uint16_t>();
+        // columns_map = config["columns_map"].as<uint16_t>();
+        // rows_map = config["rows_map"].as<uint16_t>();
         explosion_counter = config["explosion_counter"].as<int>();
         explosion_range = config["explosion_range"].as<int>();
         bullet_size = config["bullet_size"].as<int>();

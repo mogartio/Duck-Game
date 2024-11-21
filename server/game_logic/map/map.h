@@ -51,14 +51,14 @@ public:
     /**
      * @brief Returns the number of rows in the map.
      */
-    int get_rows() {
+    uint16_t get_rows() {
         return rows;
     }
 
     /**
      * @brief Returns the number of columns in the map.
      */
-    int get_columns() {
+    uint16_t get_columns() {
         return columns;
     }
 
