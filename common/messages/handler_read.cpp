@@ -20,3 +20,5 @@ void HandlerReader::handle_read(const GameEndedMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const WinnerMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const UpdatedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerReader::handle_read(const ProjectileInfoMsg& msg) { (void)msg; }
+void HandlerReader::handle_read(const NotProyectileInfo& msg) { (void)msg; }
+void HandlerReader::handle_read(const ShootMsg& msg) { (void)msg; }
