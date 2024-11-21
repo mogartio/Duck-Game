@@ -234,9 +234,5 @@ void ClientProtocol::handle_recv(NotProyectileInfo& msg) {
 
 void ClientProtocol::handle_recv(ShootMsg& msg) {
     std::string player_name = recv_string();
-    uint8_t pos_x = recv_u_int8_t();
-    uint8_t pos_y = recv_u_int8_t();
-    std::pair<uint8_t, uint8_t> position_x_y(pos_x, pos_y);
     msg.set_player_name(player_name);
-    msg.set_position_x_y(position_x_y);
 }

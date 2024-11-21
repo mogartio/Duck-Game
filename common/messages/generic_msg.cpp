@@ -495,13 +495,10 @@ uint8_t NotProyectileInfo::get_item() const { return item; }
 
 std::pair<uint8_t, uint8_t> NotProyectileInfo::get_position_x_y() const { return position_x_y; }
 
-ShootMsg::ShootMsg():
-        GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG), player_name(""), position_x_y() {}
+ShootMsg::ShootMsg(): GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG), player_name("") {}
 
 ShootMsg::ShootMsg(std::string player_name, std::pair<uint8_t, uint8_t> position_x_y):
-        GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG),
-        player_name(player_name),
-        position_x_y(position_x_y) {}
+        GenericMsg(GenericMsg::SHOOT_MSG, GenericMsg::GAME_MSG), player_name(player_name) {}
 
 void ShootMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -511,10 +508,4 @@ void ShootMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this);
 
 void ShootMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
-void ShootMsg::set_position_x_y(std::pair<uint8_t, uint8_t> position_x_y) {
-    this->position_x_y = position_x_y;
-}
-
 std::string ShootMsg::get_player_name() const { return player_name; }
-
-std::pair<uint8_t, uint8_t> ShootMsg::get_position_x_y() const { return position_x_y; }

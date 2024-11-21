@@ -222,7 +222,4 @@ void ServerProtocol::handle_send(const ShootMsg& msg) {
     send_u_int8_t(header);
     std::string player_name = msg.get_player_name();
     send_string(player_name);
-    std::pair<uint8_t, uint8_t> position = msg.get_position_x_y();
-    send_u_int8_t(position.first);
-    send_u_int8_t(position.second);
 }

@@ -653,7 +653,6 @@ public:
 class ShootMsg: public GenericMsg {
 private:
     std::string player_name;
-    std::pair<uint8_t, uint8_t> position_x_y;
 
 public:
     ShootMsg();
@@ -669,9 +668,5 @@ public:
     std::string get_player_name() const;
 
     void set_player_name(std::string player_name);
-
-    std::pair<uint8_t, uint8_t> get_position_x_y() const;
-
-    void set_position_x_y(std::pair<uint8_t, uint8_t> position_x_y);
 };
 #endif
