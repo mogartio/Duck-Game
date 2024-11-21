@@ -1,31 +1,100 @@
 #include "music.h"
-#include <stdexcept>
+#include <iostream>
 
-Music::Music() {
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        throw std::runtime_error("Error al inicializar el audio");
+Music* activeMusic = nullptr;
+
+void Music::onMusicFinished() {
+    if (!activeMusic) return;
+
+    currentSongIndex++;
+    if (currentSongIndex >= activeMusic->songs.size()) {
+        std::cout << "Todas las canciones han terminado." << std::endl;
+        return;
     }
 
-    music = Mix_LoadMUS("assets/game_assets/music/duck_game.mp3");
-    if (!music) {
-        throw std::runtime_error("Error al cargar la musica");
+    Mix_Music* nextMusic = activeMusic->songs[currentSongIndex];
+    if (Mix_PlayMusic(nextMusic, 1) == -1) {
+        std::cerr << "Error al reproducir la canción: " << Mix_GetError() << std::endl;
+    } else {
+        std::cout << "Reproduciendo siguiente canción..." << std::endl;
     }
+}
 
-    sound = Mix_LoadWAV("assets/game_assets/music/explosion.wav");
-    if (!sound) {
-        throw std::runtime_error("Error al cargar el sonido de explosion");
+void globalOnMusicFinished() {
+    if (activeMusic) {
+        activeMusic->onMusicFinished();
     }
+}
+
+Music::Music() : music(nullptr), sound(nullptr) {
+    activeMusic = this; 
+    Mix_HookMusicFinished(globalOnMusicFinished);
 }
 
 void Music::playMusic() {
-    Mix_PlayMusic(music, -1);
+    if (songs.empty()) {
+        std::cerr << "No hay canciones cargadas en el vector." << std::endl;
+        return;
+    }
+
+    currentSongIndex = 0;
+    music = songs[currentSongIndex];
+
+    if (Mix_PlayMusic(music, 1) == -1) {
+        std::cerr << "Error al reproducir la canción: " << Mix_GetError() << std::endl;
+    } else {
+        std::cout << "Reproduciendo primera canción..." << std::endl;
+    }
+}
+
+void Music::playIntenseMusic() {
+    if (!songs[5]) {
+        std::cerr << "Música intensa no válida. playIntenseMusic" << std::endl;
+        return;
+    }
+
+    // Pausa la música actual
+    if (Mix_PlayingMusic()) {
+        Mix_PauseMusic();
+    }
+
+    // Reproduce la música intensa (Boss music)
+    if (Mix_PlayMusic(songs[5], 1) == -1) {
+        std::cerr << "Error al reproducir la música intensa: " << Mix_GetError() << std::endl;
+    }
 }
 
 void Music::playExplosionSound() {
-    Mix_PlayChannel(-1, sound, 0);
+    if (!sound) {
+        std::cerr << "Efecto de sonido no cargado." << std::endl;
+        return;
+    }
+
+    if (Mix_PlayChannel(-1, sound, 0) == -1) {
+        std::cerr << "Error al reproducir efecto de sonido: " << Mix_GetError() << std::endl;
+    } else {
+        std::cout << "Reproduciendo sonido de explosión..." << std::endl;
+    }
 }
 
 void Music::playShootSound() {
-    Mix_PlayChannel(-1, sound, 0);
+    if (!sound) {
+        std::cerr << "Efecto de sonido no cargado." << std::endl;
+        return;
+    }
+
+    if (Mix_PlayChannel(-1, sound, 0) == -1) {
+        std::cerr << "Error al reproducir efecto de sonido: " << Mix_GetError() << std::endl;
+    } else {
+        std::cout << "Reproduciendo sonido de disparo..." << std::endl;
+    }
 }
 
+Music::~Music() {
+    for (Mix_Music* song : songs) {
+        Mix_FreeMusic(song);
+    }
+    Mix_FreeChunk(sound);
+    Mix_CloseAudio();
+    std::cout << "Recursos de música liberados." << std::endl;
+}
