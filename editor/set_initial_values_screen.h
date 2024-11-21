@@ -14,6 +14,7 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QSound>
+#include <QRadioButton>
 
 class SetInitialValuesScreen : public QWidget {
     Q_OBJECT
@@ -24,20 +25,29 @@ private:
     void resizeEvent(QResizeEvent *event) override;
     QPushButton *startButton;
     QPushButton *startEditingButton;
-    QLineEdit *widthInput;
-    QLineEdit *heightInput;
-    QLabel *widthLabel;
-    QLabel *heightLabel;
+    QLineEdit *columnsInput;
+    QLineEdit *rowsInput;
+    QLabel *columnsLabel;
+    QLabel *rowsLabel;
     QFont *customFont;
     QSound *buttonSound;
     QLabel *logoLabel;
     QLabel *setMapDimensionsLabel;
+
     RoundedRectangle *startButtonRect;
+    std::string choosenTheme;
+
+    QLabel *themeLabel;
+    QRadioButton *lightTheme;
+    QRadioButton *nightTheme;
+    RoundedRectangle *themeRect;
+
 private slots:
     void onStartButtonClicked();
     void onStartEditingButtonClicked();
+    void onThemeChanged();
 signals: 
-    void sendInitialValues(int width, int height);
+    void sendInitialValues(int columns, int rows, std::string choosenTheme);
 };
 
 #endif // SET_INITIAL_VALUES_SCREEN_H_

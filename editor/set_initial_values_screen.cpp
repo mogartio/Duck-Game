@@ -52,29 +52,29 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
     connect(startButton, &QPushButton::clicked, this, &SetInitialValuesScreen::onStartButtonClicked);
 
     // Draw hidden rounded rectangle
-    startButtonRect = new RoundedRectangle(this, 687, 510, 545, 410, QColor(0, 0, 0, 100), QColor(0, 0, 0, 100));
+    startButtonRect = new RoundedRectangle(this, 687, 510, 545, 450, QColor(0, 0, 0, 100), QColor(0, 0, 0, 100));
     startButtonRect->setParent(this);
     startButtonRect->hide();
 
 
     // Draw "SET MAP DIMENSIONS. MAX 500x500" label
-    setMapDimensionsLabel = new QLabel("SET MAP DIMENSIONS \nMAX 500x500; MIN 18x18", this);
+    setMapDimensionsLabel = new QLabel("SET MAP DIMENSIONS \nMAX 75x75; MIN 3x3", this);
     setMapDimensionsLabel->setStyleSheet("color: #ffffff; font-size: 36px;");
     setMapDimensionsLabel->setFont(*customFont);
-    setMapDimensionsLabel->setGeometry(635, 520, 650, 60);
+    setMapDimensionsLabel->setGeometry(635, 525, 650, 60);
     setMapDimensionsLabel->setAlignment(Qt::AlignCenter);
     setMapDimensionsLabel->hide();
     // Draw the input fields for the width and height and its corresponding labels
     // width 
-    widthLabel = new QLabel("Width", this);
-    widthLabel->setStyleSheet("color: #ffffff; font-size: 32px;");
-    widthLabel->setFont(*customFont);
-    widthLabel->setAlignment(Qt::AlignCenter);
-    widthLabel->setGeometry(787, 600, 150, 60);
-    widthLabel->hide();
-    // width QLineEdit
-    widthInput = new QLineEdit(this);
-    widthInput->setStyleSheet(
+    columnsLabel = new QLabel("columns", this);
+    columnsLabel->setStyleSheet("color: #ffffff; font-size: 32px;");
+    columnsLabel->setFont(*customFont);
+    columnsLabel->setAlignment(Qt::AlignCenter);
+    columnsLabel->setGeometry(740, 600, 150, 60);
+    columnsLabel->hide();
+    // columns QLineEdit
+    columnsInput = new QLineEdit(this);
+    columnsInput->setStyleSheet(
         "QLineEdit {"
         "background-color: rgba(212, 212, 212, 150);"        
         "color: #ffffff;"                     
@@ -85,19 +85,19 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
         "text-align: center;"               
         "}"
     );
-    widthInput->setFont(*customFont);
-    widthInput->setGeometry(787, 660, 150, 50);
-    widthInput->hide();
+    columnsInput->setFont(*customFont);
+    columnsInput->setGeometry(740, 660, 150, 50);
+    columnsInput->hide();
     // height
-    heightLabel = new QLabel("Height", this);
-    heightLabel->setStyleSheet("color: #ffffff; font-size: 32px;");
-    heightLabel->setFont(*customFont);
-    heightLabel->setAlignment(Qt::AlignCenter);
-    heightLabel->setGeometry(982, 600, 150, 60);
-    heightLabel->hide();
-    // height QLineEdit
-    heightInput = new QLineEdit(this);
-    heightInput->setStyleSheet(
+    rowsLabel = new QLabel("rows", this);
+    rowsLabel->setStyleSheet("color: #ffffff; font-size: 32px;");
+    rowsLabel->setFont(*customFont);
+    rowsLabel->setAlignment(Qt::AlignCenter);
+    rowsLabel->setGeometry(740, 710, 150, 60);
+    rowsLabel->hide();
+    // rows QLineEdit
+    rowsInput = new QLineEdit(this);
+    rowsInput->setStyleSheet(
         "QLineEdit {"
         "background-color: rgba(212, 212, 212, 150);" 
         "color: #ffffff;"                     
@@ -108,9 +108,9 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
         "text-align: center;"               
         "}"
     );
-    heightInput->setFont(*customFont);
-    heightInput->setGeometry(982, 660, 150, 50);
-    heightInput->hide();
+    rowsInput->setFont(*customFont);
+    rowsInput->setGeometry(740, 770, 150, 50);
+    rowsInput->hide();
 
     // Draw the start editing button
     startEditingButton = new QPushButton("Start Editing", this);
@@ -128,11 +128,84 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
         "background-color: rgba(227, 227, 227, 150);"
         "}"
     );
-    startEditingButton->setGeometry(785, 760, 350, 80);
+    startEditingButton->setGeometry(785, 845, 350, 80);
     startEditingButton->setFont(*customFont);
     startEditingButton->hide();
 
     connect(startEditingButton, &QPushButton::clicked, this, &SetInitialValuesScreen::onStartEditingButtonClicked);
+
+    // theme label
+    themeLabel = new QLabel("Theme", this);
+    themeLabel->setStyleSheet("color: #ffffff; font-size: 32px;");
+    themeLabel->setFont(*customFont);
+    themeLabel->setAlignment(Qt::AlignCenter);
+    themeLabel->setGeometry(980, 600, 150, 60);
+    themeLabel->hide();
+    // rectangle
+    themeRect = new RoundedRectangle(this, 980, 660, 170, 160, QColor(212, 212, 212, 150), QColor(212, 212, 212, 150));
+    themeRect->setParent(this);
+    themeRect->hide();
+
+    // initialize buttons
+    lightTheme = new QRadioButton("Light", this);
+    nightTheme = new QRadioButton("Night", this);
+
+    lightTheme->setStyleSheet(
+        "QRadioButton {"
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #ffffff;"        
+        "padding: 10px;"                    
+        "}"
+        "QRadioButton::indicator {"
+        "width: 20px;"
+        "height: 20px;"
+        "}"
+        "QRadioButton::indicator::unchecked {"
+        "border: 2px solid #ffffff;"
+        "border-radius: 10px;"
+        "}"
+        "QRadioButton::indicator::checked {"
+        "background-color: #ffffff;"
+        "border: 2px solid #ffffff;"
+        "border-radius: 10px;"
+        "}"
+    );
+    lightTheme->setFont(*customFont);
+
+    nightTheme->setStyleSheet(
+        "QRadioButton {"
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #ffffff;"        
+        "padding: 10px;"                    
+        "}"
+        "QRadioButton::indicator {"
+        "width: 20px;"
+        "height: 20px;"
+        "}"
+        "QRadioButton::indicator::unchecked {"
+        "border: 2px solid #ffffff;"
+        "border-radius: 10px;"
+        "}"
+        "QRadioButton::indicator::checked {"
+        "background-color: #ffffff;"
+        "border: 2px solid #ffffff;"
+        "border-radius: 10px;"
+        "}"
+    );
+    nightTheme->setFont(*customFont);
+
+    lightTheme->setGeometry(995, 680, 130, 50);
+    nightTheme->setGeometry(995, 740, 130, 50);
+
+    lightTheme->setChecked(true);
+    // hidden
+    lightTheme->hide();
+    nightTheme->hide();
+
+    connect(lightTheme, &QRadioButton::clicked, this, &SetInitialValuesScreen::onThemeChanged);
+    connect(nightTheme, &QRadioButton::clicked, this, &SetInitialValuesScreen::onThemeChanged);
 }
 
 void SetInitialValuesScreen::resizeEvent(QResizeEvent *event) {
@@ -145,32 +218,47 @@ void SetInitialValuesScreen::onStartButtonClicked() {
     // show labels and qlineedits
     startButtonRect->show();
     setMapDimensionsLabel->show();
-    widthLabel->show();
-    widthInput->show();
-    heightLabel->show();
-    heightInput->show();    
+    columnsLabel->show();
+    columnsInput->show();
+    rowsLabel->show();
+    rowsInput->show();    
     startEditingButton->show();
-
+    themeRect->show();
+    lightTheme->show();
+    nightTheme->show();
+    themeLabel->show();
 }
 
 void SetInitialValuesScreen::onStartEditingButtonClicked() {
     buttonSound->play();
     // get the values from the input fields
-    int width = widthInput->text().toInt();
-    int height = heightInput->text().toInt();
+    int columns = columnsInput->text().toInt();
+    int rows = rowsInput->text().toInt();
     // check if the values are numeric and within the range
-    if (width >= 18 && height >= 18 && width <= 500 && height <= 500) {
+    if (columns >= 3 && rows >= 3 && columns <= 75 && rows <= 75) {
         // emit signal to send the values to the main window
-        emit sendInitialValues(width, height);
+        emit sendInitialValues(columns, rows, choosenTheme);
     }
     else {
         // show draw message
-        QLabel *errorMsg = new QLabel("Invalid values\nEnter numeric values within range", this);
+        QLabel *errorMsg = new QLabel("Enter numeric values within range", this);
         errorMsg->setAlignment(Qt::AlignCenter);
         errorMsg->setStyleSheet("color: #ff1900; font-size: 24px;");
         errorMsg->setFont(*customFont);
-        errorMsg->setGeometry(610, 855, 700, 60);
+        errorMsg->setGeometry(610, 910, 700, 60);
         errorMsg->show();
         QTimer::singleShot(2000, errorMsg, &QObject::deleteLater);
+    }
+}
+
+void SetInitialValuesScreen::onThemeChanged() {
+    if (lightTheme->isChecked()) {
+        choosenTheme = "light";
+    }
+    else if (nightTheme->isChecked()) {
+        choosenTheme = "night";
+    }
+    else {
+        choosenTheme = "light";
     }
 }
