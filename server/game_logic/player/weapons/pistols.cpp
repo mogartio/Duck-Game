@@ -5,10 +5,13 @@
 #include <utility>
 
 #include "../../../../common/messages/generic_msg.h"
+#include "../../config/weapon_config.h"
 #include "projectiles/projectile.h"
 using namespace ProjectilesId;
 
-CowboyGun::CowboyGun(Stage& stage): Weapon(stage, 6, 20, COWBOY_PISTOL) {}
+CowboyGun::CowboyGun(Stage& stage):
+        Weapon(stage, WeaponConfig::get_instance()->weapons["cowboy"]["ammo"],
+               WeaponConfig::get_instance()->weapons["cowboy"]["reach"], COWBOY_PISTOL) {}
 
 void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
@@ -21,7 +24,9 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     stopped_holding_trigger = false;
 }
 
-Magnum::Magnum(Stage& stage): Weapon(stage, 6, 20, MAGNUM) {}
+Magnum::Magnum(Stage& stage):
+        Weapon(stage, WeaponConfig::get_instance()->weapons["magnum"]["ammo"],
+               WeaponConfig::get_instance()->weapons["magnum"]["reach"], MAGNUM) {}
 
 void Magnum::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
@@ -34,7 +39,9 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     stopped_holding_trigger = false;
 }
 
-DuelPistol::DuelPistol(Stage& stage): Weapon(stage, 1, 5, DUEL_PISTOL) {}
+DuelPistol::DuelPistol(Stage& stage):
+        Weapon(stage, WeaponConfig::get_instance()->weapons["magnum"]["ammo"],
+               WeaponConfig::get_instance()->weapons["magnum"]["reach"], DUEL_PISTOL) {}
 
 void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
