@@ -7,14 +7,11 @@ class MusicHandler {
 private:
     // seleccione estas arbitrareamente pero pueden seleccionar otras
     const std::vector<std::string> paths_musics = {
-            "assets/game_assets/music/Duck Game OST - arbuckle.wav",
-            "assets/game_assets/music/Duck Game OST - Arcade.wav",
-            "assets/game_assets/music/Duck Game OST - backwen.wav",
-            "assets/game_assets/music/Duck Game OST - castil.wav",
-            "assets/game_assets/music/Duck Game OST - ClubDuck.wav",
-    };  // Lista de paths de las musicas
+            "assets/game_assets/music/arbuckle.wav", "assets/game_assets/music/arcade.wav",
+            "assets/game_assets/music/backwen.wav",
+            "assets/game_assets/music/castil.wav"};  // Lista de paths de las musicas
 
-    std::vector<MusicPlayer> list_of_musics;
+    std::vector<MusicPlayer*> list_of_musics;
 
     bool outOfRangeError(uint number);
 

@@ -12,7 +12,7 @@ bool MusicHandler::outOfRangeError(uint number) {
 MusicHandler::MusicHandler() {
     for (const auto& path: paths_musics) {
         try {
-            list_of_musics.push_back(MusicPlayer(path));
+            list_of_musics.push_back(new MusicPlayer(path));
         } catch (const std::runtime_error& e) {
             std::cerr << e.what() << '\n';
         }
@@ -24,7 +24,7 @@ void MusicHandler::playThatMusic(uint number, int loop) {
         return;
     }
     try {
-        list_of_musics[number].playMusic(loop);
+        list_of_musics[number]->playMusic(loop);
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
@@ -35,7 +35,7 @@ void MusicHandler::pauseThatMusic(uint number) {
         return;
     }
     try {
-        list_of_musics[number].pauseMusic();
+        list_of_musics[number]->pauseMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
@@ -46,7 +46,7 @@ void MusicHandler::resumeThatMusic(uint number) {
         return;
     }
     try {
-        list_of_musics[number].resumeMusic();
+        list_of_musics[number]->resumeMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
@@ -57,7 +57,7 @@ void MusicHandler::stopThatMusic(uint number) {
         return;
     }
     try {
-        list_of_musics[number].stopMusic();
+        list_of_musics[number]->stopMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
@@ -68,15 +68,17 @@ void MusicHandler::setThatVolume(uint number, int volume) {
         return;
     }
     try {
-        list_of_musics[number].setVolume(volume);
+        list_of_musics[number]->setVolume(volume);
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
 MusicHandler::~MusicHandler() {
-    Mix_HaltChannel(-1);     // Detiene todos los canales (haciendoles un stop)
-    list_of_musics.clear();  // Libera la memoria de los objetos MusicPlayer
-    Mix_CloseAudio();        // Cierra el sistema de audio
-    Mix_Quit();              // Cierra SDL_mixer
+    Mix_HaltChannel(-1);  // Detiene todos los canales (haciendoles un stop)
+    for (auto& music: list_of_musics) {
+        delete music;
+    }
+    Mix_CloseAudio();  // Cierra el sistema de audio
+    Mix_Quit();        // Cierra SDL_mixer
 }
