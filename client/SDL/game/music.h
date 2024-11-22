@@ -1,23 +1,31 @@
+#include <iostream>
+#include <string>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include <vector>
 
-class Music {
+class MusicPlayer {
 private:
-    Mix_Music* music;
-    std::vector<Mix_Music*> songs;
-    int currentSongIndex;
-    Mix_Chunk* sound;
+    Mix_Chunk* music;  // Almacena el audio como Mix_Chunk
+    int canal;         // Canal de audio
+
+    void nonMusicError();
+
+    void nonChannelError();
 
 public:
-    Music();
+    explicit MusicPlayer(const std::string& path);
 
-    void playMusic();
-    void playIntenseMusic();
-    void playFinishedMusic();
-    void playExplosionSound();
-    void playShootSound();
-    void onMusicFinished();
+    void playMusic(int loops = 0);  // Reproduce la música en un loop y de predeterminado lo
+                                    // reproduce una vez
 
-    ~Music();
+    void pauseMusic();
+
+    void resumeMusic();
+
+    void stopMusic();
+
+    void setVolume(int volume);
+
+    ~MusicPlayer();
 };
