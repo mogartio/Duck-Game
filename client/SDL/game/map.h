@@ -55,11 +55,19 @@ private:
     // Posiciones de la armadura
     std::vector<std::pair<int, int>> armorMap;
 
+    // Imagenes de las explosiones
+    std::vector<Image*> explosions;
+    // Posiciones de las explosiones
+    std::vector<std::pair<int, int>> explosionsPos;
+    // Contador de las explosiones
+    std::vector<int> explosionCounter;
+
     Image background;
 
     Image prueba;
 
     void makeWeapon(ProjectilesId::ProjectileId id);
+    void makeExplosion();
     void makeHelmet(Helemts helmet);
     void makeArmor();
     void makeTile(TileType tileType);
@@ -98,6 +106,9 @@ public:
     void newArmor(int x, int y);
     // Asignar/Reomver armadura a un jugador
     void armorPlayer(std::string playerName);
+
+    // Agregar explosion
+    void explosion(int x, int y);
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
