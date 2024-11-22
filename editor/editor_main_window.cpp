@@ -4,6 +4,9 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("Duck Game - Level Editor");
     resize(1920, 1080);
 
+    // hide top bar
+    // setWindowFlags(Qt::FramelessWindowHint);
+
     stackedWidget = std::make_shared<QStackedWidget>(this);
     setCentralWidget(stackedWidget.get());
 

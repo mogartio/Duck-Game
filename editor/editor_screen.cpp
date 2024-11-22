@@ -1,4 +1,5 @@
 #include "editor_screen.h"
+#include <cmath>
 
 
 EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps)
@@ -6,6 +7,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(1920, 1080); // Ensure the editor screen is fixed to 1920x1080
     
+    currentTile = "";
+    isPainting = false;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
     editor_matrix.resize(rows, std::vector<int>(columns, 0)); 
 
@@ -61,7 +64,12 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     tilesMenu->addAction(column);
 
     connect(tilesMenuButton, &QPushButton::clicked, this, &EditorScreen::showTilesMenu);
+
+    connect(grass, &QAction::triggered, this, &EditorScreen::startDrag);
+    connect(rock, &QAction::triggered, this, &EditorScreen::startDrag);
+    connect(column, &QAction::triggered, this, &EditorScreen::startDrag);
     
+    setAcceptDrops(true);
 }
 
 void EditorScreen::paintEvent(QPaintEvent* event) {
@@ -104,14 +112,23 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
     // Draw the matrix
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < columns; ++col) {
-            int x = xOffset + col * cellSize;
-            int y = yOffset + row * cellSize;
-            QRect cellRect(x, y, cellSize, cellSize);
+            QRect cellRect(xOffset + col * cellSize, yOffset + row * cellSize, cellSize, cellSize);
 
-            // Draw the items in the editor_matrix
-            if (editor_matrix[row][col] != 0) {
-                // Replace this with your logic to draw items in the matrix
-                painter.fillRect(cellRect, Qt::red); // Example: fill with red color
+            if (editor_matrix[row][col] == 5) {
+                auto tile = map_of_maps["tiles"]["rock"]; // Example: Use grass for now
+                if (tile && !tile->isNull()) {
+                    painter.drawPixmap(cellRect, *tile);
+                }
+            } else if (editor_matrix[row][col] == 6) {
+                auto tile = map_of_maps["tiles"]["grass"]; // Example: Use grass for now
+                if (tile && !tile->isNull()) {
+                    painter.drawPixmap(cellRect, *tile);
+                }
+            } else if (editor_matrix[row][col] == 7) {
+                auto tile = map_of_maps["tiles"]["column"]; // Example: Use grass for now
+                if (tile && !tile->isNull()) {
+                    painter.drawPixmap(cellRect, *tile);
+                }
             }
 
             painter.drawRect(cellRect);
@@ -133,13 +150,6 @@ void EditorScreen::wheelEvent(QWheelEvent* event) {
     update(); // Trigger a repaint with the new scale
 }
 
-void EditorScreen::mousePressEvent(QMouseEvent* event) {
-    if (event->button() == Qt::LeftButton) {
-        isDragging = true;
-        lastMousePosition = event->pos();
-    }
-}
-
 void EditorScreen::mouseMoveEvent(QMouseEvent* event) {
     if (isDragging) {
         // Calculate the displacement
@@ -148,8 +158,54 @@ void EditorScreen::mouseMoveEvent(QMouseEvent* event) {
         offsetY += delta.y();
         lastMousePosition = event->pos();
         update(); // Repaint with the new offsets
+    } else if (isPainting && !currentTile.isEmpty()) {
+        QPoint pos = event->pos();
+        placeTileAtPosition(pos);
     }
 }
+
+void EditorScreen::mousePressEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        if (!currentTile.isEmpty()) {
+            // Check if we're painting or starting a drag
+            if (isPainting) {
+                isPainting = true;  // Enable painting mode
+                isDragging = false; // Disable dragging mode
+                QPoint pos = event->pos();
+                placeTileAtPosition(pos);
+            } else {
+                isDragging = true;  // Enable dragging mode
+                QPoint pos = event->pos();
+                lastMousePosition = pos; // Save initial position
+            }
+        }
+    } else if (event->button() == Qt::RightButton) {
+        currentTile = "";   // Disable painting mode
+        isPainting = false;
+    }
+}
+
+void EditorScreen::dragEnterEvent(QDragEnterEvent* event) {
+    if (event->mimeData()->hasText()) {
+        event->acceptProposedAction();
+    }
+}
+
+void EditorScreen::dropEvent(QDropEvent* event) {
+    if (event->mimeData()->hasText()) {
+        QString tileName = event->mimeData()->text();
+        currentTile = tileName;
+
+        // Switch to painting mode after dropping the tile
+        isPainting = true;
+        isDragging = false;
+
+        QPoint pos = event->pos();
+        placeTileAtPosition(pos);
+    }
+}
+
+
 
 void EditorScreen::mouseReleaseEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
@@ -183,4 +239,64 @@ std::vector<std::vector<int>> EditorScreen::convertToServerMatrix() {
 void EditorScreen::showTilesMenu() {
     buttonSound->play();
     tilesMenu->exec(tilesMenuButton->mapToGlobal(QPoint(0, tilesMenuButton->height())));
+}
+
+void EditorScreen::startDrag() {
+    QAction* action = qobject_cast<QAction*>(sender());
+    if (!action) return;
+
+    // Get the tile image associated with the action
+    QString tileName = action->text();
+    auto tile = map_of_maps["tiles"][tileName.toStdString()];
+    if (!tile || tile->isNull()) {
+        return;
+    };
+    // Create a mime data object
+    QMimeData* mimeData = new QMimeData();
+    mimeData->setText(tileName); // Use the tile name for identification
+
+    // Create a drag object
+    QDrag* drag = new QDrag(this);
+    drag->setMimeData(mimeData);
+    drag->setPixmap(*tile);
+    drag->exec(Qt::CopyAction);
+}
+
+void EditorScreen::placeTileAtPosition(const QPoint& pos) {
+    int padding = 50;
+
+    // Calculate cell size
+    int screenWidth = width();
+    int screenHeight = height();
+    int availableWidth = screenWidth - 2 * padding;
+    int availableHeight = screenHeight - 2 * padding;
+
+    int baseCellWidth = availableWidth / columns;
+    int baseCellHeight = availableHeight / rows;
+    int baseCellSize = std::min(baseCellWidth, baseCellHeight);
+    int cellSize = static_cast<int>(baseCellSize * scale);
+
+    // Calculate offsets
+    int xOffset = (screenWidth - cellSize * columns) / 2 + offsetX;
+    int yOffset = (screenHeight - cellSize * rows) / 2 + offsetY;
+
+    // Convert screen coordinates to matrix indices
+    int col = (pos.x() - xOffset) / cellSize;
+    int row = (pos.y() - yOffset) / cellSize;
+
+    if (pos.x() >= xOffset && pos.x() < xOffset + cellSize * columns &&
+        pos.y() >= yOffset && pos.y() < yOffset + cellSize * rows &&
+        row >= 0 && row < rows && col >= 0 && col < columns) {
+        if (editor_matrix[row][col] == 0) { // Place tile only on empty cells
+            if (currentTile == "rock") {
+                editor_matrix[row][col] = 5;
+            } else if (currentTile == "grass") {
+                editor_matrix[row][col] = 6;
+            } else if (currentTile == "column") {
+                editor_matrix[row][col] = 7;
+            }
+        }
+
+        update(); // Trigger a repaint
+    }
 }

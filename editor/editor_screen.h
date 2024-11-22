@@ -20,6 +20,10 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QSound>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QDebug>
+#include <QDrag>
 #include "rounded_rectangle.h"
 class EditorScreen : public QWidget {
     Q_OBJECT
@@ -36,16 +40,18 @@ private:
     QPoint lastMousePosition; // Tracks the last position of the mouse
     int offsetX, offsetY;     // Tracks the current offsets for the matrix
     std::shared_ptr<QPixmap> background_tile;
-
+    QString currentTile;
+    bool isPainting;
     // buttons
     QPushButton *tilesMenuButton;
     QMenu *tilesMenu;
 
     std::vector<std::vector<int>> convertToServerMatrix();
-
+    void placeTileAtPosition(const QPoint& pos);
 
 private slots:
     void showTilesMenu();
+    void startDrag();
 
 public: 
     EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps);
@@ -54,6 +60,8 @@ public:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
     std::vector<std::vector<int>> getMatrix();
 };
 
