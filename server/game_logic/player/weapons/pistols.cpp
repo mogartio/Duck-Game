@@ -16,7 +16,7 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     }
     Coordinate gun_position = get_gun_position(x_direction);
     stage.add_projectile(std::move(
-            std::make_unique<CowboyBullet>(gun_position, x_direction, is_aiming_up, reach)));
+            std::make_unique<CowboyBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
     ammo--;
     stopped_holding_trigger = false;
 }
@@ -29,7 +29,7 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     }
     Coordinate gun_position = get_gun_position(x_direction);
     stage.add_projectile(std::move(
-            std::make_unique<MagnumBullet>(gun_position, x_direction, is_aiming_up, reach)));
+            std::make_unique<MagnumBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
     ammo--;
     stopped_holding_trigger = false;
 }

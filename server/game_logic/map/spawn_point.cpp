@@ -6,12 +6,12 @@ void WeaponSpawnPoint::spawn_weapon() {
     // serious
     if (type_of_weapon == COWBOY_PISTOL) {
         auto weapon = std::make_unique<CowboyGun>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       4, 4, type_of_weapon, this));
+        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
+                std::move(weapon), position, 4, 599, type_of_weapon, this));
     } else {
         auto weapon = std::make_unique<Magnum>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position,
-                                                                       4, 4, type_of_weapon, this));
+        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
+                std::move(weapon), position, 4, 599, type_of_weapon, this));
     }
 }
 void WeaponSpawnPoint::set_weapon(int weapon_id) { type_of_weapon = weapon_id; }

@@ -10,7 +10,7 @@
 #define PLAYER_SIZE 6
 void Weapon::start_throw() {
     throw_started = true;
-    if (throw_reach < 1000) {
+    if (throw_reach < 100) {
         throw_reach += 3;
     }
 }
