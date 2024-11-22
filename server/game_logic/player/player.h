@@ -34,7 +34,8 @@ public:
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    Player(Coordinate& initial_position, int id, const std::string& name, const PlayerObserver& obs);
+    Player(Coordinate& initial_position, int id, const std::string& name,
+           const PlayerObserver& obs);
     void die();
     void occupy(Coordinate&);
     void add_action(int&);

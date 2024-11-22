@@ -16,6 +16,10 @@ void WeaponSpawnPoint::spawn_weapon() {
         auto weapon = std::make_unique<DuelPistol>(stage);
         stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
                 std::move(weapon), position, 4, 599, type_of_weapon, this));
+    } else if (type_of_weapon == AK_47) {
+        auto weapon = std::make_unique<Ak47>(stage);
+        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
+                std::move(weapon), position, 4, 599, type_of_weapon, this));
     }
 }
 void WeaponSpawnPoint::set_weapon(int weapon_id) { type_of_weapon = weapon_id; }

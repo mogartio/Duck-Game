@@ -31,7 +31,7 @@ bool Projectile::ray_trace(Stage& stage) {
 
         } else {
             bullet_position.x = position.x + i * x_direction;
-            if (distance_covered > 0 && deviation != 0 && distance_covered % deviation == 0) {
+            if (deviation != 0 && distance_covered % deviation == 0) {
                 bullet_position.y = position.y + deviation_direction;
             } else {
                 bullet_position.y = position.y;

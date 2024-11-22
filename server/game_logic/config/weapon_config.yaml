@@ -1,14 +1,14 @@
 weapons:
   magnum:
     reach: 40
-    speed: 6
+    speed: 3
     deviation: 40
     ammo: 6
   ak47:
     reach: 26
-    speed: 6
+    speed: 3
     deviation: 12
-    ammo: 30
+    ammo: 300
   duel:
     reach: 12
     speed: 3
@@ -16,6 +16,6 @@ weapons:
     ammo: 1
   cowboy:
     reach: 40
-    speed: 6
+    speed: 3
     deviation: 24
     ammo: 6

@@ -7,6 +7,7 @@
 
 #include "../../../../../common/coordinate.h"
 #include "../../../../../common/messages/generic_msg.h"
+#include "../../../config/weapon_config.h"
 #include "../../subject.h"
 class Weapon;
 class Stage;
@@ -59,9 +60,10 @@ class CowboyBullet: public Projectile {
 public:
     CowboyBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
                  int reach):
-            Projectile(initial_position, x_direction, y_direction, reach, 6, BULLET_PISTOL, true,
-                       true, is_aiming_up) {
-        deviation = 20;
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["cowboy"]["speed"], BULLET_PISTOL,
+                       true, true, is_aiming_up) {
+        deviation = WeaponConfig::get_instance()->weapons["cowboy"]["deviation"];
     }
 };
 
@@ -69,9 +71,10 @@ class MagnumBullet: public Projectile {
 public:
     MagnumBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
                  int reach):
-            Projectile(initial_position, x_direction, y_direction, reach, 6, BULLET_PISTOL, true,
-                       true, is_aiming_up) {
-        deviation = 12;
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["magnum"]["speed"], BULLET_PISTOL,
+                       true, true, is_aiming_up) {
+        deviation = WeaponConfig::get_instance()->weapons["magnum"]["deviation"];
         deviation_direction = -1;
     }
 };
@@ -79,9 +82,25 @@ class DuelBullet: public Projectile {
 public:
     DuelBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
                int reach):
-            Projectile(initial_position, x_direction, y_direction, reach, 3, BULLET_PISTOL, true,
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["duel"]["speed"], BULLET_PISTOL, true,
                        true, is_aiming_up) {
-        deviation = 20;
+        deviation = WeaponConfig::get_instance()->weapons["duel"]["deviation"];
+    }
+};
+
+class Ak47Bullet: public Projectile {
+public:
+    Ak47Bullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
+               int reach, int bullet_number):
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["ak47"]["speed"], BULLET_PISTOL, true,
+                       true, is_aiming_up) {
+        int init_deviation = WeaponConfig::get_instance()->weapons["ak47"]["deviation"];
+        deviation = std::max(3, init_deviation - 2 * bullet_number);
+        deviation_direction = 1 - 2 * (bullet_number % 2);  // va intercalando arriba o abajo
+        std::cout << "deviaton: " << std::to_string(deviation)
+                  << " , direction: " << std::to_string(deviation_direction) << std::endl;
     }
 };
 #endif

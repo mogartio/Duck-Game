@@ -5,6 +5,7 @@
 
 #include "../../../common/coordinate.h"
 #include "../../../common/messages/generic_msg.h"
+#include "../player/weapons/heavy_weapons.h"
 #include "../player/weapons/pistols.h"
 using namespace ProjectilesId;
 
