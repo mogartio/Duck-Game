@@ -57,7 +57,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
         (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
         weaponImage->defineSize(1 * tiles, 1 * tiles);
     } else {
-        weaponImage->defineSize(1 * tiles, 2 * tiles);
+        weaponImage->defineSize(2 * tiles, 3 * tiles);
     }
     weapons[id] = weaponImage;
 }
@@ -118,6 +118,10 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     helmetsMap.clear();
     armorMap.clear();
     playersNamesAlive.clear();
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
+    }
+    mapTexture = nullptr;
 
     for (const auto& pair: players) {
         pair.second->dropEverithing();
@@ -144,8 +148,9 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
         switch (i) {
             case 5:  // piso
                 matriz[filaActual][columnaActual] = i;
-
-                if (matriz[filaActual - 1][columnaActual] == i) {
+                if (filaActual == 0) {
+                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                } else if (matriz[filaActual - 1][columnaActual] == i) {
                     tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
                 } else {
                     tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
@@ -170,7 +175,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
     Player* player = new Player(rend, Color(color));
-    player->defineSize(3 * tiles, 3 * tiles);
+    player->defineSize(6 * tiles, 6 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     // player->armor(&armor, &hombro);
     // player->weapon(weapons[Weapon::MAGNUM]);
@@ -376,6 +381,10 @@ Map::~Map() {
 
     if (parentTexture != nullptr) {
         SDL_DestroyTexture(parentTexture);
+    }
+
+    if (mapTexture != nullptr) {
+        SDL_DestroyTexture(mapTexture);
     }
 
     for (Image* piso: tilesImages) {

@@ -17,3 +17,4 @@ AtoB.dump
 BtoA.dump
 main_map.csv
 .vscode/settings.json
+maps/map1.yaml

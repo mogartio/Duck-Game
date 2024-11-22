@@ -11,23 +11,18 @@
 #define DEATH -1
 #define FLOOR 1
 #define BACKGROUND 0
-#define PLAYER_SIZE 3
+#define PLAYER_SIZE 6
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
 #include "../player/weapons/projectiles/projectile.h"
 #include "../player/weapons/projectiles/projectile_dropped_weapon.h"
 
-#include "csv_reader.h"
-#include "csv_writer.h"
 #include "stage.h"
 
-Stage::Stage(const std::string& file_name, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
+Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
-        map(0, 0), senders(senders), obs(this->senders, ids) {
-    CSVWriter::write_map("main_map.csv");
-    CSVReader reader(file_name);
-    map = std::move(reader.read_map());
+        map(map), senders(senders), obs(this->senders, ids) {
 }
 
 void Stage::print() { map.print(); }
@@ -68,6 +63,15 @@ void Stage::update() {
     }
 }
 
+void Stage::draw(int object, int size, Coordinate init_position) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            Coordinate current(init_position.x + i, init_position.y + j);
+            set(current, object);
+        }
+    }
+}
+
 void Stage::add_player(Player* player, int id) { players[id] = player; }
 
 void Stage::draw_player(Player& player) {
@@ -104,6 +108,17 @@ bool Stage::should_fall(PlayerPosition& player_position) {
         }
     }
     return true;
+}
+
+std::set<int> Stage::things_projectile_hits(Coordinate position, int size) {
+    std::set<int>* things_it_hits = new std::set<int>();
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            Coordinate aux(position.x + j, position.y + i);
+            things_it_hits->insert(map.get(aux));
+        }
+    }
+    return *things_it_hits;
 }
 
 // color seria el id del personaje
@@ -149,7 +164,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
 
 void Stage::set(const Coordinate& coor, const int value) {
     map.set(coor, value);
-    if (value > 1) {
+    if (value >= 1) {
         coordinates_to_delete.push_back(coor);
     }
 }
