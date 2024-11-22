@@ -3,22 +3,37 @@
 #include <map>
 
 #include <SDL2/SDL_timer.h>
+
+#include "musichandler.h"
+
 #define TILES_TO_PIXELS 16
 
 enum Front_event { MOVE_LEFT, MOVE_RIGHT, JUMP_EVENT, PLAY_DEAD, END };
 
-Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend, Queue<std::shared_ptr<GenericMsg>>& queueRecive, std::string playerName1,
+Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
+           Queue<std::shared_ptr<GenericMsg>>& queueRecive, std::string playerName1,
            std::string playerName2):
         queueRecive(queueRecive),
         running(true),
         event_handler(queueSend, playerName1, running, playerName2) {}
 
 void Game::play() {
-
+    // Inicializo SDL con todo (no recomendado, se puede cambiar para lo que se necesite)
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("Error initializing SDL: %s\n", SDL_GetError());
         return;
     }
+
+    // Inicializo SDL_mixer para reproducir sonidos
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        printf("Error al inicializar SDL_mixer: %s\n", Mix_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // Aca hay que cargar los recursos de sonidos y musica con el MusicHandler
+    MusicHandler musicHandler;
+
 
     SDL_Rect displayBounds;
     if (SDL_GetDisplayUsableBounds(0, &displayBounds) != 0) {
@@ -39,17 +54,17 @@ void Game::play() {
     std::shared_ptr<SendMapMsg> newMap;
     if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
         std::shared_ptr<GenericMsg> shared_matriz = std::move(matriz);
-            newMap = std::dynamic_pointer_cast<SendMapMsg>(shared_matriz);
-            if (newMap) {
-                mapa = newMap->get_map();
-                filas = newMap->get_filas();
-                columnas = newMap->get_columnas();
-            } else {
-                throw std::runtime_error("Failed to cast GenericMsg to SendMapMsg");
-            }
-        } else if (!matriz) {
-            throw std::runtime_error("Algo anda mal! Mandaste un msj que nda que ver");
+        newMap = std::dynamic_pointer_cast<SendMapMsg>(shared_matriz);
+        if (newMap) {
+            mapa = newMap->get_map();
+            filas = newMap->get_filas();
+            columnas = newMap->get_columnas();
+        } else {
+            throw std::runtime_error("Failed to cast GenericMsg to SendMapMsg");
         }
+    } else if (!matriz) {
+        throw std::runtime_error("Algo anda mal! Mandaste un msj que nda que ver");
+    }
 
     uint tiles_w = displayBounds.w / columnas;
     uint tiles_h = displayBounds.h / filas;
@@ -64,7 +79,8 @@ void Game::play() {
     map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
-    std::shared_ptr<InfoLobbyMsg> info_lobby = std::dynamic_pointer_cast<InfoLobbyMsg>(msg_players_info);
+    std::shared_ptr<InfoLobbyMsg> info_lobby =
+            std::dynamic_pointer_cast<InfoLobbyMsg>(msg_players_info);
     std::list<DescripcionPlayer> players = info_lobby->get_players();
     std::map<std::string, uint8_t> players_info;
     for (auto& player: players) {
@@ -78,7 +94,8 @@ void Game::play() {
             throw std::runtime_error(
                     "Estoy recibiendo un mensaje que no es de updated player info");
         }
-        std::shared_ptr<UpdatedPlayerInfoMsg> player_info = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(jugador);
+        std::shared_ptr<UpdatedPlayerInfoMsg> player_info =
+                std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(jugador);
         map.addPlayer(player_info->get_position().first, player_info->get_position().second,
                       players_info[player_info->get_player_name()], player_info->get_player_name());
     }
@@ -91,6 +108,7 @@ void Game::play() {
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
 
+    musicHandler.playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
@@ -122,8 +140,8 @@ void Game::play() {
                             position = player->get_position();
                             state = player->get_state();
                             facing_direction = player->get_facing_direction();
-                            map.update(player_name, position.first, position.second, DuckState(state),
-                                    Side(facing_direction - 1));
+                            map.update(player_name, position.first, position.second,
+                                       DuckState(state), Side(facing_direction - 1));
                             stated_palying = true;
                         }
                         break;
@@ -145,7 +163,8 @@ void Game::play() {
                             item = projectile->get_item();
                             trail = projectile->get_trail();  // para el laser
                             // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                            //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), trail);
+                            //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                            //     trail);
                             // } else {
                             map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
                             // }
@@ -167,7 +186,7 @@ void Game::play() {
                         }
                         break;
 
-                    /* 
+                    /*
                     case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
                         player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
                         if (player) {
@@ -177,7 +196,8 @@ void Game::play() {
                         break;
                     */
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
-                        // directa de que termino la partida y de q hay que mostrar la pantalla de fin
+                        // directa de que termino la partida y de q hay que mostrar la pantalla de
+                        // fin
                         return;
 
                     default:
@@ -193,9 +213,9 @@ void Game::play() {
             win.fill();
             last_frame_time = current_time;
         }
-        
+
         if (stated_palying) {
-                map.allStanding();
+            map.allStanding();
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
