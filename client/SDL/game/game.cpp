@@ -109,6 +109,7 @@ void Game::play() {
     uint8_t facing_direction = 1;
 
     musicHandler.playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
+    musicHandler.setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
