@@ -21,10 +21,13 @@ include_directories(common client server common/messages common/socket client/me
 
 # Find required libraries
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets Multimedia REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-# Add all .cpp and .h files 
+# Add all .cpp and .h files
 file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h)
 file(GLOB_RECURSE CLIENT_SOURCES client/*.cpp client/*.h client/menu/*.cpp client/menu/*.h)
 file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h server/game_logic/map/*.cpp server/game_logic/map/*.h)
@@ -35,7 +38,7 @@ list(FILTER SERVER_SOURCES EXCLUDE REGEX "CMakeFiles")
 # Define the common static library
 add_library(common STATIC ${COMMON_SOURCES})
 
-# Add executables 
+# Add executables
 add_executable(client ${CLIENT_SOURCES})
 add_executable(server ${SERVER_SOURCES})
 
@@ -48,5 +51,5 @@ add_custom_target(CopyResources ALL
 add_dependencies(client CopyResources)
 
 # Link libraries
-target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
+target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image SDL2_mixer SDL2_ttf Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
 target_link_libraries(server common yaml-cpp)
