@@ -101,6 +101,8 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
     for (int i = 1; i < 5; i++) {
         if (hit.find(i) != hit.end()) {
             if (is_lethal) {
+                // AGREGAR CHEST Y HELMET
+                // CHEQUEO SI REALMENTE RECIBE DAÑO
                 stage.kill(i);
                 despawned = true;
                 return;

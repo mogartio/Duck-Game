@@ -83,9 +83,9 @@ public:
                 ss << std::to_string(std::get<0>(coor)) << " , "
                    << std::to_string(std::get<1>(coor)) << std::endl;
             }
-            std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-                      << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
-                      << " con trail: " << ss.str() << std::endl;
+            // std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+            //           << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
+            //           << " con trail: " << ss.str() << std::endl;
         }
     }
     explicit ProjectileObserver(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& queues,

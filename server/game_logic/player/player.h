@@ -21,11 +21,15 @@ private:
     bool is_alive;
     Stage* stage;
     std::shared_ptr<Weapon> weapon;
+    std::shared_ptr<Weapon> chest;
+    std::shared_ptr<Weapon> helmet;
     std::set<int> current_actions;
     std::string name;
     bool should_notify;
     Coordinate initial_position;
     void notify_picked_weapon();
+    void notify_picked_chest();
+    void notify_picked_helmet();
     void notify_dropped_weapon(uint8_t id);
     bool is_unarmed;
 
@@ -48,6 +52,8 @@ public:
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
     void pick_weapon(std::shared_ptr<Weapon> new_weapon);
+    void pick_chest(std::shared_ptr<Weapon> new_chest);
+    void pick_helmet(std::shared_ptr<Weapon> new_helmet);
     void unarm_self();
 };
 

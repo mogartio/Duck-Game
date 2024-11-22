@@ -32,4 +32,27 @@ public:
     void set_weapon(int weapon_id);
 };
 
+class ArmorSpawnPoint {
+private:
+    Coordinate position;
+    Stage& stage;
+    bool is_free;
+    int counter;
+    int type_of_armor;
+
+public:
+    ArmorSpawnPoint(Coordinate position, Stage& stage, int type_of_armor):
+            position(position),
+            stage(stage),
+            is_free(false),
+            counter(0),
+            type_of_armor(type_of_armor) {
+        spawn_armor();
+    }
+    void spawn_armor();
+    void update();
+    void free();
+};
+
+
 #endif
