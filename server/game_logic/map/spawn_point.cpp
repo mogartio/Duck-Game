@@ -13,6 +13,18 @@ void WeaponSpawnPoint::spawn_weapon() {
         case MAGNUM:
             weapon = std::make_unique<Magnum>(stage);
             break;
+        case HELMET:
+            weapon = std::make_unique<Helmet>(stage);
+            break;
+        case HELMET2:
+            weapon = std::make_unique<Helmet>(stage);
+            break;
+        case HELMET3:
+            weapon = std::make_unique<Helmet>(stage);
+            break;
+        case CHEST:
+            weapon = std::make_unique<Chest>(stage);
+            break;
         default:
             weapon = std::make_unique<CowboyGun>(stage);
             break;
@@ -37,36 +49,4 @@ void WeaponSpawnPoint::update() {
 }
 
 void WeaponSpawnPoint::free() { is_free = true; }
-
-void ArmorSpawnPoint::spawn_armor() {  
-    std::unique_ptr<Weapon> armor;
-    switch (type_of_armor) {
-        case HELMET:
-            armor = std::make_unique<Chest>(stage);
-            break;
-        case CHEST:
-            armor = std::make_unique<Helmet>(stage);
-            break;
-        default:
-            armor = std::make_unique<Chest>(stage);
-            break;
-    }
-    stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(armor), position,
-                                                                       4, 4, type_of_armor, nullptr));
-}
-
-void ArmorSpawnPoint::update() {
-    if (!is_free) {
-        return;
-    }
-    counter++;
-    // el counter es despues de cuantas iteraciones va a tirar una armadura de nuevo
-    if (counter == 300) {
-        spawn_armor();
-        counter = 0;
-        is_free = false;
-    }
-}
-
-void ArmorSpawnPoint::free() { is_free = true; }
 

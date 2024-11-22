@@ -45,7 +45,8 @@ private:
     // Imagenes de los cascos usables
     std::vector<Image*> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
+    std::unordered_map<Image*, std::pair<int, int>> helmetsMap;
+    // std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
 
     // Imagen de armadura usable
     Image armor;
@@ -53,7 +54,8 @@ private:
     // Imagen de armadura en el mapa
     Image armorOnMap;
     // Posiciones de la armadura
-    std::vector<std::pair<int, int>> armorMap;
+    std::pair<int, int> armorMap;
+    // std::vector<std::pair<int, int>> armorMap;
 
     Image background;
 

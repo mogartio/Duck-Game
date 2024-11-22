@@ -39,7 +39,6 @@ public:
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
     Player(Coordinate& initial_position, int id, const std::string& name, const PlayerObserver& obs);
-    void die();
     void occupy(Coordinate&);
     void add_action(int&);
     void remove_action(int&);
@@ -51,10 +50,18 @@ public:
     void notify_moved();
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
+
     void pick_weapon(std::shared_ptr<Weapon> new_weapon);
     void pick_chest(std::shared_ptr<Weapon> new_chest);
     void pick_helmet(std::shared_ptr<Weapon> new_helmet);
+
     void unarm_self();
+
+    bool has_chest();
+    bool has_helmet();
+
+    void take_damage();
+    void die();
 };
 
 #endif

@@ -175,9 +175,10 @@ void Player::weapon(Image* weapon) {
     weaponAngle = 0.0;
 }
 
-void Player::dropWeapon() {
+bool Player::dropWeapon() {
+    bool originalWeaponstate = weaponON;
     weaponON = false;
-
+    return originalWeaponstate;
 }
 
 void Player::shoot() {
@@ -193,10 +194,6 @@ void Player::shoot() {
 // ----------------- Armor -----------------
 
 void Player::armor(Image* armor, Image* hombro) {
-    if (armorOn) {
-        armorOn = false;
-        return;
-    }
     _armor = armor;
     _hombro = hombro;
     std::pair<int, int> position = duck->getPosition();
@@ -205,17 +202,25 @@ void Player::armor(Image* armor, Image* hombro) {
     armorOn = true;
 }
 
+bool Player::dropArmor() {
+    bool originalArmorState = armorOn;
+    armorOn = false;
+    return originalArmorState;
+}
+
 // ----------------- Helmet -----------------
 
 void Player::helmet(Image* helmet) {
-    if (helmetOn) {
-        helmetOn = false;
-        return;
-    }
     _helmet = helmet;
     std::pair<int, int> position = duck->getPosition();
     _helmet->position(position.first, position.second - 8);
     helmetOn = true;
+}
+
+bool Player::dropHelmet() {
+    bool originalHelmetState = helmetOn;
+    helmetOn = false;
+    return originalHelmetState;
 }
 
 // ----------------- Fill -----------------

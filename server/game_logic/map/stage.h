@@ -44,6 +44,10 @@ public:
     void kill(int id);
     void draw(int object, int size, Coordinate init_position);
     std::set<int> things_projectile_hits(Coordinate position, int size);
+
+    // chequear si tiene armadura/casco y hace daño
+    bool take_damage(int player_id);
+
 };
 
 #endif

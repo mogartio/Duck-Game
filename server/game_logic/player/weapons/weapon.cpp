@@ -45,6 +45,7 @@ Coordinate Unarmed::get_gun_position(int facing_direction) {
     return player_position;
 }
 void Unarmed::shoot(int x_direction, bool) {
+    // Se fija si existe un DroppedProjectile en la direccion en la que esta apuntando
     Coordinate init_position = get_gun_position(x_direction);
     int handle_direction = x_direction;
     for (int i = 0; i < reach; i++) {

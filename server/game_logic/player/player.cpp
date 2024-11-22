@@ -28,10 +28,19 @@ void Player::init_for_stage(Stage* stage) {
 }
 
 void Player::pick_weapon(std::shared_ptr<Weapon> new_weapon) {
-    weapon = std::move(new_weapon);
-    weapon->set_player(this);
-    notify_picked_weapon();
+    if (new_weapon->get_id() == CHEST) {
+        pick_chest(chest);
 
+    } else if ((new_weapon->get_id() == HELMET) || (new_weapon->get_id() == HELMET2) || (new_weapon->get_id() == HELMET3)) {
+        std::cout << "pickeo el helmet" << std::endl;
+        pick_helmet(helmet);
+
+    } else {
+        std::cout << "pickeo el arma" << std::endl;
+        weapon = std::move(new_weapon);
+        weapon->set_player(this);
+        notify_picked_weapon();
+    }
 }
 
 void Player::pick_chest(std::shared_ptr<Weapon> new_chest) {
@@ -52,10 +61,23 @@ void Player::unarm_self() {
     pick_helmet(std::make_unique<Unarmed>(*stage));
 }
 
+bool Player::has_chest() { return !chest->is_unarmed(); }
+
+bool Player::has_helmet() { return !helmet->is_unarmed(); }
+
 Coordinate Player::get_position() { return position->get_position(); }
 
 int Player::get_facing_direction() { return position->get_facing_direction(); }
 
+void Player::take_damage() {
+    if (has_helmet()) {
+        // Pierde primero el casco
+        helmet->shoot(1, false);
+    } else if (has_chest()) {
+        // Despues la armadura
+        chest->shoot(1, false);
+    }
+}
 
 int Player::get_id() { return id; }
 

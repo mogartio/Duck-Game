@@ -44,8 +44,10 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 // ----------------- Initialize Images -----------------
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
-    if ((id == ProjectilesId::ProjectileId::HELMET) || (id == ProjectilesId::ProjectileId::CHEST) ||
-        (id == ProjectilesId::ProjectileId::UNARMED)) {
+    if (id == ProjectilesId::ProjectileId::UNARMED) {
+        return;
+    }
+    if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         return;
     }
     Image* weaponImage = new Image();
@@ -55,7 +57,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     weaponImage->queryTexture();
     if ((id == ProjectilesId::ProjectileId::GRENADE) ||
         (id == ProjectilesId::ProjectileId::DUEL_PISTOL)) {
-        weaponImage->defineSize(1 * tiles, 1 * tiles);
+        weaponImage->defineSize(2 * tiles, 2 * tiles);
     } else {
         weaponImage->defineSize(2 * tiles, 3 * tiles);
     }
@@ -70,7 +72,8 @@ void Map::makeHelmet(Helemts helmet) {
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
     mapHelmet->defineSize(2 * tiles, 2 * tiles);
-    helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
+    // helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
+    helmetsMap[mapHelmet] = std::pair(-1, -1);
 
     // Creo casco de inventario
     Image* helmetImage = new Image();
@@ -116,7 +119,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     tilesPlace.clear();
     weaponsPos.clear();
     helmetsMap.clear();
-    armorMap.clear();
+    // armorMap.clear();
     playersNamesAlive.clear();
     if (mapTexture != nullptr) {
         SDL_DestroyTexture(mapTexture);
@@ -177,9 +180,6 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
     Player* player = new Player(rend, Color(color));
     player->defineSize(6 * tiles, 6 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
-    // player->armor(&armor, &hombro);
-    // player->weapon(weapons[Weapon::MAGNUM]);
-    // player->helmet(helmets[int(Helemts::TINFOIL)]);
     players[name] = player;
     playersNamesAlive.push_back(name);
 }
@@ -199,6 +199,14 @@ void Map::allStanding() {
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
+    if (id == ProjectilesId::ProjectileId::CHEST) {
+        newArmor(x, y);
+        return;
+    }
+    if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
+        newHelmet(x, y, static_cast<Helemts>(id));
+        return;
+    }
     // weaponsMap[id].push_back(std::pair(x, y));
     weaponsPos[id] = std::pair(x, y);
 }
@@ -211,9 +219,26 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id,
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     // Si el jugador ya tiene un arma, entonces la suelta
     if (id == ProjectilesId::ProjectileId::UNARMED) {
-        players[playerName]->dropWeapon();
+        bool dropped = players[playerName]->dropWeapon();
+        if (!dropped) {
+            dropped = players[playerName]->dropArmor();
+        }
+        if (!dropped) {
+            players[playerName]->dropHelmet();
+        }
         return;
     }
+
+    if (id == ProjectilesId::ProjectileId::CHEST) {
+        armorPlayer(playerName);
+        return;
+    }
+
+    if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
+        helmetPlayer(static_cast<Helemts>(id), playerName);
+        return;
+    }
+
     players[playerName]->weapon(weapons[id]);
     weaponsPos[id] = std::pair(-1, -1);
 }
@@ -223,16 +248,20 @@ void Map::dropWeapon(std::string playerName) { players[playerName]->dropWeapon()
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, Helemts newHelmet) {
-    helmetsMap[helmets[int(newHelmet)]].push_back(std::pair(x, y));
+    // helmetsMap[helmets[int(newHelmet)-14]].push_back(std::pair(x, y));
+    helmetsMap[helmets[int(newHelmet)-14]] = std::pair(x, y);
 }
 
 void Map::helmetPlayer(Helemts helmet, std::string playerName) {
-    players[playerName]->helmet(helmets[int(helmet)]);
+    players[playerName]->helmet(helmets[int(helmet)-14]);
 }
 
 // ----------------- Armor -----------------
 
-void Map::newArmor(int x, int y) { armorMap.push_back(std::pair(x, y)); }
+void Map::newArmor(int x, int y) { 
+    // armorMap.push_back(std::pair(x, y)); 
+    armorMap = std::pair(x, y);
+}
 
 void Map::armorPlayer(std::string playerName) { players[playerName]->armor(&armor, &hombro); }
 
@@ -317,17 +346,25 @@ void Map::fill() {  // Dibuja de atras para adelante
     SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
 
 
-    for (const auto& pair: helmetsMap) {
-        for (const auto& helmet: pair.second) {
-            pair.first->position(helmet.first * tiles, helmet.second * tiles);
-            pair.first->fill();
-        }
+    // for (const auto& pair: helmetsMap) {
+    //     for (const auto& helmet: pair.second) {
+    //         pair.first->position(helmet.first * tiles, helmet.second * tiles);
+    //         pair.first->fill();
+    //     }
+    // }
+
+    for (const auto& helmet: helmetsMap) {
+        helmet.first->position(helmet.second.first * tiles, helmet.second.second * tiles);
+        helmet.first->fill();
     }
 
-    for (std::pair armorPos: armorMap) {
-        armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
-        armorOnMap.fill();
-    }
+    // for (std::pair armorPos: armorMap) {
+    //     armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
+    //     armorOnMap.fill();
+    // }
+
+    armorOnMap.position(armorMap.first * tiles, armorMap.second * tiles);
+    armorOnMap.fill();
 
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
