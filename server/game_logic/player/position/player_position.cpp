@@ -17,7 +17,7 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
         aiming_direction(-1),
         aiming_up(false),
         state(GROUNDED) {
-    air_state = std::move(std::make_unique<Grounded>());
+    air_state = std::move(std::make_unique<Grounded>(true));
 }
 
 void PlayerPosition::move(const std::set<int>& directions) {

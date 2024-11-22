@@ -13,8 +13,8 @@ GameMain::GameMain(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, 
         receiver_q(q), is_testing(is_testing), players(players) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
-std::string GameMain::play_round(Stage& stage) {
-    init_round(stage);
+std::string GameMain::play_round(Stage& stage, Map& map) {
+    init_round(stage, map);
     std::string winner;
     bool round_over = false;
     while (!round_over) {
@@ -28,17 +28,14 @@ std::string GameMain::play_round(Stage& stage) {
     return winner;
 }
 
-void GameMain::init_round(Stage& stage) {
-    std::vector<std::tuple<int, int>> weapon_spawn_sites =
-            Config::get_instance()->weapon_spawn_sites;
-    Coordinate weapon_spawnA(std::get<0>(weapon_spawn_sites[0]),
-                             std::get<1>(weapon_spawn_sites[0]));
-    Coordinate weapon_spawnB(std::get<0>(weapon_spawn_sites[1]),
-                             std::get<1>(weapon_spawn_sites[1]));
-    WeaponSpawnPoint spawnA(weapon_spawnA, stage, COWBOY_PISTOL);
-    weapon_spawns.push_back(&spawnA);
-    WeaponSpawnPoint spawnB(weapon_spawnB, stage, MAGNUM);
-    weapon_spawns.push_back(&spawnB);
+void GameMain::init_round(Stage& stage, Map& map) {
+    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
+            map.get_items_spawn_sites();
+
+    for (auto& weapon: weapon_spawn_sites) {
+        WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
+        weapon_spawns.push_back(&spawn);
+    }
 
     for (auto [name, player]: players) {
         player->init_for_stage(&stage);
@@ -61,6 +58,7 @@ void GameMain::process_commands(Stage& stage) {
     for (int i = 0; i < 10; i++) {
         if (is_testing) {
             create_command();
+            i = 10;
         }
         std::shared_ptr<GenericMsg> msg;
         if (receiver_q.try_pop(msg)) {
@@ -109,6 +107,9 @@ std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
 
 // Duerme lo que le falta para terminar el ciclo actual
 void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_point t1) {
+    if (is_testing) {
+        return;
+    }
     duration<int, std::milli> time_span = duration_cast<duration<int, std::milli>>(t1 - t0);
     duration<int, std::milli> sleep_duration =
             duration<int, std::milli>(TARGET_TIME) - (time_span % TARGET_TIME);

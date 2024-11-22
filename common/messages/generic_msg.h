@@ -76,7 +76,9 @@ public:
         WINNER_MSG = 0x10,
         UPDATED_PLAYER_INFO_MSG = 0x11,
         PROJECTILE_INFO_MSG = 0x12,
-        PLAYER_INFO_MSG = 0x13, // mensaje para enviar info de un jugador especifico
+        PLAYER_INFO_MSG = 0x13,  // mensaje para enviar info de un jugador especifico
+        NOT_PROJECTILE_INFO = 0x14,
+        SHOOT_MSG = 0x15,
     };
 
     enum Type : uint8_t {
@@ -88,6 +90,8 @@ public:
     enum FacingDirection : uint8_t {
         RIGHT = 0x01,
         LEFT = 0x02,
+        UP = 0x03,
+        DOWN = 0x04,
     };
 
 
@@ -101,7 +105,7 @@ public:
     enum PlayerReadyState : uint8_t {
         NOT_READY = 0x00,
         READY = 0x01,
-    };  
+    };
 
     enum LobbyState : uint8_t {
         NOT_STARTING = 0x00,
@@ -131,7 +135,7 @@ private:
     std::list<DescripcionPlayer> players;
     uint8_t max_players;
     uint8_t lobby_id;
-    uint8_t starting_game; // 0x00 no, 0x01 yes
+    uint8_t starting_game;  // 0x00 no, 0x01 yes
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -142,7 +146,8 @@ public:
 
     InfoLobbyMsg();
 
-    explicit InfoLobbyMsg(std::list<DescripcionPlayer> players, uint8_t max_players, uint8_t lobby_id, uint8_t starting_game);
+    explicit InfoLobbyMsg(std::list<DescripcionPlayer> players, uint8_t max_players,
+                          uint8_t lobby_id, uint8_t starting_game);
 
     void set_players(std::list<DescripcionPlayer> players);
 
@@ -179,7 +184,8 @@ public:
 
     CustomizedPlayerInfoMsg();
 
-    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name, std::string player_new_name, uint8_t is_ready);
+    explicit CustomizedPlayerInfoMsg(uint8_t lobby_id, uint8_t color, std::string player_name,
+                                     std::string player_new_name, uint8_t is_ready);
 
     void set_lobby_id(uint8_t lobby_id);
 
@@ -510,6 +516,7 @@ private:
     std::pair<uint16_t, uint16_t> position;
     uint8_t state;
     uint8_t facing_direction;
+    uint8_t facing_direction_second;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -521,7 +528,8 @@ public:
     UpdatedPlayerInfoMsg();
 
     explicit UpdatedPlayerInfoMsg(std::string player_name, std::pair<uint16_t, uint16_t> position,
-                                  uint8_t state, uint8_t facing_direction);
+                                  uint8_t state, uint8_t facing_direction,
+                                  uint8_t facing_direction_second = 0);
 
     std::string get_player_name() const;
 
@@ -538,6 +546,10 @@ public:
     void set_state(uint8_t state);
 
     void set_facing_direction(uint8_t facing_direction);
+
+    uint8_t get_facing_direction_second() const;
+
+    void set_facing_direction_second(uint8_t facinDirectionSecond);
 };
 
 class ProjectileInfoMsg: public GenericMsg {
@@ -546,6 +558,8 @@ private:
     uint8_t pos_y;
     uint8_t item;
     std::vector<std::pair<uint8_t, uint8_t>> trail;
+    uint8_t facing_direction_first;
+    uint8_t facing_direction_second;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -557,7 +571,8 @@ public:
     ProjectileInfoMsg();
 
     explicit ProjectileInfoMsg(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t pos_x,
-                               uint8_t pos_y, uint8_t item);
+                               uint8_t pos_y, uint8_t item, uint8_t facing_direction_first = 0,
+                               uint8_t facing_direction_second = 0);
 
     uint8_t get_pos_x() const;
 
@@ -574,14 +589,21 @@ public:
     void set_item(uint8_t item);
 
     void set_trail(std::vector<std::pair<uint8_t, uint8_t>> trail);
-};
 
+    uint8_t get_facing_direction_first() const;
+
+    void set_facing_direction_first(uint8_t facing_direction_first);
+
+    uint8_t get_facing_direction_second() const;
+
+    void set_facing_direction_second(uint8_t facing_direction_second);
+};
 
 
 class PlayerInfoMsg: public GenericMsg {
 private:
     std::string player_name;
-    uint8_t color; 
+    uint8_t color;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -601,5 +623,50 @@ public:
     void set_player_name(std::string player_name);
 
     void set_color(uint8_t color);
+};
+
+class NotProyectileInfo: public GenericMsg {
+private:
+    uint8_t item;
+    std::pair<uint8_t, uint8_t> position_x_y;
+
+public:
+    NotProyectileInfo();
+
+    explicit NotProyectileInfo(uint8_t item, std::pair<uint8_t, uint8_t> position_x_y);
+
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    uint8_t get_item() const;
+
+    std::pair<uint8_t, uint8_t> get_position_x_y() const;
+
+    void set_item(uint8_t item);
+
+    void set_position_x_y(std::pair<uint8_t, uint8_t> position_x_y);
+};
+
+class ShootMsg: public GenericMsg {
+private:
+    std::string player_name;
+
+public:
+    ShootMsg();
+
+    explicit ShootMsg(std::string player_name, std::pair<uint8_t, uint8_t> position_x_y);
+
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+
+    std::string get_player_name() const;
+
+    void set_player_name(std::string player_name);
 };
 #endif

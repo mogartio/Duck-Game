@@ -1,15 +1,16 @@
 #ifndef CLIENT_H
 #define CLIENT_H
+#include <memory>
 #include <string>
 #include <utility>
 
 #include "../common/messages/generic_msg.h"
 #include "../common/messages/handler_read.h"
-#include "../common/sender.h"
 
 #include "lobbys_monitor.h"
 #include "receiver.h"
 #include "send_queues_monitor.h"
+#include "sender.h"
 #include "server_protocol.h"
 
 class Client: public HandlerReader {
@@ -21,7 +22,7 @@ private:
     uint id;  // a chequear, para la funcionalidad futura
     ServerProtocol protocol;
     ReceiverServer receiver;
-    Sender sender;
+    SenderServer sender;
     LobbysMonitor& lobbys;
     uint lobby_unido_id;
     bool is_testing;
@@ -29,8 +30,9 @@ private:
     void start_client();
 
 public:
-    Client(Socket&& client_skt, uint id, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues,
-           LobbysMonitor& lobbys, bool is_testing);
+    Client(Socket&& client_skt, uint id,
+           SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, LobbysMonitor& lobbys,
+           bool is_testing);
     bool operator==(const Client* other) const;
 
     void stop();
@@ -47,6 +49,8 @@ public:
     virtual void handle_read(const GoBackMsg& msg) override;
     virtual void handle_read(const ExitFromLobbyMsg& msg) override;
     virtual void handle_read(const StartGameMsg& msg) override;
+
+    void killGameAndLobby();
 };
 
 #endif  // CLIENT_H

@@ -12,7 +12,6 @@
 #include "../../common/thread.h"
 #include "../send_queues_monitor.h"
 #include "config/config.h"
-#include "map/csv_writer.h"
 #include "map/spawn_point.h"
 #include "map/stage.h"
 #include "player/player.h"
@@ -31,14 +30,14 @@ private:
     std::vector<WeaponSpawnPoint*> weapon_spawns;
     void spawn_weapons();
 
-    void init_round(Stage& stage);
+    void init_round(Stage& stage, Map& map);
 
 public:
     explicit GameMain(Queue<std::shared_ptr<GenericMsg>>&, std::map<std::string, Player*>, bool);
 
     std::shared_ptr<GenericMsg> create_msg(const std::string& command);
     void run();
-    std::string play_round(Stage&);
+    std::string play_round(Stage& stage, Map& map);
 
     using HandlerReader::handle_read;
 
