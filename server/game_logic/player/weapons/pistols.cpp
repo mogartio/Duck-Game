@@ -33,3 +33,16 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     stopped_holding_trigger = false;
 }
+
+DuelPistol::DuelPistol(Stage& stage): Weapon(stage, 1, 5, DUEL_PISTOL) {}
+
+void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
+    if (ammo == 0 || !stopped_holding_trigger || throw_started) {
+        return;
+    }
+    Coordinate gun_position = get_gun_position(x_direction);
+    stage.add_projectile(std::move(
+            std::make_unique<DuelBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    ammo--;
+    stopped_holding_trigger = false;
+}

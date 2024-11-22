@@ -75,4 +75,13 @@ public:
         deviation_direction = -1;
     }
 };
+class DuelBullet: public Projectile {
+public:
+    DuelBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
+               int reach):
+            Projectile(initial_position, x_direction, y_direction, reach, 3, BULLET_PISTOL, true,
+                       true, is_aiming_up) {
+        deviation = 20;
+    }
+};
 #endif
