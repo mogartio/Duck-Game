@@ -170,8 +170,7 @@ int main(int argc, char* argv[]) {
 
     Game game(send_queue, recv_queue, first_player, second_player);
     game.play();
-    
-    send_queue.close();
+
     recv_queue.close();
 
     if (client) {
