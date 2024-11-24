@@ -9,6 +9,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     
     currentTile = "";
     isPainting = false;
+    isErasing = false;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
     editor_matrix.resize(rows, std::vector<int>(columns, 0)); 
 
@@ -94,6 +95,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         currentTile = "";
         isPainting = false;
         isDragging = true;
+        isErasing = false;
     });
 
     // add weapons menu
@@ -154,6 +156,34 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(sniper, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(laserRifle, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(pewpewlaser, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+
+    // add erase button 
+    QPushButton *eraseButton = new QPushButton(QIcon("assets/menu_assets/eraser.png"), "", this);
+    eraseButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 0px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    eraseButton->setFont(*customFont);
+    eraseButton->setGeometry(330, 10, 40, 40);
+    connect(eraseButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        currentTile = "";
+        isPainting = false;
+        isDragging = false;
+        isErasing = true;
+        placeTileAtPosition(QCursor::pos());
+    });
+
 }
 
 void EditorScreen::paintEvent(QPaintEvent* event) {
@@ -268,6 +298,8 @@ void EditorScreen::wheelEvent(QWheelEvent* event) {
 void EditorScreen::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         if (isPainting) {
+            placeTileAtPosition(event->pos());
+        } else if (isErasing) {
             placeTileAtPosition(event->pos());
         } else {
             isDragging = true;
@@ -416,7 +448,11 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
                 editor_matrix[row][col] = 16;
             } else if (currentTile == "pew pew laser") {
                 editor_matrix[row][col] = 17;
+            } else if (currentTile == "") {
+                editor_matrix[row][col] = 0;
             }
+        } else if (isErasing) {
+            editor_matrix[row][col] = 0;
         }
 
         update(); // Trigger a repaint

@@ -42,6 +42,7 @@ private:
     std::shared_ptr<QPixmap> background_tile;
     QString currentTile;
     bool isPainting;
+    bool isErasing;
     // tiles menu
     QPushButton *tilesMenuButton;
     QMenu *tilesMenu;
