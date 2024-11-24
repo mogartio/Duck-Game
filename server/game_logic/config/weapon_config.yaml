@@ -19,3 +19,9 @@ weapons:
     speed: 3
     deviation: 24
     ammo: 6
+  shotgun:
+    reach: 14
+    speed: 3
+    deviation: 1
+    ammo: 2
+    bullets_per_shot: 6

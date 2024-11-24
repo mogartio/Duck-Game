@@ -96,11 +96,22 @@ public:
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["ak47"]["speed"], BULLET_PISTOL, true,
                        true, is_aiming_up) {
+
         int init_deviation = WeaponConfig::get_instance()->weapons["ak47"]["deviation"];
-        deviation = std::max(3, init_deviation - 2 * bullet_number);
+        deviation = std::max(3, init_deviation - 2 * bullet_number);  // la desviacion a lo sumo 3
         deviation_direction = 1 - 2 * (bullet_number % 2);  // va intercalando arriba o abajo
-        std::cout << "deviaton: " << std::to_string(deviation)
-                  << " , direction: " << std::to_string(deviation_direction) << std::endl;
+    }
+};
+
+class ShotgunBullet: public Projectile {
+public:
+    ShotgunBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
+                  int reach, int new_deviation, int new_deviation_direction):
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["shotgun"]["speed"], BULLET_SHOTGUN,
+                       true, true, is_aiming_up) {
+        deviation = new_deviation;
+        deviation_direction = new_deviation_direction;
     }
 };
 #endif

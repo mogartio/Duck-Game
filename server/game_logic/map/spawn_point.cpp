@@ -4,23 +4,20 @@
 void WeaponSpawnPoint::spawn_weapon() {
     // ya se que esto es horrible lo hice 2 horas antes de la primera entrega, its never been this
     // serious
+    std::unique_ptr<Weapon> weapon;
     if (type_of_weapon == COWBOY_PISTOL) {
-        auto weapon = std::make_unique<CowboyGun>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
-                std::move(weapon), position, 4, 599, type_of_weapon, this));
+        weapon = std::make_unique<CowboyGun>(stage);
     } else if (type_of_weapon == MAGNUM) {
-        auto weapon = std::make_unique<Magnum>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
-                std::move(weapon), position, 4, 599, type_of_weapon, this));
+        weapon = std::make_unique<Magnum>(stage);
     } else if (type_of_weapon == DUEL_PISTOL) {
-        auto weapon = std::make_unique<DuelPistol>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
-                std::move(weapon), position, 4, 599, type_of_weapon, this));
+        weapon = std::make_unique<DuelPistol>(stage);
     } else if (type_of_weapon == AK_47) {
-        auto weapon = std::make_unique<Ak47>(stage);
-        stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(
-                std::move(weapon), position, 4, 599, type_of_weapon, this));
+        weapon = std::make_unique<Ak47>(stage);
+    } else if (type_of_weapon == SHOTGUN) {
+        weapon = std::make_unique<Shotgun>(stage);
     }
+    stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position, 4,
+                                                                   599, type_of_weapon, this));
 }
 void WeaponSpawnPoint::set_weapon(int weapon_id) { type_of_weapon = weapon_id; }
 
