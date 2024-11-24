@@ -10,8 +10,8 @@ map_player_spawn_sites:
   # ...
 
 map_weapon_spawn_sites:
-  - [30, 10, 7] # [row, column, weapon_id]
-  - [15, 10, 8]
+  - [30, 10, 6] # [row, column, weapon_id]
+  - [15, 10, 5]
   # - [10, 12, 22]
   # ...
 

@@ -41,6 +41,7 @@ public:
     void add_action(int&);
     void remove_action(int&);
     void move(const std::set<int>&);
+    void move(int);
     void execute(const int&);
     void shoot();
     void update();

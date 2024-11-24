@@ -129,7 +129,16 @@ void Player::notify_picked_weapon() {
 //     }
 // }
 
-void Player::move(const std::set<int>& movements) { position->move(movements); }
+void Player::move(const std::set<int>& movements) { position->move(movements, true); }
+
+void Player::move(int direction) {
+    if (direction == -1) {
+        direction = MOVE_LEFT;
+    } else if (direction == 1) {
+        direction = MOVE_RIGHT;
+    }
+    position->move({direction}, false);
+}
 
 void Player::shoot() {
     if (weapon == nullptr) {

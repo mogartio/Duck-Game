@@ -6,6 +6,7 @@
 
 #include "../../../../common/messages/generic_msg.h"
 #include "../../config/weapon_config.h"
+#include "../player.h"
 #include "projectiles/projectile.h"
 
 Ak47::Ak47(Stage& stage):
@@ -21,6 +22,9 @@ void Ak47::shoot(int x_direction, bool is_aiming_up) {
     stage.add_projectile(std::move(std::make_unique<Ak47Bullet>(
             gun_position, x_direction, -1, is_aiming_up, reach, bullets_shot)));
     ammo--;
+    if (bullets_shot % 4 == 0) {
+        player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
+    }
     bullets_shot++;
 }
 
