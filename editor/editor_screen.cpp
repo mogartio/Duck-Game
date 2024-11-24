@@ -70,6 +70,32 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(column, &QAction::triggered, this, &EditorScreen::startDrag);
     
     setAcceptDrops(true);
+
+    // add drag button
+    QPushButton *dragButton = new QPushButton(QIcon("assets/menu_assets/arrow_cross.png"), "", this);
+    dragButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 0px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    dragButton->setFont(*customFont);
+    dragButton->setGeometry(120, 10, 40, 40);
+    connect(dragButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        currentTile = "";
+        isPainting = false;
+        isDragging = true;
+    });
+
 }
 
 void EditorScreen::paintEvent(QPaintEvent* event) {
@@ -136,6 +162,7 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
     }
 }
 
+
 void EditorScreen::wheelEvent(QWheelEvent* event) {
     const double zoomFactor = 0.1; // Amount to zoom per scroll
     if (event->angleDelta().y() > 0) {
@@ -150,6 +177,17 @@ void EditorScreen::wheelEvent(QWheelEvent* event) {
     update(); // Trigger a repaint with the new scale
 }
 
+void EditorScreen::mousePressEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        if (isPainting) {
+            placeTileAtPosition(event->pos());
+        } else {
+            isDragging = true;
+            lastMousePosition = event->pos();
+        }
+    }
+}
+
 void EditorScreen::mouseMoveEvent(QMouseEvent* event) {
     if (isDragging) {
         // Calculate the displacement
@@ -158,30 +196,14 @@ void EditorScreen::mouseMoveEvent(QMouseEvent* event) {
         offsetY += delta.y();
         lastMousePosition = event->pos();
         update(); // Repaint with the new offsets
-    } else if (isPainting && !currentTile.isEmpty()) {
-        QPoint pos = event->pos();
-        placeTileAtPosition(pos);
+    } else if (isPainting) {
+        placeTileAtPosition(event->pos());
     }
 }
 
-void EditorScreen::mousePressEvent(QMouseEvent* event) {
+void EditorScreen::mouseReleaseEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
-        if (!currentTile.isEmpty()) {
-            // Check if we're painting or starting a drag
-            if (isPainting) {
-                isPainting = true;  // Enable painting mode
-                isDragging = false; // Disable dragging mode
-                QPoint pos = event->pos();
-                placeTileAtPosition(pos);
-            } else {
-                isDragging = true;  // Enable dragging mode
-                QPoint pos = event->pos();
-                lastMousePosition = pos; // Save initial position
-            }
-        }
-    } else if (event->button() == Qt::RightButton) {
-        currentTile = "";   // Disable painting mode
-        isPainting = false;
+        isDragging = false;
     }
 }
 
@@ -205,13 +227,6 @@ void EditorScreen::dropEvent(QDropEvent* event) {
     }
 }
 
-
-
-void EditorScreen::mouseReleaseEvent(QMouseEvent* event) {
-    if (event->button() == Qt::LeftButton) {
-        isDragging = false;
-    }
-}
 
 std::vector<std::vector<int>> EditorScreen::getMatrix() {
     return editor_matrix;
