@@ -82,7 +82,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
-    helmetImage->defineSize(3 * tiles, 3 * tiles);  // mismo tamaño que el pato
+    helmetImage->defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
     helmets.push_back(helmetImage);
 }
 
@@ -95,11 +95,11 @@ void Map::makeArmor() {
     // Creo armadura de inventario
     armor.initialize(rend, "assets/game_assets/armor/armor4.png");
     armor.queryTexture();
-    armor.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño que el pato
+    armor.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
 
     hombro.initialize(rend, "assets/game_assets/armor/hombro4.png");
     hombro.queryTexture();
-    hombro.defineSize(3 * tiles, 3 * tiles);  // mismo tamaño q el pato
+    hombro.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
@@ -257,6 +257,7 @@ void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
 
 void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
     players[playerName]->helmet(helmets[int(helmet)-14]);
+    helmetsPos[helmet] = std::pair(-1, -1);
 }
 
 // ----------------- Armor -----------------
@@ -266,7 +267,10 @@ void Map::newArmor(int x, int y) {
     armorMap = std::pair(x, y);
 }
 
-void Map::armorPlayer(std::string playerName) { players[playerName]->armor(&armor, &hombro); }
+void Map::armorPlayer(std::string playerName) { 
+    players[playerName]->armor(&armor, &hombro);
+    armorMap = std::pair(-1, -1);    
+}
 
 // ----------------- Pre-fill -----------------
 
@@ -362,7 +366,6 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
         helmetsMap[helmet.first]->position(helmet.second.first * tiles, helmet.second.second * tiles);
         helmetsMap[helmet.first]->fill();
-        helmetsPos[helmet.first] = std::pair(-1, -1);
     }
 
     // for (std::pair armorPos: armorMap) {
@@ -373,7 +376,6 @@ void Map::fill() {  // Dibuja de atras para adelante
     if (armorMap.first != -1) {
         armorOnMap.position(armorMap.first * tiles, armorMap.second * tiles);
         armorOnMap.fill();
-        armorMap = std::pair(-1, -1);
     }
 
     // for (const auto& pair : weaponsMap) {

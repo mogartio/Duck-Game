@@ -17,7 +17,7 @@ void Chest::shoot(int damage, bool) {
 }
 
 
-Helmet::Helmet(Stage& stage): Weapon(stage, 1, 20, HELMET) {}
+Helmet::Helmet(Stage& stage, int id): Weapon(stage, 1, 20, id) {}
 
 void Helmet::shoot(int damage, bool) {
     // Recibe daño

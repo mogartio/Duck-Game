@@ -28,10 +28,14 @@ void Player::init_for_stage(Stage* stage) {
 
 void Player::pick_weapon(std::shared_ptr<Weapon> new_weapon) {
     if (new_weapon->get_id() == CHEST) {
-        pick_chest(chest);
+        chest = std::move(new_weapon);
+        chest->set_player(this);
+        notify_picked_chest();
 
     } else if ((new_weapon->get_id() == HELMET) || (new_weapon->get_id() == HELMET2) || (new_weapon->get_id() == HELMET3)) {
-        pick_helmet(helmet);
+        helmet = std::move(new_weapon);
+        helmet->set_player(this);
+        notify_picked_helmet();
 
     } else {
         weapon = std::move(new_weapon);

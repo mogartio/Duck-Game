@@ -233,7 +233,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el casco que tiene el pato
     if (helmetOn) {
-        _helmet->position(position.first, position.second - 8);
+        _helmet->position(position.first, position.second - 13);
         _helmet->fill(flip);
     }
 

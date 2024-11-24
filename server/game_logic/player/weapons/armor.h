@@ -12,7 +12,7 @@ public:
 
 class Helmet: public Weapon {
 public:
-    explicit Helmet(Stage&);
+    explicit Helmet(Stage&, int id);
     // Reimplementacion de shoot para que reciba daño
     virtual void shoot(int, bool) override;
 };

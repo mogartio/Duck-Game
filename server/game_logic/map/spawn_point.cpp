@@ -13,13 +13,9 @@ void WeaponSpawnPoint::spawn_weapon() {
             weapon = std::make_unique<Magnum>(stage);
             break;
         case HELMET:
-            weapon = std::make_unique<Helmet>(stage);
-            break;
         case HELMET2:
-            weapon = std::make_unique<Helmet>(stage);
-            break;
         case HELMET3:
-            weapon = std::make_unique<Helmet>(stage);
+            weapon = std::make_unique<Helmet>(stage, type_of_weapon);
             break;
         case CHEST:
             weapon = std::make_unique<Chest>(stage);
