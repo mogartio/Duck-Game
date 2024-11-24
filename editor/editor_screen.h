@@ -24,6 +24,7 @@
 #include <QMimeData>
 #include <QDebug>
 #include <QDrag>
+#include <set>
 #include "rounded_rectangle.h"
 class EditorScreen : public QWidget {
     Q_OBJECT
@@ -49,6 +50,10 @@ private:
     // weapons menu
     QPushButton *weaponsMenuButton;
     QMenu *weaponsMenu;
+    // players menu. a player can be added only once
+    std::set<std::string> players_set;
+    QPushButton *playersMenuButton;
+    QMenu *playersMenu;
 
     std::vector<std::vector<int>> convertToServerMatrix();
     void placeTileAtPosition(const QPoint& pos);

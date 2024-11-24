@@ -72,32 +72,6 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     
     setAcceptDrops(true);
 
-    // add drag button
-    QPushButton *dragButton = new QPushButton(QIcon("assets/menu_assets/arrow_cross.png"), "", this);
-    dragButton->setStyleSheet(
-        "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
-        "font-size: 28px;"                  
-        "border: 0px solid #555555;"        
-        "border-radius: 15px;"              
-        "padding: 0px;"                    
-        "text-align: center;"               
-        "}"
-        "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
-        "}"
-    );
-    dragButton->setFont(*customFont);
-    dragButton->setGeometry(120, 10, 40, 40);
-    connect(dragButton, &QPushButton::clicked, [this](){
-        buttonSound->play();
-        currentTile = "";
-        isPainting = false;
-        isDragging = true;
-        isErasing = false;
-    });
-
     // add weapons menu
     weaponsMenuButton = new QPushButton("Weapons", this);
     weaponsMenuButton->setStyleSheet(
@@ -115,7 +89,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "}"
     );
     weaponsMenuButton->setFont(*customFont);
-    weaponsMenuButton->setGeometry(170, 10, 150, 40);
+    weaponsMenuButton->setGeometry(120, 10, 150, 40);
     // add menu
     weaponsMenu = new QMenu(this);
     weaponsMenu->setFont(actionFont);
@@ -157,6 +131,48 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(laserRifle, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(pewpewlaser, &QAction::triggered, this, [this]() { startDrag("weapons"); });
 
+    // add players button
+    players_set = std::set<std::string>();
+    playersMenuButton = new QPushButton("Players", this);
+    playersMenuButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    playersMenuButton->setFont(*customFont);
+    playersMenuButton->setGeometry(280, 10, 150, 40);
+    // add menu
+    playersMenu = new QMenu(this);
+    playersMenu->setFont(actionFont);
+    playersMenu->setFixedWidth(200);
+    QAction *player1 = new QAction(QIcon("assets/game_assets/ducks/white/standing.png"), "player1", this);
+    playersMenu->addAction(player1);
+    QAction *player2 = new QAction(QIcon("assets/game_assets/ducks/yellow/standing.png"), "player2", this);
+    playersMenu->addAction(player2);
+    QAction *player3 = new QAction(QIcon("assets/game_assets/ducks/orange/standing.png"), "player3", this);
+    playersMenu->addAction(player3);
+    QAction *player4 = new QAction(QIcon("assets/game_assets/ducks/grey/standing.png"), "player4", this);
+    playersMenu->addAction(player4);
+
+    connect(playersMenuButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        playersMenu->exec(playersMenuButton->mapToGlobal(QPoint(0, playersMenuButton->height())));
+    });
+
+    connect(player1, &QAction::triggered, this, [this]() { startDrag("players"); });
+    connect(player2, &QAction::triggered, this, [this]() { startDrag("players"); });
+    connect(player3, &QAction::triggered, this, [this]() { startDrag("players"); });
+    connect(player4, &QAction::triggered, this, [this]() { startDrag("players"); });
+
     // add erase button 
     QPushButton *eraseButton = new QPushButton(QIcon("assets/menu_assets/eraser.png"), "", this);
     eraseButton->setStyleSheet(
@@ -174,7 +190,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "}"
     );
     eraseButton->setFont(*customFont);
-    eraseButton->setGeometry(330, 10, 40, 40);
+    eraseButton->setGeometry(440, 10, 40, 40);
     connect(eraseButton, &QPushButton::clicked, [this](){
         buttonSound->play();
         currentTile = "";
@@ -182,6 +198,33 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         isDragging = false;
         isErasing = true;
         placeTileAtPosition(QCursor::pos());
+    });
+
+    // add drag button
+    QPushButton *dragButton = new QPushButton(QIcon("assets/menu_assets/arrow_cross.png"), "", this);
+    dragButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 0px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    dragButton->setFont(*customFont);
+    dragButton->setGeometry(490, 10, 40, 40);
+
+    connect(dragButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        currentTile = "";
+        isPainting = false;
+        isDragging = true;
+        isErasing = false;
     });
 
 }
@@ -274,6 +317,24 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                     QRect weaponRect(cellRect.center().x() - weaponWidth / 2, cellRect.bottom() - weaponHeight, weaponWidth, weaponHeight);
                     painter.drawPixmap(weaponRect, scaledTile);
                 }
+            } else if (editor_matrix[row][col] >= 18 && editor_matrix[row][col] <= 21) { 
+                std::string playerName;
+                switch (editor_matrix[row][col]) {
+                    case 18: playerName = "player1"; break;
+                    case 19: playerName = "player2"; break;
+                    case 20: playerName = "player3"; break;
+                    case 21: playerName = "player4"; break;
+                }
+                auto tile = map_of_maps["players"][playerName];
+                if (tile && !tile->isNull()) {
+                    // Scale the player image according to the current scale factor
+                    QPixmap scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    // Calculate the position to center the player image in the cell
+                    int playerWidth = scaledTile.width();
+                    int playerHeight = scaledTile.height();
+                    QRect playerRect(cellRect.center().x() - playerWidth / 2, cellRect.bottom() - playerHeight, playerWidth, playerHeight);
+                    painter.drawPixmap(playerRect, scaledTile);
+                } 
             }
 
             painter.drawRect(cellRect);
@@ -383,6 +444,7 @@ void EditorScreen::startDrag(std::string menu) {
     QString tileName = action->text();
     auto tile = map_of_maps[menu][tileName.toStdString()];
     if (!tile || tile->isNull()) {
+        std::cout << "Tile: " << tileName.toStdString() << " not found." << std::endl;
         return;
     };
     // Create a mime data object
@@ -450,11 +512,32 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
                 editor_matrix[row][col] = 17;
             } else if (currentTile == "") {
                 editor_matrix[row][col] = 0;
+            } else if (currentTile == "player1" && players_set.find("player1") == players_set.end()) {
+                editor_matrix[row][col] = 18;
+                players_set.insert("player1");
+            } else if (currentTile == "player2" && players_set.find("player2") == players_set.end()) {
+                editor_matrix[row][col] = 19;
+                players_set.insert("player2");
+            } else if (currentTile == "player3" && players_set.find("player3") == players_set.end()) {
+                editor_matrix[row][col] = 20;
+                players_set.insert("player3");
+            } else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) {
+                editor_matrix[row][col] = 21;
+                players_set.insert("player4");
+
+            } else {
+                editor_matrix[row][col] = 0;
             }
         } else if (isErasing) {
+            int item = editor_matrix[row][col];
+            switch (item) {
+                case 18: players_set.erase("player1"); break;
+                case 19: players_set.erase("player2"); break;
+                case 20: players_set.erase("player3"); break;
+                case 21: players_set.erase("player4"); break;
+            }
             editor_matrix[row][col] = 0;
         }
-
         update(); // Trigger a repaint
     }
 }
