@@ -25,3 +25,8 @@ weapons:
     deviation: 1
     ammo: 2
     bullets_per_shot: 6
+  sniper:
+    reach: 128
+    speed: 5
+    ammo: 3
+    deviation: 128

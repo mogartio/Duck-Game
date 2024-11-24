@@ -114,4 +114,13 @@ public:
         deviation_direction = new_deviation_direction;
     }
 };
+
+class SniperBullet: public Projectile {
+public:
+    SniperBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
+                 int reach):
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["sniper"]["speed"], BULLET_PISTOL,
+                       true, true, is_aiming_up) {}
+};
 #endif

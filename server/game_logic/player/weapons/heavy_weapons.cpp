@@ -40,7 +40,6 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    std::cout << "Se esta recargando el arma" << std::endl;
     if (!is_loaded) {
         is_loaded = true;
         return;
@@ -61,5 +60,28 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
     is_loaded = false;
     stopped_holding_trigger = false;
 }
-
 void Shotgun::stop_shooting() { stopped_holding_trigger = true; }
+
+
+Sniper::Sniper(Stage& stage):
+        Weapon(stage, WeaponConfig::get_instance()->weapons["sniper"]["ammo"],
+               WeaponConfig::get_instance()->weapons["sniper"]["reach"], SNIPER),
+        is_loaded(true) {}
+
+void Sniper::shoot(int x_direction, bool is_aiming_up) {
+    if (ammo == 0 || !stopped_holding_trigger || throw_started) {
+        return;
+    }
+    if (!is_loaded) {
+        is_loaded = true;
+        return;
+    }
+    Coordinate gun_position = get_gun_position(x_direction);
+    stage.add_projectile(std::move(
+            std::make_unique<SniperBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    ammo--;
+    is_loaded = false;
+    stopped_holding_trigger = false;
+}
+
+void Sniper::stop_shooting() { stopped_holding_trigger = true; }

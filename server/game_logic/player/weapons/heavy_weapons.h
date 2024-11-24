@@ -22,4 +22,12 @@ public:
     virtual void shoot(int, bool) override;
     virtual void stop_shooting() override;
 };
+class Sniper: public Weapon {
+    bool is_loaded;
+
+public:
+    explicit Sniper(Stage&);
+    virtual void shoot(int, bool) override;
+    virtual void stop_shooting() override;
+};
 #endif
