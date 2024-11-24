@@ -1,4 +1,9 @@
+#include <algorithm>
+#include <list>
+#include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
@@ -14,8 +19,9 @@ private:
     EventHandler event_handler;
 
 public:
-    Game(Queue<std::shared_ptr<GenericMsg>>& queueSend, Queue<std::shared_ptr<GenericMsg>>& queueRecive,
-              std::string playerName1, std::string playerName2 = "");
+    Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
+         Queue<std::shared_ptr<GenericMsg>>& queueRecive, std::string playerName1,
+         std::string playerName2 = "");
 
     void play();
 };

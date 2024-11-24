@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL_timer.h>
 
+#include "loadingscreen.h"
 #include "musichandler.h"
 
 #define TILES_TO_PIXELS 16
@@ -27,6 +28,13 @@ void Game::play() {
     // Inicializo SDL_mixer para reproducir sonidos
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         printf("Error al inicializar SDL_mixer: %s\n", Mix_GetError());
+        SDL_Quit();
+        return;
+    }
+
+    // Inicializa TTF
+    if (TTF_Init() < 0) {
+        std::cerr << "Error al inicializar TTF: " << TTF_GetError() << std::endl;
         SDL_Quit();
         return;
     }
@@ -75,6 +83,10 @@ void Game::play() {
 
     Window win(displayBounds.w, displayBounds.h);
 
+    // Creo la pantalla de carga
+    LoadingScreen loadingScreen(win.get_rend(), displayBounds.w, displayBounds.h);
+
+    // Creo el mapa
     Map map(win.get_rend(), tiles, displayBounds.w, displayBounds.h);
     map.makeMap(columnas, filas, mapa);
 
@@ -172,6 +184,8 @@ void Game::play() {
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                        loadingScreen.show(2000);  // pantalla de carga de 500 ms para que no se vea
+                                                   // tan feo el cambio de mapa
                         newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
                         if (newMap) {
                             mapa = newMap->get_map();
@@ -221,6 +235,8 @@ void Game::play() {
         // Controla la frecuencia de cuadros por segundo (FPS)
         SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
     }
+    TTF_Quit();
+    SDL_Quit();
 
     event_handler.stop();
     event_handler.join();
