@@ -14,18 +14,4 @@ public:
     virtual void shoot(int, bool) override;
 };
 
-class Chest: public Weapon {
-public:
-    explicit Chest(Stage&);
-    // Reimplementacion de shoot para que reciba daño
-    virtual void shoot(int, bool) override;
-};
-
-class Helmet: public Weapon {
-public:
-    explicit Helmet(Stage&);
-    // Reimplementacion de shoot para que reciba daño
-    virtual void shoot(int, bool) override;
-};
-
 #endif

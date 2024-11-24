@@ -6,7 +6,6 @@
 #include "../../../common/messages/generic_msg.h"
 #include "weapons/pistols.h"
 #include "weapons/weapon.h"
-#include "weapons/armor/armor.h"
 
 using namespace ActionsId;
 Player::Player(Coordinate& initial_position, int id, const std::string& name,
@@ -32,11 +31,9 @@ void Player::pick_weapon(std::shared_ptr<Weapon> new_weapon) {
         pick_chest(chest);
 
     } else if ((new_weapon->get_id() == HELMET) || (new_weapon->get_id() == HELMET2) || (new_weapon->get_id() == HELMET3)) {
-        std::cout << "pickeo el helmet" << std::endl;
         pick_helmet(helmet);
 
     } else {
-        std::cout << "pickeo el arma" << std::endl;
         weapon = std::move(new_weapon);
         weapon->set_player(this);
         notify_picked_weapon();

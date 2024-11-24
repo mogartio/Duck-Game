@@ -25,8 +25,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         makeWeapon(weapon);
     }
 
-    for (int i = int(Helemts::NORMAL); i <= int(Helemts::TINFOIL); i++) {
-        Helemts helmet = static_cast<Helemts>(i);
+    for (int i = int(ProjectilesId::ProjectileId::HELMET); i <= int(ProjectilesId::ProjectileId::HELMET3); i++) {
+        ProjectilesId::ProjectileId helmet = static_cast<ProjectilesId::ProjectileId>(i);
         makeHelmet(helmet);
     }
 
@@ -64,7 +64,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     weapons[id] = weaponImage;
 }
 
-void Map::makeHelmet(Helemts helmet) {
+void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     // Creo casco de mapa
     Image* mapHelmet = new Image();
     std::string mapPath = "assets/game_assets/map/";
@@ -73,7 +73,8 @@ void Map::makeHelmet(Helemts helmet) {
     mapHelmet->queryTexture();
     mapHelmet->defineSize(2 * tiles, 2 * tiles);
     // helmetsMap[mapHelmet] = std::vector<std::pair<int, int>>();
-    helmetsMap[mapHelmet] = std::pair(-1, -1);
+    helmetsMap[helmet] = mapHelmet;
+    helmetsPos[helmet] = std::pair(-1, -1);
 
     // Creo casco de inventario
     Image* helmetImage = new Image();
@@ -118,7 +119,9 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     // Limpiar mapa
     tilesPlace.clear();
     weaponsPos.clear();
-    helmetsMap.clear();
+    for (auto& pair: helmetsPos) {
+        pair.second = std::pair(-1, -1);
+    }
     // armorMap.clear();
     playersNamesAlive.clear();
     if (mapTexture != nullptr) {
@@ -204,7 +207,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         return;
     }
     if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
-        newHelmet(x, y, static_cast<Helemts>(id));
+        newHelmet(x, y, id);
         return;
     }
     // weaponsMap[id].push_back(std::pair(x, y));
@@ -235,7 +238,7 @@ void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     }
 
     if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
-        helmetPlayer(static_cast<Helemts>(id), playerName);
+        helmetPlayer(id, playerName);
         return;
     }
 
@@ -247,12 +250,12 @@ void Map::dropWeapon(std::string playerName) { players[playerName]->dropWeapon()
 
 // ----------------- Helmet -----------------
 
-void Map::newHelmet(int x, int y, Helemts newHelmet) {
+void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
     // helmetsMap[helmets[int(newHelmet)-14]].push_back(std::pair(x, y));
-    helmetsMap[helmets[int(newHelmet)-14]] = std::pair(x, y);
+    helmetsPos[newHelmet] = std::pair(x, y);
 }
 
-void Map::helmetPlayer(Helemts helmet, std::string playerName) {
+void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
     players[playerName]->helmet(helmets[int(helmet)-14]);
 }
 
@@ -353,9 +356,13 @@ void Map::fill() {  // Dibuja de atras para adelante
     //     }
     // }
 
-    for (const auto& helmet: helmetsMap) {
-        helmet.first->position(helmet.second.first * tiles, helmet.second.second * tiles);
-        helmet.first->fill();
+    for (const auto& helmet: helmetsPos) {
+        if (helmet.second.first == -1) {
+            continue;
+        }
+        helmetsMap[helmet.first]->position(helmet.second.first * tiles, helmet.second.second * tiles);
+        helmetsMap[helmet.first]->fill();
+        helmetsPos[helmet.first] = std::pair(-1, -1);
     }
 
     // for (std::pair armorPos: armorMap) {
@@ -363,8 +370,11 @@ void Map::fill() {  // Dibuja de atras para adelante
     //     armorOnMap.fill();
     // }
 
-    armorOnMap.position(armorMap.first * tiles, armorMap.second * tiles);
-    armorOnMap.fill();
+    if (armorMap.first != -1) {
+        armorOnMap.position(armorMap.first * tiles, armorMap.second * tiles);
+        armorOnMap.fill();
+        armorMap = std::pair(-1, -1);
+    }
 
     // for (const auto& pair : weaponsMap) {
     //     for (const auto& weapon: pair.second) {
@@ -437,7 +447,7 @@ Map::~Map() {
     }
 
     for (const auto& pair: helmetsMap) {
-        delete pair.first;
+        delete pair.second;
     }
 
     for (const auto& pair: players) {

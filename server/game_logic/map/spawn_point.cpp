@@ -1,7 +1,6 @@
 #include "spawn_point.h"
 
 #include "../player/weapons/projectiles/projectile_dropped_weapon.h"
-#include "../player/weapons/armor/armor.h"
 
 void WeaponSpawnPoint::spawn_weapon() {
     // Para agregar mas opciones de armas agregarlas unicamente al switch

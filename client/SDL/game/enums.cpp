@@ -19,11 +19,11 @@ std::string tileType_to_string(TileType type) {
     }
 }
 
-std::string helmet_to_string(Helemts helmet) {
+std::string helmet_to_string(ProjectilesId::ProjectileId helmet) {
     switch (helmet) {
-        case Helemts::NORMAL:   return "normal.png";
-        case Helemts::KNIGHT:   return "knight.png";
-        case Helemts::TINFOIL:  return "tinfoil.png";
+        case ProjectilesId::ProjectileId::HELMET:   return "normal.png";
+        case ProjectilesId::ProjectileId::HELMET2:   return "knight.png";
+        case ProjectilesId::ProjectileId::HELMET3:  return "tinfoil.png";
         default:        return "unknown.png";
     }
 }
