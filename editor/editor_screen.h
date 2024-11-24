@@ -42,16 +42,19 @@ private:
     std::shared_ptr<QPixmap> background_tile;
     QString currentTile;
     bool isPainting;
-    // buttons
+    // tiles menu
     QPushButton *tilesMenuButton;
     QMenu *tilesMenu;
+    // weapons menu
+    QPushButton *weaponsMenuButton;
+    QMenu *weaponsMenu;
 
     std::vector<std::vector<int>> convertToServerMatrix();
     void placeTileAtPosition(const QPoint& pos);
 
 private slots:
     void showTilesMenu();
-    void startDrag();
+    void startDrag(std::string menu);
 
 public: 
     EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps);

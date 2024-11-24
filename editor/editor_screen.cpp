@@ -65,9 +65,9 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
 
     connect(tilesMenuButton, &QPushButton::clicked, this, &EditorScreen::showTilesMenu);
 
-    connect(grass, &QAction::triggered, this, &EditorScreen::startDrag);
-    connect(rock, &QAction::triggered, this, &EditorScreen::startDrag);
-    connect(column, &QAction::triggered, this, &EditorScreen::startDrag);
+    connect(grass, &QAction::triggered, this, [this]() { startDrag("tiles"); });
+    connect(rock, &QAction::triggered, this, [this]() { startDrag("tiles"); });
+    connect(column, &QAction::triggered, this, [this]() { startDrag("tiles"); });
     
     setAcceptDrops(true);
 
@@ -96,6 +96,64 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         isDragging = true;
     });
 
+    // add weapons menu
+    weaponsMenuButton = new QPushButton("Weapons", this);
+    weaponsMenuButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 100);"        
+        "color: #ced4da;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 100);"
+        "}"
+    );
+    weaponsMenuButton->setFont(*customFont);
+    weaponsMenuButton->setGeometry(170, 10, 150, 40);
+    // add menu
+    weaponsMenu = new QMenu(this);
+    weaponsMenu->setFont(actionFont);
+    weaponsMenu->setFixedWidth(200);
+    QAction *ak47 = new QAction(QIcon("assets/game_assets/weapons/ak47.png"), "ak47", this);
+    weaponsMenu->addAction(ak47);
+    QAction *banana = new QAction(QIcon("assets/game_assets/weapons/banana.png"), "banana", this);
+    weaponsMenu->addAction(banana);
+    QAction *cowboy_pistol = new QAction(QIcon("assets/game_assets/weapons/cowboy.png"), "cowboy pistol", this);
+    weaponsMenu->addAction(cowboy_pistol);
+    QAction *duelos = new QAction(QIcon("assets/game_assets/weapons/duelos.png"), "duel pistol", this);
+    weaponsMenu->addAction(duelos);
+    QAction *shotgun = new QAction(QIcon("assets/game_assets/weapons/escopeta.png"), "shotgun", this);
+    weaponsMenu->addAction(shotgun);
+    QAction *grenade = new QAction(QIcon("assets/game_assets/weapons/granada.png"), "grenade", this);
+    weaponsMenu->addAction(grenade);
+    QAction *magnum = new QAction(QIcon("assets/game_assets/weapons/magnum.png"), "magnum", this);
+    weaponsMenu->addAction(magnum);
+    QAction *sniper = new QAction(QIcon("assets/game_assets/weapons/sniper.png"), "sniper", this);
+    weaponsMenu->addAction(sniper);
+    QAction *laserRifle = new QAction(QIcon("assets/game_assets/weapons/laserRifle.png"), "laser rifle", this);
+    weaponsMenu->addAction(laserRifle);
+    QAction *pewpewlaser = new QAction(QIcon("assets/game_assets/weapons/pewpewlaser.png"), "pew pew laser", this);
+    weaponsMenu->addAction(pewpewlaser);
+
+    connect(weaponsMenuButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        weaponsMenu->exec(weaponsMenuButton->mapToGlobal(QPoint(0, weaponsMenuButton->height())));
+    });
+
+    connect(ak47, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(banana, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(cowboy_pistol, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(duelos, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(shotgun, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(grenade, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(magnum, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(sniper, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(laserRifle, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(pewpewlaser, &QAction::triggered, this, [this]() { startDrag("weapons"); });
 }
 
 void EditorScreen::paintEvent(QPaintEvent* event) {
@@ -154,6 +212,37 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 auto tile = map_of_maps["tiles"]["column"]; // Example: Use grass for now
                 if (tile && !tile->isNull()) {
                     painter.drawPixmap(cellRect, *tile);
+                } 
+            } else if (editor_matrix[row][col] >= 8 && editor_matrix[row][col] <= 17) { // Updated range to include all weapons
+                std::string weaponName;
+                switch (editor_matrix[row][col]) {
+                    case 8: weaponName = "ak47"; break;
+                    case 9: weaponName = "banana"; break;
+                    case 10: weaponName = "cowboy pistol"; break;
+                    case 11: weaponName = "duel pistol"; break;
+                    case 12: weaponName = "shotgun"; break;
+                    case 13: weaponName = "grenade"; break;
+                    case 14: weaponName = "magnum"; break;
+                    case 15: weaponName = "sniper"; break;
+                    case 16: weaponName = "laser rifle"; break;
+                    case 17: weaponName = "pew pew laser"; break;
+                }
+                auto tile = map_of_maps["weapons"][weaponName];
+                if (tile && !tile->isNull()) {
+                    // Scale the weapon image according to the current scale factor
+                    QPixmap scaledTile;
+                    if (weaponName == "sniper" || weaponName == "shotgun" || weaponName == "ak47" || weaponName == "laser rifle") {
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    } else if (weaponName == "grenade" || weaponName == "duel pistol") {
+                        scaledTile = tile->scaled(cellSize * 0.45, cellSize * 0.45, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    } else {
+                        scaledTile = tile->scaled(cellSize * 0.65, cellSize * 0.65, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    }
+                    // Calculate the position to center the weapon image in the cell
+                    int weaponWidth = scaledTile.width();
+                    int weaponHeight = scaledTile.height();
+                    QRect weaponRect(cellRect.center().x() - weaponWidth / 2, cellRect.bottom() - weaponHeight, weaponWidth, weaponHeight);
+                    painter.drawPixmap(weaponRect, scaledTile);
                 }
             }
 
@@ -161,7 +250,6 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
         }
     }
 }
-
 
 void EditorScreen::wheelEvent(QWheelEvent* event) {
     const double zoomFactor = 0.1; // Amount to zoom per scroll
@@ -227,7 +315,6 @@ void EditorScreen::dropEvent(QDropEvent* event) {
     }
 }
 
-
 std::vector<std::vector<int>> EditorScreen::getMatrix() {
     return editor_matrix;
 }
@@ -256,13 +343,13 @@ void EditorScreen::showTilesMenu() {
     tilesMenu->exec(tilesMenuButton->mapToGlobal(QPoint(0, tilesMenuButton->height())));
 }
 
-void EditorScreen::startDrag() {
+void EditorScreen::startDrag(std::string menu) {
     QAction* action = qobject_cast<QAction*>(sender());
     if (!action) return;
 
     // Get the tile image associated with the action
     QString tileName = action->text();
-    auto tile = map_of_maps["tiles"][tileName.toStdString()];
+    auto tile = map_of_maps[menu][tileName.toStdString()];
     if (!tile || tile->isNull()) {
         return;
     };
@@ -309,6 +396,26 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
                 editor_matrix[row][col] = 6;
             } else if (currentTile == "column") {
                 editor_matrix[row][col] = 7;
+            } else if (currentTile == "ak47") { // despues las armas van a ser spawn points, no van a estar en la matriz cuando se guarde
+                editor_matrix[row][col] = 8;
+            } else if (currentTile == "banana") {
+                editor_matrix[row][col] = 9;
+            } else if (currentTile == "cowboy pistol") {
+                editor_matrix[row][col] = 10;
+            } else if (currentTile == "duel pistol") {
+                editor_matrix[row][col] = 11;
+            } else if (currentTile == "shotgun") {
+                editor_matrix[row][col] = 12;
+            } else if (currentTile == "grenade") {
+                editor_matrix[row][col] = 13;
+            } else if (currentTile == "magnum") {
+                editor_matrix[row][col] = 14;
+            } else if (currentTile == "sniper") {
+                editor_matrix[row][col] = 15;
+            } else if (currentTile == "laser rifle") {
+                editor_matrix[row][col] = 16;
+            } else if (currentTile == "pew pew laser") {
+                editor_matrix[row][col] = 17;
             }
         }
 

@@ -76,13 +76,13 @@ void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
     std::map<std::string, std::shared_ptr<QPixmap>> weapons;
     weapons["ak47"] = std::make_shared<QPixmap>("assets/game_assets/weapons/ak47.png");
     weapons["banana"] = std::make_shared<QPixmap>("assets/game_assets/weapons/banana.png");
-    weapons["cowboy"] = std::make_shared<QPixmap>("assets/game_assets/weapons/cowboy.png");
-    weapons["duelos"] = std::make_shared<QPixmap>("assets/game_assets/weapons/duelos.png");
-    weapons["escopeta"] = std::make_shared<QPixmap>("assets/game_assets/weapons/escopeta.png");
-    weapons["granada"] = std::make_shared<QPixmap>("assets/game_assets/weapons/granada.png");
-    weapons["laserRifle"] = std::make_shared<QPixmap>("assets/game_assets/weapons/laserRifle.png");
+    weapons["cowboy pistol"] = std::make_shared<QPixmap>("assets/game_assets/weapons/cowboy.png");
+    weapons["duel pistol"] = std::make_shared<QPixmap>("assets/game_assets/weapons/duelos.png");
+    weapons["shotgun"] = std::make_shared<QPixmap>("assets/game_assets/weapons/escopeta.png");
+    weapons["grenade"] = std::make_shared<QPixmap>("assets/game_assets/weapons/granada.png");
+    weapons["laser rifle"] = std::make_shared<QPixmap>("assets/game_assets/weapons/laserRifle.png");
     weapons["magnum"] = std::make_shared<QPixmap>("assets/game_assets/weapons/magnum.png");
-    weapons["pewpewlaser"] = std::make_shared<QPixmap>("assets/game_assets/weapons/pewpewlaser.png");
+    weapons["pew pew laser"] = std::make_shared<QPixmap>("assets/game_assets/weapons/pewpewlaser.png");
     weapons["sniper"] = std::make_shared<QPixmap>("assets/game_assets/weapons/sniper.png");
     
     map_of_maps["weapons"] = weapons;
