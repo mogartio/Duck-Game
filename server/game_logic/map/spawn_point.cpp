@@ -19,6 +19,8 @@ void WeaponSpawnPoint::spawn_weapon() {
         weapon = std::make_unique<Sniper>(stage);
     } else if (type_of_weapon == PEW_PEW_LASER) {
         weapon = std::make_unique<PewLaser>(stage);
+    } else if (type_of_weapon == LASER_RIFLE) {
+        weapon = std::make_unique<LaserRifle>(stage);
     }
     stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position, 4,
                                                                    599, type_of_weapon, this));

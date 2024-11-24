@@ -9,4 +9,9 @@ public:
     virtual void shoot(int, bool) override;
     virtual void stop_shooting() override;
 };
+class LaserRifle: public Weapon {
+public:
+    explicit LaserRifle(Stage&);
+    virtual void shoot(int, bool) override;
+};
 #endif

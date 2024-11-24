@@ -35,3 +35,7 @@ weapons:
     speed: 3
     ammo: 12
     deviation: 12
+  laser_rifle:
+    reach: 42
+    speed: 3
+    ammo: 10

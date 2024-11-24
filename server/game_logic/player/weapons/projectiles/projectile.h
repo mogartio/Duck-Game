@@ -30,6 +30,8 @@ protected:
     std::vector<std::pair<uint8_t, uint8_t>> trail;
     bool moving_vertically;
 
+    Coordinate get_bullet_position(int offset);
+
 public:
     Projectile(Coordinate& initial_position, int x_direction, int y_direction, int reach, int speed,
                int id, bool despawns_on_contact, bool is_lethal, bool moving_vertically):
@@ -134,5 +136,15 @@ public:
         deviation = new_deviation;
         deviation_direction = new_deviation_direction;
     }
+};
+
+class LaserBullet: public Projectile {
+public:
+    LaserBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
+                int reach):
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["laser_rifle"]["speed"], LASER, true,
+                       true, is_aiming_up) {}
+    bool ray_trace(Stage& stage) override;
 };
 #endif
