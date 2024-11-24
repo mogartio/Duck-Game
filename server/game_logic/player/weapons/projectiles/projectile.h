@@ -123,4 +123,16 @@ public:
                        WeaponConfig::get_instance()->weapons["sniper"]["speed"], BULLET_PISTOL,
                        true, true, is_aiming_up) {}
 };
+
+class PewLaserBullet: public Projectile {
+public:
+    PewLaserBullet(Coordinate& initial_position, int x_direction, int y_direction,
+                   bool is_aiming_up, int reach, int new_deviation, int new_deviation_direction):
+            Projectile(initial_position, x_direction, y_direction, reach,
+                       WeaponConfig::get_instance()->weapons["pewpew"]["speed"], LASER, true, true,
+                       is_aiming_up) {
+        deviation = new_deviation;
+        deviation_direction = new_deviation_direction;
+    }
+};
 #endif

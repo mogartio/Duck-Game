@@ -30,3 +30,8 @@ weapons:
     speed: 5
     ammo: 3
     deviation: 128
+  pewpew:
+    reach: 70
+    speed: 3
+    ammo: 12
+    deviation: 12
