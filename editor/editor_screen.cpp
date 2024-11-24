@@ -29,15 +29,15 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     *background_tile = background_tile->scaled(1920, 1080, Qt::KeepAspectRatioByExpanding);
 
     // rectangle where the buttons will be
-    RoundedRectangle* roundedRectangle = new RoundedRectangle(this, 0, 0, 1920, 60, QColor(255, 0, 0, 200), QColor(255, 0, 0, 200), 10);
+    RoundedRectangle* roundedRectangle = new RoundedRectangle(this, 0, 0, 1920, 60, QColor(255, 255, 255, 150), QColor(255, 255, 255, 150), 10);
     roundedRectangle->setParent(this);
 
     // draw tiles button -> dropdown menu
     tilesMenuButton = new QPushButton("Tiles", this);
     tilesMenuButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
         "font-size: 28px;"                  
         "border: 0px solid #555555;"        
         "border-radius: 15px;"              
@@ -45,7 +45,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
+        "background-color: rgba(232, 89, 12, 255);"
         "}"
     );
     tilesMenuButton->setFont(*customFont);
@@ -76,8 +76,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     weaponsMenuButton = new QPushButton("Weapons", this);
     weaponsMenuButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
         "font-size: 28px;"                  
         "border: 0px solid #555555;"        
         "border-radius: 15px;"              
@@ -85,7 +85,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
+        "background-color: rgba(232, 89, 12, 255);"
         "}"
     );
     weaponsMenuButton->setFont(*customFont);
@@ -136,8 +136,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     playersMenuButton = new QPushButton("Players", this);
     playersMenuButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
         "font-size: 28px;"                  
         "border: 0px solid #555555;"        
         "border-radius: 15px;"              
@@ -145,7 +145,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
+        "background-color: rgba(232, 89, 12, 255);"
         "}"
     );
     playersMenuButton->setFont(*customFont);
@@ -177,8 +177,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     QPushButton *eraseButton = new QPushButton(QIcon("assets/menu_assets/eraser.png"), "", this);
     eraseButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
         "font-size: 28px;"                  
         "border: 0px solid #555555;"        
         "border-radius: 15px;"              
@@ -186,7 +186,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
+        "background-color: rgba(232, 89, 12, 255);"
         "}"
     );
     eraseButton->setFont(*customFont);
@@ -194,9 +194,14 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(eraseButton, &QPushButton::clicked, [this](){
         buttonSound->play();
         currentTile = "";
-        isPainting = false;
-        isDragging = false;
-        isErasing = true;
+        if (isErasing) {
+            isErasing = false;
+        } else {
+            isPainting = false;
+            isDragging = false;
+            isErasing = true;
+        }
+        
         placeTileAtPosition(QCursor::pos());
     });
 
@@ -204,8 +209,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     QPushButton *dragButton = new QPushButton(QIcon("assets/menu_assets/arrow_cross.png"), "", this);
     dragButton->setStyleSheet(
         "QPushButton {"
-        "background-color: rgba(240, 140, 0, 100);"        
-        "color: #ced4da;"                     
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
         "font-size: 28px;"                  
         "border: 0px solid #555555;"        
         "border-radius: 15px;"              
@@ -213,7 +218,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "text-align: center;"               
         "}"
         "QPushButton:hover {"
-        "background-color: rgba(232, 89, 12, 100);"
+        "background-color: rgba(232, 89, 12, 255);"
         "}"
     );
     dragButton->setFont(*customFont);
@@ -359,6 +364,7 @@ void EditorScreen::wheelEvent(QWheelEvent* event) {
 void EditorScreen::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         if (isPainting) {
+            isErasing = false;
             placeTileAtPosition(event->pos());
         } else if (isErasing) {
             placeTileAtPosition(event->pos());
