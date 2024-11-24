@@ -245,17 +245,15 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        int wx = position.first;
-        int wy = position.second;
+        int wx = position.first + 5;
+        int wy = position.second + 36;
         if (flip == SDL_FLIP_HORIZONTAL) {
-            wy += 26;
             if (weaponAngle != 0.0) {
                 wy -= 10;
                 wx += 5;
             }
         } else {
-            wx += 20;
-            wy += 26;
+            wx += 32;
             if (weaponAngle != 0.0) {
                 wx -= 3;
                 wy -= 7;
