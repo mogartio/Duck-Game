@@ -428,34 +428,34 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
 
                 if (category == "weapons") {
                     if (itemName == "sniper" || itemName == "shotgun" || itemName == "ak47" || itemName == "laser rifle") {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
                     } else if (itemName == "grenade" || itemName == "duel pistol") {
-                        scaledTile = tile->scaled(cellSize * 0.45, cellSize * 0.45, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize * 0.45, cellSize * 0.45, Qt::KeepAspectRatio, Qt::FastTransformation);
                     } else {
-                        scaledTile = tile->scaled(cellSize * 0.65, cellSize * 0.65, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize * 0.65, cellSize * 0.65, Qt::KeepAspectRatio, Qt::FastTransformation);
                     }
                     int itemWidth = scaledTile.width();
                     int itemHeight = scaledTile.height();
                     itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight, itemWidth, itemHeight);
                 } else if (category == "armor") {
                     if (itemName == "chest") {
-                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::FastTransformation);
                         int itemWidth = scaledTile.width();
                         int itemHeight = scaledTile.height();
                         itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight / 1.5, itemWidth, itemHeight);
                     } else if (itemName == "tinfoil") {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
                         int itemWidth = scaledTile.width();
                         int itemHeight = scaledTile.height();
                         itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.40, itemWidth, itemHeight);
                     } else {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
                         int itemWidth = scaledTile.width();
                         int itemHeight = scaledTile.height();
                         itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.57, itemWidth, itemHeight);
                     }
                 } else if (category == "players") {
-                    QPixmap scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    QPixmap scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
                     // Calculate the position to center the player image in the cell
                     int playerWidth = scaledTile.width();
                     int playerHeight = scaledTile.height();
@@ -543,29 +543,6 @@ void EditorScreen::dropEvent(QDropEvent* event) {
         QPoint pos = event->pos();
         placeTileAtPosition(pos);
     }
-}
-
-std::vector<std::vector<int>> EditorScreen::getMatrix() {
-    return editor_matrix;
-}
-
-std::vector<std::vector<int>> EditorScreen::convertToServerMatrix() {
-    int serverRows = rows * 4;
-    int serverColumns = columns * 4;
-    std::vector<std::vector<int>> serverMatrix(serverRows, std::vector<int>(serverColumns, 0));
-
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < columns; ++j) {
-            int value = editor_matrix[i][j];
-            for (int k = 0; k < 4; ++k) {
-                for (int l = 0; l < 4; ++l) {
-                    serverMatrix[i * 4 + k][j * 4 + l] = value;
-                }
-            }
-        }
-    }
-
-    return serverMatrix;
 }
 
 void EditorScreen::showTilesMenu() {
@@ -687,24 +664,56 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
 }
 
 void EditorScreen::onSaveMap() {
+    // if there isn't at least two players on the map, show a warning
+    if (players_set.size() < 2) {
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle("Warning");
+        msgBox.setText("You must place at least two players on the map.");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setFont(*customFont);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setStyleSheet(
+            "QMessageBox {"
+            "background-color: rgba(240, 240, 240, 255);"
+            "}"
+            "QLabel {"
+            "font-size: 32px;"
+            "color: #333333;"
+            "}"
+            "QPushButton {"
+            "background-color: rgba(240, 140, 0, 225);"
+            "color: #ffffff;"
+            "font-size: 18px;"
+            "border: 0px solid #555555;"
+            "border-radius: 10px;"
+            "padding: 5px 10px;"
+            "}"
+            "QPushButton:hover {"
+            "background-color: rgba(232, 89, 12, 255);"
+            "}"
+        );
+        msgBox.exec();
+        return;
+    }
     // show dialog to get the filename and confirmation
     QInputDialog inputDialog(this);
     inputDialog.setWindowTitle("Save map");
-    inputDialog.setLabelText("Enter filename:");
+    inputDialog.setLabelText("Map name:");
     inputDialog.setFont(*customFont);
+    inputDialog.setBaseSize(400, 200);
     inputDialog.setStyleSheet(
         "QInputDialog {"
         "background-color: rgba(240, 240, 240, 255);"
         "}"
         "QLabel {"
-        "font-size: 20px;"
+        "font-size: 32px;"
         "color: #333333;"
         "}"
         "QLineEdit {"
-        "font-size: 18px;"
-        "padding: 5px;"
+        "font-size: 24px;"
+        "padding: 10px;"
         "border: 1px solid #555555;"
-        "border-radius: 5px;"
+        "border-radius: 10px;"
         "}"
         "QPushButton {"
         "background-color: rgba(240, 140, 0, 225);"
@@ -712,7 +721,7 @@ void EditorScreen::onSaveMap() {
         "font-size: 18px;"
         "border: 0px solid #555555;"
         "border-radius: 10px;"
-        "padding: 5px 10px;"
+        "padding: 10px 10px;"
         "}"
         "QPushButton:hover {"
         "background-color: rgba(232, 89, 12, 255);"
@@ -721,7 +730,6 @@ void EditorScreen::onSaveMap() {
     bool ok = inputDialog.exec() == QDialog::Accepted;
     QString filename = inputDialog.textValue();
     if (ok && !filename.isEmpty()) {
-        std::vector<std::vector<int>> server_matrix = convertToServerMatrix();
-        saveMap(server_matrix, filename.toStdString());
+        saveMap(editor_matrix, filename.toStdString());
     }
 }
