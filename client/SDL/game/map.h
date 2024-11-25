@@ -37,15 +37,16 @@ private:
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
-    std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> weaponsPos;
     std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
-    // std::unordered_map<Weapon, std::vector<std::pair<int, int>>> weaponsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
     std::vector<Image*> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, Image*> helmetsMap;
+    // std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
+    std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> helmetsPos;
 
     // Imagen de armadura usable
     Image armor;
@@ -53,6 +54,7 @@ private:
     // Imagen de armadura en el mapa
     Image armorOnMap;
     // Posiciones de la armadura
+    // std::pair<int, int> armorMap;
     std::vector<std::pair<int, int>> armorMap;
 
     Image background;
@@ -60,7 +62,7 @@ private:
     Image prueba;
 
     void makeWeapon(ProjectilesId::ProjectileId id);
-    void makeHelmet(Helemts helmet);
+    void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
     SDL_Rect adjustMapZoom();
@@ -90,14 +92,17 @@ public:
     void dropWeapon(std::string playerName);
 
     // Agrega un nuevo casco al mapa
-    void newHelmet(int x, int y, Helemts newHelmet);
+    void newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet);
     // Asignar/Remover casco a un jugador
-    void helmetPlayer(Helemts helmet, std::string playerName);
+    void helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName);
 
     // Agrega una nueva armadura al mapa
     void newArmor(int x, int y);
     // Asignar/Reomver armadura a un jugador
     void armorPlayer(std::string playerName);
+
+    // Remover del mapa
+    void removeWeapon(int x, int y, ProjectilesId::ProjectileId id);
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();

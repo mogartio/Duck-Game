@@ -13,10 +13,12 @@ void Server::run() {
     acceptor.start();
 
     while (_keep_running) {
-        std::string input;
-        std::getline(std::cin, input);
-        if (input == "q") {
-            _keep_running = false;
+        if (!is_testing) {
+            std::string input;
+            std::getline(std::cin, input);
+            if (input == "q") {
+                _keep_running = false;
+            }
         }
     }
 

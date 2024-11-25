@@ -27,7 +27,7 @@ find_package(yaml-cpp REQUIRED)
 # Add all .cpp and .h files 
 file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h)
 file(GLOB_RECURSE CLIENT_SOURCES client/*.cpp client/*.h client/menu/*.cpp client/menu/*.h)
-file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h server/game_logic/map/*.cpp server/game_logic/map/*.h)
+file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h server/game_logic/map/*.cpp server/game_logic/config/*.h server/game_logic/map/*.h)
 file(GLOB_RECURSE EDITOR_SOURCES editor/*.cpp editor/*.h)
 
 # Excluir archivos en los directorios de CMake

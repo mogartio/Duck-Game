@@ -13,4 +13,10 @@ public:
     explicit Magnum(Stage&);
     virtual void shoot(int, bool) override;
 };
+
+class DuelPistol: public Weapon {
+public:
+    explicit DuelPistol(Stage&);
+    virtual void shoot(int, bool) override;
+};
 #endif

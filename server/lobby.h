@@ -8,6 +8,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include "./../common/messages/descripcion-lobby.h"
 #include "./../common/messages/generic_msg.h"
@@ -30,7 +31,9 @@ private:
     std::map<std::string, uint8_t> players_ready;
 
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues;
-    std::set <uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW, GenericMsg::DuckColor::ORANGE, GenericMsg::DuckColor::GREY};
+    std::set<uint8_t> available_colors = {GenericMsg::DuckColor::YELLOW,
+                                          GenericMsg::DuckColor::ORANGE,
+                                          GenericMsg::DuckColor::GREY};
     Queue<std::shared_ptr<GenericMsg>>* receiver_q;
 
     std::shared_ptr<Game> game;
@@ -45,6 +48,7 @@ private:
 
     void lobby_empty();
     bool is_testing;
+    bool is_dead;
 
     std::list<DescripcionPlayer> get_players_description();
 
@@ -52,7 +56,9 @@ public:
     /*
      * Constructor del lobby
      */
-    explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name, std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby, bool is_testing);
+    explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues,
+                   std::string& player_name, std::string& lobby_name, uint8_t max_players,
+                   Client* first_player, uint& id_lobby, bool is_testing);
 
     /*
      * Metodo que agrega un jugador al lobby
@@ -87,7 +93,13 @@ public:
     /*
      * Metodo que actualiza la informacion de un jugador
      */
-    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color, uint8_t is_ready);
+    void updatePlayerInfo(std::string player_name, std::string new_name, uint8_t color,
+                          uint8_t is_ready);
+
+    /*
+     * Metodo que elimina el lobby y todo su contenido
+     */
+    void kill();
 
     // ------------------ Desabilitamos -----------------------
 

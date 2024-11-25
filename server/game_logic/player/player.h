@@ -21,11 +21,15 @@ private:
     bool is_alive;
     Stage* stage;
     std::shared_ptr<Weapon> weapon;
+    std::shared_ptr<Weapon> chest;
+    std::shared_ptr<Weapon> helmet;
     std::set<int> current_actions;
     std::string name;
     bool should_notify;
     Coordinate initial_position;
     void notify_picked_weapon();
+    void notify_picked_chest();
+    void notify_picked_helmet();
     void notify_dropped_weapon(uint8_t id);
     bool is_unarmed;
 
@@ -34,12 +38,13 @@ public:
     Coordinate get_position();
     std::vector<Coordinate> get_occupied();
     int get_facing_direction();
-    Player(Coordinate&, int, const std::string&, const PlayerObserver&);
-    void die();
+    Player(Coordinate& initial_position, int id, const std::string& name,
+           const PlayerObserver& obs);
     void occupy(Coordinate&);
     void add_action(int&);
     void remove_action(int&);
     void move(const std::set<int>&);
+    void move(int);
     void execute(const int&);
     void shoot();
     void update();
@@ -47,8 +52,18 @@ public:
     void notify_moved();
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
+
     void pick_weapon(std::shared_ptr<Weapon> new_weapon);
+    void pick_chest(std::shared_ptr<Weapon> new_chest);
+    void pick_helmet(std::shared_ptr<Weapon> new_helmet);
+
     void unarm_self();
+
+    bool has_chest();
+    bool has_helmet();
+
+    void take_damage();
+    void die();
 };
 
 #endif

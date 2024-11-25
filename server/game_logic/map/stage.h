@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#define ROW_NUMBER 50
-#define COLUMN_NUMBER 50
 #include <vector>
 
 #include "../player/weapons/projectiles/projectile.h"
@@ -28,7 +26,7 @@ public:
     // Son es para poder mockear la clase mas facilmente
     void draw_player(Player&);
     int is_valid_position(Coordinate, int);
-    Stage(const std::string&, SendQueuesMonitor<std::shared_ptr<GenericMsg>>&,
+    Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>&,
           std::shared_ptr<std::set<uint>> ids);
     void delete_player_from_stage(Player&);
     void print();
@@ -44,6 +42,14 @@ public:
     std::shared_ptr<Weapon> pick_weapon(Coordinate);
     void add_player(Player*, int id);
     void kill(int id);
+    void draw(int object, int size, Coordinate init_position);
+
+    // las cosas que un objeto en position de tamanio size esta tocando en un momento
+    std::set<int> things_projectile_hits(Coordinate position, int size);
+
+    // chequear si tiene armadura/casco y hace daño
+    bool take_damage(int player_id);
+
 };
 
 #endif
