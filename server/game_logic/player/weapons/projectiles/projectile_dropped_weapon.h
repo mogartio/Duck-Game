@@ -39,6 +39,13 @@ public:
         deviation_angle =
                 deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
+
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
+    }
+
     virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     void notify() override {
@@ -69,6 +76,13 @@ public:
                         static_cast<uint8_t>(id));
         }
     }
+
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
+    }
+
     virtual std::shared_ptr<Weapon> get_weapon() {
         spawn->free();
         return std::move(weapon);

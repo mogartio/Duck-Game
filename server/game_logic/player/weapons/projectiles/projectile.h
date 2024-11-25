@@ -44,6 +44,7 @@ public:
     virtual ~Projectile() = default;
     virtual int get_id() { return id; }
     virtual void update() {}
+    virtual void updateNotPosition(uint8_t, uint8_t) {}
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;
     virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage);
@@ -57,6 +58,12 @@ public:
             Projectile(initial_position, x_direction, reach, 6, 0, BULLET_PISTOL, true, true) {
         deviation_angle = M_PI / 2 + (M_PI / 2 * is_aiming_up);
     }
+
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
+    }
 };
 
 class MagnumBullet: public Projectile {
@@ -65,6 +72,11 @@ public:
             Projectile(initial_position, x_direction, reach, 6, 0, BULLET_PISTOL, true, true) {
 
         deviation_angle = M_PI / 1.92 + (M_PI / 2 * is_aiming_up);
+    }
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
     }
 };
 #endif

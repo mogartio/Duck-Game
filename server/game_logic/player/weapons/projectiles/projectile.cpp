@@ -46,6 +46,7 @@ bool Projectile::ray_trace(Stage& stage) {
             return false;
         }
         trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
+        updateNotPosition(position.x, position.y);
         position = bullet_position;
         // coordinates_to_delete.push_back(bullet_position);
         update();
@@ -94,7 +95,7 @@ bool Projectile::ray_trace(Stage& stage) {
         //             update();
         //         }
         //     }
-    }
+    }    
     return false;
 }
 void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage) {
