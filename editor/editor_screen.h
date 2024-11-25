@@ -29,7 +29,6 @@
 #include <QFileDialog>
 #include <QLineEdit>
 #include "rounded_rectangle.h"
-#include "../common/messages/generic_msg.h"
 #include "save_map.h"
 
 class EditorScreen : public QWidget {

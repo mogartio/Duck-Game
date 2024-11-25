@@ -2,7 +2,10 @@
 #define SAVE_MAP_H_
 
 #include <yaml-cpp/yaml.h>
+#include "../common/messages/generic_msg.h"
 #include <iostream>
+
+
 // Save the editor matrix to a YAML file
 inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& filename) {
     std::cout << "Saving map to " << filename << std::endl;
