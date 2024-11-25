@@ -32,6 +32,9 @@ bool Projectile::ray_trace(Stage& stage) {
         }
         check_if_stopped(things_it_hits, despawned, stage);
         if (despawned) {
+            if ((id == BULLET_PISTOL) || (id == BULLET_SHOTGUN)) {
+                updateNotPosition(position.x, position.y);
+            }
             return despawns_on_contact;
         }
         if (i == speed - 1) {
