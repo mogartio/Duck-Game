@@ -26,7 +26,7 @@ public:
     ProjectileThrownWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                            int x_direction, int reach, int id):
             Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
-            weapon(std::move(weapon)) {
+            weapon(std::move(weapon)), deviations_index(-1) {  // Initialize deviations_index
         for (int i = 0; i < speed; i++) {
             deviations.push_back(3);
             deviations_direction.push_back(UP_DIRECTION);
