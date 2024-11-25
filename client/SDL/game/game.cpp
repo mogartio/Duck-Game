@@ -185,8 +185,7 @@ void Game::play() {
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
-                        loadingScreen.show(2000);  // pantalla de carga de 500 ms para que no se vea
-                                                   // tan feo el cambio de mapa
+                        loadingScreen.fadeOut(map.getTextureMapWithAll(), 1000);
                         newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
                         if (newMap) {
                             mapa = newMap->get_map();
@@ -198,7 +197,11 @@ void Game::play() {
                             tiles = std::min(tiles_w, tiles_h);
 
                             map.makeMap(columnas, filas, mapa);
+                            map.fill();
                         }
+                        loadingScreen.show(2000);  // pantalla de carga de 500 ms para que no se vea
+                                                   // tan feo el cambio de mapa
+                        loadingScreen.fadeIn(map.getTextureMapWithoutAnything(), 1000);
                         break;
 
                     /*

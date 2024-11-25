@@ -1,5 +1,8 @@
 #include "loadingscreen.h"
 
+#include <iostream>
+
+
 #define RADIUS 70
 
 LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): renderer(renderer) {
@@ -29,6 +32,10 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): ren
     if (!textura_texto) {
         throw std::runtime_error("Error al crear la textura: " + std::string(SDL_GetError()));
     }
+
+    // Crear la textura principal
+    mainTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
+                                    width, height);
 }
 
 void LoadingScreen::renderText() {
@@ -99,19 +106,45 @@ void LoadingScreen::show(Uint32 durationMs) {
     float startAngle = 0.0f;            // Ángulo inicial del círculo de carga
     float rotationSpeed = 0.05f;        // Velocidad de rotación del círculo
 
+    // Variables para el fadein y fadeout
+    Uint32 finishtimeFadeIn = durationMs / 4;
+    Uint32 startedtimeFadeOut = (3 * durationMs) / 4;
+    float alphaFadeIn = 0.0f;
+    float alphaFadeOut = 255.0f;
+
     while (true) {
         Uint32 elapsedTime = SDL_GetTicks() - startTime;
         if (elapsedTime >= durationMs) {
             break;  // Salir después de que pase el tiempo
         }
 
-        startAngle += rotationSpeed;  // Rotar el círculo
+        // Limpiar la pantalla
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
 
-        // Renderizar contenido de la pantalla de carga
+        SDL_SetRenderTarget(renderer,
+                            mainTexture);  // Cambiar el render target a la textura principal
+
+        // Renderizar el texto de la pantalla de carga y la limpia
         renderText();
+
+        startAngle += rotationSpeed;  // Rotar el círculo
 
         // Renderizar el círculo de carga
         renderLoadingCircle(startAngle, 4 * M_PI / 3, 1, 15);
+
+        SDL_SetRenderTarget(renderer, nullptr);  // Restablecer el render target
+
+        if (elapsedTime < finishtimeFadeIn) {
+            alphaFadeIn = 255.0f * (float)elapsedTime / finishtimeFadeIn;
+            renderWithOpacity(mainTexture, alphaFadeIn);
+        } else if (elapsedTime > startedtimeFadeOut) {
+            alphaFadeOut = 255.0f - 255.0f * (float)(elapsedTime - startedtimeFadeOut) /
+                                            (durationMs - startedtimeFadeOut);
+            renderWithOpacity(mainTexture, alphaFadeOut);
+        } else {
+            SDL_RenderCopy(renderer, mainTexture, nullptr, nullptr);
+        }
 
         // Presenta la pantalla
         SDL_RenderPresent(renderer);
@@ -121,7 +154,58 @@ void LoadingScreen::show(Uint32 durationMs) {
     }
 }
 
+void LoadingScreen::renderWithOpacity(SDL_Texture* texture, float alpha) {
+    // Configurar para renderizar con opacidad
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Establecer el color
+
+    SDL_SetTextureAlphaMod(texture, (Uint8)alpha);  // Modifica la opacidad
+    SDL_RenderClear(renderer);                      // Limpia la pantalla
+    SDL_RenderCopy(renderer, texture, NULL, NULL);  // Renderiza la textura
+
+    SDL_SetTextureAlphaMod(texture,
+                           255);  // Asegura que la textura esté completamente visible nuevamente
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);  // Restablece el modo de mezcla
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
+}
+
+// Función para realizar un fade in de una textura
+void LoadingScreen::fadeIn(SDL_Texture* texture, Uint32 duration) {
+    // Inicializo el tiempo inicio y fin
+    Uint32 start = SDL_GetTicks();
+    Uint32 end = start + duration;
+    // Inicializo la opacidad en 0 osea que no es visible nada
+    float alpha = 0.0f;
+
+    // Animación de fade-in
+    while (SDL_GetTicks() < end) {
+        alpha = 255.0f * (float)(SDL_GetTicks() - start) / duration;
+        renderWithOpacity(texture, alpha);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16);  // ~60 FPS
+    }
+}
+
+// Función para realizar un fade out de una textura
+void LoadingScreen::fadeOut(SDL_Texture* texture, Uint32 duration) {
+    // Inicializo el tiempo de inicio y fin
+    Uint32 start = SDL_GetTicks();
+    Uint32 end = start + duration;
+    // Inicializo la opacidad en 255 osea completamente visible
+    float alpha = 255.0f;
+
+    // Animación de fade-out
+    while (SDL_GetTicks() < end) {
+        alpha = 255.0f - 255.0f * (float)(SDL_GetTicks() - start) / duration;
+        renderWithOpacity(texture, alpha);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(16);  // ~60 FPS
+    }
+}
+
 LoadingScreen::~LoadingScreen() {
     TTF_CloseFont(font);
     SDL_DestroyTexture(textura_texto);
+    SDL_DestroyTexture(mainTexture);
 }

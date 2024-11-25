@@ -12,6 +12,7 @@ private:
     TTF_Font* font;
     SDL_Rect ubication;
     SDL_Texture* textura_texto;
+    SDL_Texture* mainTexture;
 
     void renderText();
 
@@ -20,8 +21,14 @@ private:
 
     void renderFilledCircle(int x, int y, int radius);
 
+    void renderWithOpacity(SDL_Texture* texture, float alpha);
+
 public:
     LoadingScreen(SDL_Renderer* renderer, int width, int height);
+
+    void fadeIn(SDL_Texture* texture, Uint32 durationMs);
+
+    void fadeOut(SDL_Texture* texture, Uint32 durationMs);
 
     void show(Uint32 durationMs);
 
