@@ -53,48 +53,6 @@ bool Projectile::ray_trace(Stage& stage) {
             notify();
         }
     }
-
-        //         int next_tile = stage.get(bullet_position, despawned, stage);
-        //         if (next_tile == -1) {
-        //             trail.pop_back();  // esto es para que no aparezca la posicion actual en el
-        //             trail. notify(); return true;
-        //         }
-        //         if (next_tile == Config::get_instance()->mapsId["floor"] ||
-        //             next_tile == Config::get_instance()->mapsId["wall"]) {
-        //             speed = 0;
-        //             stage.draw(id, Config::get_instance()->bullet_size, position);
-        //             trail.pop_back();  // esto es para que no aparezca la posicion actual en el
-        //             trail. notify(); return despawns_on_contact;
-        //         }
-        //         // si la siguiente tile es un pato
-        //         if (next_tile == 1 || next_tile == 2) {
-        //             if (is_lethal) {
-        //                 stage.kill(next_tile);
-        //                 return true;
-        //             }
-        //             if (!(initial_position == position)) {
-        //                 trail.pop_back();  // esto es para que no aparezca la posicion actual en
-        //                 el
-        //                                    // trail.
-        //                 notify();
-        //             }
-        //         }
-        //         if ((next_tile == BACKGROUND || next_tile == id)) {
-        //             if (i == speed - 1) {
-        //                 stage.draw(id, Config::get_instance()->bullet_size, bullet_position);
-        //                 trail.pop_back();  // esto es para que no aparezca la posicion actual en
-        //                 el
-        //                                    // trail. its never been this serious
-        //                 notify();
-        //                 return false;
-        //             }
-        //             trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x,
-        //             bullet_position.y)); position = bullet_position;
-        //             // coordinates_to_delete.push_back(bullet_position);
-        //             update();
-        //         }
-        //     }
-    }    
     return false;
 }
 void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage) {
@@ -107,7 +65,7 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
                     despawned = true;
                     return;
                 }
-                
+
                 stage.kill(i);
                 despawned = true;
                 return;

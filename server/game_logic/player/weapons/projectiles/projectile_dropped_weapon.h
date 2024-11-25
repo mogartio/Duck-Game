@@ -58,7 +58,6 @@ public:
         }
     }
 
-    virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     void notify() override {
         for (const Observer* obs: observers) {
