@@ -19,7 +19,8 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent) {
     // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to receive columns and rows values
     connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::sendInitialValues, this, &EditorMainWindow::receiveValues);
 
-
+    // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to quit the app
+    connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::quitApp, this, &EditorMainWindow::handleQuitApp);
 }
 
 void EditorMainWindow::receiveValues(int columns, int rows, std::string theme) {
@@ -147,4 +148,8 @@ void EditorMainWindow::onBackSignal() {
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
 
+}
+
+void EditorMainWindow::handleQuitApp() {
+    QApplication::quit();
 }

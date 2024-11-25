@@ -206,6 +206,27 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
 
     connect(lightTheme, &QRadioButton::clicked, this, &SetInitialValuesScreen::onThemeChanged);
     connect(nightTheme, &QRadioButton::clicked, this, &SetInitialValuesScreen::onThemeChanged);
+
+    // add quit button visible at all times 
+    QPushButton *quitButton = new QPushButton("Quit", this);
+    quitButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(235, 141, 0, 150);"        
+        "color: #ffffff;"                     
+        "font-size: 32px;"                  
+        "border: 0px solid #ffffff;"        
+        "border-radius: 20px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(201, 121, 0, 150);"
+        "}"
+    );
+    quitButton->setGeometry(1810, 10, 100, 50);
+    quitButton->setFont(*customFont);
+    quitButton->show();
+    connect(quitButton, &QPushButton::clicked, this, &SetInitialValuesScreen::onQuitButtonClicked);
 }
 
 void SetInitialValuesScreen::resizeEvent(QResizeEvent *event) {
@@ -261,4 +282,9 @@ void SetInitialValuesScreen::onThemeChanged() {
     else {
         choosenTheme = "light";
     }
+}
+
+void SetInitialValuesScreen::onQuitButtonClicked() {
+    buttonSound->play();
+    emit quitApp();
 }

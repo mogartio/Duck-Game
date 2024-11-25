@@ -46,8 +46,10 @@ private slots:
     void onStartButtonClicked();
     void onStartEditingButtonClicked();
     void onThemeChanged();
+    void onQuitButtonClicked();
 signals: 
     void sendInitialValues(int columns, int rows, std::string choosenTheme);
+    void quitApp();
 };
 
 #endif // SET_INITIAL_VALUES_SCREEN_H_

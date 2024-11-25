@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <memory>
 #include <QStackedWidget>
+#include <QApplication>
 #include <QPropertyAnimation>
 #include <QGraphicsOpacityEffect>
 #include "set_initial_values_screen.h"
@@ -32,6 +33,7 @@ private:
 private slots:
     void receiveValues(int columns, int rows, std::string theme);
     void onBackSignal();
+    void handleQuitApp();
 };
 
 
