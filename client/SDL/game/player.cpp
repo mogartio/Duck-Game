@@ -175,9 +175,10 @@ void Player::weapon(Image* weapon) {
     weaponAngle = 0.0;
 }
 
-void Player::dropWeapon() {
+bool Player::dropWeapon() {
+    bool originalWeaponstate = weaponON;
     weaponON = false;
-
+    return originalWeaponstate;
 }
 
 void Player::shoot() {
@@ -193,10 +194,6 @@ void Player::shoot() {
 // ----------------- Armor -----------------
 
 void Player::armor(Image* armor, Image* hombro) {
-    if (armorOn) {
-        armorOn = false;
-        return;
-    }
     _armor = armor;
     _hombro = hombro;
     std::pair<int, int> position = duck->getPosition();
@@ -205,17 +202,25 @@ void Player::armor(Image* armor, Image* hombro) {
     armorOn = true;
 }
 
+bool Player::dropArmor() {
+    bool originalArmorState = armorOn;
+    armorOn = false;
+    return originalArmorState;
+}
+
 // ----------------- Helmet -----------------
 
 void Player::helmet(Image* helmet) {
-    if (helmetOn) {
-        helmetOn = false;
-        return;
-    }
     _helmet = helmet;
     std::pair<int, int> position = duck->getPosition();
     _helmet->position(position.first, position.second - 8);
     helmetOn = true;
+}
+
+bool Player::dropHelmet() {
+    bool originalHelmetState = helmetOn;
+    helmetOn = false;
+    return originalHelmetState;
 }
 
 // ----------------- Fill -----------------
@@ -228,7 +233,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el casco que tiene el pato
     if (helmetOn) {
-        _helmet->position(position.first, position.second - 8);
+        _helmet->position(position.first, position.second - 13);
         _helmet->fill(flip);
     }
 
@@ -240,17 +245,15 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     // Dibujo el arma que tiene el pato
     if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        int wx = position.first;
-        int wy = position.second;
+        int wx = position.first + 5;
+        int wy = position.second + 36;
         if (flip == SDL_FLIP_HORIZONTAL) {
-            wy += 26;
             if (weaponAngle != 0.0) {
                 wy -= 10;
                 wx += 5;
             }
         } else {
-            wx += 20;
-            wy += 26;
+            wx += 32;
             if (weaponAngle != 0.0) {
                 wx -= 3;
                 wy -= 7;

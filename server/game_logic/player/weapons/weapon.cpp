@@ -45,13 +45,13 @@ Coordinate Unarmed::get_gun_position(int facing_direction) {
     return player_position;
 }
 void Unarmed::shoot(int x_direction, bool) {
+    // Se fija si existe un DroppedProjectile en la direccion en la que esta apuntando
     Coordinate init_position = get_gun_position(x_direction);
     int handle_direction = x_direction;
     for (int i = 0; i < reach; i++) {
         for (int j = 0; j < PLAYER_SIZE; j++) {
             Coordinate checking(init_position.x + i * handle_direction, init_position.y + j);
-            if (stage.get(checking) > 0 &&
-                stage.get(checking) < 11) {  // TODO: Definir bien cuales son los pickables
+            if (stage.get(checking) > 0) {  // TODO: Definir bien cuales son los pickables
                 std::shared_ptr<Weapon> weapon = stage.pick_weapon(checking);
                 if (weapon != nullptr) {
                     player->pick_weapon(std::move(weapon));

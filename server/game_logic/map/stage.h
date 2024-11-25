@@ -46,6 +46,10 @@ public:
 
     // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);
+
+    // chequear si tiene armadura/casco y hace daño
+    bool take_damage(int player_id);
+
 };
 
 #endif

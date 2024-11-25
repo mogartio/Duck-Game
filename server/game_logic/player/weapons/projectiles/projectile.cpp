@@ -58,6 +58,13 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
     for (int i = 1; i < 5; i++) {  // si le pego a un jugador con id entre 1 y 4
         if (hit.find(i) != hit.end()) {
             if (is_lethal) {
+
+                // Chequea si el jugador tiene casco o armadura y recibe el daño
+                if (stage.take_damage(i)) {
+                    despawned = true;
+                    return;
+                }
+                
                 stage.kill(i);
                 despawned = true;
                 return;
@@ -70,6 +77,7 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
         }
     }
 }
+
 void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage) {
     if ((hit.find(Config::get_instance()->mapsId["wall"])) != hit.end() ||
         (hit.find(Config::get_instance()->mapsId["floor"])) != hit.end()) {

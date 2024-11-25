@@ -45,7 +45,9 @@ private:
     // Imagenes de los cascos usables
     std::vector<Image*> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, Image*> helmetsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
+    // std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
 
     // Imagen de armadura usable
     Image armor;
@@ -53,14 +55,15 @@ private:
     // Imagen de armadura en el mapa
     Image armorOnMap;
     // Posiciones de la armadura
-    std::vector<std::pair<int, int>> armorMap;
+    std::pair<int, int> armorMap;
+    // std::vector<std::pair<int, int>> armorMap;
 
     Image background;
 
     Image prueba;
 
     void makeWeapon(ProjectilesId::ProjectileId id);
-    void makeHelmet(Helemts helmet);
+    void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
     SDL_Rect adjustMapZoom();
@@ -90,9 +93,9 @@ public:
     void dropWeapon(std::string playerName);
 
     // Agrega un nuevo casco al mapa
-    void newHelmet(int x, int y, Helemts newHelmet);
+    void newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet);
     // Asignar/Remover casco a un jugador
-    void helmetPlayer(Helemts helmet, std::string playerName);
+    void helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName);
 
     // Agrega una nueva armadura al mapa
     void newArmor(int x, int y);

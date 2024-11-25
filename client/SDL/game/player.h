@@ -61,15 +61,19 @@ public:
     // Agarrar un arma
     void weapon(Image* weapon);
     // Devolver el arma
-    void dropWeapon();
+    bool dropWeapon();
     // Disparar arma
     void shoot();
 
-    // Agarrar/Droppear armadura
+    // Agarrar armadura
     void armor(Image* armor, Image* hombro);
+    // Droppear armadura
+    bool dropArmor();
 
     // Agarrar/Dropear casco
     void helmet(Image* helmet);
+    // Droppear casco
+    bool dropHelmet();
 
     // Dibujar jugador
     void fill();

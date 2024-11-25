@@ -43,6 +43,14 @@ void Stage::remove_projectile(std::shared_ptr<Projectile>& projectile) {
 
 void Stage::kill(int id) { players[id]->die(); }
 
+bool Stage::take_damage(int player_id) {
+    if (players[player_id]->has_chest() || players[player_id]->has_helmet()) {
+        players[player_id]->take_damage();
+        return true;
+    }
+    return false;
+}
+
 void Stage::update() {
     for (const auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
