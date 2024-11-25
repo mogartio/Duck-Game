@@ -7,7 +7,7 @@
 
 LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): renderer(renderer) {
     // Crear la fuente y la textura
-    font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 24);
+    font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 56);
 
     // Si no se pudo cargar la fuente, lanzar una excepción
     if (!font) {
@@ -16,13 +16,13 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): ren
 
     // Crear la superficie con el mensaje "Cargando..."
     SDL_Surface* surface = TTF_RenderText_Solid(font, "Cargando...", {255, 255, 255, 255});
-    int position_x = width / 2 - surface->w / 2;
-    int position_y = (height / 2 - RADIUS) - surface->h;
-    ubication = {position_x, position_y, surface->w, surface->h};
     // Si no se pudo crear la superficie, lanzar una excepción
     if (!surface) {
         throw std::runtime_error("Error al crear la superficie: " + std::string(TTF_GetError()));
     }
+    int position_x = width / 2 - surface->w / 2;
+    int position_y = (height / 2 - RADIUS) - surface->h;
+    ubication = {position_x, position_y, surface->w, surface->h};
 
     // Crear la textura a partir de la superficie
     textura_texto = SDL_CreateTextureFromSurface(renderer, surface);
@@ -33,16 +33,26 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): ren
         throw std::runtime_error("Error al crear la textura: " + std::string(SDL_GetError()));
     }
 
+    // Cargar la imagen de la pantalla de carga
+    surface = IMG_Load("assets/game_assets/background/99bf80c0-14b1-4b73-ba9f-065bc5046a51.png");
+    if (!surface) {
+        throw std::runtime_error("Error al cargar la imagen: " + std::string(IMG_GetError()));
+    }
+
+    // Crear una textura desde la superficie
+    backgroundImage = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);  // Liberar la superficie después de crear la textura
+
+    if (!backgroundImage) {
+        throw std::runtime_error("Error al crear la textura: " + std::string(SDL_GetError()));
+    }
+
     // Crear la textura principal
     mainTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                     width, height);
 }
 
 void LoadingScreen::renderText() {
-    // Limpia la pantalla
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Negro
-    SDL_RenderClear(renderer);
-
     // Renderiza un mensaje de "Cargando..."
     SDL_RenderCopy(renderer, textura_texto, nullptr, &ubication);
 }
@@ -124,6 +134,13 @@ void LoadingScreen::show(Uint32 durationMs) {
 
         SDL_SetRenderTarget(renderer,
                             mainTexture);  // Cambiar el render target a la textura principal
+
+        // Limpia la pantalla de la textura principal
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Negro
+        SDL_RenderClear(renderer);
+
+        // Renderizar la imagen de fondo
+        SDL_RenderCopy(renderer, backgroundImage, nullptr, nullptr);
 
         // Renderizar el texto de la pantalla de carga y la limpia
         renderText();
@@ -208,4 +225,5 @@ LoadingScreen::~LoadingScreen() {
     TTF_CloseFont(font);
     SDL_DestroyTexture(textura_texto);
     SDL_DestroyTexture(mainTexture);
+    SDL_DestroyTexture(backgroundImage);
 }

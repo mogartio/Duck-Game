@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL_image.h>
 
 // Clase para la pantalla de carga
 class LoadingScreen {
@@ -12,6 +13,7 @@ private:
     TTF_Font* font;
     SDL_Rect ubication;
     SDL_Texture* textura_texto;
+    SDL_Texture* backgroundImage;
     SDL_Texture* mainTexture;
 
     void renderText();
