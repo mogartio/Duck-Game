@@ -47,6 +47,8 @@
     map_matrix will have only the map tiles [GRASS, ROCK, COLUMN] where grass and rock are represented with the same number;
     each item in the editor matrix will occupy a 4x4 square in the map_matrix.
 
+    The map_matrix will have a two 4x4 tile padding around the actual map
+
     The weapons and armors lists will have each position plus the uint8_t id of the item defined in generic_msg.h
 
     The spawn coordinates will be defined as:
@@ -56,38 +58,50 @@
     The file will be placed in the folder maps/ with the name map_name.yaml
 */ 
 inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name) {
-    std::string file_name = "maps/" + map_name + ".yaml";
+    const int padding = 8; // Padding size (4x4 tiles padding)
+    const std::string file_name = "maps/" + map_name + ".yaml";
+
     int editor_rows = editor_matrix.size();
     int editor_columns = editor_matrix[0].size();
 
     int map_rows = editor_rows * 4; // Each cell in editor_matrix becomes 4x4 in map_matrix
     int map_columns = editor_columns * 4;
 
-    std::vector<std::vector<int>> map_matrix(map_rows, std::vector<int>(map_columns, FLOOR)); // Initialize with FLOOR tiles
+    // New dimensions with padding
+    int padded_rows = map_rows + 2 * padding;
+    int padded_columns = map_columns + 2 * padding;
+
+    // Initialize padded map_matrix with BG tiles
+    std::vector<std::vector<int>> padded_map_matrix(padded_rows, std::vector<int>(padded_columns, BG));
+
     std::vector<std::tuple<int, int>> player_spawn_sites;
     std::vector<std::tuple<int, int, uint>> weapon_spawn_sites;
 
-    // Iterate over the editor_matrix to populate spawn sites and map tiles
+    // Fill the map matrix and adjust for padding
     for (int i = 0; i < editor_rows; ++i) {
         for (int j = 0; j < editor_columns; ++j) {
             int cellValue = editor_matrix[i][j];
 
             if (Id::players.find(cellValue) != Id::players.end()) {
                 // Player spawn site
-                player_spawn_sites.emplace_back(j*4, i*4);
+                player_spawn_sites.emplace_back(j * 4 + padding, i * 4 + padding);
 
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
-                weapon_spawn_sites.emplace_back(j*4+1, i*4+2, cellValue); // las armas ocupan 2x2, las ubico en el centro de una celda 4x4
+                weapon_spawn_sites.emplace_back(j * 4 + padding + 1, i * 4 + padding + 2, cellValue);
             }
+
             for (int x = 0; x < 4; ++x) {
                 for (int y = 0; y < 4; ++y) {
+                    int dest_row = i * 4 + y + padding;
+                    int dest_col = j * 4 + x + padding;
+
                     if (cellValue == Id::GRASS || cellValue == Id::ROCK) {
-                        map_matrix[i * 4 + y][j * 4 + x] = FLOOR;
+                        padded_map_matrix[dest_row][dest_col] = FLOOR;
                     } else if (cellValue == Id::COL) {
-                        map_matrix[i * 4 + y][j * 4 + x] = COLUMN;
+                        padded_map_matrix[dest_row][dest_col] = COLUMN;
                     } else {
-                        map_matrix[i * 4 + y][j * 4 + x] = BG;
+                        padded_map_matrix[dest_row][dest_col] = BG;
                     }
                 }
             }
@@ -98,8 +112,8 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "map_name" << YAML::Value << map_name;
-    out << YAML::Key << "map_rows" << YAML::Value << map_rows;
-    out << YAML::Key << "map_columns" << YAML::Value << map_columns;
+    out << YAML::Key << "map_rows" << YAML::Value << padded_rows;
+    out << YAML::Key << "map_columns" << YAML::Value << padded_columns;
     out << YAML::Key << "map_player_spawn_sites" << YAML::Value << YAML::BeginSeq;
     for (const auto& spawn : player_spawn_sites) {
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << YAML::EndSeq;
@@ -111,7 +125,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     }
     out << YAML::EndSeq;
     out << YAML::Key << "map_matrix" << YAML::Value << YAML::BeginSeq;
-    for (const auto& row : map_matrix) {
+    for (const auto& row : padded_map_matrix) {
         out << YAML::Flow << YAML::BeginSeq;
         for (int cell : row) {
             out << cell;
