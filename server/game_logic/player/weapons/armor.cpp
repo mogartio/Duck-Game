@@ -5,7 +5,7 @@
 #include <memory>
 #include <utility>
 
-Chest::Chest(Stage& stage): Weapon(stage, 1, 20, CHEST) {}
+Chest::Chest(Stage& stage): Weapon(stage, 2, 20, CHEST) {}
 
 void Chest::shoot(int damage, bool) {
     // Recibe daño
@@ -17,7 +17,7 @@ void Chest::shoot(int damage, bool) {
 }
 
 
-Helmet::Helmet(Stage& stage, int id): Weapon(stage, 1, 20, id) {}
+Helmet::Helmet(Stage& stage, int id): Weapon(stage, 2, 20, id) {}
 
 void Helmet::shoot(int damage, bool) {
     // Recibe daño

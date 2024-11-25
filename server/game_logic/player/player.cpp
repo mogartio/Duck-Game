@@ -70,16 +70,6 @@ Coordinate Player::get_position() { return position->get_position(); }
 
 int Player::get_facing_direction() { return position->get_facing_direction(); }
 
-void Player::take_damage() {
-    if (has_helmet()) {
-        // Pierde primero el casco
-        helmet->shoot(1, false);
-    } else if (has_chest()) {
-        // Despues la armadura
-        chest->shoot(1, false);
-    }
-}
-
 int Player::get_id() { return id; }
 
 void Player::occupy(Coordinate& coordinate) { position->occupy(coordinate); }
@@ -212,6 +202,16 @@ void Player::shoot() {
         return;
     }
     weapon->shoot(position->get_aiming_direction(), position->is_aiming_up());
+}
+
+void Player::take_damage() {
+    if (has_helmet()) {
+        // Pierde primero el casco
+        helmet->shoot(1, false);
+    } else if (has_chest()) {
+        // Despues la armadura
+        chest->shoot(1, false);
+    }
 }
 
 void Player::die() { is_alive = false; }
