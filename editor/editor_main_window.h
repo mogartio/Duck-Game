@@ -19,6 +19,7 @@ private:
 
     void showEditorScreen();
     void loadImagesGivenTheme(std::string theme);
+    void showSetInitialValuesScreen();
 
 public:
     EditorMainWindow(QWidget *parent = nullptr);
@@ -30,6 +31,7 @@ private:
 
 private slots:
     void receiveValues(int columns, int rows, std::string theme);
+    void onBackSignal();
 };
 
 

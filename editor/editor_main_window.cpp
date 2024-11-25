@@ -19,6 +19,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent) {
     // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to receive columns and rows values
     connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::sendInitialValues, this, &EditorMainWindow::receiveValues);
 
+
 }
 
 void EditorMainWindow::receiveValues(int columns, int rows, std::string theme) {
@@ -58,6 +59,9 @@ void EditorMainWindow::showEditorScreen() {
     });
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
+
+    // Connect the signal from the EditorScreen to the EditorMainWindow to go back to the menu
+    connect(editorScreen.get(), &EditorScreen::switchToMenu, this, &EditorMainWindow::onBackSignal);
 }
 
 void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
@@ -104,5 +108,40 @@ void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
     players["player4"] = std::make_shared<QPixmap>("assets/game_assets/ducks/grey/standing.png");
 
     map_of_maps["players"] = players;
+
+}
+
+void EditorMainWindow::onBackSignal() {
+    // cleanup
+    // show menu screen with fade
+    // re-initialize the menu screen
+    setInitialValuesScreen = std::make_shared<SetInitialValuesScreen>();
+    stackedWidget->addWidget(setInitialValuesScreen.get());
+
+    QWidget *overlay = new QWidget(this);
+    overlay->setStyleSheet("background-color: black;");
+    overlay->setGeometry(this->rect());
+    overlay->show();
+
+    QGraphicsOpacityEffect *effect = new QGraphicsOpacityEffect(this);
+    overlay->setGraphicsEffect(effect);
+
+    QPropertyAnimation *fadeOut = new QPropertyAnimation(effect, "opacity");
+    fadeOut->setDuration(1000);
+    fadeOut->setStartValue(0);
+    fadeOut->setEndValue(1);
+
+    connect(fadeOut, &QPropertyAnimation::finished, [this, overlay]() {
+        stackedWidget->setCurrentWidget(setInitialValuesScreen.get());
+        QPropertyAnimation *fadeIn = new QPropertyAnimation(overlay->graphicsEffect(), "opacity");
+        fadeIn->setDuration(1000);
+        fadeIn->setStartValue(1);
+        fadeIn->setEndValue(0);
+
+        connect(fadeIn, &QPropertyAnimation::finished, overlay, &QWidget::deleteLater);
+        fadeIn->start(QPropertyAnimation::DeleteWhenStopped);
+    });
+
+    fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
 
 }

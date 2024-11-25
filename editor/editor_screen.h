@@ -25,12 +25,16 @@
 #include <QDebug>
 #include <QDrag>
 #include <set>
+#include <QInputDialog>
+#include <QFileDialog>
+#include <QLineEdit>
 #include "rounded_rectangle.h"
 #include "../common/messages/generic_msg.h"
+#include "save_map.h"
+
 class EditorScreen : public QWidget {
     Q_OBJECT
 private:
-    std::vector<std::vector<int>> matrix;
     std::vector<std::vector<int>> editor_matrix;
     std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps;
     int columns; 
@@ -67,6 +71,9 @@ private:
 private slots:
     void showTilesMenu();
     void startDrag(std::string menu);
+    void onSaveMap();
+signals:
+    void switchToMenu();
 
 public: 
     EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps);

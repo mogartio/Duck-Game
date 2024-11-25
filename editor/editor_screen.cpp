@@ -300,6 +300,52 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         update();
     });
 
+    // add save map button
+    QPushButton *saveButton = new QPushButton("Save map", this);
+    saveButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 255);"
+        "}"
+    );
+    saveButton->setFont(*customFont);
+    saveButton->setGeometry(1760, 10, 150, 40);
+    connect(saveButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        onSaveMap();
+    });
+
+    // add back to menu button
+    QPushButton *backButton = new QPushButton("Back to menu", this);
+    backButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 255);"
+        "}"
+    );
+    backButton->setFont(*customFont);
+    backButton->setGeometry(1535, 10, 220, 40);
+    connect(backButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        emit switchToMenu();
+    });
+
 }
 
 void EditorScreen::paintEvent(QPaintEvent* event) {
@@ -656,5 +702,45 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             editor_matrix[row][col] = 0;
         }
         update(); // Trigger a repaint
+    }
+}
+
+void EditorScreen::onSaveMap() {
+    // show dialog to get the filename and confirmation
+    QInputDialog inputDialog(this);
+    inputDialog.setWindowTitle("Save map");
+    inputDialog.setLabelText("Enter filename:");
+    inputDialog.setFont(*customFont);
+    inputDialog.setStyleSheet(
+        "QInputDialog {"
+        "background-color: rgba(240, 240, 240, 255);"
+        "}"
+        "QLabel {"
+        "font-size: 20px;"
+        "color: #333333;"
+        "}"
+        "QLineEdit {"
+        "font-size: 18px;"
+        "padding: 5px;"
+        "border: 1px solid #555555;"
+        "border-radius: 5px;"
+        "}"
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 225);"
+        "color: #ffffff;"
+        "font-size: 18px;"
+        "border: 0px solid #555555;"
+        "border-radius: 10px;"
+        "padding: 5px 10px;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 255);"
+        "}"
+    );
+    bool ok = inputDialog.exec() == QDialog::Accepted;
+    QString filename = inputDialog.textValue();
+    if (ok && !filename.isEmpty()) {
+        std::vector<std::vector<int>> server_matrix = convertToServerMatrix();
+        saveMap(server_matrix, filename.toStdString());
     }
 }
