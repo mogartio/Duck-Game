@@ -142,8 +142,11 @@ void EditorMainWindow::onBackSignal() {
         connect(fadeIn, &QPropertyAnimation::finished, overlay, &QWidget::deleteLater);
         fadeIn->start(QPropertyAnimation::DeleteWhenStopped);
 
+        // reconnect signals
         // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to receive columns and rows values
         connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::sendInitialValues, this, &EditorMainWindow::receiveValues);
+        // Connect the signal from the SetInitialValuesScreen to the EditorMainWindow to quit the app
+        connect(setInitialValuesScreen.get(), &SetInitialValuesScreen::quitApp, this, &EditorMainWindow::handleQuitApp);
     });
 
     fadeOut->start(QPropertyAnimation::DeleteWhenStopped);
