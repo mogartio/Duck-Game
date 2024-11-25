@@ -425,42 +425,31 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
             if (tile && !tile->isNull()) {
                 QPixmap scaledTile;
                 QRect itemRect;
+                auto scaleTile = [&](double widthFactor, double heightFactor, double yOffsetFactor) {
+                    scaledTile = tile->scaled(cellSize * widthFactor, cellSize * heightFactor, Qt::KeepAspectRatio, Qt::FastTransformation);
+                    int itemWidth = scaledTile.width();
+                    int itemHeight = scaledTile.height();
+                    itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * yOffsetFactor, itemWidth, itemHeight);
+                };
 
                 if (category == "weapons") {
                     if (itemName == "sniper" || itemName == "shotgun" || itemName == "ak47" || itemName == "laser rifle") {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+                        scaleTile(1.0, 1.0, 1.0);
                     } else if (itemName == "grenade" || itemName == "duel pistol") {
-                        scaledTile = tile->scaled(cellSize * 0.45, cellSize * 0.45, Qt::KeepAspectRatio, Qt::FastTransformation);
+                        scaleTile(0.45, 0.45, 1.0);
                     } else {
-                        scaledTile = tile->scaled(cellSize * 0.65, cellSize * 0.65, Qt::KeepAspectRatio, Qt::FastTransformation);
+                        scaleTile(0.65, 0.65, 1.0);
                     }
-                    int itemWidth = scaledTile.width();
-                    int itemHeight = scaledTile.height();
-                    itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight, itemWidth, itemHeight);
                 } else if (category == "armor") {
                     if (itemName == "chest") {
-                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::FastTransformation);
-                        int itemWidth = scaledTile.width();
-                        int itemHeight = scaledTile.height();
-                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight / 1.5, itemWidth, itemHeight);
+                        scaleTile(1.5, 1.5, 1.5);
                     } else if (itemName == "tinfoil") {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-                        int itemWidth = scaledTile.width();
-                        int itemHeight = scaledTile.height();
-                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.40, itemWidth, itemHeight);
+                        scaleTile(1.0, 1.0, 0.40);
                     } else {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-                        int itemWidth = scaledTile.width();
-                        int itemHeight = scaledTile.height();
-                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.57, itemWidth, itemHeight);
+                        scaleTile(1.0, 1.0, 0.57);
                     }
                 } else if (category == "players") {
-                    QPixmap scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-                    // Calculate the position to center the player image in the cell
-                    int playerWidth = scaledTile.width();
-                    int playerHeight = scaledTile.height();
-                    QRect playerRect(cellRect.center().x() - playerWidth / 2, cellRect.bottom() - playerHeight, playerWidth, playerHeight);
-                    painter.drawPixmap(playerRect, scaledTile);
+                    scaleTile(1.0, 1.0, 1.0);
                 } else if (category == "tiles") {
                     painter.drawPixmap(cellRect, *tile);
                 }
