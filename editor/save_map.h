@@ -45,9 +45,9 @@
     they will be represented in the map_player_spawn_sites and map_weapon_spawn_sites lists.
     
     map_matrix will have only the map tiles [GRASS, ROCK, COLUMN] where grass and rock are represented with the same number;
-    each item in the editor matrix will occupy a 4x4 square in the map_matrix.
+    each item in the editor matrix will occupy a 6x6 square in the map_matrix.
 
-    The map_matrix will have a two 4x4 tile padding around the actual map
+    The map_matrix will have a two 6x6 tile padding around the actual map
 
     The weapons and armors lists will have each position plus the uint8_t id of the item defined in generic_msg.h
 
@@ -58,14 +58,14 @@
     The file will be placed in the folder maps/ with the name map_name.yaml
 */ 
 inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name) {
-    const int padding = 8; // Padding size (4x4 tiles padding)
+    const int padding = 8; // Padding size (6x6 tiles padding)
     const std::string file_name = "maps/" + map_name + ".yaml";
 
     int editor_rows = editor_matrix.size();
     int editor_columns = editor_matrix[0].size();
 
-    int map_rows = editor_rows * 4; // Each cell in editor_matrix becomes 4x4 in map_matrix
-    int map_columns = editor_columns * 4;
+    int map_rows = editor_rows * 6; // Each cell in editor_matrix becomes 6x6 in map_matrix
+    int map_columns = editor_columns * 6;
 
     // New dimensions with padding
     int padded_rows = map_rows + 2 * padding;
@@ -84,17 +84,17 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
 
             if (Id::players.find(cellValue) != Id::players.end()) {
                 // Player spawn site
-                player_spawn_sites.emplace_back(j * 4 + padding, i * 4 + padding);
+                player_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding);
 
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
-                weapon_spawn_sites.emplace_back(j * 4 + padding + 1, i * 4 + padding + 2, cellValue);
+                weapon_spawn_sites.emplace_back(j * 6 + padding + 1, i * 6 + padding + 2, cellValue);
             }
 
-            for (int x = 0; x < 4; ++x) {
-                for (int y = 0; y < 4; ++y) {
-                    int dest_row = i * 4 + y + padding;
-                    int dest_col = j * 4 + x + padding;
+            for (int x = 0; x < 6; ++x) {
+                for (int y = 0; y < 6; ++y) {
+                    int dest_row = i * 6 + y + padding;
+                    int dest_col = j * 6 + x + padding;
 
                     if (cellValue == Id::GRASS || cellValue == Id::ROCK) {
                         padded_map_matrix[dest_row][dest_col] = FLOOR;
