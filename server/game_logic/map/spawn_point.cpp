@@ -43,7 +43,7 @@ void WeaponSpawnPoint::spawn_weapon() {
             break;
     }
     stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(std::move(weapon), position, 4,
-                                                                   4, type_of_weapon, this));
+                                                                   4000, type_of_weapon, this));
 }
 void WeaponSpawnPoint::set_weapon(int weapon_id) { type_of_weapon = weapon_id; }
 
