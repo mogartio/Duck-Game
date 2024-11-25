@@ -590,71 +590,53 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
     if (pos.x() >= xOffset && pos.x() < xOffset + cellSize * columns &&
         pos.y() >= yOffset && pos.y() < yOffset + cellSize * rows &&
         row >= 0 && row < rows && col >= 0 && col < columns) {
-        if (editor_matrix[row][col] == Id::EMPTY) { // Place tile only on empty cells
-            if (currentTile == "rock") {
-                editor_matrix[row][col] = Id::ROCK;
-            } else if (currentTile == "grass") {
-                editor_matrix[row][col] = Id::GRASS;
-            } else if (currentTile == "column") {
-                editor_matrix[row][col] = Id::COL;
-            } else if (currentTile == "ak47") {
-                editor_matrix[row][col] = Id::AK_47;
-            } else if (currentTile == "banana") {
-                editor_matrix[row][col] = Id::BANANA;
-            } else if (currentTile == "cowboy pistol") {
-                editor_matrix[row][col] = Id::COWBOY_PISTOL;
-            } else if (currentTile == "duel pistol") {
-                editor_matrix[row][col] = Id::DUEL_PISTOL;
-            } else if (currentTile == "shotgun") {
-                editor_matrix[row][col] = Id::SHOTGUN;
-            } else if (currentTile == "grenade") {
-                editor_matrix[row][col] = Id::GRENADE;
-            } else if (currentTile == "magnum") {
-                editor_matrix[row][col] = Id::MAGNUM;
-            } else if (currentTile == "sniper") {
-                editor_matrix[row][col] = Id::SNIPER;
-            } else if (currentTile == "laser rifle") {
-                editor_matrix[row][col] = Id::LASER_RIFLE;
-            } else if (currentTile == "pew pew laser") {
-                editor_matrix[row][col] = Id::PEW_PEW_LASER;
-            } else if (currentTile == "") {
-                editor_matrix[row][col] = Id::EMPTY;
-            } else if (currentTile == "player1" && players_set.find("player1") == players_set.end()) {
-                editor_matrix[row][col] = Id::PLAYER1;
-                players_set.insert("player1");
-            } else if (currentTile == "player2" && players_set.find("player2") == players_set.end()) {
-                editor_matrix[row][col] = Id::PLAYER2;
-                players_set.insert("player2");
-            } else if (currentTile == "player3" && players_set.find("player3") == players_set.end()) {
-                editor_matrix[row][col] = Id::PLAYER3;
-                players_set.insert("player3");
-            } else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) {
-                editor_matrix[row][col] = Id::PLAYER4;
-                players_set.insert("player4");
-            } else if (currentTile == "chest") {
-                editor_matrix[row][col] = Id::CHEST;
-            } else if (currentTile == "knight") {
-                editor_matrix[row][col] = Id::HELMET; // POR AHORA SON TODOS IGUALES 
-            } else if (currentTile == "normal") {
-                editor_matrix[row][col] = Id::HELMET2;
-            } else if (currentTile == "tinfoil") {
-                editor_matrix[row][col] = Id::HELMET3;
-            } else {
-                editor_matrix[row][col] = Id::EMPTY;
+        
+        auto placeTile = [&](int id, const std::string& player = "") {
+            editor_matrix[row][col] = id;
+            if (!player.empty()) {
+                players_set.insert(player);
             }
-        } else if (isErasing) {
+        };
+
+        auto eraseTile = [&]() {
             int item = editor_matrix[row][col];
             switch (item) {
                 case Id::PLAYER1: players_set.erase("player1"); break;
                 case Id::PLAYER2: players_set.erase("player2"); break;
                 case Id::PLAYER3: players_set.erase("player3"); break;
                 case Id::PLAYER4: players_set.erase("player4"); break;
-            };
+            }
             editor_matrix[row][col] = Id::EMPTY;
+        };
+
+        if (editor_matrix[row][col] == Id::EMPTY) { // Place tile only on empty cells
+            if (currentTile == "rock") placeTile(Id::ROCK);
+            else if (currentTile == "grass") placeTile(Id::GRASS);
+            else if (currentTile == "column") placeTile(Id::COL);
+            else if (currentTile == "ak47") placeTile(Id::AK_47);
+            else if (currentTile == "banana") placeTile(Id::BANANA);
+            else if (currentTile == "cowboy pistol") placeTile(Id::COWBOY_PISTOL);
+            else if (currentTile == "duel pistol") placeTile(Id::DUEL_PISTOL);
+            else if (currentTile == "shotgun") placeTile(Id::SHOTGUN);
+            else if (currentTile == "grenade") placeTile(Id::GRENADE);
+            else if (currentTile == "magnum") placeTile(Id::MAGNUM);
+            else if (currentTile == "sniper") placeTile(Id::SNIPER);
+            else if (currentTile == "laser rifle") placeTile(Id::LASER_RIFLE);
+            else if (currentTile == "pew pew laser") placeTile(Id::PEW_PEW_LASER);
+            else if (currentTile == "") placeTile(Id::EMPTY);
+            else if (currentTile == "player1" && players_set.find("player1") == players_set.end()) placeTile(Id::PLAYER1, "player1");
+            else if (currentTile == "player2" && players_set.find("player2") == players_set.end()) placeTile(Id::PLAYER2, "player2");
+            else if (currentTile == "player3" && players_set.find("player3") == players_set.end()) placeTile(Id::PLAYER3, "player3");
+            else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) placeTile(Id::PLAYER4, "player4");
+            else if (currentTile == "chest") placeTile(Id::CHEST);
+            else if (currentTile == "knight") placeTile(Id::HELMET);
+            else if (currentTile == "normal") placeTile(Id::HELMET2);
+            else if (currentTile == "tinfoil") placeTile(Id::HELMET3);
+        } else if (isErasing) {
+            eraseTile();
         }
         update(); // Trigger a repaint
     }
-
 }
 
 void EditorScreen::onSaveMap() {
