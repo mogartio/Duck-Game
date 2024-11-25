@@ -75,8 +75,7 @@ private:
 
 
 public:
-    Map(SDL_Renderer* rend, uint tiles, uint width_window,
-        uint height_window);
+    Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
@@ -91,9 +90,11 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
     // Balas
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail);
+    void newWeapon(int x, int y, ProjectilesId::ProjectileId id,
+                   std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
-    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
+    void weaponPlayer(ProjectilesId::ProjectileId id,
+                      std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
     void dropWeapon(std::string playerName);
 
@@ -112,6 +113,10 @@ public:
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
+
+    SDL_Texture* getTextureMapWithAll() const;
+
+    SDL_Texture* getTextureMapWithoutAnything() const;
 
     ~Map();
 };

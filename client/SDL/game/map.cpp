@@ -387,16 +387,16 @@ void Map::fill() {  // Dibuja de atras para adelante
     }
 
     for (uint8_t i = 0; i < explosionsPos.size(); i++) {
-        if (explosionCounter[i]%4 != 0) {
+        if (explosionCounter[i] % 4 != 0) {
             explosionCounter[i]++;
-            explosions[explosionCounter[i]/4]->fill();
+            explosions[explosionCounter[i] / 4]->fill();
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionCounter[i]/4]->position(pos.first, pos.second);
-        explosions[explosionCounter[i]/4]->fill();
+        explosions[explosionCounter[i] / 4]->position(pos.first, pos.second);
+        explosions[explosionCounter[i] / 4]->fill();
         explosionCounter[i]++;
-        if (explosionCounter[i]/4 == 6) {
+        if (explosionCounter[i] / 4 == 6) {
             explosionsPos.erase(explosionsPos.begin() + i);
             explosionCounter.erase(explosionCounter.begin() + i);
         }
@@ -413,12 +413,11 @@ void Map::fill() {  // Dibuja de atras para adelante
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
 
     laser.clear();
-    /*
-    // Sin usar zoom
-    // Dibujamos el parentTexture
-    SDL_RenderCopy(rend, parentTexture, nullptr, nullptr);
-    */
 }
+
+SDL_Texture* Map::getTextureMapWithAll() const { return parentTexture; }
+
+SDL_Texture* Map::getTextureMapWithoutAnything() const { return mapTexture; }
 
 // ----------------- Destructor -----------------
 
