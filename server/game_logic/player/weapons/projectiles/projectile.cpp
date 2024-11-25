@@ -104,6 +104,7 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
 
                 // Chequea si el jugador tiene casco o armadura y recibe el daño
                 if (stage.take_damage(i)) {
+                    despawned = true;
                     return;
                 }
                 

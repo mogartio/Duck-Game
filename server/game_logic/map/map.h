@@ -99,13 +99,13 @@ public:
                 if (matrix[i][j] == 2 || matrix[i][j] == 1) {
                     stream << "\033[31m"
                            << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 5 || matrix[i][j] == 6) {
+                } else if (matrix[i][j] == 5 || matrix[i][j] == 6) {
                     stream << "\033[34m"
                            << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
                 } else if (matrix[i][j] == 8 || matrix[i][j] == 7) {
                     stream << "\033[33m"
                            << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
-                } else if (matrix[j][i] == 4) {
+                } else if (matrix[i][j] == 4) {
                     stream << "\033[32m"
                            << "|" << matrix[i][j] << "\033[0m";  // Rojo para el número 2
                 } else {

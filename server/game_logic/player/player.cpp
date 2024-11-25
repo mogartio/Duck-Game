@@ -212,6 +212,7 @@ void Player::take_damage() {
         // Despues la armadura
         chest->shoot(1, false);
     }
+    is_alive = true;
 }
 
 void Player::die() { is_alive = false; }
