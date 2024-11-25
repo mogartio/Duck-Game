@@ -389,102 +389,83 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
     for (int row = 0; row < rows; ++row) {
         for (int col = 0; col < columns; ++col) {
             QRect cellRect(xOffset + col * cellSize, yOffset + row * cellSize, cellSize, cellSize);
+            int cellValue = editor_matrix[row][col];
 
-            if (editor_matrix[row][col] == 5) {
-                auto tile = map_of_maps["tiles"]["rock"]; // Example: Use grass for now
-                if (tile && !tile->isNull()) {
-                    painter.drawPixmap(cellRect, *tile);
-                }
-            } else if (editor_matrix[row][col] == 6) {
-                auto tile = map_of_maps["tiles"]["grass"]; // Example: Use grass for now
-                if (tile && !tile->isNull()) {
-                    painter.drawPixmap(cellRect, *tile);
-                }
-            } else if (editor_matrix[row][col] == 7) {
-                auto tile = map_of_maps["tiles"]["column"]; // Example: Use grass for now
-                if (tile && !tile->isNull()) {
-                    painter.drawPixmap(cellRect, *tile);
-                } 
-            } else if (editor_matrix[row][col] >= 8 && editor_matrix[row][col] <= 17) { // Updated range to include all weapons
-                std::string weaponName;
-                switch (editor_matrix[row][col]) {
-                    case 8: weaponName = "ak47"; break;
-                    case 9: weaponName = "banana"; break;
-                    case 10: weaponName = "cowboy pistol"; break;
-                    case 11: weaponName = "duel pistol"; break;
-                    case 12: weaponName = "shotgun"; break;
-                    case 13: weaponName = "grenade"; break;
-                    case 14: weaponName = "magnum"; break;
-                    case 15: weaponName = "sniper"; break;
-                    case 16: weaponName = "laser rifle"; break;
-                    case 17: weaponName = "pew pew laser"; break;
-                }
-                auto tile = map_of_maps["weapons"][weaponName];
-                if (tile && !tile->isNull()) {
-                    // Scale the weapon image according to the current scale factor
-                    QPixmap scaledTile;
-                    if (weaponName == "sniper" || weaponName == "shotgun" || weaponName == "ak47" || weaponName == "laser rifle") {
+            std::shared_ptr<QPixmap> tile;
+            std::string category;
+            std::string itemName;
+
+            switch (cellValue) {
+                case ROCK: category = "tiles"; itemName = "rock"; break;
+                case GRASS: category = "tiles"; itemName = "grass"; break;
+                case COLUMN: category = "tiles"; itemName = "column"; break;
+                case AK_47: category = "weapons"; itemName = "ak47"; break;
+                case BANANA: category = "weapons"; itemName = "banana"; break;
+                case COWBOY_PISTOL: category = "weapons"; itemName = "cowboy pistol"; break;
+                case DUEL_PISTOL: category = "weapons"; itemName = "duel pistol"; break;
+                case SHOTGUN: category = "weapons"; itemName = "shotgun"; break;
+                case GRENADE: category = "weapons"; itemName = "grenade"; break;
+                case MAGNUM: category = "weapons"; itemName = "magnum"; break;
+                case SNIPER: category = "weapons"; itemName = "sniper"; break;
+                case LASER_RIFLE: category = "weapons"; itemName = "laser rifle"; break;
+                case PEW_PEW_LASER: category = "weapons"; itemName = "pew pew laser"; break;
+                case PLAYER1: category = "players"; itemName = "player1"; break;
+                case PLAYER2: category = "players"; itemName = "player2"; break;
+                case PLAYER3: category = "players"; itemName = "player3"; break;
+                case PLAYER4: category = "players"; itemName = "player4"; break;
+                case CHEST: category = "armor"; itemName = "chest"; break;
+                case HELMET: category = "armor"; itemName = "knight"; break;
+                default: break;
+            }
+
+            if (!category.empty() && !itemName.empty()) {
+                tile = map_of_maps[category][itemName];
+            }
+
+            if (tile && !tile->isNull()) {
+                QPixmap scaledTile;
+                QRect itemRect;
+
+                if (category == "weapons") {
+                    if (itemName == "sniper" || itemName == "shotgun" || itemName == "ak47" || itemName == "laser rifle") {
                         scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                    } else if (weaponName == "grenade" || weaponName == "duel pistol") {
+                    } else if (itemName == "grenade" || itemName == "duel pistol") {
                         scaledTile = tile->scaled(cellSize * 0.45, cellSize * 0.45, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                     } else {
                         scaledTile = tile->scaled(cellSize * 0.65, cellSize * 0.65, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                     }
-                    // Calculate the position to center the weapon image in the cell
-                    int weaponWidth = scaledTile.width();
-                    int weaponHeight = scaledTile.height();
-                    QRect weaponRect(cellRect.center().x() - weaponWidth / 2, cellRect.bottom() - weaponHeight, weaponWidth, weaponHeight);
-                    painter.drawPixmap(weaponRect, scaledTile);
-                }
-            } else if (editor_matrix[row][col] >= 18 && editor_matrix[row][col] <= 21) { 
-                std::string playerName;
-                switch (editor_matrix[row][col]) {
-                    case 18: playerName = "player1"; break;
-                    case 19: playerName = "player2"; break;
-                    case 20: playerName = "player3"; break;
-                    case 21: playerName = "player4"; break;
-                }
-                auto tile = map_of_maps["players"][playerName];
-                if (tile && !tile->isNull()) {
-                    // Scale the player image according to the current scale factor
+                    int itemWidth = scaledTile.width();
+                    int itemHeight = scaledTile.height();
+                    itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight, itemWidth, itemHeight);
+                } else if (category == "armor") {
+                    if (itemName == "chest") {
+                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int itemWidth = scaledTile.width();
+                        int itemHeight = scaledTile.height();
+                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight / 1.5, itemWidth, itemHeight);
+                    } else if (itemName == "tinfoil") {
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int itemWidth = scaledTile.width();
+                        int itemHeight = scaledTile.height();
+                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.40, itemWidth, itemHeight);
+                    } else {
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int itemWidth = scaledTile.width();
+                        int itemHeight = scaledTile.height();
+                        itemRect = QRect(cellRect.center().x() - itemWidth / 2, cellRect.bottom() - itemHeight * 0.57, itemWidth, itemHeight);
+                    }
+                } else if (category == "players") {
                     QPixmap scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                     // Calculate the position to center the player image in the cell
                     int playerWidth = scaledTile.width();
                     int playerHeight = scaledTile.height();
                     QRect playerRect(cellRect.center().x() - playerWidth / 2, cellRect.bottom() - playerHeight, playerWidth, playerHeight);
                     painter.drawPixmap(playerRect, scaledTile);
-                } 
-            } else if (editor_matrix[row][col] >= 22 && editor_matrix[row][col] <= 25) { 
-                std::string armorName;
-                switch (editor_matrix[row][col]) {
-                    case 22: armorName = "chest"; break;
-                    case 23: armorName = "knight"; break;
-                    case 24: armorName = "normal"; break;
-                    case 25: armorName = "tinfoil"; break;
+                } else if (category == "tiles") {
+                    painter.drawPixmap(cellRect, *tile);
                 }
-                auto tile = map_of_maps["armor"][armorName];
-                if (tile && !tile->isNull()) {
-                    QPixmap scaledTile;
-                    QRect armorRect;
-                    if (armorName == "chest") {
-                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                        int armorWidth = scaledTile.width();
-                        int armorHeight = scaledTile.height();
-                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight/1.5, armorWidth, armorHeight);
-                    } else if (armorName == "tinfoil") {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                        int armorWidth = scaledTile.width();
-                        int armorHeight = scaledTile.height();
-                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight*0.40, armorWidth, armorHeight);
-                    } else {
-                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                        int armorWidth = scaledTile.width();
-                        int armorHeight = scaledTile.height();
-                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight*0.57, armorWidth, armorHeight);
-                    }
-                    
-                    painter.drawPixmap(armorRect, scaledTile);
-                } 
+
+                painter.drawPixmap(itemRect, scaledTile);
             }
 
             if (gridVisible) {
@@ -639,67 +620,67 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
     if (pos.x() >= xOffset && pos.x() < xOffset + cellSize * columns &&
         pos.y() >= yOffset && pos.y() < yOffset + cellSize * rows &&
         row >= 0 && row < rows && col >= 0 && col < columns) {
-        if (editor_matrix[row][col] == 0) { // Place tile only on empty cells
+        if (editor_matrix[row][col] == EMPTY) { // Place tile only on empty cells
             if (currentTile == "rock") {
-                editor_matrix[row][col] = 5;
+                editor_matrix[row][col] = ROCK;
             } else if (currentTile == "grass") {
-                editor_matrix[row][col] = 6;
+                editor_matrix[row][col] = GRASS;
             } else if (currentTile == "column") {
-                editor_matrix[row][col] = 7;
-            } else if (currentTile == "ak47") { // despues las armas van a ser spawn points, no van a estar en la matriz cuando se guarde
-                editor_matrix[row][col] = 8;
+                editor_matrix[row][col] = COLUMN;
+            } else if (currentTile == "ak47") {
+                editor_matrix[row][col] = AK_47;
             } else if (currentTile == "banana") {
-                editor_matrix[row][col] = 9;
+                editor_matrix[row][col] = BANANA;
             } else if (currentTile == "cowboy pistol") {
-                editor_matrix[row][col] = 10;
+                editor_matrix[row][col] = COWBOY_PISTOL;
             } else if (currentTile == "duel pistol") {
-                editor_matrix[row][col] = 11;
+                editor_matrix[row][col] = DUEL_PISTOL;
             } else if (currentTile == "shotgun") {
-                editor_matrix[row][col] = 12;
+                editor_matrix[row][col] = SHOTGUN;
             } else if (currentTile == "grenade") {
-                editor_matrix[row][col] = 13;
+                editor_matrix[row][col] = GRENADE;
             } else if (currentTile == "magnum") {
-                editor_matrix[row][col] = 14;
+                editor_matrix[row][col] = MAGNUM;
             } else if (currentTile == "sniper") {
-                editor_matrix[row][col] = 15;
+                editor_matrix[row][col] = SNIPER;
             } else if (currentTile == "laser rifle") {
-                editor_matrix[row][col] = 16;
+                editor_matrix[row][col] = LASER_RIFLE;
             } else if (currentTile == "pew pew laser") {
-                editor_matrix[row][col] = 17;
+                editor_matrix[row][col] = PEW_PEW_LASER;
             } else if (currentTile == "") {
-                editor_matrix[row][col] = 0;
+                editor_matrix[row][col] = EMPTY;
             } else if (currentTile == "player1" && players_set.find("player1") == players_set.end()) {
-                editor_matrix[row][col] = 18;
+                editor_matrix[row][col] = PLAYER1;
                 players_set.insert("player1");
             } else if (currentTile == "player2" && players_set.find("player2") == players_set.end()) {
-                editor_matrix[row][col] = 19;
+                editor_matrix[row][col] = PLAYER2;
                 players_set.insert("player2");
             } else if (currentTile == "player3" && players_set.find("player3") == players_set.end()) {
-                editor_matrix[row][col] = 20;
+                editor_matrix[row][col] = PLAYER3;
                 players_set.insert("player3");
             } else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) {
-                editor_matrix[row][col] = 21;
+                editor_matrix[row][col] = PLAYER4;
                 players_set.insert("player4");
             } else if (currentTile == "chest") {
-                editor_matrix[row][col] = 22;
+                editor_matrix[row][col] = CHEST;
             } else if (currentTile == "knight") {
-                editor_matrix[row][col] = 23;
+                editor_matrix[row][col] = HELMET;
             } else if (currentTile == "normal") {
-                editor_matrix[row][col] = 24;
+                editor_matrix[row][col] = HELMET;
             } else if (currentTile == "tinfoil") {
-                editor_matrix[row][col] = 25;
+                editor_matrix[row][col] = HELMET;
             } else {
-                editor_matrix[row][col] = 0;
+                editor_matrix[row][col] = EMPTY;
             }
         } else if (isErasing) {
             int item = editor_matrix[row][col];
             switch (item) {
-                case 18: players_set.erase("player1"); break;
-                case 19: players_set.erase("player2"); break;
-                case 20: players_set.erase("player3"); break;
-                case 21: players_set.erase("player4"); break;
-            }
-            editor_matrix[row][col] = 0;
+                case PLAYER1: players_set.erase("player1"); break;
+                case PLAYER2: players_set.erase("player2"); break;
+                case PLAYER3: players_set.erase("player3"); break;
+                case PLAYER4: players_set.erase("player4"); break;
+            };
+            editor_matrix[row][col] = EMPTY;
         }
         update(); // Trigger a repaint
     }

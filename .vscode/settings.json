@@ -97,7 +97,8 @@
         "qpalette": "cpp",
         "qstackedwidget": "cpp",
         "qaction": "cpp",
-        "qmessagebox": "cpp"
+        "qmessagebox": "cpp",
+        "qfiledialog": "cpp"
     },
     "makefile.configureOnOpen": false
 }
