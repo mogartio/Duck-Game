@@ -52,12 +52,6 @@ public:
         deviation_direction = deviations_direction[deviations_index];
     }
 
-    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
-        for (const Observer* obs: observers) {
-            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
-        }
-    }
-
 
     void notify() override {
         for (const Observer* obs: observers) {
@@ -88,11 +82,6 @@ public:
         }
     }
 
-    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
-        for (const Observer* obs: observers) {
-            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
-        }
-    }
 
     virtual std::shared_ptr<Weapon> get_weapon() {
         spawn->free();

@@ -22,8 +22,7 @@
 
 Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
-        map(map), senders(senders), obs(this->senders, ids) {
-}
+        map(map), senders(senders), obs(this->senders, ids) {}
 
 void Stage::print() { map.print(); }
 

@@ -173,8 +173,7 @@ bool LaserBullet::ray_trace(Stage& stage) {
             stage.draw(id, Config::get_instance()->bullet_size, bullet_position);
             if (!trail.empty()) {
                 trail.pop_back();
-            }  // esto es para que no aparezca la posicion actual en el
-               // trail. its never been this serious
+            }
             notify();
             return false;
         }
@@ -184,4 +183,10 @@ bool LaserBullet::ray_trace(Stage& stage) {
         update();
     }
     return false;
+}
+
+void Projectile::updateNotPosition(uint8_t pos_x, uint8_t pos_y) {
+    for (const Observer* obs: observers) {
+        obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+    }
 }

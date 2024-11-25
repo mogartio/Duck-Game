@@ -51,7 +51,7 @@ public:
     virtual ~Projectile() = default;
     virtual int get_id() { return id; }
     virtual void update() {}
-    virtual void updateNotPosition(uint8_t, uint8_t) {}
+    virtual void updateNotPosition(uint8_t, uint8_t);
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;
     virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage);
@@ -85,11 +85,6 @@ public:
                        true, true, is_aiming_up) {
         deviation = WeaponConfig::get_instance()->weapons["magnum"]["deviation"];
         deviation_direction = -1;
-    }
-    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
-        for (const Observer* obs: observers) {
-            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
-        }
     }
 };
 class DuelBullet: public Projectile {
