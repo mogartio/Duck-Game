@@ -153,6 +153,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
             if (weaponProjectile->get_position() == position) {
                 std::shared_ptr new_weapon = (weaponProjectile->get_weapon());
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }
@@ -162,6 +163,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
             if (weaponProjectile->get_position() == position) {
                 std::shared_ptr new_weapon = weaponProjectile->get_weapon();
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }

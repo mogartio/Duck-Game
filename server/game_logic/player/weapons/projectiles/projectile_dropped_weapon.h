@@ -52,6 +52,14 @@ public:
         deviation_direction = deviations_direction[deviations_index];
     }
 
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
+    }
+
+    virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
+
     void notify() override {
         for (const Observer* obs: observers) {
             obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
@@ -80,6 +88,13 @@ public:
                         static_cast<uint8_t>(id));
         }
     }
+
+    void updateNotPosition(uint8_t pos_x, uint8_t pos_y) override {
+        for (const Observer* obs: observers) {
+            obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
+        }
+    }
+
     virtual std::shared_ptr<Weapon> get_weapon() {
         spawn->free();
         return std::move(weapon);
