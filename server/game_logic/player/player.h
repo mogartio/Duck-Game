@@ -40,8 +40,6 @@ public:
     int get_facing_direction();
     Player(Coordinate& initial_position, int id, const std::string& name,
            const PlayerObserver& obs);
-    void die();
-    Player(Coordinate& initial_position, int id, const std::string& name, const PlayerObserver& obs);
     void occupy(Coordinate&);
     void add_action(int&);
     void remove_action(int&);
