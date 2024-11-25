@@ -396,25 +396,25 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
             std::string itemName;
 
             switch (cellValue) {
-                case ROCK: category = "tiles"; itemName = "rock"; break;
-                case GRASS: category = "tiles"; itemName = "grass"; break;
-                case COLUMN: category = "tiles"; itemName = "column"; break;
-                case AK_47: category = "weapons"; itemName = "ak47"; break;
-                case BANANA: category = "weapons"; itemName = "banana"; break;
-                case COWBOY_PISTOL: category = "weapons"; itemName = "cowboy pistol"; break;
-                case DUEL_PISTOL: category = "weapons"; itemName = "duel pistol"; break;
-                case SHOTGUN: category = "weapons"; itemName = "shotgun"; break;
-                case GRENADE: category = "weapons"; itemName = "grenade"; break;
-                case MAGNUM: category = "weapons"; itemName = "magnum"; break;
-                case SNIPER: category = "weapons"; itemName = "sniper"; break;
-                case LASER_RIFLE: category = "weapons"; itemName = "laser rifle"; break;
-                case PEW_PEW_LASER: category = "weapons"; itemName = "pew pew laser"; break;
-                case PLAYER1: category = "players"; itemName = "player1"; break;
-                case PLAYER2: category = "players"; itemName = "player2"; break;
-                case PLAYER3: category = "players"; itemName = "player3"; break;
-                case PLAYER4: category = "players"; itemName = "player4"; break;
-                case CHEST: category = "armor"; itemName = "chest"; break;
-                case HELMET: category = "armor"; itemName = "knight"; break;
+                case Id::ROCK: category = "tiles"; itemName = "rock"; break;
+                case Id::GRASS: category = "tiles"; itemName = "grass"; break;
+                case Id::COL: category = "tiles"; itemName = "column"; break;
+                case Id::AK_47: category = "weapons"; itemName = "ak47"; break;
+                case Id::BANANA: category = "weapons"; itemName = "banana"; break;
+                case Id::COWBOY_PISTOL: category = "weapons"; itemName = "cowboy pistol"; break;
+                case Id::DUEL_PISTOL: category = "weapons"; itemName = "duel pistol"; break;
+                case Id::SHOTGUN: category = "weapons"; itemName = "shotgun"; break;
+                case Id::GRENADE: category = "weapons"; itemName = "grenade"; break;
+                case Id::MAGNUM: category = "weapons"; itemName = "magnum"; break;
+                case Id::SNIPER: category = "weapons"; itemName = "sniper"; break;
+                case Id::LASER_RIFLE: category = "weapons"; itemName = "laser rifle"; break;
+                case Id::PEW_PEW_LASER: category = "weapons"; itemName = "pew pew laser"; break;
+                case Id::PLAYER1: category = "players"; itemName = "player1"; break;
+                case Id::PLAYER2: category = "players"; itemName = "player2"; break;
+                case Id::PLAYER3: category = "players"; itemName = "player3"; break;
+                case Id::PLAYER4: category = "players"; itemName = "player4"; break;
+                case Id::CHEST: category = "armor"; itemName = "chest"; break;
+                case Id::HELMET: category = "armor"; itemName = "knight"; break;
                 default: break;
             }
 
@@ -597,67 +597,67 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
     if (pos.x() >= xOffset && pos.x() < xOffset + cellSize * columns &&
         pos.y() >= yOffset && pos.y() < yOffset + cellSize * rows &&
         row >= 0 && row < rows && col >= 0 && col < columns) {
-        if (editor_matrix[row][col] == EMPTY) { // Place tile only on empty cells
+        if (editor_matrix[row][col] == Id::EMPTY) { // Place tile only on empty cells
             if (currentTile == "rock") {
-                editor_matrix[row][col] = ROCK;
+                editor_matrix[row][col] = Id::ROCK;
             } else if (currentTile == "grass") {
-                editor_matrix[row][col] = GRASS;
+                editor_matrix[row][col] = Id::GRASS;
             } else if (currentTile == "column") {
-                editor_matrix[row][col] = COLUMN;
+                editor_matrix[row][col] = Id::COL;
             } else if (currentTile == "ak47") {
-                editor_matrix[row][col] = AK_47;
+                editor_matrix[row][col] = Id::AK_47;
             } else if (currentTile == "banana") {
-                editor_matrix[row][col] = BANANA;
+                editor_matrix[row][col] = Id::BANANA;
             } else if (currentTile == "cowboy pistol") {
-                editor_matrix[row][col] = COWBOY_PISTOL;
+                editor_matrix[row][col] = Id::COWBOY_PISTOL;
             } else if (currentTile == "duel pistol") {
-                editor_matrix[row][col] = DUEL_PISTOL;
+                editor_matrix[row][col] = Id::DUEL_PISTOL;
             } else if (currentTile == "shotgun") {
-                editor_matrix[row][col] = SHOTGUN;
+                editor_matrix[row][col] = Id::SHOTGUN;
             } else if (currentTile == "grenade") {
-                editor_matrix[row][col] = GRENADE;
+                editor_matrix[row][col] = Id::GRENADE;
             } else if (currentTile == "magnum") {
-                editor_matrix[row][col] = MAGNUM;
+                editor_matrix[row][col] = Id::MAGNUM;
             } else if (currentTile == "sniper") {
-                editor_matrix[row][col] = SNIPER;
+                editor_matrix[row][col] = Id::SNIPER;
             } else if (currentTile == "laser rifle") {
-                editor_matrix[row][col] = LASER_RIFLE;
+                editor_matrix[row][col] = Id::LASER_RIFLE;
             } else if (currentTile == "pew pew laser") {
-                editor_matrix[row][col] = PEW_PEW_LASER;
+                editor_matrix[row][col] = Id::PEW_PEW_LASER;
             } else if (currentTile == "") {
-                editor_matrix[row][col] = EMPTY;
+                editor_matrix[row][col] = Id::EMPTY;
             } else if (currentTile == "player1" && players_set.find("player1") == players_set.end()) {
-                editor_matrix[row][col] = PLAYER1;
+                editor_matrix[row][col] = Id::PLAYER1;
                 players_set.insert("player1");
             } else if (currentTile == "player2" && players_set.find("player2") == players_set.end()) {
-                editor_matrix[row][col] = PLAYER2;
+                editor_matrix[row][col] = Id::PLAYER2;
                 players_set.insert("player2");
             } else if (currentTile == "player3" && players_set.find("player3") == players_set.end()) {
-                editor_matrix[row][col] = PLAYER3;
+                editor_matrix[row][col] = Id::PLAYER3;
                 players_set.insert("player3");
             } else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) {
-                editor_matrix[row][col] = PLAYER4;
+                editor_matrix[row][col] = Id::PLAYER4;
                 players_set.insert("player4");
             } else if (currentTile == "chest") {
-                editor_matrix[row][col] = CHEST;
+                editor_matrix[row][col] = Id::CHEST;
             } else if (currentTile == "knight") {
-                editor_matrix[row][col] = HELMET;
+                editor_matrix[row][col] = Id::HELMET; // POR AHORA SON TODOS IGUALES 
             } else if (currentTile == "normal") {
-                editor_matrix[row][col] = HELMET;
+                editor_matrix[row][col] = Id::HELMET;
             } else if (currentTile == "tinfoil") {
-                editor_matrix[row][col] = HELMET;
+                editor_matrix[row][col] = Id::HELMET;
             } else {
-                editor_matrix[row][col] = EMPTY;
+                editor_matrix[row][col] = Id::EMPTY;
             }
         } else if (isErasing) {
             int item = editor_matrix[row][col];
             switch (item) {
-                case PLAYER1: players_set.erase("player1"); break;
-                case PLAYER2: players_set.erase("player2"); break;
-                case PLAYER3: players_set.erase("player3"); break;
-                case PLAYER4: players_set.erase("player4"); break;
+                case Id::PLAYER1: players_set.erase("player1"); break;
+                case Id::PLAYER2: players_set.erase("player2"); break;
+                case Id::PLAYER3: players_set.erase("player3"); break;
+                case Id::PLAYER4: players_set.erase("player4"); break;
             };
-            editor_matrix[row][col] = EMPTY;
+            editor_matrix[row][col] = Id::EMPTY;
         }
         update(); // Trigger a repaint
     }
