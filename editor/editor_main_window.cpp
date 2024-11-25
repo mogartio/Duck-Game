@@ -89,8 +89,10 @@ void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
 
     // load armor 
     std::map<std::string, std::shared_ptr<QPixmap>> armor;
-    armor["armor1"] = std::make_shared<QPixmap>("assets/game_assets/armor/armor.png");
-    armor["knight helmet"] = std::make_shared<QPixmap>("assets/game_assets/helmets/knight.png");
+    armor["chest"] = std::make_shared<QPixmap>("assets/game_assets/armor/armor.png");
+    armor["knight"] = std::make_shared<QPixmap>("assets/game_assets/helmets/knight.png");
+    armor["normal"] = std::make_shared<QPixmap>("assets/game_assets/helmets/normal.png");
+    armor["tinfoil"] = std::make_shared<QPixmap>("assets/game_assets/helmets/tinfoil.png");
 
     map_of_maps["armor"] = armor;
 

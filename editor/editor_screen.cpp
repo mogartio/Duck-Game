@@ -9,7 +9,8 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     
     currentTile = "";
     isPainting = false;
-    isErasing = false;
+    isErasing = false;\
+    gridVisible = true;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
     editor_matrix.resize(rows, std::vector<int>(columns, 0)); 
 
@@ -93,7 +94,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     // add menu
     weaponsMenu = new QMenu(this);
     weaponsMenu->setFont(actionFont);
-    weaponsMenu->setFixedWidth(200);
+    weaponsMenu->setFixedWidth(250);
     QAction *ak47 = new QAction(QIcon("assets/game_assets/weapons/ak47.png"), "ak47", this);
     weaponsMenu->addAction(ak47);
     QAction *banana = new QAction(QIcon("assets/game_assets/weapons/banana.png"), "banana", this);
@@ -153,7 +154,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     // add menu
     playersMenu = new QMenu(this);
     playersMenu->setFont(actionFont);
-    playersMenu->setFixedWidth(200);
+    playersMenu->setFixedWidth(150);
     QAction *player1 = new QAction(QIcon("assets/game_assets/ducks/white/standing.png"), "player1", this);
     playersMenu->addAction(player1);
     QAction *player2 = new QAction(QIcon("assets/game_assets/ducks/yellow/standing.png"), "player2", this);
@@ -173,6 +174,49 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(player3, &QAction::triggered, this, [this]() { startDrag("players"); });
     connect(player4, &QAction::triggered, this, [this]() { startDrag("players"); });
 
+    // add armor menu
+    armorMenuButton = new QPushButton("armor", this);
+    armorMenuButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 10px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 255);"
+        "}"
+    );
+    armorMenuButton->setFont(*customFont);
+    armorMenuButton->setGeometry(440, 10, 130, 40);
+    // add menu
+    armorMenu = new QMenu(this);
+    armorMenu->setFont(actionFont);
+    armorMenu->setFixedWidth(150);
+
+    QAction *chest = new QAction(QIcon("assets/game_assets/armor/armor.png"), "chest", this);
+    QAction *knight= new QAction(QIcon("assets/game_assets/helmets/knight.png"), "knight", this);
+    QAction *normal = new QAction(QIcon("assets/game_assets/helmets/normal.png"), "normal", this);
+    QAction *tinfoil = new QAction(QIcon("assets/game_assets/helmets/tinfoil.png"), "tinfoil", this);
+
+    armorMenu->addAction(chest);
+    armorMenu->addAction(knight);
+    armorMenu->addAction(normal);
+    armorMenu->addAction(tinfoil);
+
+    connect(armorMenuButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        armorMenu->exec(armorMenuButton->mapToGlobal(QPoint(0, armorMenuButton->height())));
+    });
+
+    connect(chest, &QAction::triggered, this, [this]() { startDrag("armor"); });
+    connect(knight, &QAction::triggered, this, [this]() { startDrag("armor"); });
+    connect(normal, &QAction::triggered, this, [this]() { startDrag("armor"); });
+    connect(tinfoil, &QAction::triggered, this, [this]() { startDrag("armor"); });
+
     // add erase button 
     QPushButton *eraseButton = new QPushButton(QIcon("assets/menu_assets/eraser.png"), "", this);
     eraseButton->setStyleSheet(
@@ -190,7 +234,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "}"
     );
     eraseButton->setFont(*customFont);
-    eraseButton->setGeometry(440, 10, 40, 40);
+    eraseButton->setGeometry(580, 10, 40, 40);
     connect(eraseButton, &QPushButton::clicked, [this](){
         buttonSound->play();
         currentTile = "";
@@ -222,7 +266,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         "}"
     );
     dragButton->setFont(*customFont);
-    dragButton->setGeometry(490, 10, 40, 40);
+    dragButton->setGeometry(630, 10, 40, 40);
 
     connect(dragButton, &QPushButton::clicked, [this](){
         buttonSound->play();
@@ -230,6 +274,30 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
         isPainting = false;
         isDragging = true;
         isErasing = false;
+    });
+
+    // add show/hide grid
+    QPushButton *gridButton = new QPushButton(QIcon("assets/menu_assets/grid.png"), "", this);
+    gridButton->setStyleSheet(
+        "QPushButton {"
+        "background-color: rgba(240, 140, 0, 225);"        
+        "color: #ffffff;"                     
+        "font-size: 28px;"                  
+        "border: 0px solid #555555;"        
+        "border-radius: 15px;"              
+        "padding: 0px;"                    
+        "text-align: center;"               
+        "}"
+        "QPushButton:hover {"
+        "background-color: rgba(232, 89, 12, 255);"
+        "}"
+    );
+    gridButton->setFont(*customFont);
+    gridButton->setGeometry(680, 10, 40, 40);
+    connect(gridButton, &QPushButton::clicked, [this](){
+        buttonSound->play();
+        gridVisible = !gridVisible;
+        update();
     });
 
 }
@@ -340,8 +408,44 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                     QRect playerRect(cellRect.center().x() - playerWidth / 2, cellRect.bottom() - playerHeight, playerWidth, playerHeight);
                     painter.drawPixmap(playerRect, scaledTile);
                 } 
+            } else if (editor_matrix[row][col] >= 22 && editor_matrix[row][col] <= 25) { 
+                std::string armorName;
+                switch (editor_matrix[row][col]) {
+                    case 22: armorName = "chest"; break;
+                    case 23: armorName = "knight"; break;
+                    case 24: armorName = "normal"; break;
+                    case 25: armorName = "tinfoil"; break;
+                }
+                auto tile = map_of_maps["armor"][armorName];
+                if (tile && !tile->isNull()) {
+                    QPixmap scaledTile;
+                    QRect armorRect;
+                    if (armorName == "chest") {
+                        scaledTile = tile->scaled(cellSize * 1.5, cellSize * 1.5, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int armorWidth = scaledTile.width();
+                        int armorHeight = scaledTile.height();
+                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight/1.5, armorWidth, armorHeight);
+                    } else if (armorName == "tinfoil") {
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int armorWidth = scaledTile.width();
+                        int armorHeight = scaledTile.height();
+                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight*0.40, armorWidth, armorHeight);
+                    } else {
+                        scaledTile = tile->scaled(cellSize, cellSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                        int armorWidth = scaledTile.width();
+                        int armorHeight = scaledTile.height();
+                        armorRect = QRect(cellRect.center().x() - armorWidth/2, cellRect.bottom() - armorHeight*0.57, armorWidth, armorHeight);
+                    }
+                    
+                    painter.drawPixmap(armorRect, scaledTile);
+                } 
             }
 
+            if (gridVisible) {
+                painter.setPen(QPen(Qt::black, 1));
+            } else {
+                painter.setPen(QPen(Qt::transparent, 1));
+            }
             painter.drawRect(cellRect);
         }
     }
@@ -530,7 +634,14 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             } else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) {
                 editor_matrix[row][col] = 21;
                 players_set.insert("player4");
-
+            } else if (currentTile == "chest") {
+                editor_matrix[row][col] = 22;
+            } else if (currentTile == "knight") {
+                editor_matrix[row][col] = 23;
+            } else if (currentTile == "normal") {
+                editor_matrix[row][col] = 24;
+            } else if (currentTile == "tinfoil") {
+                editor_matrix[row][col] = 25;
             } else {
                 editor_matrix[row][col] = 0;
             }

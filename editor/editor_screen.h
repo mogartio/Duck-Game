@@ -26,6 +26,7 @@
 #include <QDrag>
 #include <set>
 #include "rounded_rectangle.h"
+#include "../common/messages/generic_msg.h"
 class EditorScreen : public QWidget {
     Q_OBJECT
 private:
@@ -44,6 +45,7 @@ private:
     QString currentTile;
     bool isPainting;
     bool isErasing;
+    bool gridVisible;
     // tiles menu
     QPushButton *tilesMenuButton;
     QMenu *tilesMenu;
@@ -54,6 +56,10 @@ private:
     std::set<std::string> players_set;
     QPushButton *playersMenuButton;
     QMenu *playersMenu;
+    // armor menu
+    QPushButton *armorMenuButton;
+    QMenu *armorMenu;
+
 
     std::vector<std::vector<int>> convertToServerMatrix();
     void placeTileAtPosition(const QPoint& pos);
