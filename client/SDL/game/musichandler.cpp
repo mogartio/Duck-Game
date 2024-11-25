@@ -12,7 +12,7 @@ bool MusicHandler::outOfRangeError(uint number) {
 MusicHandler::MusicHandler() {
     for (const auto& path: paths_musics) {
         try {
-            list_of_musics.push_back(new MusicPlayer(path));
+            list_of_musics.push_back(std::make_unique<MusicPlayer>(path));
         } catch (const std::runtime_error& e) {
             std::cerr << e.what() << '\n';
         }
@@ -76,9 +76,7 @@ void MusicHandler::setThatVolume(uint number, int volume) {
 
 MusicHandler::~MusicHandler() {
     Mix_HaltChannel(-1);  // Detiene todos los canales (haciendoles un stop)
-    for (auto& music: list_of_musics) {
-        delete music;
-    }
+    list_of_musics.clear();
     Mix_CloseAudio();  // Cierra el sistema de audio
     Mix_Quit();        // Cierra SDL_mixer
 }

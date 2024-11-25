@@ -10,7 +10,6 @@
 class LoadingScreen {
 private:
     SDL_Renderer* renderer;
-    TTF_Font* font;
     SDL_Rect ubication;
     SDL_Texture* textura_texto;
     SDL_Texture* backgroundImage;

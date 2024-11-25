@@ -7,7 +7,7 @@
 
 LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): renderer(renderer) {
     // Crear la fuente y la textura
-    font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 56);
+    TTF_Font* font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 56);
 
     // Si no se pudo cargar la fuente, lanzar una excepción
     if (!font) {
@@ -28,6 +28,7 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height): ren
     textura_texto = SDL_CreateTextureFromSurface(renderer, surface);
     // Liberar la superficie
     SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
     // Si no se pudo crear la textura, lanzar una excepción
     if (!textura_texto) {
         throw std::runtime_error("Error al crear la textura: " + std::string(SDL_GetError()));
@@ -222,7 +223,6 @@ void LoadingScreen::fadeOut(SDL_Texture* texture, Uint32 duration) {
 }
 
 LoadingScreen::~LoadingScreen() {
-    TTF_CloseFont(font);
     SDL_DestroyTexture(textura_texto);
     SDL_DestroyTexture(mainTexture);
     SDL_DestroyTexture(backgroundImage);

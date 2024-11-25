@@ -1,4 +1,5 @@
 #include <list>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -27,44 +28,44 @@ private:
     uint filas;
 
     // Imagenes de los tiles
-    std::vector<Image*> tilesImages;
+    std::vector<std::shared_ptr<Image>> tilesImages;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
     // Jugadores
-    std::unordered_map<std::string, Player*> players;
+    std::unordered_map<std::string, std::shared_ptr<Player>> players;
     std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
-    std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
     std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> weaponsPos;
     std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
     // std::unordered_map<Weapon, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
-    std::vector<Image*> helmets;
+    std::vector<std::shared_ptr<Image>> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<Image*, std::vector<std::pair<int, int>>> helmetsMap;
+    std::unordered_map<std::shared_ptr<Image>, std::vector<std::pair<int, int>>> helmetsMap;
 
     // Imagen de armadura usable
-    Image armor;
-    Image hombro;
+    std::shared_ptr<Image> armor;
+    std::shared_ptr<Image> hombro;
     // Imagen de armadura en el mapa
-    Image armorOnMap;
+    std::shared_ptr<Image> armorOnMap;
     // Posiciones de la armadura
     std::vector<std::pair<int, int>> armorMap;
 
     // Imagenes de las explosiones
-    std::vector<Image*> explosions;
+    std::vector<std::shared_ptr<Image>> explosions;
     // Posiciones de las explosiones
     std::vector<std::pair<int, int>> explosionsPos;
     // Contador de las explosiones
     std::vector<int> explosionCounter;
 
-    Image background;
+    std::shared_ptr<Image> background;
 
-    Image prueba;
+    std::shared_ptr<Image> prueba;
 
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();

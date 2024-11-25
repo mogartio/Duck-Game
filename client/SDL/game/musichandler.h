@@ -1,3 +1,4 @@
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -11,7 +12,7 @@ private:
             "assets/game_assets/music/backwen.wav",
             "assets/game_assets/music/castil.wav"};  // Lista de paths de las musicas
 
-    std::vector<MusicPlayer*> list_of_musics;
+    std::vector<std::unique_ptr<MusicPlayer>> list_of_musics;
 
     bool outOfRangeError(uint number);
 
