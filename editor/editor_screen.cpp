@@ -12,7 +12,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     isErasing = false;\
     gridVisible = true;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
-    editor_matrix.resize(rows, std::vector<int>(columns, 0)); 
+    editor_matrix.resize(rows, std::vector<int>(columns, Id::EMPTY)); 
 
     // Load custom font
     int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
@@ -394,7 +394,7 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
             std::shared_ptr<QPixmap> tile;
             std::string category;
             std::string itemName;
-
+            
             switch (cellValue) {
                 case Id::ROCK: category = "tiles"; itemName = "rock"; break;
                 case Id::GRASS: category = "tiles"; itemName = "grass"; break;
@@ -413,10 +413,14 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 case Id::PLAYER2: category = "players"; itemName = "player2"; break;
                 case Id::PLAYER3: category = "players"; itemName = "player3"; break;
                 case Id::PLAYER4: category = "players"; itemName = "player4"; break;
-                case Id::CHEST: category = "armor"; itemName = "chest"; break;
                 case Id::HELMET: category = "armor"; itemName = "knight"; break;
+                case Id::HELMET2: category = "armor"; itemName = "normal"; break;
+                case Id::HELMET3: category = "armor"; itemName = "tinfoil"; break;
+                case Id::CHEST: category = "armor"; itemName = "chest"; break;
                 default: break;
             }
+
+            // Debug statement to check the category and itemName
 
             if (!category.empty() && !itemName.empty()) {
                 tile = map_of_maps[category][itemName];
@@ -442,7 +446,7 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                     }
                 } else if (category == "armor") {
                     if (itemName == "chest") {
-                        scaleTile(1.5, 1.5, 1.5);
+                        scaleTile(1.5, 1.5, 0.70);
                     } else if (itemName == "tinfoil") {
                         scaleTile(1.0, 1.0, 0.40);
                     } else {
@@ -632,9 +636,9 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             } else if (currentTile == "knight") {
                 editor_matrix[row][col] = Id::HELMET; // POR AHORA SON TODOS IGUALES 
             } else if (currentTile == "normal") {
-                editor_matrix[row][col] = Id::HELMET;
+                editor_matrix[row][col] = Id::HELMET2;
             } else if (currentTile == "tinfoil") {
-                editor_matrix[row][col] = Id::HELMET;
+                editor_matrix[row][col] = Id::HELMET3;
             } else {
                 editor_matrix[row][col] = Id::EMPTY;
             }
@@ -650,6 +654,7 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
         }
         update(); // Trigger a repaint
     }
+
 }
 
 void EditorScreen::onSaveMap() {
