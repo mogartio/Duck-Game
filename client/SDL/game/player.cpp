@@ -231,47 +231,49 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     std::pair<int, int> position = duck->getPosition();
 
-    // Dibujo el casco que tiene el pato
-    if (helmetOn) {
-        _helmet->position(position.first, position.second - 13);
-        _helmet->fill(flip);
-    }
-
-    // Dibujo la armadura que tiene el pato
-    if (armorOn) {
-        _armor->position(position.first, position.second);
-        _armor->fill(flip);
-    }
-
-    // Dibujo el arma que tiene el pato
-    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        int wx = position.first + 5;
-        int wy = position.second + 36;
-        if (flip == SDL_FLIP_HORIZONTAL) {
-            if (weaponAngle != 0.0) {
-                wy -= 10;
-                wx += 5;
-            }
-        } else {
-            wx += 32;
-            if (weaponAngle != 0.0) {
-                wx -= 3;
-                wy -= 7;
-            }
-        }
-        _weapon->position(wx, wy);
-        _weapon->fill(weaponAngle, flip);
-    }
-
-    // Dibujo el ala del pato
     if (state != DuckState::PLAY_DEAD) {
-        wing->fill(flip);
-    }
+        // Dibujo el casco que tiene el pato
+        if (helmetOn) {
+            _helmet->position(position.first, position.second - 13);
+            _helmet->fill(flip);
+        }
 
-    // Dibujo el hombro de la armadura
-    if (armorOn) {
-        _hombro->position(position.first, position.second);
-        _hombro->fill(flip);
+        // Dibujo la armadura que tiene el pato
+        if (armorOn) {
+            _armor->position(position.first, position.second);
+            _armor->fill(flip);
+        }
+
+        // Dibujo el arma que tiene el pato
+        if (weaponON && (state != DuckState::SLOW_FALL)) {
+            int wx = position.first + 5;
+            int wy = position.second + 36;
+            if (flip == SDL_FLIP_HORIZONTAL) {
+                if (weaponAngle != 0.0) {
+                    wy -= 10;
+                    wx += 5;
+                }
+            } else {
+                wx += 32;
+                if (weaponAngle != 0.0) {
+                    wx -= 3;
+                    wy -= 7;
+                }
+            }
+            _weapon->position(wx, wy);
+            _weapon->fill(weaponAngle, flip);
+        }
+    
+        // Dibujo el ala del pato
+        if (state != DuckState::PLAY_DEAD) {
+            wing->fill(flip);
+        }
+
+        // Dibujo el hombro de la armadura
+        if (armorOn) {
+            _hombro->position(position.first, position.second);
+            _hombro->fill(flip);
+        }
     }
 }
 
