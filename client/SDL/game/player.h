@@ -1,4 +1,3 @@
-#include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -6,8 +5,9 @@
 
 #include "../../../common/duckState/duckState.h"
 
-#include "enums.h"
 #include "image.h"
+#include "enums.h"
+#include "../../../common/duckState/duckState.h"
 
 class Player {
 private:
@@ -15,8 +15,8 @@ private:
     SDL_RendererFlip flip;
     std::string file;
 
-    std::unordered_map<DuckState, std::vector<std::shared_ptr<Image>>> ducks;
-    std::vector<std::shared_ptr<Image>> wings;
+    std::unordered_map<DuckState, std::vector<Image*>> ducks;
+    std::vector<Image*> wings;
 
     DuckState state;
 
@@ -33,13 +33,13 @@ private:
     uint width;
     uint height;
 
-    std::shared_ptr<Image> duck;
-    std::shared_ptr<Image> wing;
+    Image* duck;
+    Image* wing;
 
-    std::shared_ptr<Image> _armor;
-    std::shared_ptr<Image> _hombro;
-    std::shared_ptr<Image> _helmet;
-    std::shared_ptr<Image> _weapon;
+    Image* _armor;
+    Image* _hombro;
+    Image* _helmet;
+    Image* _weapon;
 
     void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
@@ -59,17 +59,21 @@ public:
     void dropEverithing();
 
     // Agarrar un arma
-    void weapon(std::shared_ptr<Image> weapon);
+    void weapon(Image* weapon);
     // Devolver el arma
     bool dropWeapon();
     // Disparar arma
     void shoot();
 
-    // Agarrar/Droppear armadura
-    void armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro);
+    // Agarrar armadura
+    void armor(Image* armor, Image* hombro);
+    // Droppear armadura
+    bool dropArmor();
 
     // Agarrar/Dropear casco
-    void helmet(std::shared_ptr<Image> helmet);
+    void helmet(Image* helmet);
+    // Droppear casco
+    bool dropHelmet();
 
     // Dibujar jugador
     void fill();

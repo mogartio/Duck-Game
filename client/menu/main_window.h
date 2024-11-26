@@ -69,7 +69,7 @@ private:
     std::shared_ptr<QPixmap> soundOnIcon;
     std::shared_ptr<QPixmap> soundOffIcon;
     bool isMuted;
-    bool menuMusicPlaying;
+    bool menuMusicPlaying = false;
     QMediaPlayer* mediaPlayer;
     QString logoConnectionSongPath;
     std::vector<QString> menuSongsPaths;

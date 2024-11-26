@@ -1,6 +1,6 @@
+#include <cassert>
 #include "player.h"
 
-#include <cassert>
 #include <iostream>
 #include <vector>
 
@@ -9,24 +9,24 @@
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
 
-    std::shared_ptr<Image> image = std::make_shared<Image>();
+    Image* image = new Image();
     image->initialize(rend, wingType);
     wings.push_back(image);
 }
 
 void Player::initialiceDuckImages(DuckState state) {
-    std::vector<std::shared_ptr<Image>> images;
+    std::vector<Image*> images;
     std::string action = file + duckState_to_string(state);
 
     if (state == DuckState::WALK) {
         for (int i = 1; i <= 5; i++) {
             std::string walk_action = action + std::to_string(i) + ".png";
-            std::shared_ptr<Image> additionalImage = std::make_shared<Image>();
+            Image* additionalImage = new Image();
             additionalImage->initialize(rend, walk_action);
             images.push_back(additionalImage);
         }
     } else {
-        std::shared_ptr<Image> image = std::make_shared<Image>();
+        Image* image = new Image();
         image->initialize(rend, action);
         images.push_back(image);
     }
@@ -37,12 +37,7 @@ void Player::initialiceDuckImages(DuckState state) {
 // ----------------- Constructor -----------------
 
 Player::Player(SDL_Renderer* rend, Color color):
-        rend(rend),
-        flip(SDL_FLIP_NONE),
-        file("assets/game_assets/ducks/"),
-        weaponON(false),
-        armorOn(false),
-        helmetOn(false) {
+        rend(rend), flip(SDL_FLIP_NONE), file("assets/game_assets/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
 
     walk = 0;
     file += color_to_string(color);
@@ -70,15 +65,14 @@ void Player::defineSize(int height, int width) {
     this->height = height;
     this->width = width;
     for (const auto& pair: ducks) {
-        const std::vector<std::shared_ptr<Image>>& patos =
-                pair.second;  // Obtener el vector de imágenes
-        for (auto pato: patos) {
+        const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
+        for (Image* pato: patos) {
             pato->queryTexture();
             pato->defineSize(height, width);
         }
     }
 
-    for (auto ala: wings) {
+    for (Image* ala: wings) {
         ala->queryTexture();
         ala->defineSize(height, width);
     }
@@ -150,7 +144,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 
     // Actualizo posicion del arma
-    if (weaponON) {  // Falta agregar offsets (perdon facu)
+    if(weaponON) { // Falta agregar offsets (perdon facu)
         _weapon->position(x, y);
     }
 
@@ -175,7 +169,7 @@ void Player::dropEverithing() {
 
 // ----------------- Weapon -----------------
 
-void Player::weapon(std::shared_ptr<Image> weapon) {
+void Player::weapon(Image* weapon) {
     _weapon = weapon;
     weaponON = true;
     weaponAngle = 0.0;
@@ -231,7 +225,7 @@ bool Player::dropHelmet() {
 
 // ----------------- Fill -----------------
 
-void Player::fill() {  // Esta todo en el orden en el que debe ser dibujado
+void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
     duck->fill(flip);
 
@@ -283,10 +277,21 @@ void Player::fill() {  // Esta todo en el orden en el que debe ser dibujado
 
 // ----------------- Get Position -----------------
 
-std::pair<int, int> Player::getPosition() const { return duck->getPosition(); }
+std::pair<int, int> Player::getPosition() const {
+    return duck->getPosition();
+}
 
 // ----------------- Destructor -----------------
 
 Player::~Player() {
-    // No se necesita liberar memoria de las imagenes porque se hace en el destructor de Image
+    for (Image* wing: wings) {
+        delete wing;
+    }
+
+    for (const auto& pair: ducks) {
+        const std::vector<Image*>& images = pair.second;  // Obtener el vector de imágenes
+        for (Image* image: images) {
+            delete image;
+        }
+    }
 }
