@@ -55,4 +55,14 @@ public:
     void stop_jumping(PlayerPosition&) override;
 };
 
+class PlayingDead: public AirState {
+public:
+    PlayingDead() {}
+    virtual int get_offset() override;
+    virtual void jump(PlayerPosition&) override;
+    virtual void update(bool, PlayerPosition&) override;
+    virtual void stop_jumping(PlayerPosition&) override {};
+
+};
+
 #endif

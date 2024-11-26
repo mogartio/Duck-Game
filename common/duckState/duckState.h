@@ -8,7 +8,6 @@ enum class DuckState {
     JUMP,
     FALL,
     SLOW_FALL,
-    LAND,
     PLAY_DEAD 
 };
 

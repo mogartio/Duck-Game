@@ -56,6 +56,8 @@ enum ProjectileId : uint8_t {
     HELMET2 = 0x0F,
     HELMET3 = 0x10,
     CHEST = 0x11,
+
+    EXPLOSION = 0x12,
 };
 }
 

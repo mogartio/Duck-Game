@@ -38,6 +38,10 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
             air_state->jump(*this);
+
+        } else if (direction == PLAY_DEAD) {
+            set_state(std::make_unique<PlayingDead>(), PLAYING_DEAD);
+
         } else if (direction == 6) {
             if (should_change_facing_direction) {
                 facing_direction = AIM_UP;

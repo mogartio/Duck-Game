@@ -61,3 +61,15 @@ void Falling::update(bool could_fall, PlayerPosition& player) {
 }
 
 void Falling::stop_jumping(PlayerPosition& player) { stopped_jumping = true; }
+
+int PlayingDead::get_offset() { return 0; }
+
+void PlayingDead::jump(PlayerPosition& player) {
+    player.set_state(std::make_unique<Jumping>(), JUMPING);
+}
+
+void PlayingDead::update(bool could_fall, PlayerPosition& player) {
+    if (could_fall) {
+        player.set_state(std::make_unique<Falling>(), FALLING);
+    }
+}
