@@ -92,8 +92,15 @@ void Stage::draw_player(Player& player) {
     Coordinate init_position = player.get_position();
     int x = init_position.x;
     int y = init_position.y;
-    for (int i = 0; i < PLAYER_SIZE; i++) {
-        for (int j = 0; j < PLAYER_SIZE; j++) {
+
+    int size = PLAYER_SIZE;
+    if (player.get_state() == PLAYING_DEAD) {
+        size = 3;
+        y += 3;
+    }
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
             Coordinate current(x + i, y + j);
             player.occupy(current);
             map.set(current, player.get_id());

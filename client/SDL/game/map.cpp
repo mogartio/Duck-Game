@@ -205,9 +205,11 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
     players[player]->update(x * tiles, y * tiles, state, side);
 }
 
-void Map::allStanding() {
+void Map::standing(std::unordered_map<std::string, bool> players_updated) {
     for (std::string name: playersNamesAlive) {
-        players[name]->standing();
+        if (!players_updated[name]) {
+            players[name]->standing();
+        }
     }
 }
 

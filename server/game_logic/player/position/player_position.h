@@ -37,7 +37,6 @@ public:
     int get_facing_direction();
     int get_aiming_direction();
     void released_jump();
-    void released_w();
     bool is_aiming_up();
     void stop_aiming_up();
 };
