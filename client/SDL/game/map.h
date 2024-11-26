@@ -1,5 +1,4 @@
 #include <list>
-#include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -28,56 +27,50 @@ private:
     uint filas;
 
     // Imagenes de los tiles
-    std::vector<std::shared_ptr<Image>> tilesImages;
+    std::vector<Image*> tilesImages;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
     // Jugadores
-    std::unordered_map<std::string, std::shared_ptr<Player>> players;
+    std::unordered_map<std::string, Player*> players;
     std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
-    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
-    std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> weaponsPos;
+    std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
     std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
-    std::vector<std::shared_ptr<Image>> helmets;
+    std::vector<Image*> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<std::shared_ptr<Image>, std::vector<std::pair<int, int>>> helmetsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, Image*> helmetsMap;
+    // std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
+    std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> helmetsPos;
 
     // Imagen de armadura usable
-    std::shared_ptr<Image> armor;
-    std::shared_ptr<Image> hombro;
+    Image armor;
+    Image hombro;
     // Imagen de armadura en el mapa
-    std::shared_ptr<Image> armorOnMap;
+    Image armorOnMap;
     // Posiciones de la armadura
     // std::pair<int, int> armorMap;
     std::vector<std::pair<int, int>> armorMap;
 
-    // Imagenes de las explosiones
-    std::vector<std::shared_ptr<Image>> explosions;
-    // Posiciones de las explosiones
-    std::vector<std::pair<int, int>> explosionsPos;
-    // Contador de las explosiones
-    std::vector<int> explosionCounter;
+    Image background;
 
-    std::shared_ptr<Image> background;
-
-    std::shared_ptr<Image> prueba;
+    Image prueba;
 
     void makeWeapon(ProjectilesId::ProjectileId id);
-    void makeExplosion();
-    void makeHelmet(Helemts helmet);
+    void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
     SDL_Rect adjustMapZoom();
 
 
 public:
-    Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window);
+    Map(SDL_Renderer* rend, uint tiles, uint width_window,
+        uint height_window);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
@@ -92,11 +85,9 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
     // Balas
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id,
-                   std::vector<std::pair<uint8_t, uint8_t>> trail);
+    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
-    void weaponPlayer(ProjectilesId::ProjectileId id,
-                      std::string playerName);  // si ya tiene arma tonces dispara
+    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
     void dropWeapon(std::string playerName);
 
@@ -110,15 +101,11 @@ public:
     // Asignar/Reomver armadura a un jugador
     void armorPlayer(std::string playerName);
 
-    // Agregar explosion
-    void explosion(int x, int y);
+    // Remover del mapa
+    void removeWeapon(int x, int y, ProjectilesId::ProjectileId id);
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
-
-    SDL_Texture* getTextureMapWithAll() const;
-
-    SDL_Texture* getTextureMapWithoutAnything() const;
 
     ~Map();
 };
