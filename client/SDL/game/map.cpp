@@ -110,7 +110,7 @@ void Map::makeTile(TileType tileType) {
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
     tile->queryTexture();
-    tile->defineSize(1 * tiles, 1 * tiles);
+    tile->defineSize(6 * tiles, 6 * tiles);
     tile->position(0, 0);
     tilesImages[int(tileType)] = tile;
 }
@@ -172,6 +172,26 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
                 break;
         }
         columnaActual++;
+    }
+    for (auto& [tileType, positions] : tilesPlace) {
+        std::vector<std::pair<int, int>> filteredPositions;
+
+        // Use a set to track blocks we've already processed
+        std::set<std::pair<int, int>> processedBlocks;
+
+        for (const auto& [x, y] : positions) {
+            // Determine the block this tile belongs to
+            int blockX = x / 6;
+            int blockY = y / 6;
+
+            // If the block hasn't been processed yet, keep this tile
+            if (processedBlocks.emplace(blockX, blockY).second) {
+                filteredPositions.emplace_back(x, y);
+            }
+        }
+
+        // Replace the original positions with the filtered ones
+        positions = std::move(filteredPositions);
     }
 }
 
