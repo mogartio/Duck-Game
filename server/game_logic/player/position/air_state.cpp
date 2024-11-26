@@ -3,12 +3,14 @@
 
 #include <memory>
 
+#include "../../../../common/duckState/duckState.h"
 #include "../../config/config.h"
 #include "../observer.h"
 
 #include "player_position.h"
 
 using namespace PlayerInfoId;
+using namespace statesId;
 
 void Grounded::jump(PlayerPosition& player) {
     if (stopped_jumping) {
@@ -46,10 +48,11 @@ int Jumping::get_offset() { return -2; }
 
 
 int Falling::get_offset() { return falling_speed; }
-void Falling::jump(PlayerPosition&) {
+void Falling::jump(PlayerPosition& player) {
     if (stopped_jumping) {
         falling_speed = 0;
         stopped_jumping = false;
+        player.set_state(nullptr, SLOW_FALL);
     }
 }
 void Falling::update(bool could_fall, PlayerPosition& player) {
