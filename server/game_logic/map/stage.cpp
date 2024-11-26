@@ -183,6 +183,8 @@ void Stage::set_explosion(Coordinate center_position, int radius) {
     explosions.push_back(std::tuple<Coordinate, int>(center_position, radius));
 }
 void Stage::explode(Coordinate center_position, int radius) {
+    obs.update(std::vector<std::pair<uint8_t, uint8_t>>(), static_cast<uint8_t>(center_position.x),
+               static_cast<uint8_t>(center_position.y), static_cast<uint8_t>(EXPLOSION));
     for (int i = 0; i < radius + 1; i++) {
         bool keep_going_horizontally = true;
         Coordinate next_position(center_position.x + i, center_position.y);
