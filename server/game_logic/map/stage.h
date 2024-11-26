@@ -21,6 +21,8 @@ private:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
     ProjectileObserver obs;
     std::map<int, Player*> players;
+    void explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
+                            bool& keep_going_horizontally);
 
 public:
     // Son es para poder mockear la clase mas facilmente
@@ -37,8 +39,7 @@ public:
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
     std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
-    void set_explosion(Coordinate, int) {
-    };  // TODO: Implementar esto que recibe el centro y el rango de una explosion
+    void set_explosion(Coordinate, int);
     std::shared_ptr<Weapon> pick_weapon(Coordinate);
     void add_player(Player*, int id);
     void kill(int id);
@@ -49,7 +50,6 @@ public:
 
     // chequear si tiene armadura/casco y hace daño
     bool take_damage(int player_id);
-
 };
 
 #endif

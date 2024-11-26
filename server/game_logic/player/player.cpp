@@ -32,7 +32,8 @@ void Player::pick_weapon(std::shared_ptr<Weapon> new_weapon) {
         chest->set_player(this);
         notify_picked_chest();
 
-    } else if ((new_weapon->get_id() == HELMET) || (new_weapon->get_id() == HELMET2) || (new_weapon->get_id() == HELMET3)) {
+    } else if ((new_weapon->get_id() == HELMET) || (new_weapon->get_id() == HELMET2) ||
+               (new_weapon->get_id() == HELMET3)) {
         helmet = std::move(new_weapon);
         helmet->set_player(this);
         notify_picked_helmet();
@@ -56,8 +57,8 @@ void Player::pick_helmet(std::shared_ptr<Weapon> new_helmet) {
     notify_picked_helmet();
 }
 
-void Player::unarm_self() { 
-    pick_weapon(std::make_unique<Unarmed>(*stage)); 
+void Player::unarm_self() {
+    pick_weapon(std::make_unique<Unarmed>(*stage));
     pick_chest(std::make_unique<Unarmed>(*stage));
     pick_helmet(std::make_unique<Unarmed>(*stage));
 }
@@ -111,7 +112,6 @@ void Player::remove_action(int& command) {
             // notify_dropped_weapon(weapon_id);
             pick_helmet(std::make_unique<Unarmed>(
                     *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
-
         }
     }
 }
@@ -121,6 +121,8 @@ void Player::execute(const int& command) {
         return;
     }
     if (command == SHOOT) {
+        std::cout << "DISPARANDO DESDE: " << std::to_string(position->get_position().x) << " , "
+                  << std::to_string(position->get_position().y) << std::endl;
         shoot();
         return;
     }

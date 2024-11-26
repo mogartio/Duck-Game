@@ -6,6 +6,9 @@ void WeaponSpawnPoint::spawn_weapon() {
     // Para agregar mas opciones de armas agregarlas unicamente al switch
     std::unique_ptr<Weapon> weapon;
     switch (type_of_weapon) {
+        case GRENADE:
+            weapon = std::make_unique<Grenade>(stage);
+            break;
         case COWBOY_PISTOL:
             weapon = std::make_unique<CowboyGun>(stage);
             break;

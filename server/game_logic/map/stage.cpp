@@ -171,6 +171,53 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
     return nullptr;
 }
 
+void Stage::set_explosion(Coordinate center_position, int radius) {
+    for (int i = 0; i < radius + 1; i++) {
+        bool keep_going_horizontally = true;
+        Coordinate next_position(center_position.x + i, center_position.y);
+        explode_vertically(next_position, radius, 1, keep_going_horizontally);
+        explode_vertically(next_position, radius, -1, keep_going_horizontally);
+        if (!keep_going_horizontally) {
+            break;
+        }
+    }
+    for (int i = 0; i < radius + 1; i++) {
+        bool keep_going_horizontally = true;
+        Coordinate next_position(center_position.x - i, center_position.y);
+        explode_vertically(next_position, radius, 1, keep_going_horizontally);
+        explode_vertically(next_position, radius, -1, keep_going_horizontally);
+        if (!keep_going_horizontally) {
+            break;
+        }
+    }
+}
+
+void Stage::explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
+                               bool& keep_going_horizontally) {
+    int wall = Config::get_instance()->mapsId["wall"];
+    int floor = Config::get_instance()->mapsId["floor"];
+
+    for (int j = 0; j < radius + 1; j++) {
+        Coordinate next_tile(starting_position.x, starting_position.y + j * vertical_direction);
+        std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
+                  << std::to_string(next_tile.y) << std::endl;
+        int content_in_next_tile = map.get(next_tile);
+        if (content_in_next_tile == wall || content_in_next_tile == floor) {
+            if (j == 0) {
+                keep_going_horizontally = false;
+            }
+            return;
+        }
+        if (content_in_next_tile > 0 && content_in_next_tile < 5) {  // si toca un jugador, matalo
+            std::cout << "el contenido en la tile de arriba es "
+                      << std::to_string(content_in_next_tile) << std::endl;
+            kill(content_in_next_tile);
+            return;
+        }
+    }
+}
+
+
 void Stage::set(const Coordinate& coor, const int value) {
     map.set(coor, value);
     if (value >= 1) {

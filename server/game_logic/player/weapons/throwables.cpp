@@ -36,7 +36,6 @@ void Grenade::update() {
 void Grenade::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
     // TODO: deberia poder tirar la granada para arriba
-    stage.add_projectile(std::move(
-            std::make_unique<GrenadeProjectile>(std::move(weapon), gun_position, throw_reach,
-                                                x_direction, 1000, counter, stage, GRENADE)));
+    stage.add_projectile(std::move(std::make_unique<GrenadeProjectile>(
+            std::move(weapon), gun_position, 3, x_direction, 40, counter, stage, GRENADE)));
 }
