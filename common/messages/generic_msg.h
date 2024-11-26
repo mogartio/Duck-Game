@@ -35,7 +35,7 @@ namespace ProjectilesId {
 
 enum ProjectileId : uint8_t {
     UNARMED = 0x00,
-    GRENADE = 0x01,
+    SHOTGUN = 0x01,
     BANANA = 0x02,
     PEW_PEW_LASER = 0x03,
     LASER_RIFLE = 0x04,
@@ -43,7 +43,7 @@ enum ProjectileId : uint8_t {
     DUEL_PISTOL = 0x06,
     COWBOY_PISTOL = 0x07,
     MAGNUM = 0x08,
-    SHOTGUN = 0x09,
+    GRENADE = 0x09,
     SNIPER = 0x0A,
 
     // balas (?)

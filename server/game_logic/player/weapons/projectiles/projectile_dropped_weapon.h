@@ -16,22 +16,42 @@
 
 // Un monton de codigo repetido aca
 class ProjectileThrownWeapon: public Projectile {
-private:
-    std::shared_ptr<Weapon> weapon;
+protected:
     std::vector<int> deviations;
     std::vector<int> deviations_direction;
     int deviations_index;
+    std::shared_ptr<Weapon> weapon;
 
 public:
     ProjectileThrownWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                            int x_direction, int reach, int id):
             Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
-            weapon(std::move(weapon)), deviations_index(-1) {  // Initialize deviations_index
+            deviations_index(-1),
+            weapon(std::move(weapon)) {  // Initialize deviations_index
         for (int i = 0; i < speed; i++) {
             deviations.push_back(3);
             deviations_direction.push_back(UP_DIRECTION);
             deviations.push_back(5);
-            if (i > speed / 2) {
+            if (i < speed / 2) {
+                deviations_direction.push_back(UP_DIRECTION);
+            } else {
+                deviations_direction.push_back(DOWN_DIRECTION);
+            }
+        }
+        deviations.push_back(3);
+        deviations_direction.push_back(DOWN_DIRECTION);
+    }
+
+    ProjectileThrownWeapon(std::shared_ptr<Grenade> weapon, Coordinate initial_position, int speed,
+                           int x_direction, int reach, int id):
+            Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
+            deviations_index(-1),
+            weapon(std::move(weapon)) {  // Initialize deviations_index
+        for (int i = 0; i < speed; i++) {
+            deviations.push_back(3);
+            deviations_direction.push_back(UP_DIRECTION);
+            deviations.push_back(5);
+            if (i < speed / 2) {
                 deviations_direction.push_back(UP_DIRECTION);
             } else {
                 deviations_direction.push_back(DOWN_DIRECTION);
@@ -42,14 +62,22 @@ public:
     }
 
     virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
-    void update() override {
+    bool update() override {
 
+        if (weapon->get_id() == GRENADE) {
+            if (weapon->exploded()) {
+                updateNotPosition(position.x, position.y);
+                return true;
+            }
+            weapon->update(position);
+        }
         if (static_cast<size_t>(deviations_index) == deviations.size() - 1) {
-            return;
+            return false;
         }
         deviations_index++;
         deviation = deviations[deviations_index];
         deviation_direction = deviations_direction[deviations_index];
+        return false;
     }
 
 
@@ -81,31 +109,10 @@ public:
                         static_cast<uint8_t>(id));
         }
     }
-
-
     virtual std::shared_ptr<Weapon> get_weapon() {
         spawn->free();
         return std::move(weapon);
     }
 };
 
-class GrenadeProjectile: public ProjectileThrownWeapon {
-    int counter;
-    Stage& stage;
-
-public:
-    GrenadeProjectile(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                      int x_direction, int reach, int counter, Stage& stage, int id):
-            ProjectileThrownWeapon(std::move(weapon), initial_position, speed, x_direction, reach,
-                                   id),
-            counter(counter),
-            stage(stage) {}
-    void update() override {
-        ProjectileThrownWeapon::update();
-        counter++;
-        if (counter == Config::get_instance()->explosion_counter) {
-            stage.set_explosion(position, Config::get_instance()->explosion_range);
-        }
-    }
-};
 #endif

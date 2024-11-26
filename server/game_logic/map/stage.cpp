@@ -65,7 +65,11 @@ void Stage::update() {
             remove_projectile(*iterator);
             continue;
         }
-        (*iterator)->update();
+        projectile_was_erased = (*iterator)->update();
+        if (projectile_was_erased) {
+            remove_projectile(*iterator);
+            continue;
+        }
         iterator++;
     }
 }

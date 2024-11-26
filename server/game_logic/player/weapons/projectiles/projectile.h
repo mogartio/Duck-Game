@@ -50,7 +50,7 @@ public:
     virtual Coordinate get_position() { return position; }
     virtual ~Projectile() = default;
     virtual int get_id() { return id; }
-    virtual void update() {}
+    virtual bool update() { return false; }
     virtual void updateNotPosition(uint8_t, uint8_t);
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;

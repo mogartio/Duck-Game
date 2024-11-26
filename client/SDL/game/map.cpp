@@ -19,13 +19,14 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
     // Deberia llegarme la info del fondo
     background.initialize(rend, "assets/game_assets/background/day.png");
 
-    for (int i = int(ProjectilesId::ProjectileId::GRENADE);
+    for (int i = int(ProjectilesId::ProjectileId::SHOTGUN);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
 
-    for (int i = int(ProjectilesId::ProjectileId::HELMET); i <= int(ProjectilesId::ProjectileId::HELMET3); i++) {
+    for (int i = int(ProjectilesId::ProjectileId::HELMET);
+         i <= int(ProjectilesId::ProjectileId::HELMET3); i++) {
         ProjectilesId::ProjectileId helmet = static_cast<ProjectilesId::ProjectileId>(i);
         makeHelmet(helmet);
     }
@@ -252,28 +253,29 @@ void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
 }
 
 void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
-    players[playerName]->helmet(helmets[int(helmet)-14]);
+    players[playerName]->helmet(helmets[int(helmet) - 14]);
 }
 
 // ----------------- Armor -----------------
 
-void Map::newArmor(int x, int y) { 
-    armorMap.push_back(std::pair(x, y));
-}
+void Map::newArmor(int x, int y) { armorMap.push_back(std::pair(x, y)); }
 
-void Map::armorPlayer(std::string playerName) { 
-    players[playerName]->armor(&armor, &hombro);
-}
+void Map::armorPlayer(std::string playerName) { players[playerName]->armor(&armor, &hombro); }
 
 // ----------------- Remove -----------------
 
 void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::CHEST) {
-        armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)), armorMap.end());
+        armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)),
+                       armorMap.end());
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
-        helmetsPos[id].erase(std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), std::pair(x, y)), helmetsPos[id].end());
+        helmetsPos[id].erase(
+                std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), std::pair(x, y)),
+                helmetsPos[id].end());
     } else {
-        weaponsMap[id].erase(std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)), weaponsMap[id].end());
+        weaponsMap[id].erase(
+                std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)),
+                weaponsMap[id].end());
     }
 }
 

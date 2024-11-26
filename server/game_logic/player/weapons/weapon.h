@@ -34,8 +34,10 @@ public:
     virtual void set_player(Player* new_player) { player = new_player; }
     virtual void deset_player() { player = nullptr; }
     virtual void update() {}
+    virtual void update(Coordinate) {}
     virtual uint8_t get_id() { return id; }
     virtual bool is_unarmed() { return false; }
+    virtual bool exploded() { return false; }
 };
 
 class Unarmed: public Weapon {
