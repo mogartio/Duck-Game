@@ -3,9 +3,9 @@
 #include <string>
 
 namespace statesId {
-enum { STANDING, WALK, JUMP, FALL, SLOW_FALL, LAND, PLAY_DEAD };
+enum { STANDING, WALK, JUMP, FALL, SLOW_FALL, PLAY_DEAD };
 }
-enum class DuckState { STANDING, WALK, JUMP, FALL, SLOW_FALL, LAND, PLAY_DEAD };
+enum class DuckState { STANDING, WALK, JUMP, FALL, SLOW_FALL, PLAY_DEAD };
 
 std::string duckState_to_string(DuckState state);  // Declaración
 
