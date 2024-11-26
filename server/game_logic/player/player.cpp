@@ -81,19 +81,20 @@ void Player::add_action(int& command) { current_actions.insert(command); }
 
 void Player::remove_action(int& command) {
     current_actions.erase(command);
+
     if (command == JUMP) {  // esto va a terminar siendo un diccionario de funciones probablemente
         position->released_jump();
-    }
-    if (command == 6) {
+
+    } else if (command == 6) {
         position->stop_aiming_up();
-    }
-    if (command == SHOOT) {
+
+    } else if (command == SHOOT) {
         if (weapon == nullptr) {
             return;
         }
         weapon->stop_shooting();
-    }
-    if (command == THROW_WEAPON) {
+
+    } else if (command == THROW_WEAPON) {
         if (!weapon->is_unarmed()) {
             weapon->finish_throw(position->get_aiming_direction(), position->is_aiming_up(),
                                  std::move(weapon));
@@ -145,7 +146,7 @@ void Player::update() {
     std::set<int> moving_commands;  // comandos que te emocionan son...
     for (int command: current_actions) {
         execute(command);
-        if (command == 6 || command == MOVE_LEFT || command == MOVE_RIGHT || command == JUMP) {
+        if (command == 6 || command == MOVE_LEFT || command == MOVE_RIGHT || command == JUMP || command == PLAY_DEAD) {
             moving_commands.insert(command);
         }
     }

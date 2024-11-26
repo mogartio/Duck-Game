@@ -7,7 +7,6 @@ std::string duckState_to_string(DuckState state) {
         case DuckState::JUMP:       return "jump.png";
         case DuckState::FALL:       return "fall.png";
         case DuckState::SLOW_FALL:  return "slowFall.png";
-        case DuckState::LAND:       return "land.png";
         case DuckState::PLAY_DEAD:  return "playDead.png";
         default:         return "unknown.png";
     }

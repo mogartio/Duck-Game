@@ -16,7 +16,8 @@ namespace PlayerInfoId {
 #define GROUNDED 1
 #define JUMPING 2
 #define FALLING 3
-#define DEAD 4
+#define SLOW_FALL 4
+#define PLAYING_DEAD 5
 
 }  // namespace PlayerInfoId
 class Observer {
