@@ -227,11 +227,6 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     }
 }
 
-void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id,
-                    std::vector<std::pair<uint8_t, uint8_t>> trail) {
-    laser.push_back(std::pair(x, y));
-}
-
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     // Si el jugador ya tiene un arma, entonces la suelta
     if (id == ProjectilesId::ProjectileId::UNARMED) {
@@ -380,14 +375,6 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el mapa
     SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
 
-
-    // for (const auto& pair: helmetsMap) {
-    //     for (const auto& helmet: pair.second) {
-    //         pair.first->position(helmet.first * tiles, helmet.second * tiles);
-    //         pair.first->fill();
-    //     }
-    // }
-
     for (const auto& helmet: helmetsPos) {
         for (const auto& pos: helmet.second) {
             helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles);
@@ -395,22 +382,10 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
     }
 
-    // for (std::pair armorPos: armorMap) {
-    //     armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
-    //     armorOnMap.fill();
-    // }
-
     for (std::pair armorPos: armorMap) {
         armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap.fill();
     }
-
-    // for (const auto& pair : weaponsMap) {
-    //     for (const auto& weapon: pair.second) {
-    //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
-    //         weapons[pair.first]->fill();
-    //     }
-    // }
 
     for (const auto& pair: weaponsMap) {
         for (const auto& weapon: pair.second) {
@@ -421,12 +396,6 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     for (std::string playerName: playersNamesAlive) {
         players[playerName]->fill();
-    }
-
-    for (std::pair laserPos: laser) {
-        weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles,
-                                                              laserPos.second * tiles);
-        weapons[ProjectilesId::ProjectileId::LASER]->fill();
     }
 
     for (uint8_t i = 0; i < explosionsPos.size(); i++) {
@@ -455,13 +424,11 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
 
-    laser.clear();
-    /*
-    // Sin usar zoom
-    // Dibujamos el parentTexture
-    SDL_RenderCopy(rend, parentTexture, nullptr, nullptr);
-    */
 }
+
+SDL_Texture* Map::getTextureMapWithAll() const { return parentTexture; }
+
+SDL_Texture* Map::getTextureMapWithoutAnything() const { return mapTexture; }
 
 // ----------------- Destructor -----------------
 

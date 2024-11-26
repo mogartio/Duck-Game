@@ -48,5 +48,5 @@ add_custom_target(CopyResources ALL
 add_dependencies(client CopyResources)
 
 # Link libraries
-target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
+target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image SDL2_mixer SDL2_ttf Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
 target_link_libraries(server common yaml-cpp)

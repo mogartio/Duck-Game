@@ -37,7 +37,6 @@ private:
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
-    std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
@@ -54,7 +53,6 @@ private:
     // Imagen de armadura en el mapa
     Image armorOnMap;
     // Posiciones de la armadura
-    // std::pair<int, int> armorMap;
     std::vector<std::pair<int, int>> armorMap;
 
     Image background;
@@ -92,8 +90,6 @@ public:
 
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
-    // Balas
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
     void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
@@ -117,6 +113,10 @@ public:
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
+
+    SDL_Texture* getTextureMapWithAll() const;
+
+    SDL_Texture* getTextureMapWithoutAnything() const;
 
     ~Map();
 };
