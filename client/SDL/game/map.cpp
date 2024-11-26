@@ -16,8 +16,16 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         width_window(width_window),
         height_window(height_window),
         tilesImages(3, nullptr) {
+
+    // inicializo las imagenes
+    armor = std::make_shared<Image>();
+    hombro = std::make_shared<Image>();
+    armorOnMap = std::make_shared<Image>();
+    background = std::make_shared<Image>();
+    prueba = std::make_shared<Image>();
+
     // Deberia llegarme la info del fondo
-    background.initialize(rend, "assets/game_assets/background/day.png");
+    background->initialize(rend, "assets/game_assets/background/day.png");
 
     for (int i = int(ProjectilesId::ProjectileId::GRENADE);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
@@ -39,6 +47,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
+
+    makeExplosion();
 }
 
 // ----------------- Initialize Images -----------------
@@ -50,7 +60,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         return;
     }
-    Image* weaponImage = new Image();
+    std::shared_ptr<Image> weaponImage = std::make_shared<Image>();
     std::string path = "assets/game_assets/weapons/";
     path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
@@ -64,9 +74,22 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     weapons[id] = weaponImage;
 }
 
-void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
+void Map::makeExplosion() {
+    for (int i = 1; i <= 7; i++) {
+        std::shared_ptr<Image> explosion = std::make_shared<Image>();
+        std::string path = "assets/game_assets/weapons/bullets/explosion";
+        path += std::to_string(i);
+        path += ".png";
+        explosion->initialize(rend, path);
+        explosion->queryTexture();
+        explosion->defineSize(2 * tiles, 2 * tiles);
+        explosions.push_back(explosion);
+    }
+}
+
+void Map::makeHelmet(Helemts helmet) {
     // Creo casco de mapa
-    Image* mapHelmet = new Image();
+    std::shared_ptr<Image> mapHelmet = std::make_shared<Image>();
     std::string mapPath = "assets/game_assets/map/";
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
@@ -77,7 +100,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     helmetsPos[helmet] = std::vector<std::pair<int, int>>();
 
     // Creo casco de inventario
-    Image* helmetImage = new Image();
+    std::shared_ptr<Image> helmetImage = std::make_shared<Image>();
     std::string path = "assets/game_assets/helmets/";
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
@@ -88,22 +111,22 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
 
 void Map::makeArmor() {
     // Creo armadura de mapa
-    armorOnMap.initialize(rend, "assets/game_assets/map/armor.png");
-    armorOnMap.queryTexture();
-    armorOnMap.defineSize(2 * tiles, 2 * tiles);
+    armorOnMap->initialize(rend, "assets/game_assets/map/armor.png");
+    armorOnMap->queryTexture();
+    armorOnMap->defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
-    armor.initialize(rend, "assets/game_assets/armor/armor4.png");
-    armor.queryTexture();
-    armor.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
+    armor->initialize(rend, "assets/game_assets/armor/armor4.png");
+    armor->queryTexture();
+    armor->defineSize(3 * tiles, 3 * tiles);  // mismo tamaño que el pato
 
-    hombro.initialize(rend, "assets/game_assets/armor/hombro4.png");
-    hombro.queryTexture();
-    hombro.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño q el pato
+    hombro->initialize(rend, "assets/game_assets/armor/hombro4.png");
+    hombro->queryTexture();
+    hombro->defineSize(3 * tiles, 3 * tiles);  // mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
-    Image* tile = new Image();
+    std::shared_ptr<Image> tile = std::make_shared<Image>();
     std::string path =
             "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
                                                    // me mande el server (dia, noche)
@@ -178,7 +201,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 // ----------------- Player -----------------
 
 void Map::addPlayer(int columnaActual, int filaActual, int color, std::string name) {
-    Player* player = new Player(rend, Color(color));
+    std::shared_ptr<Player> player = std::make_shared<Player>(rend, Color(color));
     player->defineSize(6 * tiles, 6 * tiles);
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     players[name] = player;
@@ -209,7 +232,13 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         return;
     }
     // weaponsMap[id].push_back(std::pair(x, y));
-    weaponsMap[id].push_back(std::pair(x, y));
+
+    // if (id == ProjectilesId::ProjectileId::EXPLOSION) {
+    //     explosion(x, y);
+    //     return;
+    // }
+
+    weaponsPos[id] = std::pair(x, y);
 }
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id,
@@ -275,6 +304,14 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     } else {
         weaponsMap[id].erase(std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)), weaponsMap[id].end());
     }
+void Map::armorPlayer(std::string playerName) { players[playerName]->armor(armor, hombro); }
+
+
+// ----------------- Explosion -----------------
+
+void Map::explosion(int x, int y) {
+    explosionsPos.push_back(std::pair(x, y));
+    explosionCounter.push_back(0);
 }
 
 // ----------------- Pre-fill -----------------
@@ -338,7 +375,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         SDL_RenderClear(rend);
 
         // Dibujamos el fondo
-        background.fill(true);
+        background->fill(true);
 
         // Dibujamos el mapa
         for (const auto& tilePair: tilesPlace) {
@@ -378,8 +415,8 @@ void Map::fill() {  // Dibuja de atras para adelante
     // }
 
     for (std::pair armorPos: armorMap) {
-        armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
-        armorOnMap.fill();
+        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
+        armorOnMap->fill();
     }
 
     // for (const auto& pair : weaponsMap) {
@@ -406,6 +443,22 @@ void Map::fill() {  // Dibuja de atras para adelante
         weapons[ProjectilesId::ProjectileId::LASER]->fill();
     }
 
+    for (uint8_t i = 0; i < explosionsPos.size(); i++) {
+        if (explosionCounter[i] % 4 != 0) {
+            explosionCounter[i]++;
+            explosions[explosionCounter[i] / 4]->fill();
+            continue;
+        }
+        std::pair pos = explosionsPos[i];
+        explosions[explosionCounter[i] / 4]->position(pos.first, pos.second);
+        explosions[explosionCounter[i] / 4]->fill();
+        explosionCounter[i]++;
+        if (explosionCounter[i] / 4 == 6) {
+            explosionsPos.erase(explosionsPos.begin() + i);
+            explosionCounter.erase(explosionCounter.begin() + i);
+        }
+    }
+
     // Cambiamos el render target al renderer
     SDL_SetRenderTarget(rend, nullptr);
 
@@ -417,12 +470,11 @@ void Map::fill() {  // Dibuja de atras para adelante
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
 
     laser.clear();
-    /*
-    // Sin usar zoom
-    // Dibujamos el parentTexture
-    SDL_RenderCopy(rend, parentTexture, nullptr, nullptr);
-    */
 }
+
+SDL_Texture* Map::getTextureMapWithAll() const { return parentTexture; }
+
+SDL_Texture* Map::getTextureMapWithoutAnything() const { return mapTexture; }
 
 // ----------------- Destructor -----------------
 
@@ -434,25 +486,5 @@ Map::~Map() {
 
     if (mapTexture != nullptr) {
         SDL_DestroyTexture(mapTexture);
-    }
-
-    for (Image* piso: tilesImages) {
-        delete piso;
-    }
-
-    for (const auto& pair: weapons) {
-        delete pair.second;
-    }
-
-    for (Image* helmet: helmets) {
-        delete helmet;
-    }
-
-    for (const auto& pair: helmetsMap) {
-        delete pair.second;
-    }
-
-    for (const auto& pair: players) {
-        delete pair.second;
     }
 }
