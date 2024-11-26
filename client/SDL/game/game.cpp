@@ -129,8 +129,6 @@ void Game::play() {
                                     Side(facing_direction - 1));
                             stated_palying = true;
                             players_updated[player_name] = true;
-
-                            std::cout << int(state) << std::endl;
                         }
                         break;
 
