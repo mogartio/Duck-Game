@@ -72,6 +72,10 @@ void Stage::update() {
         }
         iterator++;
     }
+    for (const auto& [center_position, radius]: explosions) {
+        explode(center_position, radius);
+    }
+    explosions.clear();
 }
 
 void Stage::draw(int object, int size, Coordinate init_position) {
@@ -176,6 +180,9 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
 }
 
 void Stage::set_explosion(Coordinate center_position, int radius) {
+    explosions.push_back(std::tuple<Coordinate, int>(center_position, radius));
+}
+void Stage::explode(Coordinate center_position, int radius) {
     for (int i = 0; i < radius + 1; i++) {
         bool keep_going_horizontally = true;
         Coordinate next_position(center_position.x + i, center_position.y);
