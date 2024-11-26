@@ -58,7 +58,7 @@
     The file will be placed in the folder maps/ with the name map_name.yaml
 */ 
 inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name) {
-    const int padding = 8; // Padding size (6x6 tiles padding)
+    const int padding = 12; // Padding size (6x6 tiles padding)
     const std::string file_name = "maps/" + map_name + ".yaml";
 
     int editor_rows = editor_matrix.size();
