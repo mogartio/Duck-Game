@@ -2,8 +2,11 @@
 #define STAGE_H
 
 #include <algorithm>
+#include <map>
 #include <memory>
+#include <set>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "../player/weapons/projectiles/projectile.h"
@@ -17,10 +20,14 @@ private:
     Map map;
     void printStage();
     std::vector<std::shared_ptr<Projectile>> projectiles;
+    std::vector<std::tuple<Coordinate, int>> explosions;
     std::vector<Coordinate> coordinates_to_delete;
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
     ProjectileObserver obs;
     std::map<int, Player*> players;
+    void explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
+                            bool& keep_going_horizontally);
+    std::shared_ptr<Projectile> find_projectile_in(Coordinate init_position);
 
 public:
     // Son es para poder mockear la clase mas facilmente
@@ -36,14 +43,19 @@ public:
     void update();
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
-    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
-    void set_explosion(Coordinate, int) {
-    };  // TODO: Implementar esto que recibe el centro y el rango de una explosion
+    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); }
+    void set_explosion(Coordinate, int);
+    void explode(Coordinate, int);
     std::shared_ptr<Weapon> pick_weapon(Coordinate);
     void add_player(Player*, int id);
     void kill(int id);
     void draw(int object, int size, Coordinate init_position);
+
+    // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);
+
+    // chequear si tiene armadura/casco y hace daño
+    bool take_damage(int player_id);
 };
 
 #endif

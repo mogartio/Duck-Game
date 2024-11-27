@@ -22,8 +22,7 @@
 
 Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
-        map(map), senders(senders), obs(this->senders, ids) {
-}
+        map(map), senders(senders), obs(this->senders, ids) {}
 
 void Stage::print() { map.print(); }
 
@@ -43,6 +42,14 @@ void Stage::remove_projectile(std::shared_ptr<Projectile>& projectile) {
 
 void Stage::kill(int id) { players[id]->die(); }
 
+bool Stage::take_damage(int player_id) {
+    if (players[player_id]->has_chest() || players[player_id]->has_helmet()) {
+        players[player_id]->take_damage();
+        return true;
+    }
+    return false;
+}
+
 void Stage::update() {
     for (const auto& c: coordinates_to_delete) {
         map.set(c, BACKGROUND);
@@ -58,9 +65,17 @@ void Stage::update() {
             remove_projectile(*iterator);
             continue;
         }
-        (*iterator)->update();
+        projectile_was_erased = (*iterator)->update();
+        if (projectile_was_erased) {
+            remove_projectile(*iterator);
+            continue;
+        }
         iterator++;
     }
+    for (const auto& [center_position, radius]: explosions) {
+        explode(center_position, radius);
+    }
+    explosions.clear();
 }
 
 void Stage::draw(int object, int size, Coordinate init_position) {
@@ -130,12 +145,40 @@ int Stage::is_valid_position(Coordinate position, int color) {
                 return DEATH;
             }
             int value = map.get(aux);
+            if (value == LIVE_BANANA) {  // una banana que fue activada
+                std::shared_ptr<Projectile> banana_per_se = find_projectile_in(aux);
+                if (banana_per_se) {
+
+                    Coordinate banana_position = banana_per_se->get_position();
+                    banana_per_se->updateNotPosition(banana_position.x, banana_position.y);
+                    remove_projectile(banana_per_se);  // se elimina la banana per se
+                }
+                return LIVE_BANANA;
+            }
             if (value != BACKGROUND && value != color) {
                 return OCCUPIED;
             }
         }
     }
     return FREE;
+}
+
+std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position) {
+    for (auto& projectile: projectiles) {
+        Coordinate projectile_position = projectile->get_position();
+        std::vector<Coordinate> positions_occupied_by_projectile;
+        for (int i = 0; i < Config::get_instance()->bullet_size; i++) {
+            for (int j = 0; j < Config::get_instance()->bullet_size; j++) {
+                Coordinate c(projectile_position.x + j, projectile_position.y + i);
+                positions_occupied_by_projectile.push_back(c);
+            }
+        }
+        if (count(positions_occupied_by_projectile.begin(), positions_occupied_by_projectile.end(),
+                  init_position) > 0) {
+            return projectile;
+        }
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
@@ -145,6 +188,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
             if (weaponProjectile->get_position() == position) {
                 std::shared_ptr new_weapon = (weaponProjectile->get_weapon());
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }
@@ -152,8 +196,12 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
         if (ProjectileThrownWeapon* weaponProjectile =
                     dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
+                if (weaponProjectile->get_id() == LIVE_BANANA) {  // banana activa no es levantable
+                    return nullptr;
+                }
                 std::shared_ptr new_weapon = weaponProjectile->get_weapon();
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }
@@ -161,6 +209,58 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
     }
     return nullptr;
 }
+
+void Stage::set_explosion(Coordinate center_position, int radius) {
+    explosions.push_back(std::tuple<Coordinate, int>(center_position, radius));
+}
+void Stage::explode(Coordinate center_position, int radius) {
+    obs.update(std::vector<std::pair<uint8_t, uint8_t>>(), static_cast<uint8_t>(center_position.x),
+               static_cast<uint8_t>(center_position.y), static_cast<uint8_t>(EXPLOSION));
+    for (int i = 0; i < radius + 1; i++) {
+        bool keep_going_horizontally = true;
+        Coordinate next_position(center_position.x + i, center_position.y);
+        explode_vertically(next_position, radius, 1, keep_going_horizontally);
+        explode_vertically(next_position, radius, -1, keep_going_horizontally);
+        if (!keep_going_horizontally) {
+            break;
+        }
+    }
+    for (int i = 0; i < radius + 1; i++) {
+        bool keep_going_horizontally = true;
+        Coordinate next_position(center_position.x - i, center_position.y);
+        explode_vertically(next_position, radius, 1, keep_going_horizontally);
+        explode_vertically(next_position, radius, -1, keep_going_horizontally);
+        if (!keep_going_horizontally) {
+            break;
+        }
+    }
+}
+
+void Stage::explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
+                               bool& keep_going_horizontally) {
+    int wall = Config::get_instance()->mapsId["wall"];
+    int floor = Config::get_instance()->mapsId["floor"];
+
+    for (int j = 0; j < radius + 1; j++) {
+        Coordinate next_tile(starting_position.x, starting_position.y + j * vertical_direction);
+        std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
+                  << std::to_string(next_tile.y) << std::endl;
+        int content_in_next_tile = map.get(next_tile);
+        if (content_in_next_tile == wall || content_in_next_tile == floor) {
+            if (j == 0) {
+                keep_going_horizontally = false;
+            }
+            return;
+        }
+        if (content_in_next_tile > 0 && content_in_next_tile < 5) {  // si toca un jugador, matalo
+            std::cout << "el contenido en la tile de arriba es "
+                      << std::to_string(content_in_next_tile) << std::endl;
+            kill(content_in_next_tile);
+            return;
+        }
+    }
+}
+
 
 void Stage::set(const Coordinate& coor, const int value) {
     map.set(coor, value);

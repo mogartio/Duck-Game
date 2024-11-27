@@ -22,7 +22,7 @@ private:
     bool stopped_jumping;
 
 public:
-    Grounded(bool stopped_jumping): stopped_jumping(stopped_jumping) {}
+    explicit Grounded(bool stopped_jumping): stopped_jumping(stopped_jumping) {}
     virtual int get_offset() override;
     virtual void jump(PlayerPosition& player) override;
     virtual void update(bool, PlayerPosition&) override;
@@ -53,6 +53,15 @@ public:
     virtual void jump(PlayerPosition&) override;
     virtual void update(bool, PlayerPosition&) override;
     void stop_jumping(PlayerPosition&) override;
+};
+
+class PlayingDead: public AirState {
+public:
+    PlayingDead() {}
+    virtual int get_offset() override;
+    virtual void jump(PlayerPosition&) override;
+    virtual void update(bool, PlayerPosition&) override;
+    virtual void stop_jumping(PlayerPosition&) override{};
 };
 
 #endif

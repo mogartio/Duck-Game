@@ -7,11 +7,11 @@ weapons_init_ammo:
   Cowboy Gun: 6
 
 player_falling_speed: 2
-player_jumping_height: 5
+player_jumping_height: 6
 armor_strength: 1
 
-explosion_counter: 10
-explosion_range: 5
+explosion_counter: 120
+explosion_range: 2
 rounds_per_cycle: 5
 bullet_size: 2
 mapId:

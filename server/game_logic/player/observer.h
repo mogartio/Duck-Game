@@ -1,6 +1,10 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
+#include <memory>
 #include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "../../../common/coordinate.h"
 #include "../../../common/messages/generic_msg.h"
@@ -16,7 +20,8 @@ namespace PlayerInfoId {
 #define GROUNDED 1
 #define JUMPING 2
 #define FALLING 3
-#define DEAD 4
+#define SLOW_FALL 4
+#define PLAYING_DEAD 5
 
 }  // namespace PlayerInfoId
 class Observer {
@@ -34,6 +39,7 @@ public:
     virtual void update(std::string, uint8_t) const {}
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t, uint8_t, uint8_t) const {
     }
+    virtual void updateOldPos(uint8_t, uint8_t, uint8_t) const {}
     virtual void broadcast(std::shared_ptr<GenericMsg> msg) const {
         for (auto id: *ids) {
             senders.send_to_client(msg, id);
@@ -72,22 +78,24 @@ class ProjectileObserver: public Observer {
 public:
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
                         uint8_t current_pos_y, uint8_t id) const override {
-        // ProjectileInfoMsg* msg = new ProjectileInfoMsg(trail, current_pos_x, current_pos_y, id);
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
         broadcast(msg);
         std::stringstream ss;
         if (trail.size() > 0) {
-
             for (auto& coor: trail) {
                 ss << std::to_string(std::get<0>(coor)) << " , "
                    << std::to_string(std::get<1>(coor)) << std::endl;
             }
-            std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-                      << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
-                      << " con trail: " << ss.str() << std::endl;
         }
     }
+
+    virtual void updateOldPos(uint8_t pos_x, uint8_t pos_y, uint8_t id) const override {
+        std::shared_ptr<GenericMsg> msg =
+                std::make_shared<NotProyectileInfo>(id, std::pair<uint8_t, uint8_t>(pos_x, pos_y));
+        broadcast(msg);
+    }
+
     explicit ProjectileObserver(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& queues,
                                 std::shared_ptr<std::set<uint>> ids):
             Observer(queues, ids) {}

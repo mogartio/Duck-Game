@@ -131,6 +131,8 @@ void Game::play() {
                 uint8_t state = 0;
 
                 std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
+                std::shared_ptr<NotProyectileInfo> not_projectile = nullptr;
+                std::pair<uint8_t, uint8_t> position_x_y;
                 uint8_t pos_x, pos_y, item = 0;
                 std::vector<std::pair<uint8_t, uint8_t>> trail;
 
@@ -178,6 +180,16 @@ void Game::play() {
                             // } else {
                             map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
                             // }
+                        }
+                        break;
+
+                    case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
+                        not_projectile = std::dynamic_pointer_cast<NotProyectileInfo>(msj);
+                        if (not_projectile) {
+                            position_x_y = not_projectile->get_position_x_y();
+                            item = not_projectile->get_item();
+                            map.removeWeapon(position_x_y.first, position_x_y.second,
+                                             ProjectilesId::ProjectileId(item));
                         }
                         break;
 

@@ -20,24 +20,34 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
     air_state = std::move(std::make_unique<Grounded>(true));
 }
 
-void PlayerPosition::move(const std::set<int>& directions) {
+void PlayerPosition::move(const std::set<int>& directions, bool should_change_facing_direction) {
     int x_offset = 0;
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...
-            facing_direction = AIM_LEFT;
-            aiming_direction = -1;
+            if (should_change_facing_direction) {
+                facing_direction = AIM_LEFT;
+                aiming_direction = -1;
+            }
             x_offset = -1;
         } else if (direction == MOVE_RIGHT) {
-            facing_direction = AIM_RIGHT;
-            aiming_direction = AIM_RIGHT;
+            if (should_change_facing_direction) {
+                facing_direction = AIM_RIGHT;
+                aiming_direction = AIM_RIGHT;
+            }
             x_offset = 1;
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
             air_state->jump(*this);
+
+        } else if (direction == PLAY_DEAD) {
+            set_state(std::make_unique<PlayingDead>(), PLAYING_DEAD);
+
         } else if (direction == 6) {
-            facing_direction = AIM_UP;
-            aiming_up = true;
-            player.Notify();
+            if (should_change_facing_direction) {
+                facing_direction = AIM_UP;
+                aiming_up = true;
+                player.Notify();
+            }
         } else {
             continue;
         }
@@ -58,6 +68,8 @@ void PlayerPosition::move_horizontally(int offset) {
         player.die();
     } else if (next_position == OCCUPIED) {
         return;
+    } else if (next_position == LIVE_BANANA) {
+        move_horizontally(offset * 4);
     } else {
         if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
             player.Notify();
@@ -68,7 +80,9 @@ void PlayerPosition::move_horizontally(int offset) {
 
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
 void PlayerPosition::set_state(std::shared_ptr<AirState> new_state, uint8_t state_code) {
-    air_state = std::move(new_state);
+    if (new_state != nullptr) {
+        air_state = std::move(new_state);
+    }
     state = state_code;
     player.Notify();
 }

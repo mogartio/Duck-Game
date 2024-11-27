@@ -61,15 +61,19 @@ public:
     // Agarrar un arma
     void weapon(std::shared_ptr<Image> weapon);
     // Devolver el arma
-    void dropWeapon();
+    bool dropWeapon();
     // Disparar arma
     void shoot();
 
-    // Agarrar/Droppear armadura
+    // Agarrar armadura
     void armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro);
+    // Droppear armadura
+    bool dropArmor();
 
     // Agarrar/Dropear casco
     void helmet(std::shared_ptr<Image> helmet);
+    // Droppear casco
+    bool dropHelmet();
 
     // Dibujar jugador
     void fill();
