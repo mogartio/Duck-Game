@@ -47,8 +47,6 @@ public:
     void add_player(Player*, int id);
     void kill(int id);
     void draw(int object, int size, Coordinate init_position);
-
-    // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);
 
     // chequear si tiene armadura/casco y hace daño

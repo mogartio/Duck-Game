@@ -29,7 +29,8 @@ std::string GameMain::play_round(Stage& stage, Map& map) {
 }
 
 void GameMain::init_round(Stage& stage, Map& map) {
-    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites = map.get_items_spawn_sites();
+    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
+            map.get_items_spawn_sites();
 
     for (auto& weapon: weapon_spawn_sites) {
         WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));

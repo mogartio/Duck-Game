@@ -71,6 +71,7 @@ Coordinate Player::get_position() { return position->get_position(); }
 
 int Player::get_facing_direction() { return position->get_facing_direction(); }
 
+
 int Player::get_id() { return id; }
 
 void Player::occupy(Coordinate& coordinate) { position->occupy(coordinate); }
@@ -130,10 +131,6 @@ void Player::execute(const int& command) {
     if (command == THROW_WEAPON) {
         if (!weapon->is_unarmed()) {
             weapon->start_throw();
-        } else if (!chest->is_unarmed()) {
-            chest->start_throw();
-        } else if (!helmet->is_unarmed()) {
-            helmet->start_throw();
         }
     }
 }
@@ -154,12 +151,6 @@ void Player::update() {
     if (weapon != nullptr) {
         weapon->update();
     }
-    if (chest != nullptr) {
-        chest->update();
-    }
-    if (helmet != nullptr) {
-        helmet->update();
-    }
     if (should_notify) {
         notify_moved();
     }
@@ -179,18 +170,6 @@ void Player::notify_picked_weapon() {
     }
 }
 
-void Player::notify_picked_chest() {
-    for (const PlayerObserver* obs: observers) {
-        obs->update(name, chest->get_id());
-    }
-}
-
-void Player::notify_picked_helmet() {
-    for (const PlayerObserver* obs: observers) {
-        obs->update(name, helmet->get_id());
-    }
-}
-
 
 // void Player::notify_dropped_weapon(uint8_t id) {
 //     for (PlayerObserver* obs: observers) {
@@ -198,33 +177,13 @@ void Player::notify_picked_helmet() {
 //     }
 // }
 
-void Player::move(const std::set<int>& movements) { position->move(movements, true); }
-
-void Player::move(int direction) {
-    if (direction == -1) {
-        direction = MOVE_LEFT;
-    } else if (direction == 1) {
-        direction = MOVE_RIGHT;
-    }
-    position->move({direction}, false);
-}
+void Player::move(const std::set<int>& movements) { position->move(movements); }
 
 void Player::shoot() {
     if (weapon == nullptr) {
         return;
     }
     weapon->shoot(position->get_aiming_direction(), position->is_aiming_up());
-}
-
-void Player::take_damage() {
-    if (has_helmet()) {
-        // Pierde primero el casco
-        helmet->shoot(1, false);
-    } else if (has_chest()) {
-        // Despues la armadura
-        chest->shoot(1, false);
-    }
-    is_alive = true;
 }
 
 void Player::die() { is_alive = false; }

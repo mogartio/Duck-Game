@@ -9,7 +9,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     
     currentTile = "";
     isPainting = false;
-    isErasing = false;\
+    isErasing = false;
     gridVisible = true;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
     editor_matrix.resize(rows, std::vector<int>(columns, Id::EMPTY)); 
@@ -414,8 +414,8 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 case Id::PLAYER3: category = "players"; itemName = "player3"; break;
                 case Id::PLAYER4: category = "players"; itemName = "player4"; break;
                 case Id::HELMET: category = "armor"; itemName = "knight"; break;
-                case Id::HELMET2: category = "armor"; itemName = "normal"; break;
-                case Id::HELMET3: category = "armor"; itemName = "tinfoil"; break;
+                // case Id::HELMET2: category = "armor"; itemName = "normal"; break;
+                // case Id::HELMET3: category = "armor"; itemName = "tinfoil"; break;
                 case Id::CHEST: category = "armor"; itemName = "chest"; break;
                 default: break;
             }
@@ -630,8 +630,8 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             else if (currentTile == "player4" && players_set.find("player4") == players_set.end()) placeTile(Id::PLAYER4, "player4");
             else if (currentTile == "chest") placeTile(Id::CHEST);
             else if (currentTile == "knight") placeTile(Id::HELMET);
-            else if (currentTile == "normal") placeTile(Id::HELMET2);
-            else if (currentTile == "tinfoil") placeTile(Id::HELMET3);
+            // else if (currentTile == "normal") placeTile(Id::HELMET2);
+            // else if (currentTile == "tinfoil") placeTile(Id::HELMET3);
         } else if (isErasing) {
             eraseTile();
         }

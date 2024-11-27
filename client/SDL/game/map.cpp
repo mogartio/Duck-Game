@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
-#define MIN_ZOOM 1000
+#define MIN_ZOOM_WHITH 1000
+#define MIN_ZOOM_HEIGHT 300
 #define VELOCIDAD_ZOOM 2
 #define TILES_PATIÑOS 3
-
 
 Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         rend(rend),
@@ -17,7 +17,12 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         height_window(height_window),
         tilesImages(3, nullptr) {
     // Deberia llegarme la info del fondo
-    background.initialize(rend, "assets/game_assets/background/day.png");
+    this->armor = std::make_shared<Image>();
+    this->hombro = std::make_shared<Image>();
+    this->armorOnMap = std::make_shared<Image>();
+    this->prueba = std::make_shared<Image>();
+    this->background = std::make_shared<Image>();
+    background->initialize(rend, "assets/game_assets/background/day.png");
 
     for (int i = int(ProjectilesId::ProjectileId::SHOTGUN);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
@@ -53,7 +58,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         return;
     }
-    Image* weaponImage = new Image();
+    std::shared_ptr<Image> weaponImage = std::make_shared<Image>();
     std::string path = "assets/game_assets/weapons/";
     path += projectile_to_string(id);
     weaponImage->initialize(rend, path);
@@ -69,7 +74,7 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
 
 void Map::makeExplosion() {
     for (int i = 1; i <= 7; i++) {
-        Image* explosion = new Image();
+        std::shared_ptr<Image> explosion = std::make_shared<Image>();
         std::string path = "assets/game_assets/weapons/bullets/explosion";
         path += std::to_string(i);
         path += ".png";
@@ -82,7 +87,7 @@ void Map::makeExplosion() {
 
 void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     // Creo casco de mapa
-    Image* mapHelmet = new Image();
+    std::shared_ptr<Image> mapHelmet = std::make_shared<Image>();
     std::string mapPath = "assets/game_assets/map/";
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
@@ -93,7 +98,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     helmetsPos[helmet] = std::vector<std::pair<int, int>>();
 
     // Creo casco de inventario
-    Image* helmetImage = new Image();
+    std::shared_ptr<Image> helmetImage = std::make_shared<Image>();
     std::string path = "assets/game_assets/helmets/";
     path += helmet_to_string(helmet);
     helmetImage->initialize(rend, path);
@@ -104,22 +109,22 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
 
 void Map::makeArmor() {
     // Creo armadura de mapa
-    armorOnMap.initialize(rend, "assets/game_assets/map/armor.png");
-    armorOnMap.queryTexture();
-    armorOnMap.defineSize(2 * tiles, 2 * tiles);
+    armorOnMap->initialize(rend, "assets/game_assets/map/armor.png");
+    armorOnMap->queryTexture();
+    armorOnMap->defineSize(2 * tiles, 2 * tiles);
 
     // Creo armadura de inventario
-    armor.initialize(rend, "assets/game_assets/armor/armor4.png");
-    armor.queryTexture();
-    armor.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
+    armor->initialize(rend, "assets/game_assets/armor/armor4.png");
+    armor->queryTexture();
+    armor->defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
 
-    hombro.initialize(rend, "assets/game_assets/armor/hombro4.png");
-    hombro.queryTexture();
-    hombro.defineSize(6 * tiles, 6 * tiles);  // mismo tamaño q el pato
+    hombro->initialize(rend, "assets/game_assets/armor/hombro4.png");
+    hombro->queryTexture();
+    hombro->defineSize(6 * tiles, 6 * tiles);  // mismo tamaño q el pato
 }
 
 void Map::makeTile(TileType tileType) {
-    Image* tile = new Image();
+    std::shared_ptr<Image> tile = std::make_shared<Image>();
     std::string path =
             "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
                                                    // me mande el server (dia, noche)
@@ -291,11 +296,23 @@ void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerNam
     players[playerName]->helmet(helmets[int(helmet) - 32]);
 }
 
+bool Player::dropHelmet() {
+    bool originalHelmetState = helmetOn;
+    helmetOn = false;
+    return originalHelmetState;
+}
+
 // ----------------- Armor -----------------
 
 void Map::newArmor(int x, int y) { armorMap.push_back(std::pair(x, y)); }
 
-void Map::armorPlayer(std::string playerName) { players[playerName]->armor(&armor, &hombro); }
+void Map::armorPlayer(std::string playerName) { players[playerName]->armor(armor, hombro); }
+
+bool Player::dropArmor() {
+    bool originalArmorState = armorOn;
+    armorOn = false;
+    return originalArmorState;
+}
 
 // ----------------- Explosion -----------------
 
@@ -323,6 +340,7 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
 
 // ----------------- Pre-fill -----------------
 
+
 SDL_Rect Map::adjustMapZoom() {
     SDL_Rect zoomRect;
     int max_x = 0;
@@ -344,17 +362,30 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = std::max((max_x - min_x) * VELOCIDAD_ZOOM, MIN_ZOOM);
-    int new_height = (max_y - min_y) * VELOCIDAD_ZOOM;
+    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MIN_ZOOM_WHITH);
+    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MIN_ZOOM_HEIGHT);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
-    float proportion_width = float(width_window) / float(new_width);
-    float proportion_height = float(height_window) / float(new_height);
-    float proportion = 1 / std::min(proportion_width, proportion_height);
+    float proportion_width = float(new_width) / float(width_window) ;
+    float proportion_height = float(new_height) / float(height_window) ;
+    float proportion = std::max(proportion_width, proportion_height);
 
     new_width = proportion * width_window;
     new_height = proportion * height_window;
+
+    if ((centro_x - new_width / 2) < 0) {
+        centro_x = new_width / 2;
+    }else if ((centro_x + new_width / 2) > (int)width_window) {
+        centro_x = width_window - new_width / 2;
+    }
+
+    if ((centro_y - new_height / 2) < 0) {
+        centro_y = new_height / 2;
+    }else if ((centro_y + new_height / 2) > (int)height_window) {
+        centro_y = height_window - new_height / 2;
+    }
+
     min_x = centro_x - new_width / 2;
     min_y = centro_y - new_height / 2;
 
@@ -382,7 +413,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         SDL_RenderClear(rend);
 
         // Dibujamos el fondo
-        background.fill(true);
+        background->fill(true);
 
         // Dibujamos el mapa
         for (const auto& tilePair: tilesPlace) {
@@ -422,8 +453,8 @@ void Map::fill() {  // Dibuja de atras para adelante
     // }
 
     for (std::pair armorPos: armorMap) {
-        armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
-        armorOnMap.fill();
+        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
+        armorOnMap->fill();
     }
 
     // for (const auto& pair : weaponsMap) {
@@ -489,31 +520,4 @@ void Map::fill() {  // Dibuja de atras para adelante
 
 Map::~Map() {
 
-    if (parentTexture != nullptr) {
-        SDL_DestroyTexture(parentTexture);
-    }
-
-    if (mapTexture != nullptr) {
-        SDL_DestroyTexture(mapTexture);
-    }
-
-    for (Image* piso: tilesImages) {
-        delete piso;
-    }
-
-    for (const auto& pair: weapons) {
-        delete pair.second;
-    }
-
-    for (Image* helmet: helmets) {
-        delete helmet;
-    }
-
-    for (const auto& pair: helmetsMap) {
-        delete pair.second;
-    }
-
-    for (const auto& pair: players) {
-        delete pair.second;
-    }
 }

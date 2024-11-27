@@ -35,7 +35,6 @@ public:
     virtual void update(std::string, uint8_t) const {}
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t, uint8_t, uint8_t) const {
     }
-    virtual void updateOldPos(uint8_t, uint8_t, uint8_t) const {}
     virtual void broadcast(std::shared_ptr<GenericMsg> msg) const {
         for (auto id: *ids) {
             senders.send_to_client(msg, id);
