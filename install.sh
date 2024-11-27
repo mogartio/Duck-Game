@@ -37,7 +37,6 @@ sudo apt-get --yes install libsdl2-dev     		\
 MAG_WHI_BOLD="1;35;47";
 print_text $CYAN "--------- Installing SDL2 ---------"
 
-
 wget "$SDL2_IMAGE" -P "SDL2"
 wget "$SDL2_MIXER" -P "SDL2"
 wget "$SDL2_TTF" -P "SDL2"
@@ -49,7 +48,7 @@ cd "SDL2/SDL2_image-2.6.3"
 mkdir build
 cd build
 cmake ..
-make -j4 
+make -j4
 sudo make install
 
 cd ../../SDL2_mixer-2.6.3
@@ -77,6 +76,17 @@ sudo apt-get --yes install qtmultimedia5-dev
 MAG_WHI_BOLD="1;35;47";
 print_text $CYAN "--------- Installing YAML ---------"
 sudo apt-get --yes install libyaml-cpp-dev
+
+MAG_WHI_BOLD="1;35;47";
+print_text $CYAN "--------- Installing GoogleTest ---------"
+git clone https://github.com/google/googletest.git
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+cd ../../
 
 INSTALL_MSG="1;5;32;45";
 print_text $INSTALL_MSG "--------- Installing Duck Game ---------"
