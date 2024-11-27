@@ -24,6 +24,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
+    
+    makeExplosion();
 
     for (int i = int(ProjectilesId::ProjectileId::HELMET);
          i <= int(ProjectilesId::ProjectileId::HELMET3); i++) {
@@ -73,7 +75,7 @@ void Map::makeExplosion() {
         path += ".png";
         explosion->initialize(rend, path);
         explosion->queryTexture();
-        explosion->defineSize(2 * tiles, 2 * tiles);
+        explosion->defineSize(6 * tiles, 6 * tiles);
         explosions.push_back(explosion);
     }
 }
@@ -235,6 +237,7 @@ void Map::allStanding() {
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::EXPLOSION) {
+        std::cout << "Explosion" << std::endl;
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
@@ -454,7 +457,7 @@ void Map::fill() {  // Dibuja de atras para adelante
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionCounter[i]/4]->position(pos.first, pos.second);
+        explosions[explosionCounter[i]/4]->position((pos.first - 3) * tiles, (pos.second - 3) * tiles);
         explosions[explosionCounter[i]/4]->fill();
         explosionCounter[i]++;
         if (explosionCounter[i]/4 == 6) {

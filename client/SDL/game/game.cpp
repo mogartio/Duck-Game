@@ -127,8 +127,6 @@ void Game::play() {
                             map.update(player_name, position.first, position.second, DuckState(state),
                                     Side(facing_direction - 1));
                             stated_palying = true;
-
-                            std::cout << int(state) << std::endl;
                         }
                         break;
 
