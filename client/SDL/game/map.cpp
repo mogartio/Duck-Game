@@ -24,7 +24,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);
     }
-    
+
     makeExplosion();
 
     for (int i = int(ProjectilesId::ProjectileId::HELMET);
@@ -189,13 +189,13 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
         }
         columnaActual++;
     }
-    for (auto& [tileType, positions] : tilesPlace) {
+    for (auto& [tileType, positions]: tilesPlace) {
         std::vector<std::pair<int, int>> filteredPositions;
 
         // Use a set to track blocks we've already processed
         std::set<std::pair<int, int>> processedBlocks;
 
-        for (const auto& [x, y] : positions) {
+        for (const auto& [x, y]: positions) {
             // Determine the block this tile belongs to
             int blockX = x / 6;
             int blockY = y / 6;
@@ -288,7 +288,7 @@ void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
 }
 
 void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
-    players[playerName]->helmet(helmets[int(helmet) - 14]);
+    players[playerName]->helmet(helmets[int(helmet) - 32]);
 }
 
 // ----------------- Armor -----------------
@@ -451,16 +451,17 @@ void Map::fill() {  // Dibuja de atras para adelante
     }
 
     for (uint8_t i = 0; i < explosionsPos.size(); i++) {
-        if (explosionCounter[i]%4 != 0) {
+        if (explosionCounter[i] % 4 != 0) {
             explosionCounter[i]++;
-            explosions[explosionCounter[i]/4]->fill();
+            explosions[explosionCounter[i] / 4]->fill();
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionCounter[i]/4]->position((pos.first - 3) * tiles, (pos.second - 3) * tiles);
-        explosions[explosionCounter[i]/4]->fill();
+        explosions[explosionCounter[i] / 4]->position((pos.first - 3) * tiles,
+                                                      (pos.second - 3) * tiles);
+        explosions[explosionCounter[i] / 4]->fill();
         explosionCounter[i]++;
-        if (explosionCounter[i]/4 == 6) {
+        if (explosionCounter[i] / 4 == 6) {
             explosionsPos.erase(explosionsPos.begin() + i);
             explosionCounter.erase(explosionCounter.begin() + i);
         }

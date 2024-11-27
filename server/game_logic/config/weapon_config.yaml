@@ -39,3 +39,11 @@ weapons:
     reach: 42
     speed: 3
     ammo: 10
+  banana:
+    reach: 30
+    speed: 3
+    ammo: 1
+  grenade:
+    reach: 30
+    speed: 3
+    ammo: 1

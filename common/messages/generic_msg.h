@@ -36,8 +36,8 @@ namespace ProjectilesId {
 enum ProjectileId : uint8_t {
     UNARMED = 0x00,
     SHOTGUN = 0x01,
-    BANANA = 0x02,
-    PEW_PEW_LASER = 0x03,
+    PEW_PEW_LASER = 0x02,
+    BANANA = 0x03,
     LASER_RIFLE = 0x04,
     AK_47 = 0x05,
     DUEL_PISTOL = 0x06,
@@ -45,18 +45,21 @@ enum ProjectileId : uint8_t {
     MAGNUM = 0x08,
     GRENADE = 0x09,
     SNIPER = 0x0A,
+    LIVE_BANANA = 0X0B,
 
     // balas (?)
-    LASER = 0x0B,           // PEW_PEW_LASER y LASER_RIFLE
-    BULLET_PISTOL = 0x0C,   // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
-    BULLET_SHOTGUN = 0x0D,  // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    LASER = 0x0C,           // PEW_PEW_LASER y LASER_RIFLE
+    BULLET_PISTOL = 0x0D,   // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
+    BULLET_SHOTGUN = 0x0E,  // AK_47, DUEL_PISTOL, COWBOY_PISTOL, MAGNUM, SHOTGUN, SNIPER
 
     // armadura
-    HELMET = 0x0E,
-    HELMET2 = 0x0F,
-    HELMET3 = 0x10,
-    CHEST = 0x11,
-    EXPLOSION = 0x12,
+    HELMET = 0x20,
+    HELMET2 = 0x21,
+    HELMET3 = 0x22,
+    CHEST = 0x23,
+
+
+    EXPLOSION = 0x30,
 };
 }
 

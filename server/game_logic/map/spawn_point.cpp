@@ -9,6 +9,9 @@ void WeaponSpawnPoint::spawn_weapon() {
         case GRENADE:
             weapon = std::make_unique<Grenade>(stage);
             break;
+        case BANANA:
+            weapon = std::make_unique<Banana>(stage);
+            break;
         case COWBOY_PISTOL:
             weapon = std::make_unique<CowboyGun>(stage);
             break;

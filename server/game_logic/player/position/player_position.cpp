@@ -68,6 +68,8 @@ void PlayerPosition::move_horizontally(int offset) {
         player.die();
     } else if (next_position == OCCUPIED) {
         return;
+    } else if (next_position == LIVE_BANANA) {
+        move_horizontally(offset * 4);
     } else {
         if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
             player.Notify();

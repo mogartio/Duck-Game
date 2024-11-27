@@ -14,6 +14,14 @@ public:
     // virtual void finish_throw(int, bool, std::shared_ptr<Weapon>) override;
     virtual void update() override;
     void update(Coordinate) override;
-    bool exploded() override;
+};
+class Banana: public Weapon {
+protected:
+    bool turned_on;
+    bool dead;
+
+public:
+    explicit Banana(Stage&);
+    virtual void shoot(int, bool) override;
 };
 #endif

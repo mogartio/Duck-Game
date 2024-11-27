@@ -24,6 +24,7 @@ private:
     std::map<int, Player*> players;
     void explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
                             bool& keep_going_horizontally);
+    std::shared_ptr<Projectile> find_projectile_in(Coordinate init_position);
 
 public:
     // Son es para poder mockear la clase mas facilmente
