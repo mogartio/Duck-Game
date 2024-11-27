@@ -20,8 +20,8 @@ namespace Id {
     static const int LASER_RIFLE = static_cast<int>(ProjectilesId::LASER_RIFLE);
     static const int PEW_PEW_LASER = static_cast<int>(ProjectilesId::PEW_PEW_LASER);
     static const int HELMET = static_cast<int>(ProjectilesId::HELMET);
-    static const int HELMET2 = static_cast<int>(ProjectilesId::HELMET2);
-    static const int HELMET3 = static_cast<int>(ProjectilesId::HELMET3);
+    // static const int HELMET2 = static_cast<int>(ProjectilesId::HELMET2);
+    // static const int HELMET3 = static_cast<int>(ProjectilesId::HELMET3);
     static const int CHEST = static_cast<int>(ProjectilesId::CHEST);
     static const int PLAYER1 = 104;
     static const int PLAYER2 = 105;

@@ -5,10 +5,7 @@
 
 #include "../../../common/coordinate.h"
 #include "../../../common/messages/generic_msg.h"
-#include "../player/weapons/heavy_weapons.h"
-#include "../player/weapons/lasers.h"
 #include "../player/weapons/pistols.h"
-#include "../player/weapons/armor.h"
 using namespace ProjectilesId;
 
 #include "stage.h"

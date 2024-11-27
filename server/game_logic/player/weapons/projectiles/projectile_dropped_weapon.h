@@ -9,8 +9,6 @@
 #include "../../../config/config.h"
 #include "../../../map/spawn_point.h"
 #include "../weapon.h"
-#define UP_DIRECTION -1
-#define DOWN_DIRECTION 1
 
 #include "projectile.h"
 
@@ -18,40 +16,30 @@
 class ProjectileThrownWeapon: public Projectile {
 private:
     std::shared_ptr<Weapon> weapon;
-    std::vector<int> deviations;
-    std::vector<int> deviations_direction;
-    int deviations_index;
+    int current_angle_index;
+    std::vector<double> deviation_angles{};
 
 public:
     ProjectileThrownWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                            int x_direction, int reach, int id):
-            Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
-            weapon(std::move(weapon)) {
+            Projectile(initial_position, x_direction, reach, speed, M_PI / 1.6, id, false, false),
+            weapon(std::move(weapon)),
+            current_angle_index(0) {
+        deviation_angles.push_back(M_PI / 4);
         for (int i = 0; i < speed; i++) {
-            deviations.push_back(3);
-            deviations_direction.push_back(UP_DIRECTION);
-            deviations.push_back(5);
-            if (i > speed / 2) {
-                deviations_direction.push_back(UP_DIRECTION);
-            } else {
-                deviations_direction.push_back(DOWN_DIRECTION);
-            }
+            deviation_angles.push_back(M_PI / 2);
         }
-        deviations.push_back(3);
-        deviations_direction.push_back(DOWN_DIRECTION);
+        deviation_angles.push_back(9 * M_PI / 4);
     }
-
-    virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
     void update() override {
-
-        if (static_cast<size_t>(deviations_index) == deviations.size() - 1) {
+        if (static_cast<size_t>(current_angle_index) == deviation_angles.size() - 1) {
             return;
         }
-        deviations_index++;
-        deviation = deviations[deviations_index];
-        deviation_direction = deviations_direction[deviations_index];
+        current_angle_index++;
+        deviation_angle =
+                deviation_angles[current_angle_index];  // Se ve medio wonky cuando la tira frame 1
     }
-
+    virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     void notify() override {
         for (const Observer* obs: observers) {
@@ -70,7 +58,7 @@ private:
 public:
     ProjectileDroppedWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
                             int reach, int id, WeaponSpawnPoint* spawn):
-            Projectile(initial_position, 1, 1, reach, speed, id, false, false, true),
+            Projectile(initial_position, 1, reach, speed, 0, id, false, false),
             weapon(std::move(weapon)),
             spawn(spawn) {}
 
@@ -81,8 +69,6 @@ public:
                         static_cast<uint8_t>(id));
         }
     }
-
-
     virtual std::shared_ptr<Weapon> get_weapon() {
         spawn->free();
         return std::move(weapon);

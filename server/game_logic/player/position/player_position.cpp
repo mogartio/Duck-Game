@@ -20,30 +20,24 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
     air_state = std::move(std::make_unique<Grounded>(true));
 }
 
-void PlayerPosition::move(const std::set<int>& directions, bool should_change_facing_direction) {
+void PlayerPosition::move(const std::set<int>& directions) {
     int x_offset = 0;
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...
-            if (should_change_facing_direction) {
-                facing_direction = AIM_LEFT;
-                aiming_direction = -1;
-            }
+            facing_direction = AIM_LEFT;
+            aiming_direction = -1;
             x_offset = -1;
         } else if (direction == MOVE_RIGHT) {
-            if (should_change_facing_direction) {
-                facing_direction = AIM_RIGHT;
-                aiming_direction = AIM_RIGHT;
-            }
+            facing_direction = AIM_RIGHT;
+            aiming_direction = AIM_RIGHT;
             x_offset = 1;
             // OBS: si se manda instruccion de izq y der al mismo tiempo, se va a la der
         } else if (direction == JUMP) {
             air_state->jump(*this);
         } else if (direction == 6) {
-            if (should_change_facing_direction) {
-                facing_direction = AIM_UP;
-                aiming_up = true;
-                player.Notify();
-            }
+            facing_direction = AIM_UP;
+            aiming_up = true;
+            player.Notify();
         } else {
             continue;
         }
