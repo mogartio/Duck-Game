@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
-#define MIN_ZOOM 1000
-#define VELOCIDAD_ZOOM 2
-#define TILES_PATIÑOS 3
+#define MIN_ZOOM_WHITH 1000
+#define MIN_ZOOM_HEIGHT 300
+#define VELOCIDAD_ZOOM 1.5
+#define TILES_PATIÑOS 6
 
 
 Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
@@ -329,17 +330,30 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = std::max((max_x - min_x) * VELOCIDAD_ZOOM, MIN_ZOOM);
-    int new_height = (max_y - min_y) * VELOCIDAD_ZOOM;
+    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MIN_ZOOM_WHITH);
+    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MIN_ZOOM_HEIGHT);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
-    float proportion_width = float(width_window) / float(new_width);
-    float proportion_height = float(height_window) / float(new_height);
-    float proportion = 1 / std::min(proportion_width, proportion_height);
+    float proportion_width = float(new_width) / float(width_window) ;
+    float proportion_height = float(new_height) / float(height_window) ;
+    float proportion = std::max(proportion_width, proportion_height);
 
     new_width = proportion * width_window;
     new_height = proportion * height_window;
+
+    if ((centro_x - new_width / 2) < 0) {
+        centro_x = new_width / 2;
+    }else if ((centro_x + new_width / 2) > (int)width_window) {
+        centro_x = width_window - new_width / 2;
+    }
+
+    if ((centro_y - new_height / 2) < 0) {
+        centro_y = new_height / 2;
+    }else if ((centro_y + new_height / 2) > (int)height_window) {
+        centro_y = height_window - new_height / 2;
+    }
+
     min_x = centro_x - new_width / 2;
     min_y = centro_y - new_height / 2;
 
