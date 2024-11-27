@@ -22,8 +22,7 @@
 
 Stage::Stage(Map& map, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
              std::shared_ptr<std::set<uint>> ids):
-        map(map), senders(senders), obs(this->senders, ids) {
-}
+        map(map), senders(senders), obs(this->senders, ids) {}
 
 void Stage::print() { map.print(); }
 
@@ -42,6 +41,14 @@ void Stage::remove_projectile(std::shared_ptr<Projectile>& projectile) {
 }
 
 void Stage::kill(int id) { players[id]->die(); }
+
+bool Stage::take_damage(int player_id) {
+    if (players[player_id]->has_chest() || players[player_id]->has_helmet()) {
+        players[player_id]->take_damage();
+        return true;
+    }
+    return false;
+}
 
 void Stage::update() {
     for (const auto& c: coordinates_to_delete) {
@@ -181,6 +188,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
             if (weaponProjectile->get_position() == position) {
                 std::shared_ptr new_weapon = (weaponProjectile->get_weapon());
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }
@@ -193,6 +201,7 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
                 }
                 std::shared_ptr new_weapon = weaponProjectile->get_weapon();
                 coordinates_to_delete.push_back(position);
+                obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
                 remove_projectile(projectile);
                 return new_weapon;
             }
