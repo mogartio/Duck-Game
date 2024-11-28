@@ -82,3 +82,27 @@ make
 
 # Success message
 print_text $INSTALL_MSG "--------- Duck Game Installation Complete ---------"
+
+
+# Configure run_server and client scripts
+print_text $MAG_WHI_BOLD "--------- Configuring Scripts ---------"
+
+# Create run_server script
+cat > run_server <<'EOF'
+#!/bin/bash
+cd build
+./server $1
+EOF
+
+# Create client script
+cat > run_client <<'EOF'
+#!/bin/bash
+cd build
+./client
+EOF
+
+# Make scripts executable
+chmod +x run_server
+chmod +x run_client
+
+print_text $MAG_WHI_BOLD "--------- Scripts Configured Successfully ---------"
