@@ -23,7 +23,6 @@ bool Projectile::ray_trace(Stage& stage) {
             if (!trail.empty()) {
                 trail.pop_back();
             }
-            notify();
             return true;
         }
         check_if_player_killed(things_it_hits, despawned, stage);
