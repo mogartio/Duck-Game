@@ -27,7 +27,7 @@ void Game::run() {
         
             const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
             players = generate_players(player_names, *player_obs, map);
-            game_loop = std::make_shared<GameMain>(recv, players, is_testing);
+            game_loop = std::make_shared<GameLoop>(recv, players, is_testing);
 
             std::string winner = game_loop->play_round(*current_stage, map);
             player_points[winner]++;

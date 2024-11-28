@@ -8,12 +8,12 @@
 #define TARGET_TIME 35
 using namespace std::chrono;
 
-GameMain::GameMain(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
+GameLoop::GameLoop(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
                    bool is_testing):
         receiver_q(q), is_testing(is_testing), players(players) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
-std::string GameMain::play_round(Stage& stage, Map& map) {
+std::string GameLoop::play_round(Stage& stage, Map& map) {
     init_round(stage, map);
     std::string winner;
     bool round_over = false;
@@ -28,7 +28,7 @@ std::string GameMain::play_round(Stage& stage, Map& map) {
     return winner;
 }
 
-void GameMain::init_round(Stage& stage, Map& map) {
+void GameLoop::init_round(Stage& stage, Map& map) {
     std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
             map.get_items_spawn_sites();
 
@@ -48,13 +48,13 @@ void GameMain::init_round(Stage& stage, Map& map) {
     }
 }
 
-void GameMain::spawn_weapons() {
+void GameLoop::spawn_weapons() {
     for (auto& spawn: weapon_spawns) {
         spawn->update();
     }
 }
 
-void GameMain::process_commands(Stage& stage) {
+void GameLoop::process_commands(Stage& stage) {
     for (int i = 0; i < 10; i++) {
         if (is_testing) {
             create_command();
@@ -81,7 +81,7 @@ void GameMain::process_commands(Stage& stage) {
 
 // Se fija si solamente queda un jugador vivo. si lo hay settea el bool que se le pasa a true y
 // devuelve el nombre del ganador
-std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bool& round_over) {
+std::string GameLoop::look_for_dead_people_and_do_what_you_must(Stage& stage, bool& round_over) {
     std::vector<std::string> recently_deceased;  // its never been this serious
     for (std::string player: alive_players) {
         if (!players[player]->lives()) {
@@ -106,7 +106,7 @@ std::string GameMain::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
 
 
 // Duerme lo que le falta para terminar el ciclo actual
-void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_point t1) {
+void GameLoop::sleep_for_round(steady_clock::time_point t0, steady_clock::time_point t1) {
     if (is_testing) {
         return;
     }
@@ -116,12 +116,12 @@ void GameMain::sleep_for_round(steady_clock::time_point t0, steady_clock::time_p
     std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
 }
 
-void GameMain::handle_read(const StartActionMsg& msg) {
+void GameLoop::handle_read(const StartActionMsg& msg) {
     int action = msg.get_action_id();
     players[msg.get_player_name()]->add_action(action);
 }
 
-void GameMain::handle_read(const StopActionMsg& msg) {
+void GameLoop::handle_read(const StopActionMsg& msg) {
     int action = msg.get_action_id();
     players[msg.get_player_name()]->remove_action(action);
 }
@@ -132,7 +132,7 @@ void GameMain::handle_read(const StopActionMsg& msg) {
 // El peor codigo que escribi en este tp hasta ahora
 // pero funciona
 // no lo toquen
-std::shared_ptr<GenericMsg> GameMain::create_msg(const std::string& command) {
+std::shared_ptr<GenericMsg> GameLoop::create_msg(const std::string& command) {
     std::string player_name1;
     std::string player_name2;
     auto it = players.begin();
@@ -184,7 +184,7 @@ std::shared_ptr<GenericMsg> GameMain::create_msg(const std::string& command) {
     return nullptr;
 }
 
-void GameMain::create_command() {
+void GameLoop::create_command() {
     std::string command;
     std::getline(std::cin, command);
     std::shared_ptr<GenericMsg> new_msg = create_msg(command);
