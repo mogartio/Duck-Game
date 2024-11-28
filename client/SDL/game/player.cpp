@@ -1,6 +1,6 @@
+#include <cassert>
 #include "player.h"
 
-#include <cassert>
 #include <iostream>
 #include <vector>
 
@@ -37,12 +37,7 @@ void Player::initialiceDuckImages(DuckState state) {
 // ----------------- Constructor -----------------
 
 Player::Player(SDL_Renderer* rend, Color color):
-        rend(rend),
-        flip(SDL_FLIP_NONE),
-        file("assets/game_assets/ducks/"),
-        weaponON(false),
-        armorOn(false),
-        helmetOn(false) {
+        rend(rend), flip(SDL_FLIP_NONE), file("assets/game_assets/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
 
     walk = 0;
     file += color_to_string(color);
@@ -70,8 +65,7 @@ void Player::defineSize(int height, int width) {
     this->height = height;
     this->width = width;
     for (const auto& pair: ducks) {
-        const std::vector<std::shared_ptr<Image>>& patos =
-                pair.second;  // Obtener el vector de imágenes
+        const std::vector<std::shared_ptr<Image>>& patos = pair.second;  // Obtener el vector de imágenes
         for (auto pato: patos) {
             pato->queryTexture();
             pato->defineSize(height, width);
@@ -150,7 +144,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 
     // Actualizo posicion del arma
-    if (weaponON) {  // Falta agregar offsets (perdon facu)
+    if(weaponON) { // Falta agregar offsets (perdon facu)
         _weapon->position(x, y);
     }
 
@@ -187,16 +181,6 @@ bool Player::dropWeapon() {
     return originalWeaponstate;
 }
 
-void Player::shoot() {
-    if (!weaponON) {
-        return;  // Si no tiene un arma no hace nada
-    }
-
-    /*
-        Disparo el arma
-    */
-}
-
 // ----------------- Armor -----------------
 
 void Player::armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro) {
@@ -231,62 +215,76 @@ bool Player::dropHelmet() {
 
 // ----------------- Fill -----------------
 
-void Player::fill() {  // Esta todo en el orden en el que debe ser dibujado
+void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     // Dibujo el cueerpo dl pato
     duck->fill(flip);
 
     std::pair<int, int> position = duck->getPosition();
 
-    // Dibujo el casco que tiene el pato
-    if (helmetOn) {
-        _helmet->position(position.first, position.second - 13);
-        _helmet->fill(flip);
-    }
-
-    // Dibujo la armadura que tiene el pato
-    if (armorOn) {
-        _armor->position(position.first, position.second);
-        _armor->fill(flip);
-    }
-
-    // Dibujo el arma que tiene el pato
-    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        int wx = position.first + 5;
-        int wy = position.second + 36;
-        if (flip == SDL_FLIP_HORIZONTAL) {
-            if (weaponAngle != 0.0) {
-                wy -= 10;
-                wx += 5;
-            }
-        } else {
-            wx += 32;
-            if (weaponAngle != 0.0) {
-                wx -= 3;
-                wy -= 7;
-            }
-        }
-        _weapon->position(wx, wy);
-        _weapon->fill(weaponAngle, flip);
-    }
-
-    // Dibujo el ala del pato
     if (state != DuckState::PLAY_DEAD) {
-        wing->fill(flip);
-    }
+        // Dibujo el casco que tiene el pato
+        if (helmetOn) {
+            _helmet->position(position.first, position.second - 13);
+            _helmet->fill(flip);
+        }
 
-    // Dibujo el hombro de la armadura
-    if (armorOn) {
-        _hombro->position(position.first, position.second);
-        _hombro->fill(flip);
+        // Dibujo la armadura que tiene el pato
+        if (armorOn) {
+            _armor->position(position.first, position.second);
+            _armor->fill(flip);
+        }
+
+        // Dibujo el arma que tiene el pato
+        if (weaponON && (state != DuckState::SLOW_FALL)) {
+            int wx = position.first + 5;
+            int wy = position.second + 32;
+
+            // Mira hacia la Izquierda
+            if (flip == SDL_FLIP_HORIZONTAL) {
+                if (weaponAngle != 0.0) {
+                    wy -= 10;
+                    wx += 5;
+                }
+
+                // Me fijo si el arma es un cuadrado para cambiar el offset
+                std::pair<int, int> weaponSize = _weapon->getSize();
+                if (weaponSize.first == weaponSize.second) {
+                    wy -= 5;
+                }
+
+            } else { // Mira hacia la Derecha
+                wx += 32;
+                if (weaponAngle != 0.0) {
+                    wx -= 3;
+                    wy -= 7;
+                }
+
+                // Me fijo si el arma es un cuadrado para cambiar el offset
+                std::pair<int, int> weaponSize = _weapon->getSize();
+                if (weaponSize.first == weaponSize.second) {
+                    // wx -= 5;
+                }
+            }
+            _weapon->position(wx, wy);
+            _weapon->fill(weaponAngle, flip);
+        }
+    
+        // Dibujo el ala del pato
+        if (state != DuckState::PLAY_DEAD) {
+            wing->fill(flip);
+        }
+
+        // Dibujo el hombro de la armadura
+        if (armorOn) {
+            _hombro->position(position.first, position.second);
+            _hombro->fill(flip);
+        }
     }
 }
 
 // ----------------- Get Position -----------------
 
-std::pair<int, int> Player::getPosition() const { return duck->getPosition(); }
-
-// ----------------- Destructor -----------------
-
-Player::~Player() {
-    // No se necesita liberar memoria de las imagenes porque se hace en el destructor de Image
+std::pair<int, int> Player::getPosition() const {
+    return duck->getPosition();
 }
+

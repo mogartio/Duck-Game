@@ -26,6 +26,8 @@ public:
     void queryTexture();
 
     void defineSize(int height, int width);
+    std::pair<int, int> getSize() const;
+    
     void position(int x, int y);
     std::pair<int, int> getPosition() const;
 

@@ -61,7 +61,8 @@ public:
     virtual int get_offset() override;
     virtual void jump(PlayerPosition&) override;
     virtual void update(bool, PlayerPosition&) override;
-    virtual void stop_jumping(PlayerPosition&) override{};
+    virtual void stop_jumping(PlayerPosition&) override {};
+
 };
 
 #endif

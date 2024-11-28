@@ -114,6 +114,8 @@ void Player::remove_action(int& command) {
             pick_helmet(std::make_unique<Unarmed>(
                     *stage));  // tecnicamente nunca habria que avisar que se droppeo algo
         }
+    } else if (command == PLAY_DEAD) {
+        position->set_state(std::make_unique<Falling>(), FALLING);
     }
 }
 
@@ -122,8 +124,8 @@ void Player::execute(const int& command) {
         return;
     }
     if (command == SHOOT) {
-        std::cout << "DISPARANDO DESDE: " << std::to_string(position->get_position().x) << " , "
-                  << std::to_string(position->get_position().y) << std::endl;
+        // std::cout << "DISPARANDO DESDE: " << std::to_string(position->get_position().x) << " , "
+        //           << std::to_string(position->get_position().y) << std::endl;
         shoot();
         return;
     }

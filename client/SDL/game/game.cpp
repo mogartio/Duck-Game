@@ -113,6 +113,7 @@ void Game::play() {
     Uint32 last_frame_time = SDL_GetTicks();  // Tiempo del último frame
 
     bool stated_palying = false;
+    std::unordered_map<std::string, bool> players_updated;
     std::string player_name;
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
@@ -155,6 +156,7 @@ void Game::play() {
                             map.update(player_name, position.first, position.second,
                                        DuckState(state), Side(facing_direction - 1));
                             stated_palying = true;
+                            players_updated[player_name] = true;
                         }
                         break;
 
@@ -182,7 +184,6 @@ void Game::play() {
                             // }
                         }
                         break;
-
                     case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
                         not_projectile = std::dynamic_pointer_cast<NotProyectileInfo>(msj);
                         if (not_projectile) {
@@ -242,7 +243,10 @@ void Game::play() {
         }
 
         if (stated_palying) {
-            map.allStanding();
+            map.standing(players_updated);
+            for (auto& player: players_updated) {
+                player.second = false;
+            }
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)

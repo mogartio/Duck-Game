@@ -51,15 +51,13 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
+
 }
 
 // ----------------- Initialize Images -----------------
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::UNARMED) {
-        return;
-    }
-    if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         return;
     }
     std::shared_ptr<Image> weaponImage = std::make_shared<Image>();
@@ -108,7 +106,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
     helmetImage->defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
-    helmets.push_back(helmetImage);
+    helmets[helmet] = helmetImage;
 }
 
 void Map::makeArmor() {
@@ -139,6 +137,24 @@ void Map::makeTile(TileType tileType) {
     tile->position(0, 0);
     tilesImages[int(tileType)] = tile;
 }
+
+bool Map::canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual) {
+    for(int i = 0; i < 6; i++) {
+        for(int j = 0; j < 6; j++) {
+            // Si esta fuera de rango saltea la pos
+            if ((filaActual - i < 0 || columnaActual - j < 0) ||
+                (static_cast<size_t>(filaActual - i) >= matriz.size() || static_cast<size_t>(columnaActual - j) >= matriz[0].size())) {
+                continue;
+            }
+
+            // Si hay un tile en esa pos entonces ya no se puede poner otro
+            if ((matriz[filaActual - i][columnaActual - j] == 5)|| (matriz[filaActual - i][columnaActual - j] == 6)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}   
 
 void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     // Limpiar mapa
@@ -176,47 +192,29 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
         switch (i) {
             case 5:  // piso
-                matriz[filaActual][columnaActual] = i;
-                if (filaActual == 0) {
-                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
-                } else if (matriz[filaActual - 1][columnaActual] == i) {
-                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
-                } else {
-                    tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
+                if (canAddTile(matriz, filaActual, columnaActual)) {
+                    matriz[filaActual][columnaActual] = i;
+                    if (filaActual == 0) {
+                        tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                    } else if ((filaActual >= 6) && (matriz[filaActual - 6][columnaActual] == i)) {
+                        tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                    } else {
+                        tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
+                    }
                 }
+                
                 break;
-            case 6:                                     // pared
-                matriz[filaActual][columnaActual] = i;  // este proximamente va a servir para cuando
-                                                        // las columnas tengan tope inferior
-                tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
-                break;
-            case 13:  // caja
-            case 14:  // caja rota
+            case 6:  // pared
+                if (canAddTile(matriz, filaActual, columnaActual)) {
+                    matriz[filaActual][columnaActual] = i; 
+                    tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
+                }
+                
                 break;
             default:
                 break;
         }
         columnaActual++;
-    }
-    for (auto& [tileType, positions]: tilesPlace) {
-        std::vector<std::pair<int, int>> filteredPositions;
-
-        // Use a set to track blocks we've already processed
-        std::set<std::pair<int, int>> processedBlocks;
-
-        for (const auto& [x, y]: positions) {
-            // Determine the block this tile belongs to
-            int blockX = x / 6;
-            int blockY = y / 6;
-
-            // If the block hasn't been processed yet, keep this tile
-            if (processedBlocks.emplace(blockX, blockY).second) {
-                filteredPositions.emplace_back(x, y);
-            }
-        }
-
-        // Replace the original positions with the filtered ones
-        positions = std::move(filteredPositions);
     }
 }
 
@@ -236,9 +234,11 @@ void Map::update(std::string player, int x, int y, DuckState state, Side side) {
     players[player]->update(x * tiles, y * tiles, state, side);
 }
 
-void Map::allStanding() {
+void Map::standing(std::unordered_map<std::string, bool> players_updated) {
     for (std::string name: playersNamesAlive) {
-        players[name]->standing();
+        if (!players_updated[name]) {
+            players[name]->standing();
+        }
     }
 }
 
@@ -246,7 +246,6 @@ void Map::allStanding() {
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::EXPLOSION) {
-        std::cout << "Explosion" << std::endl;
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
@@ -257,10 +256,6 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     }
 }
 
-void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id,
-                    std::vector<std::pair<uint8_t, uint8_t>> trail) {
-    laser.push_back(std::pair(x, y));
-}
 
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     // Si el jugador ya tiene un arma, entonces la suelta
@@ -297,7 +292,7 @@ void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
 }
 
 void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
-    players[playerName]->helmet(helmets[int(helmet) - 32]);
+    players[playerName]->helmet(helmets[helmet]);
 }
 
 // ----------------- Armor -----------------
@@ -423,14 +418,6 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el mapa
     SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
 
-
-    // for (const auto& pair: helmetsMap) {
-    //     for (const auto& helmet: pair.second) {
-    //         pair.first->position(helmet.first * tiles, helmet.second * tiles);
-    //         pair.first->fill();
-    //     }
-    // }
-
     for (const auto& helmet: helmetsPos) {
         for (const auto& pos: helmet.second) {
             helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles);
@@ -438,22 +425,10 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
     }
 
-    // for (std::pair armorPos: armorMap) {
-    //     armorOnMap.position(armorPos.first * tiles, armorPos.second * tiles);
-    //     armorOnMap.fill();
-    // }
-
     for (std::pair armorPos: armorMap) {
         armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap->fill();
     }
-
-    // for (const auto& pair : weaponsMap) {
-    //     for (const auto& weapon: pair.second) {
-    //         weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
-    //         weapons[pair.first]->fill();
-    //     }
-    // }
 
     for (const auto& pair: weaponsMap) {
         for (const auto& weapon: pair.second) {
@@ -466,16 +441,10 @@ void Map::fill() {  // Dibuja de atras para adelante
         players[playerName]->fill();
     }
 
-    for (std::pair laserPos: laser) {
-        weapons[ProjectilesId::ProjectileId::LASER]->position(laserPos.first * tiles,
-                                                              laserPos.second * tiles);
-        weapons[ProjectilesId::ProjectileId::LASER]->fill();
-    }
-
     for (uint8_t i = 0; i < explosionsPos.size(); i++) {
-        if (explosionCounter[i] % 4 != 0) {
+        if (explosionCounter[i]%4 != 0) {
             explosionCounter[i]++;
-            explosions[explosionCounter[i] / 4]->fill();
+            explosions[explosionCounter[i]/4]->fill();
             continue;
         }
         std::pair pos = explosionsPos[i];
@@ -483,7 +452,7 @@ void Map::fill() {  // Dibuja de atras para adelante
                                                       (pos.second - 3) * tiles);
         explosions[explosionCounter[i] / 4]->fill();
         explosionCounter[i]++;
-        if (explosionCounter[i] / 4 == 6) {
+        if (explosionCounter[i]/4 >= 6) {
             explosionsPos.erase(explosionsPos.begin() + i);
             explosionCounter.erase(explosionCounter.begin() + i);
         }
@@ -499,7 +468,6 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
 
-    laser.clear();
 }
 
 SDL_Texture* Map::getTextureMapWithAll() const { return parentTexture; }

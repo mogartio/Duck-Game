@@ -1,4 +1,5 @@
 #include <list>
+
 #include <memory>
 #include <set>
 #include <string>
@@ -39,12 +40,11 @@ private:
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
-    std::vector<std::pair<int, int>> laser;
     // Posiciones de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
-    std::vector<std::shared_ptr<Image>> helmets;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmets;
     // Posiciones de los cascos en el mapa
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmetsMap;
     // std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
@@ -56,7 +56,6 @@ private:
     // Imagen de armadura en el mapa
     std::shared_ptr<Image> armorOnMap;
     // Posiciones de la armadura
-    // std::pair<int, int> armorMap;
     std::vector<std::pair<int, int>> armorMap;
 
     std::shared_ptr<Image> background;
@@ -70,6 +69,8 @@ private:
     // Contador de las explosiones
     std::vector<int> explosionCounter;
 
+    bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
+
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();
     void makeHelmet(ProjectilesId::ProjectileId helmet);
@@ -79,7 +80,8 @@ private:
 
 
 public:
-    Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window);
+    Map(SDL_Renderer* rend, uint tiles, uint width_window,
+        uint height_window);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
@@ -89,16 +91,12 @@ public:
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
     // Pone a todos los jugadores en estado de parados
-    void allStanding();
+    void standing(std::unordered_map<std::string, bool> players_updated);
 
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
-    // Balas
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id,
-                   std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
-    void weaponPlayer(ProjectilesId::ProjectileId id,
-                      std::string playerName);  // si ya tiene arma tonces dispara
+    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
     void dropWeapon(std::string playerName);
 

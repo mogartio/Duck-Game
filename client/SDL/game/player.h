@@ -6,8 +6,8 @@
 
 #include "../../../common/duckState/duckState.h"
 
-#include "enums.h"
 #include "image.h"
+#include "enums.h"
 
 class Player {
 private:
@@ -81,5 +81,4 @@ public:
     // Devolver posicion del jugador
     std::pair<int, int> getPosition() const;
 
-    ~Player();
 };
