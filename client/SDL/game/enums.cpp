@@ -40,20 +40,35 @@ std::string color_to_string(Color color) {
 
 std::string projectile_to_string(ProjectilesId::ProjectileId id) {
     switch (id) {
-        case ProjectilesId::ProjectileId::GRENADE:       return "granada.png";
-        case ProjectilesId::ProjectileId::BANANA:        return "banana.png";
-        case ProjectilesId::ProjectileId::PEW_PEW_LASER:    return "pewpewlaser.png";
-        case ProjectilesId::ProjectileId::LASER_RIFLE:    return "laserRifle.png";
-        case ProjectilesId::ProjectileId::AK_47:          return "ak47.png";
-        case ProjectilesId::ProjectileId::DUEL_PISTOL:        return "duelos.png";
-        case ProjectilesId::ProjectileId::COWBOY_PISTOL:        return "cowboy.png";
-        case ProjectilesId::ProjectileId::MAGNUM:        return "magnum.png";
-        case ProjectilesId::ProjectileId::SHOTGUN:      return "escopeta.png";
-        case ProjectilesId::ProjectileId::SNIPER:        return "sniper.png";
-        
-        case ProjectilesId::ProjectileId::LASER:         return "bullets/laser.png";
-        case ProjectilesId::ProjectileId::BULLET_PISTOL:     return "bullets/pistol.png";
-        case ProjectilesId::ProjectileId::BULLET_SHOTGUN:    return "bullets/escopeta.png";
-        default:        return "unknown.png";
+        case ProjectilesId::ProjectileId::GRENADE:
+            return "granada.png";
+        case ProjectilesId::ProjectileId::BANANA:
+            return "banana.png";
+        case ProjectilesId::ProjectileId::LIVE_BANANA:
+            return "banana.png";
+        case ProjectilesId::ProjectileId::PEW_PEW_LASER:
+            return "pewpewlaser.png";
+        case ProjectilesId::ProjectileId::LASER_RIFLE:
+            return "laserRifle.png";
+        case ProjectilesId::ProjectileId::AK_47:
+            return "ak47.png";
+        case ProjectilesId::ProjectileId::DUEL_PISTOL:
+            return "duelos.png";
+        case ProjectilesId::ProjectileId::COWBOY_PISTOL:
+            return "cowboy.png";
+        case ProjectilesId::ProjectileId::MAGNUM:
+            return "magnum.png";
+        case ProjectilesId::ProjectileId::SHOTGUN:
+            return "escopeta.png";
+        case ProjectilesId::ProjectileId::SNIPER:
+            return "sniper.png";
+        case ProjectilesId::ProjectileId::LASER:
+            return "bullets/laser.png";
+        case ProjectilesId::ProjectileId::BULLET_PISTOL:
+            return "bullets/pistol.png";
+        case ProjectilesId::ProjectileId::BULLET_SHOTGUN:
+            return "bullets/escopeta.png";
+        default:
+            return "unknown.png";
     }
 }

@@ -66,7 +66,7 @@ public:
     bool update() override {
 
         if (weapon->get_id() == GRENADE) {
-            if (weapon->exploded()) {
+            if (weapon->is_dead()) {
                 updateNotPosition(position.x, position.y);
                 return true;
             }

@@ -431,6 +431,7 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     for (const auto& pair: weaponsMap) {
         for (const auto& weapon: pair.second) {
+            std::cout << int(pair.first) << std::endl;
             weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
             weapons[pair.first]->fill(SDL_FLIP_NONE);
         }
