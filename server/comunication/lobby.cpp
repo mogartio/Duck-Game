@@ -1,6 +1,6 @@
 #include "lobby.h"
 
-#include "game_logic/game.h"
+#include "../game_logic/game.h"
 
 #include "client.h"
 

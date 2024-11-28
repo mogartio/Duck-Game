@@ -10,7 +10,7 @@
 #include "../../common/messages/handler_read.h"
 #include "../../common/queue.h"
 #include "../../common/thread.h"
-#include "../send_queues_monitor.h"
+#include "../comunication/send_queues_monitor.h"
 #include "config/config.h"
 #include "map/spawn_point.h"
 #include "map/stage.h"

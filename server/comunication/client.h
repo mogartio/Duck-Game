@@ -4,8 +4,8 @@
 #include <string>
 #include <utility>
 
-#include "../common/messages/generic_msg.h"
-#include "../common/messages/handler_read.h"
+#include "../../common/messages/generic_msg.h"
+#include "../../common/messages/handler_read.h"
 
 #include "lobbys_monitor.h"
 #include "receiver.h"
