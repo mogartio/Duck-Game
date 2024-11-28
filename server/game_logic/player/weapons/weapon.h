@@ -38,7 +38,7 @@ public:
     virtual void update(Coordinate) {}
     virtual uint8_t get_id() { return id; }
     virtual bool is_unarmed() { return false; }
-    virtual bool is_dead() { return player == nullptr; }
+    virtual bool is_dead() { return false; }
 };
 
 class Unarmed: public Weapon {
