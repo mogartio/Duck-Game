@@ -160,6 +160,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     // Limpiar mapa
     tilesPlace.clear();
     weaponsMap.clear();
+    explosionsPos.clear();
     helmetsPos.clear();
     armorMap.clear();
     playersNamesAlive.clear();
@@ -418,6 +419,7 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Dibujamos el mapa
     SDL_RenderCopy(rend, mapTexture, nullptr, nullptr);
 
+    // Helmets
     for (const auto& helmet: helmetsPos) {
         for (const auto& pos: helmet.second) {
             helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles);
@@ -425,11 +427,13 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
     }
 
+    // Armor
     for (std::pair armorPos: armorMap) {
         armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap->fill();
     }
 
+    // Weapons
     for (const auto& pair: weaponsMap) {
         for (const auto& weapon: pair.second) {
             weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
@@ -437,25 +441,36 @@ void Map::fill() {  // Dibuja de atras para adelante
         }
     }
 
+    // Players
     for (std::string playerName: playersNamesAlive) {
         players[playerName]->fill();
     }
 
-    for (uint8_t i = 0; i < explosionsPos.size(); i++) {
-        if (explosionCounter[i]%4 != 0) {
+    // Explosions
+    std::vector<size_t> toRemove;
+    for (size_t i = 0; i < explosionsPos.size(); i++) {
+        size_t explosionIndex = explosionCounter[i] / 4;
+        if (explosionIndex >= explosions.size()) {
+            continue;
+        }
+        if (explosionCounter[i] % 4 != 0) {
             explosionCounter[i]++;
-            explosions[explosionCounter[i]/4]->fill();
+            explosions[explosionIndex]->fill();
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionCounter[i] / 4]->position((pos.first - 3) * tiles,
-                                                      (pos.second - 3) * tiles);
-        explosions[explosionCounter[i] / 4]->fill();
+        explosions[explosionIndex]->position((pos.first - 3) * tiles, (pos.second - 3) * tiles);
+        explosions[explosionIndex]->fill();
         explosionCounter[i]++;
-        if (explosionCounter[i]/4 >= 6) {
-            explosionsPos.erase(explosionsPos.begin() + i);
-            explosionCounter.erase(explosionCounter.begin() + i);
+        if (explosionCounter[i] > 26) {
+            toRemove.push_back(i);
         }
+    }
+
+    // Elimina las explosiones que ya terminaron de explotar
+    for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it) {
+        explosionsPos.erase(explosionsPos.begin() + *it);
+        explosionCounter.erase(explosionCounter.begin() + *it);
     }
 
     // Cambiamos el render target al renderer

@@ -14,6 +14,7 @@ public:
     // virtual void finish_throw(int, bool, std::shared_ptr<Weapon>) override;
     virtual void update() override;
     void update(Coordinate) override;
+    bool is_dead() override { return dead; }
 };
 
 class Banana: public Weapon {
