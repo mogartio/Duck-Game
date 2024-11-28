@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "../common/protocolo-common.h"
+#include "../../common/protocolo-common.h"
 
 class ClientProtocol: public ProtocoloCommon {
 private:

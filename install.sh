@@ -75,6 +75,16 @@ sudo apt-get --yes install qtbase5-dev qtmultimedia5-dev
 print_text $MAG_WHI_BOLD "--------- Installing YAML ---------"
 sudo apt-get --yes install libyaml-cpp-dev
 
+print_text $MAG_WHI_BOLD "--------- Installing GoogleTest ---------"
+git clone https://github.com/google/googletest.git
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+cd ../../
+
 # Duck Game compilation
 print_text $INSTALL_MSG "--------- Installing Duck Game ---------"
 make clean

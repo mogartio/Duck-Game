@@ -1,38 +1,41 @@
 #ifndef CONNECTION_SCREEN_H
 #define CONNECTION_SCREEN_H
 
-#include "../client.h"
-#include <QSound>
+#include <QBoxLayout>
 #include <QFontDatabase>
+#include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
+#include <QResizeEvent>
+#include <QSound>
 #include <memory>
+#include <string>
+
+#include "../comunication/client.h"
+
 #include "parallax_background.h"
 #include "rounded_rectangle.h"
-#include <QResizeEvent>
-#include <QBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <string>
-class ConnectionScreen : public QWidget {
+class ConnectionScreen: public QWidget {
     Q_OBJECT
 
-public: 
-    ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client);
-    
+public:
+    ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
+                     Queue<std::shared_ptr<GenericMsg>>* recv_queue, Client* client);
+
 signals:
     void switchToMainMenuScreen();
     void quitApplication();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+    void resizeEvent(QResizeEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
     void drawEmptyFieldsError();
     void drawConnectionRefusedError();
 
 private slots:
     void onConnectButtonClicked();
     void onQuitButtonClicked();
-    
+
 private:
     std::shared_ptr<ParallaxBackground> layer0;
     std::shared_ptr<ParallaxBackground> layer1;
@@ -47,4 +50,4 @@ private:
     Client* client;
 };
 
-#endif // CONNECTION_SCREEN_H
+#endif  // CONNECTION_SCREEN_H

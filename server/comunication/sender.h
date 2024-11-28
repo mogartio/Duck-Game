@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "../common/sender.h"
+#include "../../common/sender.h"
 class Client;
 class SenderServer: public Sender {
 protected:

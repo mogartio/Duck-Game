@@ -5,7 +5,7 @@
 #include <list>
 #include <map>
 
-#include "../common/protocolo-common.h"
+#include "../../common/protocolo-common.h"
 
 class ServerProtocol: public ProtocoloCommon {
 public:

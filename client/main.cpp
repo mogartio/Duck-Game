@@ -7,9 +7,8 @@
 #include "../common/messages/generic_msg.h"
 #include "../common/queue.h"
 #include "SDL/game/game.h"
-
-#include "client.h"
-#include "client_protocol.h"
+#include "comunication/client.h"
+#include "comunication/client_protocol.h"
 
 int main(int argc, char* argv[]) {
     // inicializadores
@@ -115,8 +114,8 @@ int main(int argc, char* argv[]) {
             // Esperar a que otra terminal se una al lobby de ser necesario
             std::cout << "Esperando a que se una otro jugador ....." << std::endl;
 
-        //     std::this_thread::sleep_for(
-        //             std::chrono::seconds(3));  // aca tienen la espera del otro player
+            //     std::this_thread::sleep_for(
+            //             std::chrono::seconds(3));  // aca tienen la espera del otro player
 
             std::cout << "Tiempo de espera de otro jugador terminado" << std::endl;
 
