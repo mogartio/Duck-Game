@@ -101,8 +101,15 @@ cd build
 ./client
 EOF
 
+# Create run_editor script
+cat > run_editor <<'EOF'
+#!/bin/bash
+./build/editor
+EOF
+
 # Make scripts executable
 chmod +x run_server
 chmod +x run_client
+chmod +x run_editor
 
 print_text $MAG_WHI_BOLD "--------- Scripts Configured Successfully ---------"
