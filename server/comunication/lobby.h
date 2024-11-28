@@ -10,11 +10,11 @@
 #include <string>
 #include <vector>
 
-#include "./../common/messages/descripcion-lobby.h"
-#include "./../common/messages/generic_msg.h"
-#include "./../common/queue.h"
-#include "./game_logic/game_main.h"
-#include "game_logic/game.h"
+#include "../../common/messages/descripcion-lobby.h"
+#include "../../common/messages/generic_msg.h"
+#include "../../common/queue.h"
+#include "../game_logic/game.h"
+#include "../game_logic/game_main.h"
 
 #include "send_queues_monitor.h"
 

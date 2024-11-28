@@ -8,7 +8,7 @@
 
 #include "../../../common/coordinate.h"
 #include "../../../common/messages/generic_msg.h"
-#include "../../send_queues_monitor.h"
+#include "../../comunication/send_queues_monitor.h"
 
 
 namespace PlayerInfoId {
@@ -56,7 +56,7 @@ public:
     explicit PlayerObserver(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& queues,
                             std::shared_ptr<std::set<uint>> ids):
             Observer(queues, ids) {}
-    
+
     virtual void update(std::string name, uint16_t pos_x, uint16_t pos_y, uint8_t state,
                         uint8_t facing_direction) const override {
         std::shared_ptr<GenericMsg> msg = std::make_shared<UpdatedPlayerInfoMsg>(
@@ -80,10 +80,10 @@ public:
 
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
-        
+
         broadcast(msg);
 
-    // Para debuggear:
+        // Para debuggear:
         // std::stringstream ss;
         // if (trail.size() > 0) {
 
@@ -95,7 +95,6 @@ public:
         //               << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
         //               << " con trail: " << ss.str() << std::endl;
         // }
-
     }
 
     virtual void updateOldPos(uint8_t pos_x, uint8_t pos_y, uint8_t id) const override {
