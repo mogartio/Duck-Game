@@ -16,7 +16,7 @@
 #include "map/stage.h"
 #include "player/player.h"
 
-class GameMain: public HandlerReader {
+class GameLoop: public HandlerReader {
 private:
     Queue<std::shared_ptr<GenericMsg>>& receiver_q;
     bool is_testing;
@@ -33,7 +33,7 @@ private:
     void init_round(Stage& stage, Map& map);
 
 public:
-    explicit GameMain(Queue<std::shared_ptr<GenericMsg>>&, std::map<std::string, Player*>, bool);
+    explicit GameLoop(Queue<std::shared_ptr<GenericMsg>>&, std::map<std::string, Player*>, bool);
 
     std::shared_ptr<GenericMsg> create_msg(const std::string& command);
     void run();

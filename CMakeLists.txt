@@ -21,47 +21,26 @@ include_directories(common client server common/messages common/socket client/me
 
 # Find required libraries
 find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_ttf REQUIRED)
 find_package(Qt5 COMPONENTS Core Widgets Multimedia REQUIRED)
 find_package(yaml-cpp REQUIRED)
-find_package(GTest REQUIRED)
 
-# Add all .cpp and .h files
-file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h common/*/*.cpp common/*/*.h)
-file(GLOB_RECURSE CLIENT_SOURCES client/*/*.cpp client/*/*.h client/*/*/*.cpp client/*/*/*.h)
-file(GLOB_RECURSE SERVER_SOURCES server/*/*.cpp server/*/*.h server/*/*/*.cpp server/*/*/*.h server/*/*/*/*.cpp server/*/*/*/*.h server/*/*/*/*/*.cpp server/*/*/*/*/*.h)
-file(GLOB_RECURSE TEST_SOURCES tests/*/*.cpp tests/*/*.h)
+# Add all .cpp and .h files 
+file(GLOB_RECURSE COMMON_SOURCES common/*.cpp common/*.h)
+file(GLOB_RECURSE CLIENT_SOURCES client/*.cpp client/*.h client/menu/*.cpp client/menu/*.h)
+file(GLOB_RECURSE SERVER_SOURCES server/*.cpp server/*.h server/game_logic/*.cpp server/game_logic/*.h server/game_logic/map/*.cpp server/game_logic/map/*.h)
+file(GLOB_RECURSE EDITOR_SOURCES editor/*.cpp editor/*.h)
 
 # Excluir archivos en los directorios de CMake
 list(FILTER COMMON_SOURCES EXCLUDE REGEX "CMakeFiles")
 list(FILTER CLIENT_SOURCES EXCLUDE REGEX "CMakeFiles")
 list(FILTER SERVER_SOURCES EXCLUDE REGEX "CMakeFiles")
-list(FILTER TEST_SOURCES EXCLUDE REGEX "CMakeFiles")
-
 # Define the common static library
 add_library(common STATIC ${COMMON_SOURCES})
-target_link_libraries(common PUBLIC yaml-cpp)
 
-# Define the client static library
-add_library(client_library STATIC ${CLIENT_SOURCES})
-target_link_libraries(client_library PUBLIC common SDL2::SDL2 SDL2 SDL2_image SDL2_mixer SDL2_ttf Qt5::Core Qt5::Widgets Qt5::Multimedia)
-
-# Define the server static library
-add_library(server_library STATIC ${SERVER_SOURCES})
-target_link_libraries(server_library PUBLIC common)
-
-# Add executables
-add_executable(client ./client/main.cpp)
-target_link_libraries(client client_library)
-
-add_executable(server ./server/main.cpp)
-target_link_libraries(server server_library)
-
-# Define the test executable
-add_executable(tests ./tests/main.cpp ${TEST_SOURCES})
-target_link_libraries(tests server_library client_library GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+# Add executables 
+add_executable(client ${CLIENT_SOURCES})
+add_executable(server ${SERVER_SOURCES})
+add_executable(editor ${EDITOR_SOURCES})
 
 # Copy the entire img_src folder, including subdirectories, to the build directory
 add_custom_target(CopyResources ALL
@@ -70,3 +49,8 @@ add_custom_target(CopyResources ALL
 )
 
 add_dependencies(client CopyResources)
+
+# Link libraries
+target_link_libraries(client common SDL2::SDL2 SDL2 SDL2_image SDL2_mixer SDL2_ttf Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
+target_link_libraries(server common yaml-cpp)
+target_link_libraries(editor common yaml-cpp Qt5::Core Qt5::Widgets Qt5::Multimedia)

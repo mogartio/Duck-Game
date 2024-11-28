@@ -250,8 +250,8 @@ void Stage::explode_vertically(Coordinate starting_position, int radius, int ver
 
     for (int j = 0; j < radius + 1; j++) {
         Coordinate next_tile(starting_position.x, starting_position.y + j * vertical_direction);
-        std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
-                  << std::to_string(next_tile.y) << std::endl;
+        // std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
+        //           << std::to_string(next_tile.y) << std::endl;
         int content_in_next_tile = map.get(next_tile);
         if (content_in_next_tile == wall || content_in_next_tile == floor) {
             if (j == 0) {

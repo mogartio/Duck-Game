@@ -18,7 +18,7 @@ private:
     std::shared_ptr<std::set<uint>> ids;
 
     Stage* current_stage;
-    std::shared_ptr<GameMain> game_loop;
+    std::shared_ptr<GameLoop> game_loop;
 
     bool game_over;
     bool is_testing;
