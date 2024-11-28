@@ -98,7 +98,8 @@
         "qstackedwidget": "cpp",
         "qaction": "cpp",
         "qmessagebox": "cpp",
-        "qfiledialog": "cpp"
+        "qfiledialog": "cpp",
+        "csignal": "cpp"
     },
     "makefile.configureOnOpen": false
 }
