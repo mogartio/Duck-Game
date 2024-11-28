@@ -28,17 +28,20 @@ public:
             Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
             deviations_index(-1),
             weapon(std::move(weapon)) {  // Initialize deviations_index
+        deviations.push_back(1);
+        deviations_direction.push_back(UP_DIRECTION);
+        deviations.push_back(1);
+        deviations_direction.push_back(UP_DIRECTION);
         for (int i = 0; i < speed; i++) {
-            deviations.push_back(3);
-            deviations_direction.push_back(UP_DIRECTION);
-            deviations.push_back(5);
             if (i < speed / 2) {
+                deviations.push_back(2);
                 deviations_direction.push_back(UP_DIRECTION);
             } else {
+                deviations.push_back(6);
                 deviations_direction.push_back(DOWN_DIRECTION);
             }
         }
-        deviations.push_back(3);
+        deviations.push_back(2);
         deviations_direction.push_back(DOWN_DIRECTION);
     }
 

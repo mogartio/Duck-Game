@@ -18,7 +18,7 @@ void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon)
     Coordinate gun_position = get_gun_position(x_direction);
     throw_started = false;
     // TODO: deberia poder tirar la granada para arriba
-    int speed = std::min(5, throw_reach / 10);
+    int speed = std::min(7, throw_reach / 10);
     throw_reach = 30;
     stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
     stage.add_projectile(std::move(std::make_unique<ProjectileThrownWeapon>(
