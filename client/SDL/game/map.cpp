@@ -60,9 +60,6 @@ void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::UNARMED) {
         return;
     }
-    if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
-        return;
-    }
     std::shared_ptr<Image> weaponImage = std::make_shared<Image>();
     std::string path = "assets/game_assets/weapons/";
     path += projectile_to_string(id);
@@ -109,7 +106,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     helmetImage->initialize(rend, path);
     helmetImage->queryTexture();
     helmetImage->defineSize(6 * tiles, 6 * tiles);  // mismo tamaño que el pato
-    helmets.push_back(helmetImage);
+    helmets[helmet] = helmetImage;
 }
 
 void Map::makeArmor() {
@@ -136,10 +133,28 @@ void Map::makeTile(TileType tileType) {
     path += tileType_to_string(tileType);
     tile->initialize(rend, path);
     tile->queryTexture();
-    tile->defineSize(1 * tiles, 1 * tiles);
+    tile->defineSize(6 * tiles, 6 * tiles);
     tile->position(0, 0);
     tilesImages[int(tileType)] = tile;
 }
+
+bool Map::canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual) {
+    for(int i = 0; i < 6; i++) {
+        for(int j = 0; j < 6; j++) {
+            // Si esta fuera de rango saltea la pos
+            if ((filaActual - i < 0 || columnaActual - j < 0) ||
+                (static_cast<size_t>(filaActual - i) >= matriz.size() || static_cast<size_t>(columnaActual - j) >= matriz[0].size())) {
+                continue;
+            }
+
+            // Si hay un tile en esa pos entonces ya no se puede poner otro
+            if ((matriz[filaActual - i][columnaActual - j] == 5)|| (matriz[filaActual - i][columnaActual - j] == 6)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}   
 
 void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     // Limpiar mapa
@@ -177,22 +192,24 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
 
         switch (i) {
             case 5:  // piso
-                matriz[filaActual][columnaActual] = i;
-                if (filaActual == 0) {
-                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
-                } else if (matriz[filaActual - 1][columnaActual] == i) {
-                    tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
-                } else {
-                    tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
+                if (canAddTile(matriz, filaActual, columnaActual)) {
+                    matriz[filaActual][columnaActual] = i;
+                    if (filaActual == 0) {
+                        tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                    } else if ((filaActual >= 6) && (matriz[filaActual - 6][columnaActual] == i)) {
+                        tilesPlace[TileType::ROCK].push_back(std::pair(columnaActual, filaActual));
+                    } else {
+                        tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
+                    }
                 }
+                
                 break;
-            case 6:                                     // pared
-                matriz[filaActual][columnaActual] = i;  // este proximamente va a servir para cuando
-                                                        // las columnas tengan tope inferior
-                tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
-                break;
-            case 13:  // caja
-            case 14:  // caja rota
+            case 6:  // pared
+                if (canAddTile(matriz, filaActual, columnaActual)) {
+                    matriz[filaActual][columnaActual] = i; 
+                    tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
+                }
+                
                 break;
             default:
                 break;
@@ -274,7 +291,7 @@ void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
 }
 
 void Map::helmetPlayer(ProjectilesId::ProjectileId helmet, std::string playerName) {
-    players[playerName]->helmet(helmets[int(helmet) - 14]);
+    players[playerName]->helmet(helmets[helmet]);
 }
 
 // ----------------- Armor -----------------
@@ -433,7 +450,7 @@ void Map::fill() {  // Dibuja de atras para adelante
         explosions[explosionCounter[i]/4]->position(pos.first, pos.second);
         explosions[explosionCounter[i]/4]->fill();
         explosionCounter[i]++;
-        if (explosionCounter[i]/4 == 6) {
+        if (explosionCounter[i]/4 >= 6) {
             explosionsPos.erase(explosionsPos.begin() + i);
             explosionCounter.erase(explosionCounter.begin() + i);
         }

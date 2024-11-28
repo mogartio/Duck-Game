@@ -41,7 +41,7 @@ private:
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
-    std::vector<std::shared_ptr<Image>> helmets;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmets;
     // Posiciones de los cascos en el mapa
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmetsMap;
     // std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
@@ -65,6 +65,11 @@ private:
     std::vector<std::pair<int, int>> explosionsPos;
     // Contador de las explosiones
     std::vector<int> explosionCounter;
+
+    bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
+
+    // true para rock, false para grass    
+    bool rockOrGrass(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();
