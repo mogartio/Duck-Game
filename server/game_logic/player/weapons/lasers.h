@@ -1,5 +1,7 @@
 #ifndef LASERS_H
 #define LASERS_H
+#include <memory>
+#include <utility>
 
 #include "weapon.h"
 

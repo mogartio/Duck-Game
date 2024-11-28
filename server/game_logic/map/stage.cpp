@@ -72,6 +72,10 @@ void Stage::update() {
         }
         iterator++;
     }
+    for (const auto& [center_position, radius]: explosions) {
+        explode(center_position, radius);
+    }
+    explosions.clear();
 }
 
 void Stage::draw(int object, int size, Coordinate init_position) {
@@ -148,12 +152,40 @@ int Stage::is_valid_position(Coordinate position, int color) {
                 return DEATH;
             }
             int value = map.get(aux);
+            if (value == LIVE_BANANA) {  // una banana que fue activada
+                std::shared_ptr<Projectile> banana_per_se = find_projectile_in(aux);
+                if (banana_per_se) {
+
+                    Coordinate banana_position = banana_per_se->get_position();
+                    banana_per_se->updateNotPosition(banana_position.x, banana_position.y);
+                    remove_projectile(banana_per_se);  // se elimina la banana per se
+                }
+                return LIVE_BANANA;
+            }
             if (value != BACKGROUND && value != color) {
                 return OCCUPIED;
             }
         }
     }
     return FREE;
+}
+
+std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position) {
+    for (auto& projectile: projectiles) {
+        Coordinate projectile_position = projectile->get_position();
+        std::vector<Coordinate> positions_occupied_by_projectile;
+        for (int i = 0; i < Config::get_instance()->bullet_size; i++) {
+            for (int j = 0; j < Config::get_instance()->bullet_size; j++) {
+                Coordinate c(projectile_position.x + j, projectile_position.y + i);
+                positions_occupied_by_projectile.push_back(c);
+            }
+        }
+        if (count(positions_occupied_by_projectile.begin(), positions_occupied_by_projectile.end(),
+                  init_position) > 0) {
+            return projectile;
+        }
+    }
+    return nullptr;
 }
 
 std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
@@ -171,6 +203,9 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
         if (ProjectileThrownWeapon* weaponProjectile =
                     dynamic_cast<ProjectileThrownWeapon*>(projectile.get())) {
             if (weaponProjectile->get_position() == position) {
+                if (weaponProjectile->get_id() == LIVE_BANANA) {  // banana activa no es levantable
+                    return nullptr;
+                }
                 std::shared_ptr new_weapon = weaponProjectile->get_weapon();
                 coordinates_to_delete.push_back(position);
                 obs.updateOldPos(position.x, position.y, weaponProjectile->get_id());
@@ -183,6 +218,11 @@ std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
 }
 
 void Stage::set_explosion(Coordinate center_position, int radius) {
+    explosions.push_back(std::tuple<Coordinate, int>(center_position, radius));
+}
+void Stage::explode(Coordinate center_position, int radius) {
+    obs.update(std::vector<std::pair<uint8_t, uint8_t>>(), static_cast<uint8_t>(center_position.x),
+               static_cast<uint8_t>(center_position.y), static_cast<uint8_t>(EXPLOSION));
     for (int i = 0; i < radius + 1; i++) {
         bool keep_going_horizontally = true;
         Coordinate next_position(center_position.x + i, center_position.y);
@@ -227,7 +267,6 @@ void Stage::explode_vertically(Coordinate starting_position, int radius, int ver
         }
     }
 }
-
 
 void Stage::set(const Coordinate& coor, const int value) {
     map.set(coor, value);

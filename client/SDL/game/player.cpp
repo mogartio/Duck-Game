@@ -181,16 +181,6 @@ bool Player::dropWeapon() {
     return originalWeaponstate;
 }
 
-void Player::shoot() {
-    if (!weaponON) {
-        return;  // Si no tiene un arma no hace nada
-    }
-
-    /*
-        Disparo el arma
-    */
-}
-
 // ----------------- Armor -----------------
 
 void Player::armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro) {
@@ -283,7 +273,3 @@ std::pair<int, int> Player::getPosition() const {
     return duck->getPosition();
 }
 
-// ----------------- Destructor -----------------
-
-Player::~Player() {
-}

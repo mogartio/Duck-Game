@@ -1,5 +1,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
+#include <algorithm>
 #include <memory>
 
 #include "../../map/stage.h"
@@ -37,7 +38,7 @@ public:
     virtual void update(Coordinate) {}
     virtual uint8_t get_id() { return id; }
     virtual bool is_unarmed() { return false; }
-    virtual bool exploded() { return false; }
+    virtual bool is_dead() { return false; }
 };
 
 class Unarmed: public Weapon {

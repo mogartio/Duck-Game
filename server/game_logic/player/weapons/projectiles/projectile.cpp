@@ -32,7 +32,7 @@ bool Projectile::ray_trace(Stage& stage) {
         }
         check_if_stopped(things_it_hits, despawned, stage);
         if (despawned) {
-            if ((id == BULLET_PISTOL) || (id == BULLET_SHOTGUN)) {
+            if ((id == BULLET_PISTOL) || (id == BULLET_SHOTGUN) || (id == LASER)) {
                 updateNotPosition(position.x, position.y);
             }
             return despawns_on_contact;
@@ -58,6 +58,7 @@ bool Projectile::ray_trace(Stage& stage) {
     }
     return false;
 }
+
 void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage) {
     for (int i = 1; i < 5; i++) {  // si le pego a un jugador con id entre 1 y 4
         if (hit.find(i) != hit.end()) {
@@ -97,7 +98,6 @@ void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& st
 }
 
 void Projectile::notify() {
-
     for (const Observer* obs: observers) {
         obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
                     static_cast<uint8_t>(id));

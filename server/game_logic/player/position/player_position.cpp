@@ -72,6 +72,8 @@ void PlayerPosition::move_horizontally(int offset) {
         player.die();
     } else if (next_position == OCCUPIED) {
         return;
+    } else if (next_position == LIVE_BANANA) {
+        move_horizontally(offset * 4);
     } else {
         if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
             player.Notify();
@@ -82,7 +84,9 @@ void PlayerPosition::move_horizontally(int offset) {
 
 void PlayerPosition::released_jump() { air_state->stop_jumping(*this); }
 void PlayerPosition::set_state(std::shared_ptr<AirState> new_state, uint8_t state_code) {
-    air_state = std::move(new_state);
+    if (new_state != nullptr) {
+        air_state = std::move(new_state);
+    }
     state = state_code;
     player.Notify();
 }

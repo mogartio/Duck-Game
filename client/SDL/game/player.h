@@ -81,5 +81,4 @@ public:
     // Devolver posicion del jugador
     std::pair<int, int> getPosition() const;
 
-    ~Player();
 };
