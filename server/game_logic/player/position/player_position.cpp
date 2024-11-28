@@ -22,6 +22,13 @@ PlayerPosition::PlayerPosition(Coordinate& initial_coordinates, Player& player, 
 
 void PlayerPosition::move(const std::set<int>& directions, bool should_change_facing_direction) {
     int x_offset = 0;
+    if (state == TRIPPING) {
+        free_occupied();
+        move_horizontally(air_state->get_x_offset());
+        move_vertically(air_state->get_offset());
+        air_state->update(stage.should_fall(*this), *this);
+        return;
+    }
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...
             if (should_change_facing_direction) {
@@ -67,9 +74,14 @@ void PlayerPosition::move_horizontally(int offset) {
     if (next_position == DEATH) {
         player.die();
     } else if (next_position == OCCUPIED) {
+        if (state == TRIPPING) {
+            set_state(std::make_shared<Grounded>(true), GROUNDED);
+        }
         return;
     } else if (next_position == LIVE_BANANA) {
-        move_horizontally(offset * 4);
+        std::shared_ptr<AirState> new_state = std::make_shared<Tripping>(offset);
+        set_state(new_state, TRIPPING);
+        // move_horizontally(offset * 4);
     } else {
         if (!(position == current)) {  // sobrecargue el == y no el !=, sue me
             player.Notify();

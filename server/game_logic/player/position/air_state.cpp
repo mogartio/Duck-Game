@@ -76,3 +76,23 @@ void PlayingDead::update(bool could_fall, PlayerPosition& player) {
         player.set_state(std::make_unique<Falling>(), FALLING);
     }
 }
+
+int Tripping::get_offset() { return falling_speed; }
+
+void Tripping::jump(PlayerPosition& player) {}
+
+void Tripping::update(bool could_fall, PlayerPosition& player) {
+    if (could_fall) {
+        falling_speed = Config::get_instance()->player_falling_speed;
+    } else {
+        falling_speed = 0;
+    }
+    turns_stunned++;
+    if (turns_stunned == stun_duration) {
+        if (could_fall) {
+            player.set_state(std::make_unique<Falling>(), FALLING);
+            return;
+        }
+        player.set_state(std::make_unique<Grounded>(true), GROUNDED);
+    }
+}

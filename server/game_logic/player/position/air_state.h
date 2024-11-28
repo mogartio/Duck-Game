@@ -14,6 +14,7 @@ public:
     virtual void jump(PlayerPosition&) = 0;
     virtual void stop_jumping(PlayerPosition&) {}
     virtual void update(bool, PlayerPosition&) = 0;
+    virtual int get_x_offset() { return 0; };
     virtual ~AirState() = default;
 };
 
@@ -62,7 +63,24 @@ public:
     virtual void jump(PlayerPosition&) override;
     virtual void update(bool, PlayerPosition&) override;
     virtual void stop_jumping(PlayerPosition&) override {};
+};
 
+class Tripping: public AirState {
+private:
+    int stun_duration;
+    int turns_stunned;
+    int x_direction;    // para donde esta cayendo
+    int falling_speed;  // por si esta cayendo mientras esta stunneado
+public:
+    Tripping(int x_direction):
+            stun_duration(Config::get_instance()->stun_duration),
+            x_direction(x_direction),
+            falling_speed(0) {}
+    virtual int get_offset() override;
+    virtual void jump(PlayerPosition&) override;
+    virtual void update(bool, PlayerPosition&) override;
+    virtual void stop_jumping(PlayerPosition&) override {};
+    virtual int get_x_offset() override { return x_direction; };
 };
 
 #endif

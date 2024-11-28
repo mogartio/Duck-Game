@@ -38,6 +38,7 @@ private:
         explosion_range = config["explosion_range"].as<int>();
         bullet_size = config["bullet_size"].as<int>();
         rounds_per_cycle = config["rounds_per_cycle"].as<int>();
+        stun_duration = config["stun_duration"].as<int>();
         for (const auto& coords: config["weapon_spawn_sites"]) {
             weapon_spawn_sites.push_back(
                     std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
@@ -57,6 +58,7 @@ public:
     // todos los atributos son publicos, viola el encapsulamiento y no me importa
     std::map<std::string, int> weapons_reach;
     std::map<std::string, int> weapons_init_ammo;
+    int stun_duration;
     int player_falling_speed;
     int player_jumping_height;
     int armor_strength;
