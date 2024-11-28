@@ -1,9 +1,10 @@
 #include "armor.h"
-#include "../player.h"
 
 #include <cmath>
 #include <memory>
 #include <utility>
+
+#include "../player.h"
 
 Chest::Chest(Stage& stage): Weapon(stage, 1, 20, CHEST) {}
 
@@ -27,6 +28,3 @@ void Helmet::shoot(int damage, bool) {
         player->pick_helmet(std::make_unique<Unarmed>(stage));
     }
 }
-
-
-

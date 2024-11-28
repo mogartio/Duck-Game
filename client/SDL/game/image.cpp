@@ -3,6 +3,9 @@
 #include "image.h"
 #include <iostream>
 
+
+// ----------------- Constructor -----------------
+
 Image::Image() : rend(nullptr), imgTex(nullptr) {}
 
 void Image::initialize(SDL_Renderer* rend, const std::string& img) {
@@ -14,6 +17,8 @@ void Image::initialize(SDL_Renderer* rend, const std::string& img) {
     }
 
 }
+
+// ----------------- Fill -----------------
 
 void Image::fill(bool background) {
     if (background) { // Dibuja el fondo
@@ -31,14 +36,24 @@ void Image::fill(double angle, SDL_RendererFlip flip) {
     SDL_RenderCopyEx(rend, imgTex, NULL, &dest, angle, NULL, flip); // Dibuja
 }
 
+// ----------------- Query Texture -----------------
+
 void Image::queryTexture() {
     SDL_QueryTexture(imgTex, NULL, NULL, &dest.w, &dest.h);
 }
+
+// ----------------- Size -----------------
 
 void Image::defineSize(int height, int width) {
     dest.h = height;
     dest.w = width;
 }
+
+std::pair<int, int> Image::getSize() const {
+    return std::pair(dest.h, dest.w);
+}
+
+// ----------------- Position -----------------
 
 void Image::position(int x, int y) {
     dest.x = x;
@@ -49,6 +64,8 @@ std::pair<int, int> Image::getPosition() const {
     return std::pair(dest.x, dest.y);
 }
 
+// ----------------- Destructor -----------------
+
 Image::~Image() {
     if (imgTex != nullptr) {
         SDL_DestroyTexture(imgTex); // Libera la textura
@@ -56,4 +73,3 @@ Image::~Image() {
     }
 
 }
-

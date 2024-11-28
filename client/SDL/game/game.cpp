@@ -189,7 +189,8 @@ void Game::play() {
                         if (not_projectile) {
                             position_x_y = not_projectile->get_position_x_y();
                             item = not_projectile->get_item();
-                            map.removeWeapon(position_x_y.first, position_x_y.second, ProjectilesId::ProjectileId(item));
+                            map.removeWeapon(position_x_y.first, position_x_y.second,
+                                             ProjectilesId::ProjectileId(item));
                         }
                         break;
 

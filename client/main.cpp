@@ -114,8 +114,10 @@ int main(int argc, char* argv[]) {
 
             // Esperar a que otra terminal se una al lobby de ser necesario
             std::cout << "Esperando a que se una otro jugador ....." << std::endl;
+
         //     std::this_thread::sleep_for(
         //             std::chrono::seconds(3));  // aca tienen la espera del otro player
+
             std::cout << "Tiempo de espera de otro jugador terminado" << std::endl;
 
 

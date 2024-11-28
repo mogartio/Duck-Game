@@ -95,10 +95,12 @@ public:
         //               << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
         //               << " con trail: " << ss.str() << std::endl;
         // }
+
     }
 
     virtual void updateOldPos(uint8_t pos_x, uint8_t pos_y, uint8_t id) const override {
-        std::shared_ptr<GenericMsg> msg = std::make_shared<NotProyectileInfo>(id, std::pair<uint8_t, uint8_t>(pos_x, pos_y));
+        std::shared_ptr<GenericMsg> msg =
+                std::make_shared<NotProyectileInfo>(id, std::pair<uint8_t, uint8_t>(pos_x, pos_y));
         broadcast(msg);
     }
 

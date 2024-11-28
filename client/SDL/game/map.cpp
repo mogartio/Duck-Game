@@ -82,7 +82,7 @@ void Map::makeExplosion() {
         path += ".png";
         explosion->initialize(rend, path);
         explosion->queryTexture();
-        explosion->defineSize(2 * tiles, 2 * tiles);
+        explosion->defineSize(6 * tiles, 6 * tiles);
         explosions.push_back(explosion);
     }
 }
@@ -216,6 +216,26 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
         }
         columnaActual++;
     }
+    for (auto& [tileType, positions]: tilesPlace) {
+        std::vector<std::pair<int, int>> filteredPositions;
+
+        // Use a set to track blocks we've already processed
+        std::set<std::pair<int, int>> processedBlocks;
+
+        for (const auto& [x, y]: positions) {
+            // Determine the block this tile belongs to
+            int blockX = x / 6;
+            int blockY = y / 6;
+
+            // If the block hasn't been processed yet, keep this tile
+            if (processedBlocks.emplace(blockX, blockY).second) {
+                filteredPositions.emplace_back(x, y);
+            }
+        }
+
+        // Replace the original positions with the filtered ones
+        positions = std::move(filteredPositions);
+    }
 }
 
 // ----------------- Player -----------------
@@ -255,6 +275,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         weaponsMap[id].push_back(std::pair(x, y));
     }
 }
+
 
 void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     // Si el jugador ya tiene un arma, entonces la suelta
@@ -352,8 +373,8 @@ SDL_Rect Map::adjustMapZoom() {
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
-    float proportion_width = float(new_width) / float(width_window) ;
-    float proportion_height = float(new_height) / float(height_window) ;
+    float proportion_width = float(new_width) / float(width_window);
+    float proportion_height = float(new_height) / float(height_window);
     float proportion = std::max(proportion_width, proportion_height);
 
     new_width = proportion * width_window;
@@ -361,13 +382,13 @@ SDL_Rect Map::adjustMapZoom() {
 
     if ((centro_x - new_width / 2) < 0) {
         centro_x = new_width / 2;
-    }else if ((centro_x + new_width / 2) > (int)width_window) {
+    } else if ((centro_x + new_width / 2) > (int)width_window) {
         centro_x = width_window - new_width / 2;
     }
 
     if ((centro_y - new_height / 2) < 0) {
         centro_y = new_height / 2;
-    }else if ((centro_y + new_height / 2) > (int)height_window) {
+    } else if ((centro_y + new_height / 2) > (int)height_window) {
         centro_y = height_window - new_height / 2;
     }
 
@@ -431,7 +452,6 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     for (const auto& pair: weaponsMap) {
         for (const auto& weapon: pair.second) {
-            std::cout << int(pair.first) << std::endl;
             weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
             weapons[pair.first]->fill(SDL_FLIP_NONE);
         }
@@ -448,8 +468,9 @@ void Map::fill() {  // Dibuja de atras para adelante
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionCounter[i]/4]->position(pos.first, pos.second);
-        explosions[explosionCounter[i]/4]->fill();
+        explosions[explosionCounter[i] / 4]->position((pos.first - 3) * tiles,
+                                                      (pos.second - 3) * tiles);
+        explosions[explosionCounter[i] / 4]->fill();
         explosionCounter[i]++;
         if (explosionCounter[i]/4 >= 6) {
             explosionsPos.erase(explosionsPos.begin() + i);

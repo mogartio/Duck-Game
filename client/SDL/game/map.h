@@ -1,4 +1,7 @@
 #include <list>
+
+#include <memory>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -67,9 +70,6 @@ private:
     std::vector<int> explosionCounter;
 
     bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
-
-    // true para rock, false para grass    
-    bool rockOrGrass(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();

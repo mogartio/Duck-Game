@@ -1,6 +1,8 @@
 #ifndef WEAPON_CONFIG_H
 #define WEAPON_CONFIG_H
+#include <map>
 #include <mutex>
+#include <string>
 
 #include <yaml-cpp/yaml.h>
 

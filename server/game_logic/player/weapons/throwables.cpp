@@ -77,5 +77,6 @@ void Banana::shoot(int, bool) {
 //     throw_reach = 30;
 //     stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
 //     stage.add_projectile(std::move(std::make_unique<Projecti>(
-//             std::move(weapon), gun_position, speed, x_direction, throw_reach, stage, GRENADE)));
+//             std::move(weapon), gun_position, speed, x_direction, throw_reach, stage,
+//             GRENADE)));
 // }
