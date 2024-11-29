@@ -6,6 +6,7 @@
 
 #include "../../../../common/messages/generic_msg.h"
 #include "../../config/weapon_config.h"
+#include "../player.h"
 #include "projectiles/projectile.h"
 using namespace ProjectilesId;
 
@@ -21,6 +22,9 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     stage.add_projectile(std::move(
             std::make_unique<CowboyBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+    }
     stopped_holding_trigger = false;
 }
 
@@ -36,6 +40,9 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     stage.add_projectile(std::move(
             std::make_unique<MagnumBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+    }
     stopped_holding_trigger = false;
 }
 
@@ -51,5 +58,8 @@ void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     stage.add_projectile(std::move(
             std::make_unique<DuelBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+    }
     stopped_holding_trigger = false;
 }

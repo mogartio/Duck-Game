@@ -8,9 +8,7 @@ class MusicHandler {
 private:
     // seleccione estas arbitrareamente pero pueden seleccionar otras
     const std::vector<std::string> paths_musics = {
-            "assets/game_assets/music/arbuckle.wav", "assets/game_assets/music/arcade.wav",
-            "assets/game_assets/music/backwen.wav",
-            "assets/game_assets/music/castil.wav"};  // Lista de paths de las musicas
+            "assets/game_assets/music/48.-Pause.wav"};  // Lista de paths de las musicas
 
     std::vector<std::unique_ptr<MusicPlayer>> list_of_musics;
 
