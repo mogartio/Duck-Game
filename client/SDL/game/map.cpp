@@ -138,6 +138,21 @@ void Map::makeTile(TileType tileType) {
     tilesImages[int(tileType)] = tile;
 }
 
+void Map::makeBoxes() {
+    // Creo cajas
+    for (int i = 1; i <= 8; i++) {
+        std::string path = "assets/game_assets/box";
+        path += std::to_string(i);
+        path += ".png";
+
+        std::shared_ptr<Image> box = std::make_shared<Image>();
+        box->initialize(rend, path);
+        box->queryTexture();
+        box->defineSize(2 * tiles, 2 * tiles);
+        boxes.push_back(box);
+    }
+}
+
 bool Map::canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual) {
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 6; j++) {
@@ -250,6 +265,8 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
+    // } else if (id == ProjectilesId::ProjectileId::BOX) {
+    //     newBox(x, y);
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         newHelmet(x, y, id);
     } else {
@@ -284,8 +301,6 @@ void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     players[playerName]->weapon(weapons[id]);
 }
 
-void Map::dropWeapon(std::string playerName) { players[playerName]->dropWeapon(); }
-
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
@@ -309,16 +324,28 @@ void Map::explosion(int x, int y) {
     explosionCounter.push_back(0);
 }
 
+// ----------------- Box -----------------
+
+void Map::newBox(int x, int y) {
+    boxesPos.push_back(std::pair(x, y));
+}
+
 // ----------------- Remove -----------------
 
 void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::CHEST) {
         armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)),
                        armorMap.end());
+
+    // } else if (id == ProjectilesId::ProjectileId::BOX) {
+    //     boxesPos.erase(std::remove(boxesPos.begin(), boxesPos.end(), std::pair(x, y)),
+    //                    boxesPos.end());
+
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         helmetsPos[id].erase(
                 std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), std::pair(x, y)),
                 helmetsPos[id].end());
+
     } else {
         weaponsMap[id].erase(
                 std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)),
@@ -439,6 +466,15 @@ void Map::fill() {  // Dibuja de atras para adelante
             weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
             weapons[pair.first]->fill(SDL_FLIP_NONE);
         }
+    }
+
+    // Boxes
+    for (std::pair boxPos: boxesPos) {
+        // Elegimos una caja al azar
+        int box = rand() % 8;
+
+        boxes[box]->position(boxPos.first * tiles, boxPos.second * tiles);
+        boxes[box]->fill();
     }
 
     // Players
