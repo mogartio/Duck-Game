@@ -11,10 +11,11 @@
 #define SHOTGUN_KNOCKBACK 2
 Ak47::Ak47(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["ak47"]["ammo"],
-               WeaponConfig::get_instance()->weapons["ak47"]["reach"], AK_47) {}
+               WeaponConfig::get_instance()->weapons["ak47"]["reach"], AK_47),
+        stopped_pressing_since_picked(false) {}
 
 void Ak47::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0 || throw_started) {
+    if (ammo == 0 || !stopped_pressing_since_picked || throw_started) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
@@ -30,7 +31,14 @@ void Ak47::shoot(int x_direction, bool is_aiming_up) {
     bullets_shot++;
 }
 
-void Ak47::stop_shooting() { bullets_shot = 0; }
+void Ak47::stop_shooting() {
+    bullets_shot = 0;
+    stopped_pressing_since_picked = true;
+}
+void Ak47::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
+    Weapon::finish_throw(x_direction, true, weapon);
+    stopped_pressing_since_picked = false;
+}
 
 Shotgun::Shotgun(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["shotgun"]["ammo"],

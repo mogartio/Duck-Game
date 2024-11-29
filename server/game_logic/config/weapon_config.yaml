@@ -8,7 +8,7 @@ weapons:
     reach: 26
     speed: 3
     deviation: 12
-    ammo: 300
+    ammo: 30
   duel:
     reach: 12
     speed: 3
