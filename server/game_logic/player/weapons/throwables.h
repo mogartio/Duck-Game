@@ -15,15 +15,6 @@ public:
     virtual void update() override;
     void update(Coordinate) override;
 };
-class Banana: public Weapon {
-protected:
-    bool turned_on;
-    bool dead;
-
-public:
-    explicit Banana(Stage&);
-    virtual void shoot(int, bool) override;
-};
 
 class Banana: public Weapon {
 protected:

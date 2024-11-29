@@ -31,14 +31,6 @@ private:
         bullet_size = config["bullet_size"].as<int>();
         rounds_per_cycle = config["rounds_per_cycle"].as<int>();
         stun_duration = config["stun_duration"].as<int>();
-        for (const auto& coords: config["weapon_spawn_sites"]) {
-            weapon_spawn_sites.push_back(
-                    std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
-        }
-        for (const auto& coords: config["player_spawn_sites"]) {
-            player_spawn_sites.push_back(
-                    std::tuple<int, int>(coords[0].as<int>(), coords[1].as<int>()));
-        }
         int counter = 0;
         for (const auto& ids: config["mapId"]) {
             mapsId[ids.as<std::string>()] = counter;

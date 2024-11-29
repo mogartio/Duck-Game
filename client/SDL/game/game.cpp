@@ -262,3 +262,4 @@ Game::~Game() {
     IMG_Quit();        // Cierra SDL_image
     TTF_Quit();        // Cierra TTF
     SDL_Quit();        // Cierra SDL
+}

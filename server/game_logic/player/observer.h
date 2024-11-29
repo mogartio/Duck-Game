@@ -78,7 +78,8 @@ class ProjectileObserver: public Observer {
 
 public:
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
-                        uint8_t current_pos_y, uint8_t id) const override {
+                        uint8_t current_pos_y, uint8_t id, uint8_t x_direction,
+                        uint8_t y_direction) const override {
 
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
