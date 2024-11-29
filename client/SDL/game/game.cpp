@@ -50,7 +50,7 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
 
     // Creo la pantalla de carga
     loadingScreen =
-            std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+            std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h, queueSend);
 }
 
 void Game::play() {
