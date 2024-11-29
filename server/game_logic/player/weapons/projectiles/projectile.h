@@ -57,7 +57,8 @@ public:
     virtual void updateNotPosition(uint8_t, uint8_t);
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;
-    virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage);
+    virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage,
+                                  Coordinate next_position);
     virtual void check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage);
 };
 

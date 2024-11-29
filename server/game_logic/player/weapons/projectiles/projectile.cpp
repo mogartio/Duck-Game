@@ -11,7 +11,6 @@ bool Projectile::ray_trace(Stage& stage) {
         stage.draw(id, Config::get_instance()->bullet_size, position);
     }
     int bullet_size = Config::get_instance()->bullet_size;
-
     for (int i = 0; i < speed; i++) {
         if (distance_covered >= reach) {
             return true;
@@ -29,7 +28,7 @@ bool Projectile::ray_trace(Stage& stage) {
         if (despawned) {
             return is_lethal;
         }
-        check_if_stopped(things_it_hits, despawned, stage);
+        check_if_stopped(things_it_hits, despawned, stage, bullet_position);
         if (despawned) {
             if ((id == BULLET_PISTOL) || (id == BULLET_SHOTGUN) || (id == LASER)) {
                 updateNotPosition(position.x, position.y);
@@ -82,10 +81,16 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
     }
 }
 
-void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage) {
+void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage,
+                                  Coordinate next_position) {
     if ((hit.find(Config::get_instance()->mapsId["wall"])) != hit.end() ||
         (hit.find(Config::get_instance()->mapsId["floor"])) != hit.end()) {
-        speed = 0;
+        if (next_position.x == position.x) {
+            speed = 0;
+        } else {
+            moving_vertically = true;
+        }
+        moving_vertically = true;
         stage.draw(id, Config::get_instance()->bullet_size, position);
         if (!trail.empty()) {
             trail.pop_back();
