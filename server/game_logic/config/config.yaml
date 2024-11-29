@@ -1,11 +1,3 @@
-weapons_reach:
-  Magnum: 20
-  Cowboy Gun: 20
-
-weapons_init_ammo:
-  Magnum: 6
-  Cowboy Gun: 6
-
 player_falling_speed: 2
 player_jumping_height: 6
 armor_strength: 1
