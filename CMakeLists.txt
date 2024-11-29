@@ -57,6 +57,8 @@ target_link_libraries(client client_library)
 add_executable(server ./server/main.cpp)
 target_link_libraries(server server_library)
 
+add_executable(editor ${EDITOR_SOURCES})
+
 # Define the test executable
 add_executable(tests ./tests/main.cpp ${TEST_SOURCES})
 target_link_libraries(tests server_library client_library GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
