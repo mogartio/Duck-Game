@@ -38,7 +38,7 @@ weapons:
   laser_rifle:
     reach: 42
     speed: 3
-    ammo: 10
+    ammo: 100
   banana:
     reach: 30
     speed: 3

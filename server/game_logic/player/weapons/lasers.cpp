@@ -11,14 +11,15 @@ void PewLaser::shoot(int x_direction, bool is_aiming_up) {
     }
     Coordinate gun_position = get_gun_position(x_direction);
     int deviation = WeaponConfig::get_instance()->weapons["pewpew"]["deviation"];
+    Coordinate position_below(gun_position.x, gun_position.y + 2);
 
     stage.add_projectile(std::move(
             std::make_unique<PewLaserBullet>(gun_position, x_direction, -1, is_aiming_up, reach,
                                              reach + 1, 1)));  // reach + 1 para que no desvie
     stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
-            gun_position, x_direction, -1, is_aiming_up, reach, deviation, 1)));
-    stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
             gun_position, x_direction, -1, is_aiming_up, reach, deviation, -1)));
+    stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
+            position_below, x_direction, -1, is_aiming_up, reach, deviation, 1)));
 
     ammo--;
     if (ammo == 0) {
