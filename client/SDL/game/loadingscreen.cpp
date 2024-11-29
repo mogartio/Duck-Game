@@ -5,7 +5,9 @@
 
 #define RADIUS 70
 
-LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height, Queue<std::shared_ptr<GenericMsg>>& send_queue): renderer(renderer), send_queue(send_queue) {
+LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height,
+                             Queue<std::shared_ptr<GenericMsg>>& send_queue):
+        renderer(renderer), send_queue(send_queue) {
     // Crear la fuente y la textura
     TTF_Font* font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 56);
 
@@ -171,7 +173,7 @@ void LoadingScreen::show(Uint32 durationMs) {
         SDL_Delay(16);  // Aproximadamente 60 FPS
     }
     std::shared_ptr<StartRoundMsg> startRoundMsg = std::make_shared<StartRoundMsg>();
-    send_queue.push(startRoundMsg);
+    // send_queue.push(startRoundMsg);
 }
 
 void LoadingScreen::renderWithOpacity(SDL_Texture* texture, float alpha) {
