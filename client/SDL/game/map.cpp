@@ -169,14 +169,21 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     }
     mapTexture = nullptr;
 
+    // Limpiar jugadores
     for (const auto& pair: players) {
         pair.second->dropEverithing();
         playersNamesAlive.push_back(pair.first);
     }
 
+    // Actualizo tiles
     this->columnas = columnas;
     this->filas = filas;
 
+    uint tiles_w = width_window / columnas;
+    uint tiles_h = height_window/ filas;
+    this->tiles = std::min(tiles_w, tiles_h);
+
+    // Creo la matriz
     std::vector<std::vector<int>> matriz(filas, std::vector<int>(columnas, 0));
 
     int filaActual = 0;
