@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-#define MIN_ZOOM_WHITH 1000
-#define MIN_ZOOM_HEIGHT 300
+#define OFFSET_MIN_ZOOM 2
 #define VELOCIDAD_ZOOM 1.5
 #define TILES_PATIÑOS 6
 
@@ -51,7 +50,6 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
-
 }
 
 // ----------------- Initialize Images -----------------
@@ -139,22 +137,24 @@ void Map::makeTile(TileType tileType) {
 }
 
 bool Map::canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual) {
-    for(int i = 0; i < 6; i++) {
-        for(int j = 0; j < 6; j++) {
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
             // Si esta fuera de rango saltea la pos
             if ((filaActual - i < 0 || columnaActual - j < 0) ||
-                (static_cast<size_t>(filaActual - i) >= matriz.size() || static_cast<size_t>(columnaActual - j) >= matriz[0].size())) {
+                (static_cast<size_t>(filaActual - i) >= matriz.size() ||
+                 static_cast<size_t>(columnaActual - j) >= matriz[0].size())) {
                 continue;
             }
 
             // Si hay un tile en esa pos entonces ya no se puede poner otro
-            if ((matriz[filaActual - i][columnaActual - j] == 5)|| (matriz[filaActual - i][columnaActual - j] == 6)) {
+            if ((matriz[filaActual - i][columnaActual - j] == 5) ||
+                (matriz[filaActual - i][columnaActual - j] == 6)) {
                 return false;
             }
         }
     }
     return true;
-}   
+}
 
 void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     // Limpiar mapa
@@ -180,7 +180,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     this->filas = filas;
 
     uint tiles_w = width_window / columnas;
-    uint tiles_h = height_window/ filas;
+    uint tiles_h = height_window / filas;
     this->tiles = std::min(tiles_w, tiles_h);
 
     // Creo la matriz
@@ -210,14 +210,14 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
                         tilesPlace[TileType::GRASS].push_back(std::pair(columnaActual, filaActual));
                     }
                 }
-                
+
                 break;
             case 6:  // pared
                 if (canAddTile(matriz, filaActual, columnaActual)) {
-                    matriz[filaActual][columnaActual] = i; 
+                    matriz[filaActual][columnaActual] = i;
                     tilesPlace[TileType::COLUMN].push_back(std::pair(columnaActual, filaActual));
                 }
-                
+
                 break;
             default:
                 break;
@@ -356,8 +356,13 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MIN_ZOOM_WHITH);
-    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MIN_ZOOM_HEIGHT);
+    int MinZoomWhith = (int)(width_window / OFFSET_MIN_ZOOM);
+    int MinZoomHeight = (int)(height_window / OFFSET_MIN_ZOOM);
+    std::cout << "MinZoomWhith: " << MinZoomWhith << std::endl;
+    std::cout << "MinZoomHeight: " << MinZoomHeight << std::endl;
+
+    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MinZoomWhith);
+    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MinZoomHeight);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
@@ -489,7 +494,6 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     // Dibujamos el parentTexture
     SDL_RenderCopy(rend, parentTexture, &zoomRect, nullptr);
-
 }
 
 SDL_Texture* Map::getTextureMapWithAll() const { return parentTexture; }
