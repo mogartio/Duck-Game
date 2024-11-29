@@ -42,6 +42,7 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
     }
     if (!is_loaded) {
         is_loaded = true;
+        stopped_holding_trigger = false;
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
@@ -73,6 +74,7 @@ void Sniper::shoot(int x_direction, bool is_aiming_up) {
         return;
     }
     if (!is_loaded) {
+        stopped_holding_trigger = false;
         is_loaded = true;
         return;
     }
