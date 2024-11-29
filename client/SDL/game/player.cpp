@@ -237,7 +237,7 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
         // Dibujo el arma que tiene el pato
         if (weaponON && (state != DuckState::SLOW_FALL)) {
             int wx = position.first;
-            int wy = position.second + 13;
+            int wy = position.second + 25;
 
             // Mira hacia la Izquierda
             if (flip == SDL_FLIP_HORIZONTAL) {
@@ -249,11 +249,11 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
                 // Me fijo si el arma es un cuadrado para cambiar el offset
                 std::pair<int, int> weaponSize = _weapon->getSize();
                 if (weaponSize.first == weaponSize.second) {
-                    wx += 5;
+                    wx += 15;
                 }
 
             } else { // Mira hacia la Derecha
-                wx += 15;
+                wx += 30;
                 if (weaponAngle != 0.0) {
                     wx -= 3;
                     wy -= 7;
