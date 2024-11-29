@@ -19,7 +19,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
     // Deberia llegarme la info del fondo
     background.initialize(rend, "assets/game_assets/background/day.png");
 
-    for (int i = int(ProjectilesId::ProjectileId::SHOTGUN);
+    for (int i = int(ProjectilesId::ProjectileId::AK_47);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
         ProjectilesId::ProjectileId weapon = static_cast<ProjectilesId::ProjectileId>(i);
         makeWeapon(weapon);

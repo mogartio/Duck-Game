@@ -88,7 +88,7 @@ public:
         for (const Observer* obs: observers) {
             obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
                         static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                        static_cast<uint8_t>(id));
+                        static_cast<uint8_t>(id), x_direction, y_direction);
         }
     }
 };
@@ -109,7 +109,7 @@ public:
         for (const Observer* obs: observers) {
             obs->update(std::vector<std::pair<uint8_t, uint8_t>>(),  // se envia el trail vacio
                         static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                        static_cast<uint8_t>(id));
+                        static_cast<uint8_t>(id), x_direction, y_direction);
         }
     }
     virtual std::shared_ptr<Weapon> get_weapon() {

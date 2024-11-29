@@ -96,10 +96,13 @@ void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& st
 }
 
 void Projectile::notify() {
-
+    int going_up = -1;
+    if (deviation == 1) {
+        going_up = 1;
+    }
     for (const Observer* obs: observers) {
         obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                    static_cast<uint8_t>(id));
+                    static_cast<uint8_t>(id), x_direction, going_up);
     }
     trail.clear();
 }

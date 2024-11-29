@@ -34,8 +34,9 @@ public:
     virtual void update(std::string, uint16_t, uint16_t, uint8_t, uint8_t) const {}
     virtual void update(uint8_t, uint8_t, uint8_t) const {}
     virtual void update(std::string, uint8_t) const {}
-    virtual void update(std::vector<std::pair<uint8_t, uint8_t>>, uint8_t, uint8_t, uint8_t) const {
-    }
+    virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
+                        uint8_t current_pos_y, uint8_t id, uint8_t x_direction,
+                        uint8_t y_direction) const {}
     virtual void updateOldPos(uint8_t, uint8_t, uint8_t) const {}
     virtual void broadcast(std::shared_ptr<GenericMsg> msg) const {
         for (auto id: *ids) {
@@ -74,7 +75,8 @@ class ProjectileObserver: public Observer {
 
 public:
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
-                        uint8_t current_pos_y, uint8_t id) const override {
+                        uint8_t current_pos_y, uint8_t id, uint8_t x_direction,
+                        uint8_t y_direction) const override {
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
         broadcast(msg);

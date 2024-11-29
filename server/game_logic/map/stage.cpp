@@ -216,7 +216,8 @@ void Stage::set_explosion(Coordinate center_position, int radius) {
 void Stage::explode(Coordinate center_position, int radius) {
     obs.update(std::vector<std::pair<uint8_t, uint8_t>>(),
                static_cast<uint8_t>(center_position.x),  // Manda mensaje de explosion
-               static_cast<uint8_t>(center_position.y), static_cast<uint8_t>(EXPLOSION));
+               static_cast<uint8_t>(center_position.y), static_cast<uint8_t>(EXPLOSION), 0,
+               0);  // no tiene direccion asi que paso 0,0
     for (int i = 0; i < radius + 1; i++) {
         bool keep_going_horizontally = true;
         Coordinate next_position(center_position.x + i, center_position.y);
