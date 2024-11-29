@@ -12,6 +12,7 @@ CTestTestfile.cmake
 
 build/
 SDL2/
+GTEST/
 server/game_logic/game
 AtoB.dump
 BtoA.dump
@@ -21,3 +22,6 @@ main_map.csv
 .vscode/settings.json
 maps/map1.yaml
 googletest/
+run_client
+run_editor
+run_server

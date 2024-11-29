@@ -33,14 +33,17 @@ mkdir -p "SDL2"
 SDL2_IMAGE=https://github.com/libsdl-org/SDL_image/releases/download/release-2.6.3/SDL2_image-2.6.3.zip
 SDL2_MIXER=https://github.com/libsdl-org/SDL_mixer/releases/download/release-2.6.3/SDL2_mixer-2.6.3.zip
 SDL2_TTF=https://github.com/libsdl-org/SDL_ttf/releases/download/release-2.20.2/SDL2_ttf-2.20.2.zip
+GTEST=https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
 
 wget "$SDL2_IMAGE" -P "SDL2"
 wget "$SDL2_MIXER" -P "SDL2"
 wget "$SDL2_TTF" -P "SDL2"
+wget "$GTEST" -P "GTEST"
 
 unzip "SDL2/SDL2_image-2.6.3.zip" -d "SDL2"
 unzip "SDL2/SDL2_mixer-2.6.3.zip" -d "SDL2"
 unzip "SDL2/SDL2_ttf-2.20.2.zip" -d "SDL2"
+unzip "GTEST/v1.15.2.zip" -d "GTEST"
 
 # Install SDL2 components
 (
@@ -75,24 +78,22 @@ sudo apt-get --yes install qtbase5-dev qtmultimedia5-dev
 print_text $MAG_WHI_BOLD "--------- Installing YAML ---------"
 sudo apt-get --yes install libyaml-cpp-dev
 
+# GTest installation
 print_text $MAG_WHI_BOLD "--------- Installing GoogleTest ---------"
-git clone https://github.com/google/googletest.git
-cd googletest
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-cd ../../
+
+(
+    cd GTEST/googletest-1.15.2
+    mkdir build && cd build
+    cmake ..
+    make -j4
+    sudo make install
+)
+
 
 # Duck Game compilation
 print_text $INSTALL_MSG "--------- Installing Duck Game ---------"
 make clean
 make
-
-# Success message
-print_text $INSTALL_MSG "--------- Duck Game Installation Complete ---------"
-
 
 # Configure run_server and client scripts
 print_text $MAG_WHI_BOLD "--------- Configuring Scripts ---------"
@@ -123,3 +124,7 @@ chmod +x run_client
 chmod +x run_editor
 
 print_text $MAG_WHI_BOLD "--------- Scripts Configured Successfully ---------"
+
+# Success message
+print_text $INSTALL_MSG "--------- Duck Game Installation Complete ---------"
+
