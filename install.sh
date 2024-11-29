@@ -118,10 +118,17 @@ cat > run_editor <<'EOF'
 ./build/editor
 EOF
 
+cat > run_tests <<'EOF'
+#!/bin/bash
+cd build
+./tests
+EOF
+
 # Make scripts executable
 chmod +x run_server
 chmod +x run_client
 chmod +x run_editor
+chmod +x run_tests
 
 print_text $MAG_WHI_BOLD "--------- Scripts Configured Successfully ---------"
 
