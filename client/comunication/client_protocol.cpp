@@ -236,3 +236,8 @@ void ClientProtocol::handle_recv(ShootMsg& msg) {
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
 }
+
+void ClientProtocol::handle_send(const StartRoundMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+}

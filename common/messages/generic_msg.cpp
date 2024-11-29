@@ -509,3 +509,12 @@ void ShootMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this);
 void ShootMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
 std::string ShootMsg::get_player_name() const { return player_name; }
+
+
+StartRoundMsg::StartRoundMsg(): GenericMsg(GenericMsg::START_ROUND_MSG, GenericMsg::GAME_MSG) {}
+
+void StartRoundMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void StartRoundMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void StartRoundMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }

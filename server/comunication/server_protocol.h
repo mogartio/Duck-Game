@@ -36,6 +36,7 @@ public:
     // virtual void handle_recv(PickupDropMsg& msg) override;
     virtual void handle_recv(StartActionMsg& msg) override;
     virtual void handle_recv(StopActionMsg& msg) override;
+    virtual void handle_recv(StartRoundMsg& msg) override;
 
     virtual void handle_send(const GameEndedMsg& msg) override;
     virtual void handle_send(const WinnerMsg& msg) override;

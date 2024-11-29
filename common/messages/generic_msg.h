@@ -88,6 +88,7 @@ public:
         PLAYER_INFO_MSG = 0x13,  // mensaje para enviar info de un jugador especifico
         NOT_PROJECTILE_INFO = 0x14,
         SHOOT_MSG = 0x15,
+        START_ROUND_MSG = 0x16,
     };
 
     enum Type : uint8_t {
@@ -678,4 +679,18 @@ public:
 
     void set_player_name(std::string player_name);
 };
+
+class StartRoundMsg: public GenericMsg {
+
+public: 
+    StartRoundMsg();
+
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+};
+
+
 #endif

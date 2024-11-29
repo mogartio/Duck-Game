@@ -223,3 +223,5 @@ void ServerProtocol::handle_send(const ShootMsg& msg) {
     std::string player_name = msg.get_player_name();
     send_string(player_name);
 }
+
+void ServerProtocol::handle_recv(StartRoundMsg& msg) { (void)msg; }
