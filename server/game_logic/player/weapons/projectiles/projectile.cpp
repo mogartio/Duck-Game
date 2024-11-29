@@ -139,13 +139,14 @@ bool LaserBullet::ray_trace(Stage& stage) {
             return true;
         }
         bool despawned = false;
+
+        // se checkea que tiene en la posicion horizontal adyacente
         Coordinate bullet_position(position.x + x_direction, position.y);
         std::set<int> things_it_hits = stage.things_projectile_hits(bullet_position, bullet_size);
         if (things_it_hits.find(-1) != things_it_hits.end()) {
             if (!trail.empty()) {
                 trail.pop_back();
             }
-            notify();
             return true;
         }
         check_if_player_killed(things_it_hits, despawned, stage);
@@ -157,13 +158,14 @@ bool LaserBullet::ray_trace(Stage& stage) {
                     things_it_hits.end()) {
             x_direction = x_direction * -1;
         }
+
+        // se checkea que tiene en la posicion vertical adyacente
         bullet_position.y += y_direction;
         things_it_hits = stage.things_projectile_hits(bullet_position, bullet_size);
         if (things_it_hits.find(-1) != things_it_hits.end()) {
             if (!trail.empty()) {
                 trail.pop_back();
             }
-            notify();
             return true;
         }
         check_if_player_killed(things_it_hits, despawned, stage);
@@ -183,7 +185,8 @@ bool LaserBullet::ray_trace(Stage& stage) {
             notify();
             return false;
         }
-        trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
+        // trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
+        updateNotPosition(position.x, position.y);
         position = bullet_position;
         distance_covered++;
         update();
