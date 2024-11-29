@@ -6,7 +6,7 @@
 #include "./map/map_manager.h"
 #include "player/player.h"
 
-#include "game_main.h"
+#include "game_loop.h"
 class Game: public Thread {
 private:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;

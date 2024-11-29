@@ -1,5 +1,5 @@
-#ifndef GAME_MAIN_H
-#define GAME_MAIN_H
+#ifndef GAME_LOOP_H
+#define GAME_LOOP_H
 
 #include <chrono>
 #include <iostream>

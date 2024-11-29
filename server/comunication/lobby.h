@@ -14,7 +14,7 @@
 #include "../../common/messages/generic_msg.h"
 #include "../../common/queue.h"
 #include "../game_logic/game.h"
-#include "../game_logic/game_main.h"
+#include "../game_logic/game_loop.h"
 
 #include "send_queues_monitor.h"
 
