@@ -356,10 +356,8 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int MinZoomWhith = (int)(width_window / OFFSET_MIN_ZOOM);
-    int MinZoomHeight = (int)(height_window / OFFSET_MIN_ZOOM);
-    std::cout << "MinZoomWhith: " << MinZoomWhith << std::endl;
-    std::cout << "MinZoomHeight: " << MinZoomHeight << std::endl;
+    int MinZoomWhith = (int)(tiles * columnas / OFFSET_MIN_ZOOM);
+    int MinZoomHeight = (int)(tiles * filas / OFFSET_MIN_ZOOM);
 
     int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MinZoomWhith);
     int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MinZoomHeight);
