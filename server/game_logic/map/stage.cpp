@@ -96,8 +96,15 @@ void Stage::draw_player(Player& player) {
     Coordinate init_position = player.get_position();
     int x = init_position.x;
     int y = init_position.y;
-    for (int i = 0; i < PLAYER_SIZE; i++) {
-        for (int j = 0; j < PLAYER_SIZE; j++) {
+
+    int size = PLAYER_SIZE;
+    if (player.get_state() == PLAYING_DEAD) {
+        size = 3;
+        y += 3;
+    }
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
             Coordinate current(x + i, y + j);
             player.occupy(current);
             map.set(current, player.get_id());
@@ -245,8 +252,8 @@ void Stage::explode_vertically(Coordinate starting_position, int radius, int ver
 
     for (int j = 0; j < radius + 1; j++) {
         Coordinate next_tile(starting_position.x, starting_position.y + j * vertical_direction);
-        std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
-                  << std::to_string(next_tile.y) << std::endl;
+        // std::cout << "KABOOM en " << std::to_string(next_tile.x) << " , "
+        //           << std::to_string(next_tile.y) << std::endl;
         int content_in_next_tile = map.get(next_tile);
         if (content_in_next_tile == wall || content_in_next_tile == floor) {
             if (j == 0) {
@@ -262,7 +269,6 @@ void Stage::explode_vertically(Coordinate starting_position, int radius, int ver
         }
     }
 }
-
 
 void Stage::set(const Coordinate& coor, const int value) {
     map.set(coor, value);

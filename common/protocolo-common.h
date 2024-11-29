@@ -2,8 +2,8 @@
 #define PROTOCOLOCOMMON_H
 #include <functional>
 #include <map>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "./messages/generic_msg.h"
 #include "./messages/handler_recv.h"
@@ -31,7 +31,8 @@ protected:
 
     bool was_closed;
 
-    // ------------------- Métodos protegidos -------------------
+public:
+    // ------------------- Métodos públicos -------------------
 
     /*
      * Envia un u_int8_t a través del socket.
@@ -62,9 +63,6 @@ protected:
      * Recibe un string a través del socket.
      */
     std::string recv_string();
-
-public:
-    // ------------------- Métodos públicos -------------------
 
     void send(std::shared_ptr<GenericMsg> msg);
 

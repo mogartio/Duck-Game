@@ -24,4 +24,15 @@ public:
     explicit Banana(Stage&);
     virtual void shoot(int, bool) override;
 };
+
+class Banana: public Weapon {
+protected:
+    bool turned_on;
+    bool dead;
+
+public:
+    explicit Banana(Stage&);
+    virtual void shoot(int, bool) override;
+};
+
 #endif

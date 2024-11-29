@@ -9,7 +9,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     
     currentTile = "";
     isPainting = false;
-    isErasing = false;\
+    isErasing = false;
     gridVisible = true;
     // Initialize the matrix with 0s. Each cell is actually 4x4 server tiles
     editor_matrix.resize(rows, std::vector<int>(columns, Id::EMPTY)); 

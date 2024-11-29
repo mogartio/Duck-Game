@@ -1,4 +1,4 @@
-#include "server.h"
+#include "comunication/server.h"
 
 
 int main(int argc, char* argv[]) {

@@ -53,4 +53,3 @@ void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     stopped_holding_trigger = false;
 }
-

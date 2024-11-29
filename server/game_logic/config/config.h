@@ -23,17 +23,9 @@ private:
     static std::mutex mutex;
     explicit Config(const std::string& file_name) {
         YAML::Node config = YAML::LoadFile(file_name);
-        for (const auto& item: config["weapons_reach"]) {
-            weapons_reach[item.first.as<std::string>()] = item.second.as<int>();
-        }
-        for (const auto& item: config["weapons_init_ammo"]) {
-            weapons_init_ammo[item.first.as<std::string>()] = item.second.as<int>();
-        }
         player_falling_speed = config["player_falling_speed"].as<int>();
         player_jumping_height = config["player_jumping_height"].as<int>();
         armor_strength = config["armor_strength"].as<int>();
-        // columns_map = config["columns_map"].as<uint16_t>();
-        // rows_map = config["rows_map"].as<uint16_t>();
         explosion_counter = config["explosion_counter"].as<int>();
         explosion_range = config["explosion_range"].as<int>();
         bullet_size = config["bullet_size"].as<int>();
@@ -62,12 +54,8 @@ public:
     int player_falling_speed;
     int player_jumping_height;
     int armor_strength;
-    uint16_t columns_map;
-    uint16_t rows_map;
     int rounds_per_cycle;
     std::map<std::string, uint16_t> mapsId;
-    std::vector<std::tuple<int, int>> weapon_spawn_sites;
-    std::vector<std::tuple<int, int>> player_spawn_sites;
     int explosion_counter;
     int explosion_range;
     int bullet_size;

@@ -128,6 +128,7 @@ void MainWindow::showLogoScreen() {
     mediaPlayer->setMedia(QUrl::fromLocalFile(logoConnectionSongPath));
     mediaPlayer->setVolume(20);
     mediaPlayer->play();
+    menuMusicPlaying = false;
     isMuted = false;
 
     stackedWidget->setCurrentWidget(logoScreen.get());
@@ -147,8 +148,14 @@ void MainWindow::showMainMenuScreenWithFade() {
     // play the menu songs
     mediaPlayer->stop();
     mediaPlayer->setMedia(QUrl::fromLocalFile(menuSongsPaths[rand() % menuSongsPaths.size()]));
-    mediaPlayer->setVolume(20);
     mediaPlayer->play();
+    if (isMuted) {
+        // volume 0
+        mediaPlayer->setVolume(0);
+    } else {
+        // volume 20
+        mediaPlayer->setVolume(20);
+    }
     menuMusicPlaying = true;
 
     QWidget *overlay = new QWidget(this);
@@ -275,12 +282,20 @@ void MainWindow::onStateChanged(QMediaPlayer::State state) {
     if (state == QMediaPlayer::StoppedState) {
         if (menuMusicPlaying) {
             mediaPlayer->setMedia(QUrl::fromLocalFile(menuSongsPaths[rand() % menuSongsPaths.size()]));
-            mediaPlayer->setVolume(20);
             mediaPlayer->play();
+            if (isMuted) {
+                mediaPlayer->setVolume(0);
+            } else {
+                mediaPlayer->setVolume(20);
+            }
         }
         mediaPlayer->play();
     } else if (state == QMediaPlayer::PlayingState) {
-        mediaPlayer->setVolume(20);
+        if (isMuted) {
+            mediaPlayer->setVolume(0);
+        } else {
+            mediaPlayer->setVolume(20);
+        }
     }
 }
 

@@ -1,10 +1,14 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
+#include <memory>
 #include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "../../../common/coordinate.h"
 #include "../../../common/messages/generic_msg.h"
-#include "../../send_queues_monitor.h"
+#include "../../comunication/send_queues_monitor.h"
 
 
 namespace PlayerInfoId {
@@ -21,6 +25,7 @@ namespace PlayerInfoId {
 #define TRIPPING 5
 
 }  // namespace PlayerInfoId
+
 class Observer {
 protected:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
@@ -53,18 +58,16 @@ public:
     explicit PlayerObserver(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& queues,
                             std::shared_ptr<std::set<uint>> ids):
             Observer(queues, ids) {}
+
     virtual void update(std::string name, uint16_t pos_x, uint16_t pos_y, uint8_t state,
                         uint8_t facing_direction) const override {
         std::shared_ptr<GenericMsg> msg = std::make_shared<UpdatedPlayerInfoMsg>(
                 name, std::make_pair(pos_x, pos_y), state, facing_direction);
-        // std::cout << "se esta broadcasteando un jugador que es:" << name
-        //           << " con pos: " << std::to_string(pos_x) << " , " << std::to_string(pos_y)
-        //           << " En estado: " << std::to_string(state) << "mirando a "
-        //           << std::to_string(facing_direction) << std::endl;
+
         broadcast(msg);
     }
+
     virtual void update(std::string name, uint8_t id) const override {
-        // PickupDropMsg* msg = new PickupDropMsg(name, id);
         std::shared_ptr<GenericMsg> msg = std::make_shared<PickupDropMsg>(name, id);
         broadcast(msg);
     }
@@ -75,18 +78,25 @@ class ProjectileObserver: public Observer {
 
 public:
     virtual void update(std::vector<std::pair<uint8_t, uint8_t>> trail, uint8_t current_pos_x,
-                        uint8_t current_pos_y, uint8_t id, uint8_t x_direction,
-                        uint8_t y_direction) const override {
+                        uint8_t current_pos_y, uint8_t id) const override {
+
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
+
         broadcast(msg);
-        std::stringstream ss;
-        if (trail.size() > 0) {
-            for (auto& coor: trail) {
-                ss << std::to_string(std::get<0>(coor)) << " , "
-                   << std::to_string(std::get<1>(coor)) << std::endl;
-            }
-        }
+
+        // Para debuggear:
+        // std::stringstream ss;
+        // if (trail.size() > 0) {
+
+        //     for (auto& coor: trail) {
+        //         ss << std::to_string(std::get<0>(coor)) << " , "
+        //            << std::to_string(std::get<1>(coor)) << std::endl;
+        //     }
+        //     std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
+        //               << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
+        //               << " con trail: " << ss.str() << std::endl;
+        // }
     }
 
     virtual void updateOldPos(uint8_t pos_x, uint8_t pos_y, uint8_t id) const override {

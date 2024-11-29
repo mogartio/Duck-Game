@@ -2,6 +2,7 @@
 #define ENUMS_H
 
 #include <string>
+
 #include "../../../common/messages/generic_msg.h"
 
 enum class WingState { NORMAL, HOLD, FLAPUP, FLAPDOWN };

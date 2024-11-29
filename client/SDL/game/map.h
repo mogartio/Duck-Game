@@ -1,8 +1,10 @@
 #include <list>
+
+#include <memory>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <utility>
-#include <set>
 #include <vector>
 
 #include <SDL2/SDL_render.h>
@@ -28,46 +30,46 @@ private:
     uint filas;
 
     // Imagenes de los tiles
-    std::vector<Image*> tilesImages;
+    std::vector<std::shared_ptr<Image>> tilesImages;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
     // Jugadores
-    std::unordered_map<std::string, Player*> players;
+    std::unordered_map<std::string, std::shared_ptr<Player>> players;
     std::list<std::string> playersNamesAlive;
 
     // Imagenes de las armas
-    std::unordered_map<ProjectilesId::ProjectileId, Image*> weapons;
-    std::vector<std::pair<int, int>> laser;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
     // Posiciones de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
 
     // Imagenes de los cascos usables
-    std::vector<Image*> helmets;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmets;
     // Posiciones de los cascos en el mapa
-    std::unordered_map<ProjectilesId::ProjectileId, Image*> helmetsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmetsMap;
     // std::unordered_map<ProjectilesId::ProjectileId, std::pair<int, int>> helmetsPos;
     std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> helmetsPos;
 
     // Imagen de armadura usable
-    Image armor;
-    Image hombro;
+    std::shared_ptr<Image> armor;
+    std::shared_ptr<Image> hombro;
     // Imagen de armadura en el mapa
-    Image armorOnMap;
+    std::shared_ptr<Image> armorOnMap;
     // Posiciones de la armadura
-    // std::pair<int, int> armorMap;
     std::vector<std::pair<int, int>> armorMap;
 
-    Image background;
+    std::shared_ptr<Image> background;
 
-    Image prueba;
+    std::shared_ptr<Image> prueba;
 
     // Imagenes de las explosiones
-    std::vector<Image*> explosions;
+    std::vector<std::shared_ptr<Image>> explosions;
     // Posiciones de las explosiones
     std::vector<std::pair<int, int>> explosionsPos;
     // Contador de las explosiones
     std::vector<int> explosionCounter;
+
+    bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();
@@ -89,12 +91,10 @@ public:
     // Actualiza posicion y estado del jugador
     void update(std::string player, int x, int y, DuckState state, Side side);
     // Pone a todos los jugadores en estado de parados
-    void allStanding();
+    void standing(std::unordered_map<std::string, bool> players_updated);
 
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
-    // Balas
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, std::vector<std::pair<uint8_t, uint8_t>> trail);
     // Asignar arma a un jugador
     void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
     // Remover arma del jugador
@@ -118,6 +118,10 @@ public:
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
+
+    SDL_Texture* getTextureMapWithAll() const;
+
+    SDL_Texture* getTextureMapWithoutAnything() const;
 
     ~Map();
 };

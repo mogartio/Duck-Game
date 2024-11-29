@@ -65,8 +65,8 @@ public:
     }
 
     virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
-    bool update() override {
 
+    bool update() override {
         if (weapon->get_id() == GRENADE) {
             if (weapon->is_dead()) {
                 updateNotPosition(position.x, position.y);

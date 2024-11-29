@@ -1,5 +1,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
+#include <algorithm>
 #include <memory>
 
 #include "../../map/stage.h"

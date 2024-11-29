@@ -10,6 +10,8 @@
 #include "projectiles/projectile.h"
 using namespace ProjectilesId;
 
+// ------------------ Grenade ------------------
+
 Grenade::Grenade(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["grenade"]["ammo"],
                WeaponConfig::get_instance()->weapons["grenade"]["reach"], GRENADE),
@@ -50,6 +52,8 @@ void Grenade::update(Coordinate position) {
     }
 }
 
+// ------------------ Banana ------------------
+
 Banana::Banana(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["banana"]["ammo"],
                WeaponConfig::get_instance()->weapons["banana"]["reach"], BANANA),
@@ -65,7 +69,6 @@ void Banana::shoot(int, bool) {
     stopped_holding_trigger = false;
     turned_on = true;
 }
-
 
 // void Grenade::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
 //     Coordinate gun_position = get_gun_position(x_direction);

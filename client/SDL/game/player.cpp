@@ -9,24 +9,24 @@
 void Player::initializeWingImage(WingState wingState) {
     std::string wingType = file + wingState_to_string(wingState);
 
-    Image* image = new Image();
+    std::shared_ptr<Image> image = std::make_shared<Image>();
     image->initialize(rend, wingType);
     wings.push_back(image);
 }
 
 void Player::initialiceDuckImages(DuckState state) {
-    std::vector<Image*> images;
+    std::vector<std::shared_ptr<Image>> images;
     std::string action = file + duckState_to_string(state);
 
     if (state == DuckState::WALK) {
         for (int i = 1; i <= 5; i++) {
             std::string walk_action = action + std::to_string(i) + ".png";
-            Image* additionalImage = new Image();
+            std::shared_ptr<Image> additionalImage = std::make_shared<Image>();
             additionalImage->initialize(rend, walk_action);
             images.push_back(additionalImage);
         }
     } else {
-        Image* image = new Image();
+        std::shared_ptr<Image> image = std::make_shared<Image>();
         image->initialize(rend, action);
         images.push_back(image);
     }
@@ -65,14 +65,14 @@ void Player::defineSize(int height, int width) {
     this->height = height;
     this->width = width;
     for (const auto& pair: ducks) {
-        const std::vector<Image*>& patos = pair.second;  // Obtener el vector de imágenes
-        for (Image* pato: patos) {
+        const std::vector<std::shared_ptr<Image>>& patos = pair.second;  // Obtener el vector de imágenes
+        for (auto pato: patos) {
             pato->queryTexture();
             pato->defineSize(height, width);
         }
     }
 
-    for (Image* ala: wings) {
+    for (auto ala: wings) {
         ala->queryTexture();
         ala->defineSize(height, width);
     }
@@ -169,7 +169,7 @@ void Player::dropEverithing() {
 
 // ----------------- Weapon -----------------
 
-void Player::weapon(Image* weapon) {
+void Player::weapon(std::shared_ptr<Image> weapon) {
     _weapon = weapon;
     weaponON = true;
     weaponAngle = 0.0;
@@ -181,19 +181,9 @@ bool Player::dropWeapon() {
     return originalWeaponstate;
 }
 
-void Player::shoot() {
-    if (!weaponON) {
-        return;  // Si no tiene un arma no hace nada
-    }
-
-    /*
-        Disparo el arma
-    */
-}
-
 // ----------------- Armor -----------------
 
-void Player::armor(Image* armor, Image* hombro) {
+void Player::armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro) {
     _armor = armor;
     _hombro = hombro;
     std::pair<int, int> position = duck->getPosition();
@@ -210,7 +200,7 @@ bool Player::dropArmor() {
 
 // ----------------- Helmet -----------------
 
-void Player::helmet(Image* helmet) {
+void Player::helmet(std::shared_ptr<Image> helmet) {
     _helmet = helmet;
     std::pair<int, int> position = duck->getPosition();
     _helmet->position(position.first, position.second - 8);
@@ -231,47 +221,58 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 
     std::pair<int, int> position = duck->getPosition();
 
-    // Dibujo el casco que tiene el pato
-    if (helmetOn) {
-        _helmet->position(position.first, position.second - 13);
-        _helmet->fill(flip);
-    }
-
-    // Dibujo la armadura que tiene el pato
-    if (armorOn) {
-        _armor->position(position.first, position.second);
-        _armor->fill(flip);
-    }
-
-    // Dibujo el arma que tiene el pato
-    if (weaponON && (state != DuckState::SLOW_FALL) && (state != DuckState::PLAY_DEAD)) {
-        int wx = position.first + 5;
-        int wy = position.second + 36;
-        if (flip == SDL_FLIP_HORIZONTAL) {
-            if (weaponAngle != 0.0) {
-                wy -= 10;
-                wx += 5;
-            }
-        } else {
-            wx += 32;
-            if (weaponAngle != 0.0) {
-                wx -= 3;
-                wy -= 7;
-            }
-        }
-        _weapon->position(wx, wy);
-        _weapon->fill(weaponAngle, flip);
-    }
-
-    // Dibujo el ala del pato
     if (state != DuckState::PLAY_DEAD) {
-        wing->fill(flip);
-    }
+        // Dibujo el casco que tiene el pato
+        if (helmetOn) {
+            _helmet->position(position.first, position.second - 13);
+            _helmet->fill(flip);
+        }
 
-    // Dibujo el hombro de la armadura
-    if (armorOn) {
-        _hombro->position(position.first, position.second);
-        _hombro->fill(flip);
+        // Dibujo la armadura que tiene el pato
+        if (armorOn) {
+            _armor->position(position.first, position.second);
+            _armor->fill(flip);
+        }
+
+        // Dibujo el arma que tiene el pato
+        if (weaponON && (state != DuckState::SLOW_FALL)) {
+            int wx = position.first;
+            int wy = position.second + 25;
+
+            // Mira hacia la Izquierda
+            if (flip == SDL_FLIP_HORIZONTAL) {
+                if (weaponAngle != 0.0) {
+                    wy -= 10;
+                    wx += 5;
+                }
+
+                // Me fijo si el arma es un cuadrado para cambiar el offset
+                std::pair<int, int> weaponSize = _weapon->getSize();
+                if (weaponSize.first == weaponSize.second) {
+                    wx += 15;
+                }
+
+            } else { // Mira hacia la Derecha
+                wx += 30;
+                if (weaponAngle != 0.0) {
+                    wx -= 3;
+                    wy -= 7;
+                }
+            }
+            _weapon->position(wx, wy);
+            _weapon->fill(weaponAngle, flip);
+        }
+    
+        // Dibujo el ala del pato
+        if (state != DuckState::PLAY_DEAD) {
+            wing->fill(flip);
+        }
+
+        // Dibujo el hombro de la armadura
+        if (armorOn) {
+            _hombro->position(position.first, position.second);
+            _hombro->fill(flip);
+        }
     }
 }
 
@@ -281,17 +282,3 @@ std::pair<int, int> Player::getPosition() const {
     return duck->getPosition();
 }
 
-// ----------------- Destructor -----------------
-
-Player::~Player() {
-    for (Image* wing: wings) {
-        delete wing;
-    }
-
-    for (const auto& pair: ducks) {
-        const std::vector<Image*>& images = pair.second;  // Obtener el vector de imágenes
-        for (Image* image: images) {
-            delete image;
-        }
-    }
-}

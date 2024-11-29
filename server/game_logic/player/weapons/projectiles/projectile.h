@@ -1,9 +1,12 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <memory>
+#include <set>
 #include <utility>
+#include <vector>
 
 #include "../../../../../common/coordinate.h"
 #include "../../../../../common/messages/generic_msg.h"

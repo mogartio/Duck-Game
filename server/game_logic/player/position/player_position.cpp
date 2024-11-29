@@ -29,6 +29,7 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
         air_state->update(stage.should_fall(*this), *this);
         return;
     }
+    bool let_movment = true;
     for (int direction: directions) {
         if (direction == MOVE_LEFT) {  // si direccion es izq...
             if (should_change_facing_direction) {
@@ -48,6 +49,7 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
 
         } else if (direction == PLAY_DEAD) {
             set_state(std::make_unique<PlayingDead>(), PLAYING_DEAD);
+            let_movment = false;
 
         } else if (direction == 6) {
             if (should_change_facing_direction) {
@@ -60,7 +62,9 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
         }
     }
     free_occupied();
-    move_horizontally(x_offset);
+    if (let_movment) {
+        move_horizontally(x_offset);
+    }
     move_vertically(air_state->get_offset());
     air_state->update(stage.should_fall(*this), *this);
 }

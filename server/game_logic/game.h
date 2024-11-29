@@ -6,7 +6,7 @@
 #include "./map/map_manager.h"
 #include "player/player.h"
 
-#include "game_main.h"
+#include "game_loop.h"
 class Game: public Thread {
 private:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
@@ -18,7 +18,7 @@ private:
     std::shared_ptr<std::set<uint>> ids;
 
     Stage* current_stage;
-    std::shared_ptr<GameMain> game_loop;
+    std::shared_ptr<GameLoop> game_loop;
 
     bool game_over;
     bool is_testing;

@@ -1,29 +1,32 @@
 #ifndef JOIN_LOBBY_SCREEN_H
 #define JOIN_LOBBY_SCREEN_H
 
-#include <QWidget>
-#include <QLineEdit>
-#include <QSound>
 #include <QFontDatabase>
-#include <QLabel>
-#include <QPushButton>
-#include <QPixmap>
 #include <QKeyEvent>
-#include <QVBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPixmap>
+#include <QPushButton>
 #include <QScrollArea>
+#include <QSound>
 #include <QTimer>
-#include "rounded_rectangle.h"
-#include "../../common/queue.h"
-#include "../../common/messages/generic_msg.h"
-#include "../../common/messages/descripcion-lobby.h"
-#include "../client.h"
+#include <QVBoxLayout>
+#include <QWidget>
 
-class JoinLobbyScreen : public QWidget {
+#include "../../common/messages/descripcion-lobby.h"
+#include "../../common/messages/generic_msg.h"
+#include "../../common/queue.h"
+#include "../comunication/client.h"
+
+#include "rounded_rectangle.h"
+
+class JoinLobbyScreen: public QWidget {
     Q_OBJECT
 
 public:
-    JoinLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue, Queue<std::shared_ptr<GenericMsg>>* recv_queue);
-    void resizeEvent(QResizeEvent *event) override;
+    JoinLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
+                    Queue<std::shared_ptr<GenericMsg>>* recv_queue);
+    void resizeEvent(QResizeEvent* event) override;
 
 signals:
     void switchToMainMenuScreen();

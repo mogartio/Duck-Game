@@ -2,8 +2,11 @@
 #define STAGE_H
 
 #include <algorithm>
+#include <map>
 #include <memory>
+#include <set>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "../player/weapons/projectiles/projectile.h"
@@ -40,7 +43,7 @@ public:
     void update();
     void set(const Coordinate&, const int);
     int get(const Coordinate&);
-    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); };
+    std::vector<uint16_t> get_vector_representation() { return map.get_vector_representation(); }
     void set_explosion(Coordinate, int);
     void explode(Coordinate, int);
     std::shared_ptr<Weapon> pick_weapon(Coordinate);

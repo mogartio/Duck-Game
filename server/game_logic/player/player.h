@@ -53,6 +53,8 @@ public:
     void init_for_stage(Stage*);
     bool lives() { return is_alive; }
 
+    uint8_t get_state() { return position->get_state(); }
+
     void pick_weapon(std::shared_ptr<Weapon> new_weapon);
     void pick_chest(std::shared_ptr<Weapon> new_chest);
     void pick_helmet(std::shared_ptr<Weapon> new_helmet);
