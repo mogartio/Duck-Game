@@ -47,8 +47,8 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
 }
 
 DuelPistol::DuelPistol(Stage& stage):
-        Weapon(stage, WeaponConfig::get_instance()->weapons["magnum"]["ammo"],
-               WeaponConfig::get_instance()->weapons["magnum"]["reach"], DUEL_PISTOL) {}
+        Weapon(stage, WeaponConfig::get_instance()->weapons["duel"]["ammo"],
+               WeaponConfig::get_instance()->weapons["duel"]["reach"], DUEL_PISTOL) {}
 
 void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
