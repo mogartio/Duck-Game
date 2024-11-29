@@ -25,3 +25,4 @@ googletest/
 run_client
 run_editor
 run_server
+run_tests
