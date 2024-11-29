@@ -58,6 +58,7 @@ add_executable(server ./server/main.cpp)
 target_link_libraries(server server_library)
 
 add_executable(editor ${EDITOR_SOURCES})
+target_link_libraries(editor PUBLIC Qt5::Core Qt5::Widgets Qt5::Multimedia yaml-cpp)
 
 # Define the test executable
 add_executable(tests ./tests/main.cpp ${TEST_SOURCES})
@@ -70,3 +71,4 @@ add_custom_target(CopyResources ALL
 )
 
 add_dependencies(client CopyResources)
+add_dependencies(editor CopyResources)
