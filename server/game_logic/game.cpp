@@ -46,15 +46,17 @@ void Game::run() {
         }
     }
     std::shared_ptr<GenericMsg> msg = std::make_shared<GameEndedMsg>();
-    senders.broadcast(msg);
+    for (auto id: *ids) {
+        senders.send_to_client(msg, id);
+    }
     players.clear();
 }
 
 void Game::send_map(Map& map) {
     std::vector<uint16_t> map_vector = current_stage->get_vector_representation();
-    std::shared_ptr<SendMapMsg> map_msg =
+    std::shared_ptr<SendMapMsg> msg =
             std::make_shared<SendMapMsg>(map_vector, map.get_rows(), map.get_columns());
-    std::list<std::shared_ptr<GenericMsg>> dejenmepasarleunmensajedirectoporfavor;
-    dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
-    senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
+    for (auto id: *ids) {
+        senders.send_to_client(msg, id);
+    }
 }
