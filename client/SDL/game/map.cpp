@@ -344,9 +344,9 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)),
                        armorMap.end());
 
-    // } else if (id == ProjectilesId::ProjectileId::BOX) {
-    //     boxesPos.erase(std::remove(boxesPos.begin(), boxesPos.end(), std::pair(x, y)),
-    //                    boxesPos.end());
+    } else if (id == ProjectilesId::ProjectileId::MYSTERY_BOX) {
+        boxesPos.erase(std::remove(boxesPos.begin(), boxesPos.end(), std::pair(x, y)),
+                       boxesPos.end());
 
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         helmetsPos[id].erase(
