@@ -14,8 +14,6 @@ TEST(GameResources, test_movement_players) {
     GameResources::GetInstance().LoadResources();
     // Obtencion de recursos
     Queue<std::shared_ptr<GenericMsg>>& recv_queue = GameResources::GetInstance().GetRecvQueue();
-    // std::shared_ptr<PlayerObserver> player_obs =
-    // GameResources::GetInstance().GetPlayerObserver();
 
     // Creacion de un nuevo juego
     auto thread_loop = []() {
@@ -100,5 +98,49 @@ TEST(GameResources, test_movement_players) {
     EXPECT_FALSE(
             players["player1"]->has_helmet());  // Verifico que el jugador 1 no tenia nada equipado
     game_thread.join();
+    GameResources::GetInstance().freeNecesaryResources();
+}
+
+
+TEST(GameResources, test_play_dead) {
+    EXPECT_EQ(GameResources::GetInstance().IsResourcesLoaded(), true);
+    GameResources::GetInstance().LoadResources();
+
+    // Creacion de un nuevo juego
+    auto thread_loop = []() {
+        std::map<std::string, Map*> maps = GameResources::GetInstance().GetMaps();
+        SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders =
+                GameResources::GetInstance().GetSenders();
+        std::shared_ptr<std::set<uint>> ids = GameResources::GetInstance().GetIds();
+        EXPECT_NE(ids, nullptr);
+        Map* map = maps["test2"];
+        EXPECT_NE(map, nullptr);
+        Stage* current_stage = new Stage(*map, senders, ids);
+        EXPECT_NE(current_stage, nullptr);
+        std::shared_ptr<GameLoop> resources =
+                GameResources::GetInstance().UseResource(*map, current_stage);
+        EXPECT_NE(resources, nullptr);
+        resources->play_round(*current_stage, *map);
+    };
+    std::thread game_thread(thread_loop);
+
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));  // Espera para que se cree el juego
+    // Verificacion de la creacion de los jugadores
+    std::map<std::string, Player*> players = GameResources::GetInstance().GetPlayers();
+    EXPECT_EQ(players.size(), 2);
+    EXPECT_EQ(players["player1"]->get_id(), 1);
+    EXPECT_EQ(players["player2"]->get_id(), 2);
+
+    // Cargando este mapa solito el jugador 1 deberia insta morir al final
+    EXPECT_FALSE(
+            players["player1"]->has_chest());  // Verifico que el jugador 1 no tenia nada equipado
+    EXPECT_FALSE(
+            players["player1"]->has_helmet());  // Verifico que el jugador 1 no tenia nada equipado
+    EXPECT_TRUE(players["player1"]->lives());   // Verifico que el jugador 1 siga vivo muerto
+
+
+    game_thread.join();
+    EXPECT_FALSE(players["player1"]->lives());  // Verifico que el jugador 1 haya muerto
     GameResources::GetInstance().freeNecesaryResources();
 }
