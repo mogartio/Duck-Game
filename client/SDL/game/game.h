@@ -15,7 +15,7 @@
 #include "eventhandler.h"
 #include "loadingscreen.h"
 #include "map.h"
-#include "musichandler.h"
+#include "music/musichandler.h"
 #include "window.h"
 class Game {
 private:

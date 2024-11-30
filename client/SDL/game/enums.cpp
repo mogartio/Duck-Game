@@ -63,7 +63,7 @@ std::string projectile_to_string(ProjectilesId::ProjectileId id) {
         case ProjectilesId::ProjectileId::BANANA:
             return "banana.png";
         case ProjectilesId::ProjectileId::LIVE_BANANA:
-            return "banana.png";
+            return "bullets/usedbanana.png";
         case ProjectilesId::ProjectileId::PEW_PEW_LASER:
             return "pewpewlaser.png";
         case ProjectilesId::ProjectileId::LASER_RIFLE:

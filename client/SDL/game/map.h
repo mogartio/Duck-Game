@@ -69,6 +69,10 @@ private:
     // Contador de las explosiones
     std::vector<int> explosionCounter;
 
+    // Imagenes de las cajas
+    std::vector<std::shared_ptr<Image>> boxes;
+    std::vector<std::pair<int, int>> boxesPos;
+
     bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void makeWeapon(ProjectilesId::ProjectileId id);
@@ -76,6 +80,8 @@ private:
     void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
+    void makeBoxes();
+
     SDL_Rect adjustMapZoom();
 
 
@@ -97,8 +103,6 @@ public:
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
     // Asignar arma a un jugador
     void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
-    // Remover arma del jugador
-    void dropWeapon(std::string playerName);
 
     // Agrega un nuevo casco al mapa
     void newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet);
@@ -112,6 +116,9 @@ public:
 
     // Agregar explosion
     void explosion(int x, int y);
+
+    // Agregar caja
+    void newBox(int x, int y);
 
     // Remover del mapa
     void removeWeapon(int x, int y, ProjectilesId::ProjectileId id);
