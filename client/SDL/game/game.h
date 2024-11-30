@@ -13,10 +13,10 @@
 #include "../../../common/thread.h"
 
 #include "eventhandler.h"
-#include "loadingscreen.h"
+#include "screens/loadingscreen.h"
 #include "map.h"
-#include "musichandler.h"
-#include "window.h"
+#include "music/musichandler.h"
+#include "screens/window.h"
 class Game {
 private:
     Queue<std::shared_ptr<GenericMsg>>& queueRecive;
