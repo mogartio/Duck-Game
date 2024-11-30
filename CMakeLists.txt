@@ -70,5 +70,11 @@ add_custom_target(CopyResources ALL
     ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
 )
 
+add_custom_target(CopyResourcesTests ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/tests/gameloop/tests_map ${CMAKE_BINARY_DIR}/tests_map
+)
+
 add_dependencies(client CopyResources)
 add_dependencies(editor CopyResources)
+add_dependencies(tests CopyResourcesTests)
