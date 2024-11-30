@@ -23,6 +23,7 @@ namespace Id {
     static const int HELMET2 = static_cast<int>(ProjectilesId::HELMET2);
     static const int HELMET3 = static_cast<int>(ProjectilesId::HELMET3);
     static const int CHEST = static_cast<int>(ProjectilesId::CHEST);
+    static const int MYSTERY_BOX = static_cast<int>(ProjectilesId::MYSTERY_BOX);
     static const int PLAYER1 = 104;
     static const int PLAYER2 = 105;
     static const int PLAYER3 = 106;

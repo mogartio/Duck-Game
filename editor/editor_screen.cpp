@@ -115,6 +115,9 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     weaponsMenu->addAction(laserRifle);
     QAction *pewpewlaser = new QAction(QIcon("assets/game_assets/weapons/pewpewlaser.png"), "pew pew laser", this);
     weaponsMenu->addAction(pewpewlaser);
+    QAction *mysteryBox = new QAction(QIcon("assets/game_assets/box/1.png"), "mystery box", this);
+    weaponsMenu->addAction(mysteryBox);
+
 
     connect(weaponsMenuButton, &QPushButton::clicked, [this](){
         buttonSound->play();
@@ -131,6 +134,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(sniper, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(laserRifle, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(pewpewlaser, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(mysteryBox, &QAction::triggered, this, [this]() { startDrag("weapons"); });
 
     // add players button
     players_set = std::set<std::string>();
@@ -417,6 +421,7 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 case Id::HELMET2: category = "armor"; itemName = "normal"; break;
                 case Id::HELMET3: category = "armor"; itemName = "tinfoil"; break;
                 case Id::CHEST: category = "armor"; itemName = "chest"; break;
+                case Id::MYSTERY_BOX: category = "box"; itemName = "mystery box"; break;
                 default: break;
             }
 
@@ -456,6 +461,9 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                     scaleTile(1.0, 1.0, 1.0);
                 } else if (category == "tiles") {
                     painter.drawPixmap(cellRect, *tile);
+                } else if (category == "box") {
+                    std::cout << "Drawing box" << category << itemName << std::endl;
+                    scaleTile(1.0, 1.0, 1.0);
                 }
 
                 painter.drawPixmap(itemRect, scaledTile);
@@ -549,6 +557,9 @@ void EditorScreen::startDrag(std::string menu) {
 
     // Get the tile image associated with the action
     QString tileName = action->text();
+    if (tileName == "mystery box") {
+        menu = "box";
+    }
     auto tile = map_of_maps[menu][tileName.toStdString()];
     if (!tile || tile->isNull()) {
         std::cout << "Tile: " << tileName.toStdString() << " not found." << std::endl;
@@ -632,6 +643,7 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             else if (currentTile == "knight") placeTile(Id::HELMET);
             else if (currentTile == "normal") placeTile(Id::HELMET2);
             else if (currentTile == "tinfoil") placeTile(Id::HELMET3);
+            else if (currentTile == "mystery box") placeTile(Id::MYSTERY_BOX);
         } else if (isErasing) {
             eraseTile();
         }

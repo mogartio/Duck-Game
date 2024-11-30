@@ -92,6 +92,12 @@ void EditorMainWindow::loadImagesGivenTheme(std::string theme) {
     
     map_of_maps["weapons"] = weapons;
 
+    // load box 
+    std::map<std::string, std::shared_ptr<QPixmap>> box;
+    box["mystery box"] = std::make_shared<QPixmap>("assets/game_assets/box/1.png");
+
+    map_of_maps["box"] = box;
+
     // load armor 
     std::map<std::string, std::shared_ptr<QPixmap>> armor;
     armor["chest"] = std::make_shared<QPixmap>("assets/game_assets/armor/armor.png");

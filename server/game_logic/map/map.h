@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "../../../common/coordinate.h"
-
+#include "../../../common/messages/generic_msg.h"
 /*
  * Map class that holds the information of the map and allows to set and get values from it.
  */
@@ -23,6 +23,7 @@ private:
     std::vector<std::vector<int>> matrix;
     std::vector<Coordinate> players_spawn_sites;
     std::vector<std::tuple<Coordinate, int>> items_spawn_sites;
+    std::vector<Coordinate> boxes_spawn_sites;
 
 public:
     Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix,
@@ -33,7 +34,14 @@ public:
             columns(columns),
             matrix(matrix),
             players_spawn_sites(players_spawn_sites),
-            items_spawn_sites(items_spawn_sites) {}
+            items_spawn_sites(items_spawn_sites) {
+                // get boxes spawn sites
+                for (const auto& spawn: items_spawn_sites) {
+                    if (std::get<1>(spawn) == ProjectilesId::MYSTERY_BOX) {
+                        boxes_spawn_sites.push_back(std::get<0>(spawn));
+                    }
+                }
+            }
 
 
     /**
@@ -80,6 +88,11 @@ public:
      * @brief Returns the items spawn points.
      */
     std::vector<std::tuple<Coordinate, int>> get_items_spawn_sites() { return items_spawn_sites; }
+
+    /**
+     * @brief Returns the boxes spawn points.
+     */
+    std::vector<Coordinate> get_boxes_spawn_sites() { return boxes_spawn_sites; }
 
     /**
      * @brief Checks if a given coordinate is out of the map's range.
