@@ -220,11 +220,12 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     duck->fill(flip);
 
     std::pair<int, int> position = duck->getPosition();
+    // std::pair<int, int> size = duck->getSize();
 
     if (state != DuckState::PLAY_DEAD) {
         // Dibujo el casco que tiene el pato
         if (helmetOn) {
-            _helmet->position(position.first, position.second - 13);
+            _helmet->position(position.first, position.second - tiles);
             _helmet->fill(flip);
         }
 
@@ -237,26 +238,31 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
         // Dibujo el arma que tiene el pato
         if (weaponON && (state != DuckState::SLOW_FALL)) {
             int wx = position.first;
-            int wy = position.second + 25;
+            int wy = position.second + (tiles*5/2);
 
             // Mira hacia la Izquierda
             if (flip == SDL_FLIP_HORIZONTAL) {
+
+                // Mira hacia arriba
                 if (weaponAngle != 0.0) {
-                    wy -= 10;
-                    wx += 5;
+                    wx += (tiles*7/10);
+                    wy -= tiles;
                 }
 
                 // Me fijo si el arma es un cuadrado para cambiar el offset
                 std::pair<int, int> weaponSize = _weapon->getSize();
                 if (weaponSize.first == weaponSize.second) {
-                    wx += 15;
+                    wx += (tiles*3/2);
                 }
 
             } else { // Mira hacia la Derecha
-                wx += 30;
+            
+                wx += tiles*3;
+
+                // Mira hacia arriba
                 if (weaponAngle != 0.0) {
-                    wx -= 3;
-                    wy -= 7;
+                    wx -= (tiles*7/10);
+                    wy -= (tiles);
                 }
             }
             _weapon->position(wx, wy);
@@ -281,4 +287,8 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
 std::pair<int, int> Player::getPosition() const {
     return duck->getPosition();
 }
+
+void Player::set_tiles(uint tiles)  { 
+    this->tiles = tiles; 
+};
 

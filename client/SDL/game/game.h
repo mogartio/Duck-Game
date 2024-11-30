@@ -11,12 +11,12 @@
 #include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
 #include "../../../common/thread.h"
+#include "music/musichandler.h"
+#include "screens/loadingscreen.h"
+#include "screens/window.h"
 
 #include "eventhandler.h"
-#include "loadingscreen.h"
 #include "map.h"
-#include "music/musichandler.h"
-#include "window.h"
 class Game {
 private:
     Queue<std::shared_ptr<GenericMsg>>& queueRecive;
