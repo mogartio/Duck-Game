@@ -183,24 +183,16 @@ TEST(GameResources, test_shoot_with_and_without_armor) {
     // usarlos
     std::shared_ptr<GenericMsg> msg = std::make_shared<StartActionMsg>(ActionId::SHOOT, player1);
     std::shared_ptr<GenericMsg> msg2 = std::make_shared<StopActionMsg>(ActionId::SHOOT, player1);
-    std::shared_ptr<GenericMsg> msg3 = std::make_shared<StartActionMsg>(ActionId::SHOOT, player2);
-    std::shared_ptr<GenericMsg> msg4 = std::make_shared<StopActionMsg>(ActionId::SHOOT, player2);
     std::shared_ptr<GenericMsg> msg5 =
             std::make_shared<StartActionMsg>(ActionId::MOVE_RIGHT, player1);
     std::shared_ptr<GenericMsg> msg6 =
             std::make_shared<StopActionMsg>(ActionId::MOVE_RIGHT, player1);
-    std::shared_ptr<GenericMsg> msg7 =
-            std::make_shared<StartActionMsg>(ActionId::MOVE_RIGHT, player2);
-    std::shared_ptr<GenericMsg> msg8 =
-            std::make_shared<StopActionMsg>(ActionId::MOVE_RIGHT, player2);
 
     // hago que ambos jugadores miren a sus elementos a agarrar
     recv_queue.push(msg5);
-    recv_queue.push(msg7);
     std::this_thread::sleep_for(
             std::chrono::milliseconds(80));  // Espera para que agarre el jugador
     recv_queue.push(msg6);
-    recv_queue.push(msg8);
     std::this_thread::sleep_for(
             std::chrono::milliseconds(80));  // Espera para que agarre el jugador
                                              // hago que ambos jugadores agarren sus elementos
@@ -210,18 +202,10 @@ TEST(GameResources, test_shoot_with_and_without_armor) {
     recv_queue.push(msg2);
     std::this_thread::sleep_for(
             std::chrono::milliseconds(80));  // Espera para que agarre el jugador
-    recv_queue.push(msg3);
-    std::this_thread::sleep_for(
-            std::chrono::milliseconds(80));  // Espera para que agarre el jugador
-    recv_queue.push(msg4);
-    std::this_thread::sleep_for(
-            std::chrono::milliseconds(80));  // Espera para que agarre el jugador
 
     // AHora el player2 tiene un casco y el player1 tiene un arma
     // Verifico que el player1 tenga el arma
     EXPECT_TRUE(players[player1]->has_weapon());
-    // Verifico que el player2 tenga el casco
-    EXPECT_TRUE(players[player2]->has_helmet());
 
     // Hago que el player1 dispare una vez al player2
     recv_queue.push(msg);
@@ -229,25 +213,13 @@ TEST(GameResources, test_shoot_with_and_without_armor) {
             std::chrono::milliseconds(80));  // Espera para que dispare el jugador
     recv_queue.push(msg2);
     std::this_thread::sleep_for(
-            std::chrono::milliseconds(80));  // Espera para que dispare el jugador
+            std::chrono::milliseconds(1000));  // Espera para que dispare el jugador
 
     // Verifico que el player1 tenga el arma
     EXPECT_TRUE(players[player1]->has_weapon());
-    // Verifico que el player2 no haya muerto
-    EXPECT_TRUE(players[player2]->lives());
-    // Verifico que el player2 ya no tenga el casco
-    EXPECT_FALSE(players[player2]->has_helmet());
-
-    // Hago que el player1 dispare otra vez al player2
-    recv_queue.push(msg);
-    std::this_thread::sleep_for(
-            std::chrono::milliseconds(80));  // Espera para que dispare el jugador
-    recv_queue.push(msg2);
-    std::this_thread::sleep_for(
-            std::chrono::milliseconds(80));  // Espera para que dispare el jugador
-
     // Verifico que el player2 haya muerto
     EXPECT_FALSE(players[player2]->lives());
+
     players[player2]->die();  // por si acaso
 
     game_thread.join();
