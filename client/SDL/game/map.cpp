@@ -15,7 +15,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         tiles(tiles),
         width_window(width_window),
         height_window(height_window),
-        tilesImages(3, nullptr) {
+        tilesImagesDay(3, nullptr),
+        tilesImagesNight(3, nullptr) {
 
     // inicializo las imagenes
     armor = std::make_shared<Image>();
@@ -25,7 +26,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
     prueba = std::make_shared<Image>();
 
     // Deberia llegarme la info del fondo
-    background->initialize(rend, "assets/game_assets/background/day.png");
+    setTheme(theme);
 
     for (int i = int(ProjectilesId::ProjectileId::AK_47);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
@@ -55,6 +56,19 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 }
 
 // ----------------- Initialize Images -----------------
+
+void Map::setTheme(uint theme) {
+    // clean shared_ptr
+    this->theme = theme;
+    background.reset();
+    background = std::make_shared<Image>();
+
+    if (theme == GenericMsg::Theme::DAY) {
+        background->initialize(rend, "assets/game_assets/background/day.png");
+    } else if (theme == GenericMsg::Theme::NIGHT) {
+        background->initialize(rend, "assets/game_assets/background/night.png");
+    }
+}
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::UNARMED) {
@@ -126,16 +140,28 @@ void Map::makeArmor() {
 }
 
 void Map::makeTile(TileType tileType) {
-    std::shared_ptr<Image> tile = std::make_shared<Image>();
+    std::shared_ptr<Image> dayTile = std::make_shared<Image>();
+    std::shared_ptr<Image> nightTile = std::make_shared<Image>();
     std::string path =
+            "assets/game_assets/tiles/nightTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
+                                                   // me mande el server (dia, noche)
+    path += tileType_to_string(tileType);
+    nightTile->initialize(rend, path);
+    nightTile->queryTexture();
+    nightTile->defineSize(6 * tiles, 6 * tiles);
+    nightTile->position(0, 0);
+    tilesImagesNight[int(tileType)] = nightTile;
+    path =
             "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
                                                    // me mande el server (dia, noche)
     path += tileType_to_string(tileType);
-    tile->initialize(rend, path);
-    tile->queryTexture();
-    tile->defineSize(6 * tiles, 6 * tiles);
-    tile->position(0, 0);
-    tilesImages[int(tileType)] = tile;
+    dayTile->initialize(rend, path);
+    dayTile->queryTexture();
+    dayTile->defineSize(6 * tiles, 6 * tiles);
+    dayTile->position(0, 0);
+    tilesImagesDay[int(tileType)] = dayTile;
+
+
 }
 
 void Map::makeBoxes() {
@@ -180,6 +206,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     explosionsPos.clear();
     helmetsPos.clear();
     armorMap.clear();
+    boxesPos.clear();
     playersNamesAlive.clear();
     if (mapTexture != nullptr) {
         SDL_DestroyTexture(mapTexture);
@@ -439,11 +466,22 @@ void Map::fill() {  // Dibuja de atras para adelante
 
         // Dibujamos el mapa
         for (const auto& tilePair: tilesPlace) {
-            if (tilesImages[int(tilePair.first)] != nullptr) {
-                for (const auto& pair: tilePair.second) {
-                    tilesImages[int(tilePair.first)]->position(pair.first * tiles,
-                                                               pair.second * tiles);
-                    tilesImages[int(tilePair.first)]->fill();
+            if (theme == GenericMsg::Theme::DAY) {
+                if (tilesImagesDay[int(tilePair.first)] != nullptr) {
+                    for (const auto& pair: tilePair.second) {
+                        tilesImagesDay[int(tilePair.first)]->position(pair.first * tiles,
+                                                                pair.second * tiles);
+                        tilesImagesDay[int(tilePair.first)]->fill();
+                    }
+                }
+            } else {
+                if (tilesImagesNight[int(tilePair.first)] != nullptr) {
+                    std::cout << "entro" << std::endl;
+                    for (const auto& pair: tilePair.second) {
+                        tilesImagesNight[int(tilePair.first)]->position(pair.first * tiles,
+                                                                pair.second * tiles);
+                        tilesImagesNight[int(tilePair.first)]->fill();
+                    }
                 }
             }
         }

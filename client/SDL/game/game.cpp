@@ -65,6 +65,7 @@ void Game::play() {
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
+    uint theme;
     std::shared_ptr<SendMapMsg> newMap;
     if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
         std::shared_ptr<GenericMsg> shared_matriz = std::move(matriz);
@@ -73,6 +74,7 @@ void Game::play() {
             mapa = newMap->get_map();
             filas = newMap->get_filas();
             columnas = newMap->get_columnas();
+            theme = newMap->get_theme();
         } else {
             throw std::runtime_error("Failed to cast GenericMsg to SendMapMsg");
         }
@@ -86,6 +88,7 @@ void Game::play() {
 
     // Creo el mapa
     Map map(win->get_rend(), tiles, displayBounds.w, displayBounds.h);
+    map.setTheme(theme);
     map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
@@ -146,6 +149,7 @@ void Game::play() {
                 std::vector<uint16_t> mapa;
                 uint16_t filas;
                 uint16_t columnas;
+                uint theme;
 
                 switch (msj->get_header()) {
                     case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
@@ -204,11 +208,12 @@ void Game::play() {
                             mapa = newMap->get_map();
                             filas = newMap->get_filas();
                             columnas = newMap->get_columnas();
+                            theme = newMap->get_theme();
 
                             tiles_w = displayBounds.w / columnas;
                             tiles_h = displayBounds.h / filas;
                             tiles = std::min(tiles_w, tiles_h);
-
+                            map.setTheme(theme);
                             map.makeMap(columnas, filas, mapa);
                             map.fill();
                         }
