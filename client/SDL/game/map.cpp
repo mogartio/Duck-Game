@@ -143,25 +143,22 @@ void Map::makeTile(TileType tileType) {
     std::shared_ptr<Image> dayTile = std::make_shared<Image>();
     std::shared_ptr<Image> nightTile = std::make_shared<Image>();
     std::string path =
-            "assets/game_assets/tiles/nightTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
-                                                   // me mande el server (dia, noche)
+            "assets/game_assets/tiles/nightTiles/";  // esto dsp se cambia a aceptar el tipo de tile
+                                                     // q me mande el server (dia, noche)
     path += tileType_to_string(tileType);
     nightTile->initialize(rend, path);
     nightTile->queryTexture();
     nightTile->defineSize(6 * tiles, 6 * tiles);
     nightTile->position(0, 0);
     tilesImagesNight[int(tileType)] = nightTile;
-    path =
-            "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
-                                                   // me mande el server (dia, noche)
+    path = "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
+                                                  // me mande el server (dia, noche)
     path += tileType_to_string(tileType);
     dayTile->initialize(rend, path);
     dayTile->queryTexture();
     dayTile->defineSize(6 * tiles, 6 * tiles);
     dayTile->position(0, 0);
     tilesImagesDay[int(tileType)] = dayTile;
-
-
 }
 
 void Map::makeBoxes() {
@@ -223,7 +220,7 @@ void Map::redifine_sizes() {
     hombro->defineSize(6 * tiles, 6 * tiles);
     armorOnMap->defineSize(2 * tiles, 2 * tiles);
 
-    for (const auto& pair: tilesImages) {
+    for (const auto& pair: tilesImagesDay) {
         if (pair != nullptr) {
             pair->defineSize(6 * tiles, 6 * tiles);
         }
@@ -514,7 +511,7 @@ void Map::fill() {  // Dibuja de atras para adelante
                 if (tilesImagesDay[int(tilePair.first)] != nullptr) {
                     for (const auto& pair: tilePair.second) {
                         tilesImagesDay[int(tilePair.first)]->position(pair.first * tiles,
-                                                                pair.second * tiles);
+                                                                      pair.second * tiles);
                         tilesImagesDay[int(tilePair.first)]->fill();
                     }
                 }
@@ -523,7 +520,7 @@ void Map::fill() {  // Dibuja de atras para adelante
                     std::cout << "entro" << std::endl;
                     for (const auto& pair: tilePair.second) {
                         tilesImagesNight[int(tilePair.first)]->position(pair.first * tiles,
-                                                                pair.second * tiles);
+                                                                        pair.second * tiles);
                         tilesImagesNight[int(tilePair.first)]->fill();
                     }
                 }
