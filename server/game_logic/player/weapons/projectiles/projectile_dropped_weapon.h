@@ -113,7 +113,9 @@ public:
         }
     }
     virtual std::shared_ptr<Weapon> get_weapon() {
-        spawn->free();
+        if (spawn) {
+            spawn->free();
+        }
         return std::move(weapon);
     }
 };

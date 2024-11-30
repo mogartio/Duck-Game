@@ -1,6 +1,6 @@
 #include "mystery_box.h"
 
-MysteryBox::MysteryBox(Stage& stage, Coordinate position) : stage(stage), pos(position) {
+MysteryBox::MysteryBox(Stage& stage, Coordinate position): stage(stage), pos(position) {
     broken = false;
     item = 0;
 }
@@ -8,12 +8,14 @@ MysteryBox::MysteryBox(Stage& stage, Coordinate position) : stage(stage), pos(po
 void MysteryBox::destroy_box() {
     broken = true;
 
-    std::list<uint> items = {BANANA, COWBOY_PISTOL, MAGNUM, DUEL_PISTOL, AK_47, SHOTGUN, SNIPER, PEW_PEW_LASER, LASER_RIFLE, HELMET, HELMET2, HELMET3, CHEST, EXPLOSION};
+    std::list<uint> items = {BANANA,  COWBOY_PISTOL, MAGNUM,        DUEL_PISTOL, AK_47,
+                             SHOTGUN, SNIPER,        PEW_PEW_LASER, LASER_RIFLE, HELMET,
+                             HELMET2, HELMET3,       CHEST,         EXPLOSION};
     // get random item from the list
     auto it = items.begin();
     std::advance(it, rand() % items.size());
     item = *it;
-    
+
     if (item == EXPLOSION) {
         explode();
     } else {
@@ -71,7 +73,7 @@ void MysteryBox::drop_weapon() {
             weapon = std::make_shared<CowboyGun>(stage);
             break;
     }
-    
-    WeaponSpawnPoint weapon_spawn(pos, stage, item);
-    stage.add_projectile(std::make_unique<ProjectileDroppedWeapon>(weapon, pos, 4, 4000, item, &weapon_spawn));
+
+    stage.add_projectile(
+            std::make_unique<ProjectileDroppedWeapon>(weapon, pos, 4, 4000, item, nullptr));
 }
