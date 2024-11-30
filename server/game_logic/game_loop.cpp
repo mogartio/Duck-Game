@@ -18,10 +18,6 @@ std::string GameLoop::play_round(Stage& stage, Map& map) {
     init_round(stage, map);
     std::string winner;
     bool round_over = false;
-    std::shared_ptr<GenericMsg> msg = receiver_q.pop();
-    if (msg->get_header() != GenericMsg::MsgTypeHeader::START_ROUND_MSG) {
-        throw std::runtime_error("Expected START_ROUND_MSG, received: " + std::to_string(static_cast<int>(msg->get_header())));
-    }
     while (!round_over) {
         steady_clock::time_point t0 = steady_clock::now();  // empieza el timer
         spawn_weapons();
@@ -34,8 +30,7 @@ std::string GameLoop::play_round(Stage& stage, Map& map) {
 }
 
 void GameLoop::init_round(Stage& stage, Map& map) {
-    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
-            map.get_items_spawn_sites();
+    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites = map.get_items_spawn_sites();
 
     for (auto& weapon: weapon_spawn_sites) {
         WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
