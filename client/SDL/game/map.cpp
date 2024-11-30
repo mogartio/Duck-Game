@@ -141,7 +141,7 @@ void Map::makeTile(TileType tileType) {
 void Map::makeBoxes() {
     // Creo cajas
     for (int i = 1; i <= 8; i++) {
-        std::string path = "assets/game_assets/box";
+        std::string path = "assets/game_assets/box/";
         path += std::to_string(i);
         path += ".png";
 
@@ -333,9 +333,7 @@ void Map::explosion(int x, int y) {
 
 // ----------------- Box -----------------
 
-void Map::newBox(int x, int y) {
-    boxesPos.push_back(std::pair(x, y));
-}
+void Map::newBox(int x, int y) { boxesPos.push_back(std::pair(x, y)); }
 
 // ----------------- Remove -----------------
 

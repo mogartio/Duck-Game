@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "../player/player.h"
+#include "../player/weapons/mystery_box.h"
 #define FREE 0
 #define OCCUPIED 1
 #define DEATH -1
@@ -153,7 +154,8 @@ int Stage::is_valid_position(Coordinate position, int color) {
             }
             int value = map.get(aux);
             if (value == LIVE_BANANA) {  // una banana que fue activada
-                std::shared_ptr<Projectile> banana_per_se = find_projectile_in(aux);
+                std::shared_ptr<Projectile> banana_per_se =
+                        find_projectile_in(aux, Config::get_instance()->bullet_size);
                 if (banana_per_se) {
 
                     Coordinate banana_position = banana_per_se->get_position();
@@ -170,12 +172,12 @@ int Stage::is_valid_position(Coordinate position, int color) {
     return FREE;
 }
 
-std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position) {
+std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position, int size) {
     for (auto& projectile: projectiles) {
         Coordinate projectile_position = projectile->get_position();
         std::vector<Coordinate> positions_occupied_by_projectile;
-        for (int i = 0; i < Config::get_instance()->bullet_size; i++) {
-            for (int j = 0; j < Config::get_instance()->bullet_size; j++) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 Coordinate c(projectile_position.x + j, projectile_position.y + i);
                 positions_occupied_by_projectile.push_back(c);
             }
@@ -186,6 +188,33 @@ std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position) 
         }
     }
     return nullptr;
+}
+
+// TODO: usar templates
+std::shared_ptr<MysteryBox> Stage::find_box_in(Coordinate init_position, int size) {
+    for (auto& box: boxes) {
+        Coordinate box_position = box->get_position();
+        std::vector<Coordinate> positions_occupied_by_box;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Coordinate c(box_position.x + j, box_position.y + i);
+                positions_occupied_by_box.push_back(c);
+            }
+        }
+        if (count(positions_occupied_by_box.begin(), positions_occupied_by_box.end(),
+                  init_position) > 0) {
+            return box;
+        }
+    }
+    return nullptr;
+}
+
+void Stage::add_box(std::shared_ptr<MysteryBox> box) { boxes.push_back(box); }
+void Stage::break_box(Coordinate position) {
+    std::shared_ptr<MysteryBox> box = find_box_in(position, 6);
+    box->destroy_box();
+    coordinates_to_delete.push_back(box->get_position());
+    obs.updateOldPos(position.x, position.y, MYSTERY_BOX);
 }
 
 std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {

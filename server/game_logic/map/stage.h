@@ -15,6 +15,7 @@
 
 class Player;          // Declaracion adelantada para evitar dependencia circular.
 class PlayerPosition;  // Idem
+class MysteryBox;      // Declaracion adelantada para evitar dependencia circular.
 class Stage {
 private:
     Map map;
@@ -23,11 +24,13 @@ private:
     std::vector<std::tuple<Coordinate, int>> explosions;
     std::vector<Coordinate> coordinates_to_delete;
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
+    std::vector<std::shared_ptr<MysteryBox>> boxes;
     ProjectileObserver obs;
     std::map<int, Player*> players;
     void explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
                             bool& keep_going_horizontally);
-    std::shared_ptr<Projectile> find_projectile_in(Coordinate init_position);
+    std::shared_ptr<Projectile> find_projectile_in(Coordinate init_position, int size);
+    std::shared_ptr<MysteryBox> find_box_in(Coordinate init_position, int size);
 
 public:
     // Son es para poder mockear la clase mas facilmente
@@ -50,10 +53,12 @@ public:
     void add_player(Player*, int id);
     void kill(int id);
     void draw(int object, int size, Coordinate init_position);
+    void add_box(std::shared_ptr<MysteryBox> box);
 
     // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);
 
+    void break_box(Coordinate position);
     // chequear si tiene armadura/casco y hace daño
     bool take_damage(int player_id);
 };

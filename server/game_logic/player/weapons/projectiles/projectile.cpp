@@ -24,7 +24,7 @@ bool Projectile::ray_trace(Stage& stage) {
             }
             return true;
         }
-        check_if_player_killed(things_it_hits, despawned, stage);
+        check_if_player_killed(things_it_hits, despawned, stage, bullet_position);
         if (despawned) {
             return is_lethal;
         }
@@ -57,7 +57,8 @@ bool Projectile::ray_trace(Stage& stage) {
     return false;
 }
 
-void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage) {
+void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage,
+                                        Coordinate next_position) {
     for (int i = 1; i < 5; i++) {  // si le pego a un jugador con id entre 1 y 4
         if (hit.find(i) != hit.end()) {
             if (is_lethal) {
@@ -78,6 +79,9 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
             notify();
             return;
         }
+    }
+    if (hit.find(MYSTERY_BOX) != hit.end()) {
+        stage.break_box(next_position);
     }
 }
 
@@ -154,7 +158,7 @@ bool LaserBullet::ray_trace(Stage& stage) {
             }
             return true;
         }
-        check_if_player_killed(things_it_hits, despawned, stage);
+        check_if_player_killed(things_it_hits, despawned, stage, bullet_position);
         if (despawned) {
             return is_lethal;
         }
@@ -173,7 +177,7 @@ bool LaserBullet::ray_trace(Stage& stage) {
             }
             return true;
         }
-        check_if_player_killed(things_it_hits, despawned, stage);
+        check_if_player_killed(things_it_hits, despawned, stage, bullet_position);
         if (despawned) {
             return is_lethal;
         }

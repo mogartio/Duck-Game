@@ -26,7 +26,6 @@ void MysteryBox::destroy_box() {
 
 void MysteryBox::explode() {
     int radius = Config::get_instance()->explosion_range;
-    // Coordinate center_pos(pos.x+3, pos.y+3); // caja es 6x6
     stage.set_explosion(pos, radius);
 }
 

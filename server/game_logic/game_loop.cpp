@@ -5,6 +5,7 @@
 
 #include "config/config.h"
 #include "map/spawn_point.h"
+#include "player/weapons/mystery_box.h"
 #define TARGET_TIME 35
 using namespace std::chrono;
 #include "game.h"
@@ -35,6 +36,11 @@ void GameLoop::init_round(Stage& stage, Map& map) {
     for (auto& weapon: weapon_spawn_sites) {
         WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
         weapon_spawns.push_back(&spawn);
+    }
+
+    std::vector<Coordinate> box_positions = map.get_boxes_spawn_sites();
+    for (auto& box_position: box_positions) {
+        stage.add_box(std::make_shared<MysteryBox>(stage, box_position));
     }
 
     for (auto [name, player]: players) {
