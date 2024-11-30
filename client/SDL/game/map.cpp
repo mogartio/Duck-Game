@@ -48,6 +48,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         makeTile(tileType);
     }
 
+    makeBoxes();
+
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
 }
@@ -270,8 +272,8 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
-    // } else if (id == ProjectilesId::ProjectileId::BOX) {
-    //     newBox(x, y);
+    } else if (id == ProjectilesId::ProjectileId::MYSTERY_BOX) {
+        newBox(x, y);
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         newHelmet(x, y, id);
     } else {
