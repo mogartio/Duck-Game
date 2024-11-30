@@ -39,6 +39,7 @@ private:
     std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps;
     int columns; 
     int rows;
+    int theme;
     double scale;
     QFont *customFont;
     QSound *buttonSound;
@@ -74,7 +75,7 @@ signals:
     void switchToMenu();
 
 public: 
-    EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps);
+    EditorScreen(int columns, int rows, std::string theme, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps);
     void paintEvent(QPaintEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

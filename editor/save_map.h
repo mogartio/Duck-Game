@@ -57,7 +57,7 @@
 
     The file will be placed in the folder maps/ with the name map_name.yaml
 */ 
-inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name) {
+inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name, int theme) {
     const int padding = 12; // Padding size (6x6 tiles padding)
     const std::string file_name = "maps/" + map_name + ".yaml";
 
@@ -70,6 +70,8 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     // New dimensions with padding
     int padded_rows = map_rows + 2 * padding;
     int padded_columns = map_columns + 2 * padding;
+
+    int theme_id = theme;
 
     // Initialize padded map_matrix with BG tiles
     std::vector<std::vector<int>> padded_map_matrix(padded_rows, std::vector<int>(padded_columns, BG));
@@ -112,6 +114,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "map_name" << YAML::Value << map_name;
+    out << YAML::Key << "map_theme" << YAML::Value << theme_id;
     out << YAML::Key << "map_rows" << YAML::Value << padded_rows;
     out << YAML::Key << "map_columns" << YAML::Value << padded_columns;
     out << YAML::Key << "map_player_spawn_sites" << YAML::Value << YAML::BeginSeq;

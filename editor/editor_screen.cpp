@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps)
+EditorScreen::EditorScreen(int columns, int rows, std::string theme, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps)
     : map_of_maps(map_of_maps), columns(columns), rows(rows), scale(1.0), isDragging(false), offsetX(0), offsetY(0) {
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(1920, 1080); // Ensure the editor screen is fixed to 1920x1080
@@ -20,6 +20,13 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     customFont = new QFont(fontFamily);
     // Load button sound
     buttonSound = new QSound("assets/menu_assets/Retro3.wav");
+
+    if (theme == "light") {
+        this->theme = static_cast<int>(GenericMsg::Theme::DAY);
+    } else {
+        this->theme = static_cast<int>(GenericMsg::Theme::NIGHT);
+    }
+
 
     // Extract the background tile from the map of maps
     background_tile = map_of_maps["tiles"]["background"];
@@ -718,6 +725,6 @@ void EditorScreen::onSaveMap() {
     bool ok = inputDialog.exec() == QDialog::Accepted;
     QString filename = inputDialog.textValue();
     if (ok && !filename.isEmpty()) {
-        saveMap(editor_matrix, filename.toStdString());
+        saveMap(editor_matrix, filename.toStdString(), theme);
     }
 }

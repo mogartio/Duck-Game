@@ -4,6 +4,8 @@
 SetInitialValuesScreen::SetInitialValuesScreen() {
     setFocusPolicy(Qt::StrongFocus);
 
+    choosenTheme = "light";
+
     // load font and sound
     int fontId = QFontDatabase::addApplicationFont("assets/menu_assets/HomeVideo-Regular.ttf");
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
@@ -147,8 +149,8 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
     themeRect->hide();
 
     // initialize buttons
-    lightTheme = new QRadioButton("Light", this);
-    nightTheme = new QRadioButton("Night", this);
+    lightTheme = new QRadioButton("light", this);
+    nightTheme = new QRadioButton("night", this);
 
     lightTheme->setStyleSheet(
         "QRadioButton {"
@@ -256,6 +258,7 @@ void SetInitialValuesScreen::onStartEditingButtonClicked() {
     int columns = columnsInput->text().toInt();
     int rows = rowsInput->text().toInt();
     // check if the values are numeric and within the range
+    std::cout << columns << " " << rows << std::endl;
     if (columns >= 3 && rows >= 3 && columns <= 75 && rows <= 75) {
         // emit signal to send the values to the main window
         emit sendInitialValues(columns, rows, choosenTheme);
