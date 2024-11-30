@@ -292,9 +292,9 @@ void ErrorMsg::set_error_msg(std::string error_msg) { this->error_msg = error_ms
 std::string ErrorMsg::get_error_msg() const { return error_msg; }
 
 SendMapMsg::SendMapMsg():
-        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG), filas(0), columnas(0) {}
+        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG), filas(0), columnas(0), theme(Theme::DAY) {}
 
-SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas):
+SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, uint8_t theme):
         GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
         map(map),
         filas(filas),
@@ -314,9 +314,13 @@ void SendMapMsg::set_filas(uint16_t filas) { this->filas = filas; }
 
 void SendMapMsg::set_columnas(uint16_t columnas) { this->columnas = columnas; }
 
+void SendMapMsg::set_theme(uint8_t theme) { this->theme = theme; }
+
 uint16_t SendMapMsg::get_filas() const { return filas; }
 
 uint16_t SendMapMsg::get_columnas() const { return columnas; }
+
+uint8_t SendMapMsg::get_theme() const { return theme; }
 
 GameEndedMsg::GameEndedMsg(): GenericMsg(GenericMsg::GAME_ENDED_MSG, GenericMsg::GAME_MSG) {}
 

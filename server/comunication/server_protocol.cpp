@@ -99,6 +99,9 @@ void ServerProtocol::handle_send(const PickupDropMsg& msg) {
 void ServerProtocol::handle_send(const SendMapMsg& msg) {
     uint8_t header = msg.get_header();
     send_u_int8_t(header);
+    // mando tema
+    uint8_t theme = msg.get_theme();
+    send_u_int8_t(theme);
     // mando filas y columnas
     uint16_t filas = msg.get_filas();
     send_u_int16_t(filas);

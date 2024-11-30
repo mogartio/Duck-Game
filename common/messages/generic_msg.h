@@ -124,6 +124,11 @@ public:
         STARTING = 0x01,
     };
 
+    enum Theme : uint8_t {
+        DAY = 0x00,
+        NIGHT = 0x01,
+    };
+
 private:
     MsgTypeHeader header;
     Type type;
@@ -462,6 +467,7 @@ public:
 class SendMapMsg: public GenericMsg {
 private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
+    uint8_t theme;
     uint16_t filas;
     uint16_t columnas;
 
@@ -474,7 +480,7 @@ public:
 
     SendMapMsg();
 
-    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas);
+    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, uint8_t theme);
 
     void set_map(std::vector<uint16_t> map);
 
@@ -484,9 +490,13 @@ public:
 
     void set_columnas(uint16_t columnas);
 
+    void set_theme(uint8_t theme);
+
     uint16_t get_filas() const;
 
     uint16_t get_columnas() const;
+
+    uint8_t get_theme() const;
 };
 
 class GameEndedMsg: public GenericMsg {

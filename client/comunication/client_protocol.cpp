@@ -166,6 +166,8 @@ void ClientProtocol::handle_recv(WinnerMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(SendMapMsg& msg) {
+    uint8_t theme = recv_u_int8_t();
+    msg.set_theme(theme);
     uint16_t filas = recv_u_int16_t();
     msg.set_filas(filas);
     uint16_t columnas = recv_u_int16_t();
