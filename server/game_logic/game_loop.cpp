@@ -7,6 +7,7 @@
 #include "map/spawn_point.h"
 #define TARGET_TIME 35
 using namespace std::chrono;
+#include "game.h"
 
 GameLoop::GameLoop(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
                    bool is_testing):
@@ -17,6 +18,10 @@ std::string GameLoop::play_round(Stage& stage, Map& map) {
     init_round(stage, map);
     std::string winner;
     bool round_over = false;
+    std::shared_ptr<GenericMsg> msg = receiver_q.pop();
+    if (msg->get_header() != GenericMsg::MsgTypeHeader::START_ROUND_MSG) {
+        throw std::runtime_error("Expected START_ROUND_MSG, received: " + std::to_string(static_cast<int>(msg->get_header())));
+    }
     while (!round_over) {
         steady_clock::time_point t0 = steady_clock::now();  // empieza el timer
         spawn_weapons();
@@ -124,6 +129,10 @@ void GameLoop::handle_read(const StartActionMsg& msg) {
 void GameLoop::handle_read(const StopActionMsg& msg) {
     int action = msg.get_action_id();
     players[msg.get_player_name()]->remove_action(action);
+}
+
+void GameLoop::handle_read(const StartRoundMsg& msg) {
+    // nada
 }
 
 // podes ignorar todo lo que esta abajo

@@ -59,6 +59,8 @@ ProtocoloCommon::ProtocoloCommon(Socket& socket): socket(socket), was_closed(fal
                           [this]() { return std::make_shared<NotProyectileInfo>(); });
     recv_handlers.emplace(GenericMsg::MsgTypeHeader::SHOOT_MSG,
                           [this]() { return std::make_shared<ShootMsg>(); });
+    recv_handlers.emplace(GenericMsg::MsgTypeHeader::START_ROUND_MSG, 
+                            [this]() { return std::make_shared<StartRoundMsg>(); });
 }
 
 void ProtocoloCommon::chk_closed_andif_fail(const char error_ms[]) const {

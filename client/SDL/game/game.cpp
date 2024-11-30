@@ -60,6 +60,9 @@ void Game::play() {
         throw("Estoy recibiendo un mensaje que no es de info lobby");
     }
 
+    std::shared_ptr<StartRoundMsg> startRoundMsg = std::make_shared<StartRoundMsg>();
+    queueRecive.push(startRoundMsg);
+
     std::shared_ptr<GenericMsg> matriz = queueRecive.pop();
     std::vector<uint16_t> mapa;
     uint16_t filas;
