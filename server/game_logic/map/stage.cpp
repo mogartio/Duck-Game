@@ -66,7 +66,10 @@ void Stage::update() {
             remove_projectile(*iterator);
             continue;
         }
-        projectile_was_erased = (*iterator)->update();
+        if (*iterator) {
+
+            projectile_was_erased = (*iterator)->update();
+        }
         if (projectile_was_erased) {
             remove_projectile(*iterator);
             continue;
@@ -194,16 +197,25 @@ std::shared_ptr<Projectile> Stage::find_projectile_in(Coordinate init_position, 
 std::shared_ptr<MysteryBox> Stage::find_box_in(Coordinate init_position, int size) {
     for (auto& box: boxes) {
         Coordinate box_position = box->get_position();
-        std::vector<Coordinate> positions_occupied_by_box;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 Coordinate c(box_position.x + j, box_position.y + i);
-                positions_occupied_by_box.push_back(c);
+                if (c == init_position) {
+                    return box;
+                }
+                Coordinate d(box_position.x - j, box_position.y + i);
+                if (d == init_position) {
+                    return box;
+                }
+                Coordinate b(box_position.x - j, box_position.y - i);
+                if (b == init_position) {
+                    return box;
+                }
+                Coordinate a(box_position.x + j, box_position.y - i);
+                if (a == init_position) {
+                    return box;
+                }
             }
-        }
-        if (count(positions_occupied_by_box.begin(), positions_occupied_by_box.end(),
-                  init_position) > 0) {
-            return box;
         }
     }
     return nullptr;
@@ -211,10 +223,14 @@ std::shared_ptr<MysteryBox> Stage::find_box_in(Coordinate init_position, int siz
 
 void Stage::add_box(std::shared_ptr<MysteryBox> box) { boxes.push_back(box); }
 void Stage::break_box(Coordinate position) {
-    std::shared_ptr<MysteryBox> box = find_box_in(position, 6);
-    box->destroy_box();
-    coordinates_to_delete.push_back(box->get_position());
-    obs.updateOldPos(position.x, position.y, MYSTERY_BOX);
+    std::shared_ptr<MysteryBox> box = find_box_in(position, 3);
+    if (box) {
+        Coordinate box_position = box->get_position();
+        box->destroy_box();
+        boxes.clear();
+        coordinates_to_delete.push_back(box->get_position());
+        obs.updateOldPos(box_position.x, box_position.y, MYSTERY_BOX);
+    }
 }
 
 std::shared_ptr<Weapon> Stage::pick_weapon(Coordinate position) {
