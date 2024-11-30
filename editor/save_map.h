@@ -91,8 +91,10 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
                 weapon_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding, cellValue);
+            } else if (cellValue == Id::MYSTERY_BOX) {
+                // Mystery box spawn site
+                weapon_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding, cellValue);
             }
-
             for (int x = 0; x < 6; ++x) {
                 for (int y = 0; y < 6; ++y) {
                     int dest_row = i * 6 + y + padding;
