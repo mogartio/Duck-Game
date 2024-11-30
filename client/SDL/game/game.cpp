@@ -49,8 +49,8 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     win = std::make_unique<Window>(displayBounds.w, displayBounds.h);
 
     // Creo la pantalla de carga
-    loadingScreen =
-            std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h, queueSend);
+    loadingScreen = std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w,
+                                                    displayBounds.h, queueSend);
 }
 
 void Game::play() {
@@ -60,8 +60,6 @@ void Game::play() {
         throw("Estoy recibiendo un mensaje que no es de info lobby");
     }
 
-    std::shared_ptr<StartRoundMsg> startRoundMsg = std::make_shared<StartRoundMsg>();
-    queueRecive.push(startRoundMsg);
 
     std::shared_ptr<GenericMsg> matriz = queueRecive.pop();
     std::vector<uint16_t> mapa;
@@ -123,6 +121,7 @@ void Game::play() {
 
     musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
     musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
+    event_handler.unblock();
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
@@ -198,6 +197,7 @@ void Game::play() {
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                        event_handler.block();
                         loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
                         newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
                         if (newMap) {
@@ -215,6 +215,7 @@ void Game::play() {
                         loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
                                                     // vea tan feo el cambio de mapa
                         loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
+                        event_handler.unblock();
                         break;
 
                     /*

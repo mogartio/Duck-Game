@@ -172,8 +172,6 @@ void LoadingScreen::show(Uint32 durationMs) {
         // Limitar el FPS
         SDL_Delay(16);  // Aproximadamente 60 FPS
     }
-    // std::shared_ptr<StartRoundMsg> startRoundMsg = std::make_shared<StartRoundMsg>();
-    // send_queue.push(startRoundMsg);
 }
 
 void LoadingScreen::renderWithOpacity(SDL_Texture* texture, float alpha) {
