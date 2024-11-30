@@ -15,6 +15,8 @@ private:
     SDL_RendererFlip flip;
     std::string file;
 
+    uint tiles;
+
     std::unordered_map<DuckState, std::vector<std::shared_ptr<Image>>> ducks;
     std::vector<std::shared_ptr<Image>> wings;
 
@@ -80,5 +82,7 @@ public:
 
     // Devolver posicion del jugador
     std::pair<int, int> getPosition() const;
+
+    void set_tiles(uint tiles);
 
 };
