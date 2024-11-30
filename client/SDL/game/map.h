@@ -10,6 +10,7 @@
 #include <SDL2/SDL_render.h>
 
 #include "../../../common/queue.h"
+#include "../../../common/messages/generic_msg.h"
 
 #include "player.h"
 
@@ -28,9 +29,11 @@ private:
     uint height_window;
     uint columnas;
     uint filas;
+    uint theme;
 
-    // Imagenes de los tiles
-    std::vector<std::shared_ptr<Image>> tilesImages;
+    // Imagenes de los tiles dia/noche
+    std::vector<std::shared_ptr<Image>> tilesImagesDay;
+    std::vector<std::shared_ptr<Image>> tilesImagesNight;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
@@ -81,7 +84,6 @@ private:
     void makeArmor();
     void makeTile(TileType tileType);
     void makeBoxes();
-
     SDL_Rect adjustMapZoom();
 
 
@@ -122,6 +124,9 @@ public:
 
     // Remover del mapa
     void removeWeapon(int x, int y, ProjectilesId::ProjectileId id);
+
+    void setTheme(uint theme);
+
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
