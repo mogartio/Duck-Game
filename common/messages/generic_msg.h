@@ -60,6 +60,8 @@ enum ProjectileId : uint8_t {
 
 
     EXPLOSION = 0x30,
+
+    MYSTERY_BOX = 0x40,
 };
 }
 
