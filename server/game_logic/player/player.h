@@ -63,6 +63,7 @@ public:
 
     bool has_chest();
     bool has_helmet();
+    bool has_weapon();
 
     void take_damage();
     void die();

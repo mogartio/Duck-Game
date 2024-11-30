@@ -67,6 +67,8 @@ bool Player::has_chest() { return !chest->is_unarmed(); }
 
 bool Player::has_helmet() { return !helmet->is_unarmed(); }
 
+bool Player::has_weapon() { return !weapon->is_unarmed(); }
+
 Coordinate Player::get_position() { return position->get_position(); }
 
 int Player::get_facing_direction() { return position->get_facing_direction(); }
