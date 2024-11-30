@@ -55,7 +55,7 @@ void Game::run() {
 void Game::send_map(Map& map) {
     std::vector<uint16_t> map_vector = current_stage->get_vector_representation();
     std::shared_ptr<SendMapMsg> msg =
-            std::make_shared<SendMapMsg>(map_vector, map.get_rows(), map.get_columns());
+            std::make_shared<SendMapMsg>(map_vector, map.get_rows(), map.get_columns(), map.get_theme());
     for (auto id: *ids) {
         senders.send_to_client(msg, id);
     }

@@ -298,7 +298,8 @@ SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t colum
         GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
         map(map),
         filas(filas),
-        columnas(columnas) {}
+        columnas(columnas), 
+        theme(theme) {}
 
 void SendMapMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 

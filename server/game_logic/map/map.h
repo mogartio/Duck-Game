@@ -24,17 +24,19 @@ private:
     std::vector<Coordinate> players_spawn_sites;
     std::vector<std::tuple<Coordinate, int>> items_spawn_sites;
     std::vector<Coordinate> boxes_spawn_sites;
+    uint8_t theme;
 
 public:
     Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix,
         std::vector<Coordinate> players_spawn_sites,
-        std::vector<std::tuple<Coordinate, int>> items_spawn_sites):
+        std::vector<std::tuple<Coordinate, int>> items_spawn_sites, uint8_t theme):
             name(new_map_name),
             rows(rows),
             columns(columns),
             matrix(matrix),
             players_spawn_sites(players_spawn_sites),
-            items_spawn_sites(items_spawn_sites) {
+            items_spawn_sites(items_spawn_sites),
+            theme(theme) {
                 // get boxes spawn sites
                 for (const auto& spawn: items_spawn_sites) {
                     if (std::get<1>(spawn) == ProjectilesId::MYSTERY_BOX) {
@@ -93,6 +95,12 @@ public:
      * @brief Returns the boxes spawn points.
      */
     std::vector<Coordinate> get_boxes_spawn_sites() { return boxes_spawn_sites; }
+
+    /**
+     * @brief Returns the theme of the map.
+     */
+    uint8_t get_theme() { return theme; }
+
 
     /**
      * @brief Checks if a given coordinate is out of the map's range.

@@ -24,6 +24,7 @@ void MapManager::load_maps() {
         std::vector<Coordinate> players_spawn_sites;
         std::vector<std::tuple<Coordinate, int>> items_spawn_sites;
         std::vector<std::vector<int>> matrix;
+        uint8_t theme = config["map_theme"].as<uint8_t>();
 
         // extract player spawn sites
         for (const auto& spawn: config["map_player_spawn_sites"]) {
@@ -49,7 +50,7 @@ void MapManager::load_maps() {
 
         // create map instance
         Map new_map =
-                Map(new_map_name, rows, columns, matrix, players_spawn_sites, items_spawn_sites);
+                Map(new_map_name, rows, columns, matrix, players_spawn_sites, items_spawn_sites, theme);
         maps.push_back(std::make_tuple(new_map_name, new_map));
     }
 }

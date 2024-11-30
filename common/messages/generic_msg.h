@@ -467,9 +467,9 @@ public:
 class SendMapMsg: public GenericMsg {
 private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
-    uint8_t theme;
     uint16_t filas;
     uint16_t columnas;
+    uint8_t theme;
 
 public:
     void accept_send(HandlerSender& handler) override;
