@@ -19,7 +19,7 @@ void MysteryBox::destroy_box() {
     if (item == EXPLOSION) {
         explode();
     } else {
-        drop_weapon();
+        explode();
     }
 }
 

@@ -81,7 +81,17 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
         }
     }
     if (hit.find(MYSTERY_BOX) != hit.end()) {
+        if (is_lethal) {
+            stage.break_box(next_position);
+            despawned = true;
+            return;
+        }
         stage.break_box(next_position);
+        if (!trail.empty()) {
+            trail.pop_back();
+        }
+        notify();
+        return;
     }
 }
 
