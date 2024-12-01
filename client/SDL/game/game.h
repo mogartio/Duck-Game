@@ -17,6 +17,7 @@
 #include "map.h"
 #include "music/musichandler.h"
 #include "screens/window.h"
+#include "screens/winnerscreen.h"
 class Game {
 private:
     Queue<std::shared_ptr<GenericMsg>>& queueRecive;
@@ -26,6 +27,7 @@ private:
     std::unique_ptr<MusicHandler> musicHandler;
     std::unique_ptr<Window> win;
     std::unique_ptr<LoadingScreen> loadingScreen;
+    std::unique_ptr<WinnerScreen> winnerScreen;
 
 public:
     Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,

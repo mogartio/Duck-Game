@@ -29,7 +29,7 @@ private:
     uint columnas;
     uint filas;
 
-    // Imagenes de los tiles
+    // Imagenes de los tiles dia/noche
     std::vector<std::shared_ptr<Image>> tilesImages;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
@@ -37,6 +37,9 @@ private:
     // Jugadores
     std::unordered_map<std::string, std::shared_ptr<Player>> players;
     std::list<std::string> playersNamesAlive;
+
+    // Puntos de los jugadores
+    std::unordered_map<std::string, int> playersPoints;
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
@@ -120,6 +123,10 @@ public:
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
+
+    // Winner
+    void addPoints(std::string winner);
+    std::pair<std::string, std::string> get_winner();
 
     SDL_Texture* getTextureMapWithAll() const;
 

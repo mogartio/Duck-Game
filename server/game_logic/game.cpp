@@ -31,11 +31,19 @@ void Game::run() {
             send_map(map);
 
             const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
-            players = generate_players(player_names, *player_obs, map);
+            if (!players_created) {
+                players = generate_players(player_names, *player_obs, map);
+                players_created = true;
+            }
             game_loop = std::make_shared<GameLoop>(recv, players, is_testing);
 
             std::string winner = game_loop->play_round(*current_stage, map);
             player_points[winner]++;
+
+            std::shared_ptr<GenericMsg> msg = std::make_shared<WinnerMsg>(winner);
+            for (auto id: *ids) {
+                senders.send_to_client(msg, id);
+            }
 
             delete current_stage;
         }

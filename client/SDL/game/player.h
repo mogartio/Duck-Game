@@ -83,6 +83,10 @@ public:
     // Devolver posicion del jugador
     std::pair<int, int> getPosition() const;
 
+    // Redimensionar el jugador
     void set_tiles(uint tiles);
+
+    // Path
+    std::string get_file() const;
 
 };

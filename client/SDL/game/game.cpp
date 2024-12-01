@@ -8,7 +8,9 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
         queueRecive(queueRecive),
         running(true),
         event_handler(queueSend, playerName1, running, playerName2),
-        musicHandler(nullptr) {
+        musicHandler(nullptr),
+        winnerScreen(nullptr) {
+
     // Inicializo SDL con todo (no recomendado, se puede cambiar para lo que se necesite)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
         throw std::runtime_error("Error initializing SDL" + std::string(SDL_GetError()));
@@ -42,6 +44,8 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     // Creo el manejador de musica
     musicHandler = std::make_unique<MusicHandler>();
 
+
+
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
@@ -51,6 +55,9 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     // Creo la pantalla de carga
     loadingScreen =
             std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+
+        // Creo la pantalla de fin
+    winnerScreen = std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 }
 
 void Game::play() {
@@ -144,6 +151,9 @@ void Game::play() {
                 std::vector<uint16_t> mapa;
                 uint16_t filas;
                 uint16_t columnas;
+                
+                std::shared_ptr<WinnerMsg> winnerMsg = nullptr;
+                std::string winner;
 
                 switch (msj->get_header()) {
                     case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
@@ -214,19 +224,17 @@ void Game::play() {
                         loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
                         break;
 
-                    /*
-                    case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
-                        player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
-                        if (player) {
-                            player_name = player->get_player_name();
-                            map.remove(player_name);
-                        }
+                    case GenericMsg::MsgTypeHeader::WINNER_MSG:
+                        // suma puntos al ganador de la ronda
+                        winnerMsg = std::dynamic_pointer_cast<WinnerMsg>(msj);
+                        winner = winnerMsg->get_winner_name();
+                        map.addPoints(winner);
                         break;
-                    */
+
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                         // directa de que termino la partida y de q hay que mostrar la pantalla de
                         // fin
-                        return;
+                        running = false;
 
                     default:
                         break;
@@ -252,6 +260,12 @@ void Game::play() {
         // Controla la frecuencia de cuadros por segundo (FPS)
         SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
     }
+
+    // event_handler.pause();
+    // musicHandler->winner_music();  // Musica de ganador
+
+    std::pair<std::string, std::string> winner = map.get_winner();
+    winnerScreen->show(winner);  // Pantalla de ganador
 }
 
 Game::~Game() {

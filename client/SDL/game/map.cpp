@@ -219,8 +219,6 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     uint tiles_h = height_window / filas;
     this->tiles = std::min(tiles_w, tiles_h);
 
-    std::cout << "TILES: " << this->tiles << std::endl;
-
     redifine_sizes();
 
     // Creo la matriz
@@ -289,6 +287,23 @@ void Map::standing(std::unordered_map<std::string, bool> players_updated) {
             players[name]->standing();
         }
     }
+}
+
+// ----------------- Points -----------------
+
+void Map::addPoints(std::string playerName) { playersPoints[playerName]++; }
+
+std::pair<std::string, std::string> Map::get_winner() {
+    int maxPoints = 0;
+    std::string winner;
+    for (const auto& pair: playersPoints) {
+        if (pair.second > maxPoints) {
+            maxPoints = pair.second;
+            winner = pair.first;
+        }
+    }
+    std::string color_path = players[winner]->get_file();
+    return std::pair(winner, color_path);
 }
 
 // ----------------- Weapon -----------------
