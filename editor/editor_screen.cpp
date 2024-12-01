@@ -469,7 +469,6 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 } else if (category == "tiles") {
                     painter.drawPixmap(cellRect, *tile);
                 } else if (category == "box") {
-                    std::cout << "Drawing box" << category << itemName << std::endl;
                     scaleTile(1.0, 1.0, 1.0);
                 }
 

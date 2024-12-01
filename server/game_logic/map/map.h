@@ -29,20 +29,15 @@ private:
 public:
     Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix,
         std::vector<Coordinate> players_spawn_sites,
-        std::vector<std::tuple<Coordinate, int>> items_spawn_sites, uint8_t theme):
+        std::vector<std::tuple<Coordinate, int>> items_spawn_sites, std::vector<Coordinate> boxes_spawn_sites, uint8_t theme):
             name(new_map_name),
             rows(rows),
             columns(columns),
             matrix(matrix),
             players_spawn_sites(players_spawn_sites),
             items_spawn_sites(items_spawn_sites),
+            boxes_spawn_sites(boxes_spawn_sites),
             theme(theme) {
-                // get boxes spawn sites
-                for (const auto& spawn: items_spawn_sites) {
-                    if (std::get<1>(spawn) == ProjectilesId::MYSTERY_BOX) {
-                        boxes_spawn_sites.push_back(std::get<0>(spawn));
-                    }
-                }
             }
 
 
