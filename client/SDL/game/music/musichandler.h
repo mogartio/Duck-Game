@@ -1,3 +1,5 @@
+#ifndef MUSIC_HANDLER_H
+#define MUSIC_HANDLER_H
 #include <memory>
 #include <string>
 #include <vector>
@@ -30,3 +32,5 @@ public:
 
     ~MusicHandler();
 };
+
+#endif

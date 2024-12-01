@@ -45,7 +45,6 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     musicHandler = std::make_unique<MusicHandler>();
 
 
-
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
@@ -53,11 +52,12 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     win = std::make_unique<Window>(displayBounds.w, displayBounds.h);
 
     // Creo la pantalla de carga
-    loadingScreen =
-            std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    loadingScreen = std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w,
+                                                    displayBounds.h, queueSend);
 
-        // Creo la pantalla de fin
-    winnerScreen = std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    // Creo la pantalla de fin
+    winnerScreen =
+            std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 }
 
 void Game::play() {
@@ -157,7 +157,7 @@ void Game::play() {
                 uint16_t filas;
                 uint16_t columnas;
                 uint theme;
-                
+
                 std::shared_ptr<WinnerMsg> winnerMsg = nullptr;
                 std::string winner;
 
