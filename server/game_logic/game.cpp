@@ -23,6 +23,7 @@ std::map<std::string, Player*> Game::generate_players(const std::vector<std::str
 }
 
 void Game::run() {
+    
     while (!game_over) {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
 
@@ -31,11 +32,14 @@ void Game::run() {
             send_map(map);
 
             const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
-            players = generate_players(player_names, *player_obs, map);
+            if (!players_created) {
+                generate_players(player_names, *player_obs, map);
+                players_created = true;
+            }
             game_loop = std::make_shared<GameLoop>(recv, players, is_testing);
 
             std::string winner = game_loop->play_round(*current_stage, map);
-            player_points[winner]++;
+            player_points[winner] = player_points[winner] + 1;
 
             delete current_stage;
         }

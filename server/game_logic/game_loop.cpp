@@ -103,7 +103,6 @@ std::string GameLoop::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
     }
     if (alive_players.size() == 1) {
         round_over = true;
-        std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
         stage.delete_player_from_stage(*players[*alive_players.begin()]);  // Borro su dibujo viejo
         return *alive_players.begin();
     }
