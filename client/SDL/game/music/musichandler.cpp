@@ -75,8 +75,11 @@ void MusicHandler::setThatVolume(uint number, int volume) {
 }
 
 MusicHandler::~MusicHandler() {
-    Mix_HaltChannel(-1);  // Detiene todos los canales (haciendoles un stop)
-    list_of_musics.clear();
-    Mix_CloseAudio();  // Cierra el sistema de audio
-    Mix_Quit();        // Cierra SDL_mixer
+    if (Mix_QuerySpec(NULL, NULL, NULL)) { // Check if SDL_mixer is initialized
+        Mix_HaltChannel(-1);  // Stop all channels
+    }
+    list_of_musics.clear();  // Free resources
+    Mix_CloseAudio();        // Shutdown audio
+    Mix_Quit();              // Quit SDL_mixer
 }
+

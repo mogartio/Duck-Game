@@ -517,7 +517,6 @@ void Map::fill() {  // Dibuja de atras para adelante
                 }
             } else {
                 if (tilesImagesNight[int(tilePair.first)] != nullptr) {
-                    std::cout << "entro" << std::endl;
                     for (const auto& pair: tilePair.second) {
                         tilesImagesNight[int(tilePair.first)]->position(pair.first * tiles,
                                                                         pair.second * tiles);
