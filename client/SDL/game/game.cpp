@@ -162,7 +162,11 @@ void Game::play() {
                             map.update(player_name, position.first, position.second,
                                        DuckState(state), Side(facing_direction - 1));
                             stated_palying = true;
-                            players_updated[player_name] = true;
+                            if (DuckState(state) == DuckState::PLAY_DEAD) {
+                                players_updated[player_name] = true;
+                            } else {
+                                players_updated[player_name] = false;
+                            }
                         }
                         break;
 
@@ -254,9 +258,6 @@ void Game::play() {
 
         if (stated_palying) {
             map.standing(players_updated);
-            for (auto& player: players_updated) {
-                player.second = false;
-            }
         }
 
         // Controla la frecuencia de cuadros por segundo (FPS)
