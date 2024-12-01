@@ -226,6 +226,12 @@ void Map::redifine_sizes() {
         }
     }
 
+    for (const auto& pair: tilesImagesNight) {
+        if (pair != nullptr) {
+            pair->defineSize(6 * tiles, 6 * tiles);
+        }
+    }
+
     for (const auto& pair: explosions) {
         pair->defineSize(6 * tiles, 6 * tiles);
     }
@@ -259,8 +265,6 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     uint tiles_w = width_window / columnas;
     uint tiles_h = height_window / filas;
     this->tiles = std::min(tiles_w, tiles_h);
-
-    std::cout << "TILES: " << this->tiles << std::endl;
 
     redifine_sizes();
 
@@ -336,7 +340,6 @@ void Map::standing(std::unordered_map<std::string, bool> players_updated) {
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::EXPLOSION) {
-        std::cout << "Explosion" << std::endl;
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
