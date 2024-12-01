@@ -1,5 +1,4 @@
 #include <list>
-
 #include <memory>
 #include <set>
 #include <string>
@@ -9,8 +8,8 @@
 
 #include <SDL2/SDL_render.h>
 
-#include "../../../common/queue.h"
 #include "../../../common/messages/generic_msg.h"
+#include "../../../common/queue.h"
 
 #include "player.h"
 
@@ -76,6 +75,9 @@ private:
     std::vector<std::shared_ptr<Image>> boxes;
     std::vector<std::pair<int, int>> boxesPos;
 
+    // zoom del mapa
+    float currentZoom;
+
     bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void redifine_sizes();
@@ -86,12 +88,14 @@ private:
     void makeArmor();
     void makeTile(TileType tileType);
     void makeBoxes();
+
+    float animationZoom(float targetZoom);
+
     SDL_Rect adjustMapZoom();
 
 
 public:
-    Map(SDL_Renderer* rend, uint tiles, uint width_window,
-        uint height_window);
+    Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
@@ -106,7 +110,8 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
     // Asignar arma a un jugador
-    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
+    void weaponPlayer(ProjectilesId::ProjectileId id,
+                      std::string playerName);  // si ya tiene arma tonces dispara
 
     // Agrega un nuevo casco al mapa
     void newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet);
