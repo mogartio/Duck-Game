@@ -112,7 +112,26 @@ HostLobbyScreen::HostLobbyScreen(Queue<std::shared_ptr<GenericMsg>>* send_queue,
 
     connect(closeLobbyButton, &QPushButton::clicked, this, &HostLobbyScreen::onCloseLobbyButtonClicked);
 
-    connect(startGameButton, &QPushButton::clicked, this, &HostLobbyScreen::onStartGameButtonClicked);
+    connect(startGameButton, &QPushButton::clicked, [this]() {
+    bool allReady = true;
+    for (auto player : players) {
+        if (players.size() < 2) {
+            allReady = false;
+            drawErrorMsg("minimum number of players not met 1/2");
+            break;
+        }
+        if (player.is_ready == GenericMsg::PlayerReadyState::NOT_READY) {
+            allReady = false;
+            drawErrorMsg("not all players are ready");
+            break;
+        }
+    }
+
+    if (allReady) {
+        // Proceed to start the game
+        onStartGameButtonClicked();
+    }
+});
 
     connect(this, &HostLobbyScreen::playersUpdated, this, &HostLobbyScreen::updatePlayersInLobby);
 
@@ -129,6 +148,7 @@ void HostLobbyScreen::processIncomingMessages() {
                 lobby_id = info_lobby_msg->get_lobby_id();
                 std::lock_guard<std::mutex> lock(players_mutex);
                 players = info_lobby_msg->get_players();
+                player_count = players.size();
                 emit playersUpdated();
             } else {
                 std::cerr << "Failed to cast to InfoLobbyMsg" << std::endl;
@@ -312,40 +332,43 @@ void HostLobbyScreen::updatePlayersInLobby() {
     updateStartGameButton();
 }
 
-
 void HostLobbyScreen::updateStartGameButton() {
-    // update start game button if necessary
+    bool allReady = true;
     for (auto player : players) {
         if (player.is_ready == GenericMsg::PlayerReadyState::NOT_READY || players.size() < 2) {
-            startGameButton->setStyleSheet(
-                "QPushButton {"
-                "background-color: rgba(235, 64, 52, 100);" // Darker color for READY state
-                "color: #ced4da;"                     
-                "font-size: 65px;"                  
-                "border: 0px solid #555555;"        
-                "border-radius: 25px;"              
-                "padding: 10px;"                    
-                "text-align: center;"               
-                "}"
-            );
-            startGameButton->setEnabled(false);
-            return;
+            allReady = false;
+            break;
         }
     }
-    startGameButton->setStyleSheet(
-        "QPushButton {"
-        "background-color: rgba(47, 133, 28, 100);" // Darker color for READY state
-        "color: #ced4da;"                     
-        "font-size: 65px;"                  
-        "border: 0px solid #555555;"        
-        "border-radius: 25px;"              
-        "padding: 10px;"                    
-        "text-align: center;"               
-        "}"
-        "QPushButton:hover {"
-        "background-color: rgba(39, 112, 22, 100);" // Darker color on hover
-        "}"
-    );
+
+    if (allReady) {
+        startGameButton->setStyleSheet(
+            "QPushButton {"
+            "background-color: rgba(47, 133, 28, 100);" // Darker color for READY state
+            "color: #ced4da;"                     
+            "font-size: 65px;"                  
+            "border: 0px solid #555555;"        
+            "border-radius: 25px;"              
+            "padding: 10px;"                    
+            "text-align: center;"               
+            "}"
+            "QPushButton:hover {"
+            "background-color: rgba(39, 112, 22, 100);" // Darker color on hover
+            "}"
+        );
+    } else {
+        startGameButton->setStyleSheet(
+            "QPushButton {"
+            "background-color: rgba(235, 64, 52, 100);" // Darker color for NOT READY state
+            "color: #ced4da;"                     
+            "font-size: 65px;"                  
+            "border: 0px solid #555555;"        
+            "border-radius: 25px;"              
+            "padding: 10px;"                    
+            "text-align: center;"               
+            "}"
+        );
+    }
     startGameButton->setEnabled(true);
 }
 
@@ -489,6 +512,17 @@ void HostLobbyScreen::onCloseLobbyButtonClicked() {
     emit switchToMainMenuScreen();
 }
 
+void HostLobbyScreen::drawErrorMsg(std::string msg) {
+    QLabel *errorLabel = new QLabel(msg.c_str(), this);
+    errorLabel->setStyleSheet("QLabel { color: #800404; font-size: 24px; }");
+    errorLabel->setFont(QFont(customFont));
+    errorLabel->setAlignment(Qt::AlignCenter);
+    errorLabel->setGeometry(1200, 660, 700, 50);
+    errorLabel->show();
+    QTimer::singleShot(2000, errorLabel, &QObject::deleteLater);
+}
+
 HostLobbyScreen::~HostLobbyScreen() {
     stopProcessing();
 }
+

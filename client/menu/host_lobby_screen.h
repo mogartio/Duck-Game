@@ -43,6 +43,7 @@ private:
     std::list<std::string>* local_players;
     std::atomic<bool> running;
     std::mutex players_mutex;
+    int player_count;
 
     QFont customFont;
     std::shared_ptr<QPixmap> saveIcon;
@@ -66,6 +67,7 @@ private:
 
     void processIncomingMessages();
     void updateStartGameButton();
+    void drawErrorMsg(std::string msg);
 };
 
 #endif // LOBBY_SCREEN_H
