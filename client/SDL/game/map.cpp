@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <iostream>
 
-#define OFFSET_MIN_ZOOM 2
-#define VELOCIDAD_ZOOM 1.5
+#define PROPORCION_AÑADIDA 1.5
+#define VELOCIDAD_DE_REACCION_ZOOM 3.0
+#define MIN_ZOOM 0.5
 #define TILES_PATIÑOS 6
 
 
@@ -16,7 +17,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         width_window(width_window),
         height_window(height_window),
         tilesImagesDay(3, nullptr),
-        tilesImagesNight(3, nullptr) {
+        tilesImagesNight(3, nullptr),
+        currentZoom(1.0f) {
 
     // inicializo las imagenes
     armor = std::make_shared<Image>();
@@ -251,6 +253,7 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
         SDL_DestroyTexture(mapTexture);
     }
     mapTexture = nullptr;
+    currentZoom = 1.0f;
 
     // Limpiar jugadores
     for (const auto& pair: players) {
@@ -448,6 +451,20 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
 
 // ----------------- Pre-fill -----------------
 
+float Map::animationZoom(float targetZoom) {
+    float deltaTime = 0.0333f;  // Aproximadamente para simular 30 FPS
+    // diferencia entre el zoom actual y el zoom objetivo
+    float difference = targetZoom - currentZoom;
+
+    // Responsiveness adapta la velocidad del zoom según el cambio
+    float dynamicFactor = std::min(std::abs(difference) * (float)VELOCIDAD_DE_REACCION_ZOOM, 10.0f);
+    float newZoom = currentZoom + difference * dynamicFactor * deltaTime;
+
+    // Limitar el valor del zoom entre minZoom y maxZoom
+    return std::clamp(newZoom, (float)MIN_ZOOM, 1.0f);
+}
+
+
 SDL_Rect Map::adjustMapZoom() {
     SDL_Rect zoomRect;
     int max_x = 0;
@@ -469,17 +486,16 @@ SDL_Rect Map::adjustMapZoom() {
         }
     }
 
-    int MinZoomWhith = (int)(tiles * columnas / OFFSET_MIN_ZOOM);
-    int MinZoomHeight = (int)(tiles * filas / OFFSET_MIN_ZOOM);
-
-    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MinZoomWhith);
-    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MinZoomHeight);
+    int new_width = ((max_x - min_x) * PROPORCION_AÑADIDA);
+    int new_height = ((max_y - min_y) * PROPORCION_AÑADIDA);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
     float proportion_width = float(new_width) / float(width_window);
     float proportion_height = float(new_height) / float(height_window);
     float proportion = std::max(proportion_width, proportion_height);
+    proportion = animationZoom(proportion);
+    currentZoom = proportion;
 
     new_width = proportion * width_window;
     new_height = proportion * height_window;
