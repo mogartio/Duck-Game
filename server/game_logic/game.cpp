@@ -41,6 +41,11 @@ void Game::run() {
             std::string winner = game_loop->play_round(*current_stage, map);
             player_points[winner] = player_points[winner] + 1;
 
+            std::shared_ptr<GenericMsg> msg = std::make_shared<WinnerMsg>(winner);
+            for (auto id: *ids) {
+                senders.send_to_client(msg, id);
+            }
+
             delete current_stage;
         }
         for (auto& [name, points]: player_points) {

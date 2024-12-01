@@ -336,6 +336,23 @@ void Map::standing(std::unordered_map<std::string, bool> players_updated) {
     }
 }
 
+// ----------------- Points -----------------
+
+void Map::addPoints(std::string playerName) { playersPoints[playerName]++; }
+
+std::pair<std::string, std::string> Map::get_winner() {
+    int maxPoints = 0;
+    std::string winner;
+    for (const auto& pair: playersPoints) {
+        if (pair.second > maxPoints) {
+            maxPoints = pair.second;
+            winner = pair.first;
+        }
+    }
+    std::string color_path = players[winner]->get_file();
+    return std::pair(winner, color_path);
+}
+
 // ----------------- Weapon -----------------
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {

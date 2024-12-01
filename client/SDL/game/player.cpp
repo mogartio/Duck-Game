@@ -282,7 +282,8 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
     }
 }
 
-// ----------------- Get Position -----------------
+// ----------------- Getters/Setters -----------------
+
 
 std::pair<int, int> Player::getPosition() const {
     return duck->getPosition();
@@ -290,5 +291,9 @@ std::pair<int, int> Player::getPosition() const {
 
 void Player::set_tiles(uint tiles)  { 
     this->tiles = tiles; 
-};
+}
+
+std::string Player::get_file() const {
+    return file;
+}
 

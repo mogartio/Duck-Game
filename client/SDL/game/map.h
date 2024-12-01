@@ -41,6 +41,9 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Player>> players;
     std::list<std::string> playersNamesAlive;
 
+    // Puntos de los jugadores
+    std::unordered_map<std::string, int> playersPoints;
+
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
     // Posiciones de las armas
@@ -132,6 +135,10 @@ public:
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
+
+    // Winner
+    void addPoints(std::string winner);
+    std::pair<std::string, std::string> get_winner();
 
     SDL_Texture* getTextureMapWithAll() const;
 
