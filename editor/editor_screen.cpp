@@ -475,8 +475,10 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 painter.drawPixmap(itemRect, scaledTile);
             }
 
-            if (gridVisible) {
+            if (gridVisible && theme == static_cast<int>(GenericMsg::Theme::DAY)) {
                 painter.setPen(QPen(Qt::black, 1));
+            } else if (gridVisible && theme == static_cast<int>(GenericMsg::Theme::NIGHT)) {
+                painter.setPen(QPen(QColor("#707070"), 1));
             } else {
                 painter.setPen(QPen(Qt::transparent, 1));
             }

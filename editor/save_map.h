@@ -58,7 +58,8 @@
     The file will be placed in the folder maps/ with the name map_name.yaml
 */ 
 inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const std::string& map_name, int theme) {
-    const int padding = 12; // Padding size (6x6 tiles padding)
+    int x_padding = 12; // Padding size (6x6 tiles padding)
+    const int y_padding = 12;
     const std::string file_name = "maps/" + map_name + ".yaml";
 
     int editor_rows = editor_matrix.size();
@@ -68,12 +69,18 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     int map_columns = editor_columns * 6;
 
     // New dimensions with padding
-    int padded_rows = map_rows + 2 * padding;
-    int padded_columns = map_columns + 2 * padding;
+    int padded_rows = map_rows + 2 * y_padding;
+    int padded_columns = map_columns + 2 * x_padding;
 
     int theme_id = theme;
 
     // Initialize padded map_matrix with BG tiles
+    // std::vector<std::vector<int>> padded_map_matrix(padded_rows, std::vector<int>(padded_columns, BG));
+    if (editor_rows > editor_columns) {
+        padded_columns = map_columns + 2 * y_padding + (editor_rows - editor_columns) * 6;
+        x_padding += ((editor_rows - editor_columns) * 6)/2;
+    }
+
     std::vector<std::vector<int>> padded_map_matrix(padded_rows, std::vector<int>(padded_columns, BG));
 
     std::vector<std::tuple<int, int>> player_spawn_sites;
@@ -86,19 +93,19 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
 
             if (Id::players.find(cellValue) != Id::players.end()) {
                 // Player spawn site
-                player_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding);
+                player_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding);
 
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
-                weapon_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding, cellValue);
+                weapon_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding, cellValue);
             } else if (cellValue == Id::MYSTERY_BOX) {
                 // Mystery box spawn site
-                boxes_spawn_sites.emplace_back(j * 6 + padding, i * 6 + padding);
+                boxes_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding);
             }
             for (int x = 0; x < 6; ++x) {
                 for (int y = 0; y < 6; ++y) {
-                    int dest_row = i * 6 + y + padding;
-                    int dest_col = j * 6 + x + padding;
+                    int dest_row = i * 6 + y + y_padding;
+                    int dest_col = j * 6 + x + x_padding;
 
                     if (cellValue == Id::GRASS || cellValue == Id::ROCK) {
                         padded_map_matrix[dest_row][dest_col] = FLOOR;
@@ -124,7 +131,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << YAML::EndSeq;
     }
     out << YAML::EndSeq;
-    out << YAML::Key << "map_weapon_spAwn_sites" << YAML::Value << YAML::BeginSeq;
+    out << YAML::Key << "map_weapon_spawn_sites" << YAML::Value << YAML::BeginSeq;
     for (const auto& spawn : weapon_spawn_sites) {
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << std::get<2>(spawn) << YAML::EndSeq;
     }

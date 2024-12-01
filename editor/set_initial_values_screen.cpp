@@ -60,7 +60,8 @@ SetInitialValuesScreen::SetInitialValuesScreen() {
 
 
     // Draw "SET MAP DIMENSIONS. MAX 500x500" label
-    setMapDimensionsLabel = new QLabel("SET MAP DIMENSIONS \nMAX 75x75; MIN 3x3", this);
+    std::string map_dim_msg = "SET MAP DIMENSIONS \nMAX " + std::to_string(MAX_COLUMNS) + "x" + std::to_string(MAX_ROWS) + "; MIN 3x3";
+    setMapDimensionsLabel = new QLabel(QString::fromStdString(map_dim_msg), this);
     setMapDimensionsLabel->setStyleSheet("color: #ffffff; font-size: 36px;");
     setMapDimensionsLabel->setFont(*customFont);
     setMapDimensionsLabel->setGeometry(635, 525, 650, 60);
@@ -258,8 +259,7 @@ void SetInitialValuesScreen::onStartEditingButtonClicked() {
     int columns = columnsInput->text().toInt();
     int rows = rowsInput->text().toInt();
     // check if the values are numeric and within the range
-    std::cout << columns << " " << rows << std::endl;
-    if (columns >= 3 && rows >= 3 && columns <= 75 && rows <= 75) {
+    if (columns >= 3 && rows >= 3 && columns <= MAX_COLUMNS && rows <= MAX_ROWS) {
         // emit signal to send the values to the main window
         emit sendInitialValues(columns, rows, choosenTheme);
     }

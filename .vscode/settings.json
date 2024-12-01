@@ -99,7 +99,8 @@
         "qaction": "cpp",
         "qmessagebox": "cpp",
         "qfiledialog": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "qradiobutton": "cpp"
     },
     "makefile.configureOnOpen": false
 }

@@ -9,6 +9,7 @@
 #include <QGraphicsOpacityEffect>
 #include "set_initial_values_screen.h"
 #include "editor_screen.h"
+
 class EditorMainWindow : public QMainWindow {
     Q_OBJECT
 private:

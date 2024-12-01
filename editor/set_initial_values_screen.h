@@ -15,7 +15,8 @@
 #include <QFontDatabase>
 #include <QSound>
 #include <QRadioButton>
-
+#define MAX_COLUMNS 50
+#define MAX_ROWS 50
 class SetInitialValuesScreen : public QWidget {
     Q_OBJECT
 public:
