@@ -78,6 +78,8 @@ private:
 
     bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
+    void redifine_sizes();
+
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();
     void makeHelmet(ProjectilesId::ProjectileId helmet);
