@@ -235,6 +235,7 @@ void Game::play() {
                     case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                         // directa de que termino la partida y de q hay que mostrar la pantalla de
                         // fin
+                        running = false;
                         return;
 
                     default:
