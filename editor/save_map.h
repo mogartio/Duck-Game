@@ -124,7 +124,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << YAML::EndSeq;
     }
     out << YAML::EndSeq;
-    out << YAML::Key << "map_weapon_spawn_sites" << YAML::Value << YAML::BeginSeq;
+    out << YAML::Key << "map_weapon_spAwn_sites" << YAML::Value << YAML::BeginSeq;
     for (const auto& spawn : weapon_spawn_sites) {
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << std::get<2>(spawn) << YAML::EndSeq;
     }
