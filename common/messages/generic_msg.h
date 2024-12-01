@@ -338,8 +338,8 @@ public:
 
 class PickupDropMsg: public GenericMsg {
 private:
-    uint8_t item_id;
     std::string player_name;
+    uint16_t item_id;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -350,13 +350,13 @@ public:
 
     PickupDropMsg();
 
-    explicit PickupDropMsg(std::string player_name, uint8_t item_id);
+    explicit PickupDropMsg(std::string player_name, uint16_t item_id);
 
-    void set_item_id(uint8_t item_id);
+    void set_item_id(uint16_t item_id);
 
     void set_player_name(std::string player_name);
 
-    uint8_t get_item_id() const;
+    uint16_t get_item_id() const;
 
     std::string get_player_name() const;
 };
@@ -480,7 +480,8 @@ public:
 
     SendMapMsg();
 
-    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, uint8_t theme);
+    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas,
+                        uint8_t theme);
 
     void set_map(std::vector<uint16_t> map);
 
@@ -694,7 +695,7 @@ public:
 
 class StartRoundMsg: public GenericMsg {
 
-public: 
+public:
     StartRoundMsg();
 
     void accept_send(HandlerSender& handler) override;

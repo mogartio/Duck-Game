@@ -22,11 +22,12 @@ void Ak47::shoot(int x_direction, bool is_aiming_up) {
     stage.add_projectile(std::move(std::make_unique<Ak47Bullet>(
             gun_position, x_direction, -1, is_aiming_up, reach, bullets_shot)));
     ammo--;
-    if (bullets_shot % 4 == 0) {
-        player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
-    }
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
+    if (bullets_shot % 4 == 0) {
+        player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
     }
     bullets_shot++;
 }
@@ -35,8 +36,8 @@ void Ak47::stop_shooting() {
     bullets_shot = 0;
     stopped_pressing_since_picked = true;
 }
-void Ak47::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
-    Weapon::finish_throw(x_direction, true, weapon);
+void Ak47::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapon> weapon) {
+    Weapon::finish_throw(x_direction, thrown_up, weapon);
     stopped_pressing_since_picked = false;
 }
 
@@ -65,12 +66,13 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
                 gun_position, x_direction, -1, is_aiming_up, bullet_reach, init_deviation + 2,
                 deviation_direction)));
     }
-    ammo--;
     for (int i = 0; i < SHOTGUN_KNOCKBACK; i++) {
         player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
     }
+    ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     is_loaded = false;
     stopped_holding_trigger = false;
@@ -98,6 +100,7 @@ void Sniper::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     is_loaded = false;
     stopped_holding_trigger = false;

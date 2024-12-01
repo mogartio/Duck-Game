@@ -1,5 +1,5 @@
 player_falling_speed: 2
-player_jumping_height: 6
+player_jumping_height: 7
 armor_strength: 1
 
 explosion_counter: 120

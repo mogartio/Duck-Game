@@ -24,6 +24,7 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     stopped_holding_trigger = false;
 }
@@ -42,6 +43,7 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     stopped_holding_trigger = false;
 }
@@ -60,6 +62,7 @@ void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     stopped_holding_trigger = false;
 }

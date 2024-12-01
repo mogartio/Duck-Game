@@ -14,32 +14,33 @@ void Weapon::start_throw() {
         throw_reach += 3;
     }
 }
-void Weapon::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
+void Weapon::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapon> weapon) {
     Coordinate gun_position = get_gun_position(x_direction);
     throw_started = false;
     // TODO: deberia poder tirar la granada para arriba
     int speed = std::min(5, throw_reach / 10);
-    throw_reach = 30;
     stopped_holding_trigger = false;  // Esto es para que no dispare cuando se agarra
     stage.add_projectile(std::move(std::make_unique<ProjectileThrownWeapon>(
-            std::move(weapon), gun_position, speed, x_direction, throw_reach, id)));
+            std::move(weapon), gun_position, speed, x_direction, 80, id, thrown_up)));
 }
 
 // aim_direction en el eje x
 Coordinate Weapon::get_gun_position(int facing_direction) {
     Coordinate player_position = player->get_position();
     if (facing_direction == 1) {
-        return Coordinate(player_position.x + 6, player_position.y + 3);
+        return Coordinate(player_position.x + 7, player_position.y + 3);
     }
-    return Coordinate(player_position.x - 2, player_position.y + 3);
+    return Coordinate(player_position.x - 3, player_position.y + 3);
 }
 
 Unarmed::Unarmed(Stage& stage): Weapon(stage, 0, 3, 0) {}
 
 Coordinate Unarmed::get_gun_position(int facing_direction) {
-    Coordinate player_position = Weapon::get_gun_position(facing_direction);
-    player_position.y--;
-    return player_position;
+    Coordinate player_position = player->get_position();
+    if (facing_direction == 1) {
+        return Coordinate(player_position.x + 6, player_position.y + 2);
+    }
+    return Coordinate(player_position.x - 2, player_position.y + 2);
 }
 void Unarmed::shoot(int x_direction, bool) {
     // Se fija si existe un DroppedProjectile en la direccion en la que esta apuntando

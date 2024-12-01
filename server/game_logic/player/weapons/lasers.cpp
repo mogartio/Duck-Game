@@ -10,6 +10,7 @@ void PewLaser::shoot(int x_direction, bool is_aiming_up) {
         return;
     }
     Coordinate gun_position = get_gun_position(x_direction);
+    gun_position.y -= 2;  // se ve mejor en el render cuando esta un poco mas arriba
     int deviation = WeaponConfig::get_instance()->weapons["pewpew"]["deviation"];
     Coordinate position_below(gun_position.x, gun_position.y + 2);
 
@@ -24,6 +25,7 @@ void PewLaser::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     stopped_holding_trigger = false;
 }
@@ -35,8 +37,8 @@ LaserRifle::LaserRifle(Stage& stage):
                WeaponConfig::get_instance()->weapons["laser_rifle"]["reach"], LASER_RIFLE),
         stopped_pressing_since_picked(false) {}
 
-void LaserRifle::finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) {
-    Weapon::finish_throw(x_direction, true, weapon);
+void LaserRifle::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapon> weapon) {
+    Weapon::finish_throw(x_direction, thrown_up, weapon);
     stopped_pressing_since_picked = false;
 }
 void LaserRifle::stop_shooting() { stopped_pressing_since_picked = true; }
@@ -51,5 +53,6 @@ void LaserRifle::shoot(int x_direction, bool is_aiming_up) {
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
 }

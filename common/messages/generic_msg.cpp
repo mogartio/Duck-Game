@@ -179,13 +179,13 @@ void StartGameMsg::accept_read(HandlerReader& handler) { handler.handle_read(*th
 
 PickupDropMsg::PickupDropMsg():
         GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
-        item_id(0),
-        player_name("") {}
+        player_name(""),
+        item_id(0) {}
 
-PickupDropMsg::PickupDropMsg(std::string player_name, uint8_t item_id):
+PickupDropMsg::PickupDropMsg(std::string player_name, uint16_t item_id):
         GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
-        item_id(item_id),
-        player_name(player_name) {}
+        player_name(player_name),
+        item_id(item_id) {}
 
 void PickupDropMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -193,11 +193,11 @@ void PickupDropMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(
 
 void PickupDropMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-void PickupDropMsg::set_item_id(uint8_t item_id) { this->item_id = item_id; }
+void PickupDropMsg::set_item_id(uint16_t item_id) { this->item_id = item_id; }
 
 void PickupDropMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
-uint8_t PickupDropMsg::get_item_id() const { return item_id; }
+uint16_t PickupDropMsg::get_item_id() const { return item_id; }
 
 std::string PickupDropMsg::get_player_name() const { return player_name; }
 
@@ -292,13 +292,16 @@ void ErrorMsg::set_error_msg(std::string error_msg) { this->error_msg = error_ms
 std::string ErrorMsg::get_error_msg() const { return error_msg; }
 
 SendMapMsg::SendMapMsg():
-        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG), filas(0), columnas(0), theme(Theme::DAY) {}
+        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
+        filas(0),
+        columnas(0),
+        theme(Theme::DAY) {}
 
 SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, uint8_t theme):
         GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
         map(map),
         filas(filas),
-        columnas(columnas), 
+        columnas(columnas),
         theme(theme) {}
 
 void SendMapMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
