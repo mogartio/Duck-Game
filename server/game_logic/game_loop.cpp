@@ -48,9 +48,8 @@ void GameLoop::init_round(Stage& stage, Map& map) {
         alive_players.insert(name);
         stage.add_player(player, player->get_id());
     }
-    for (auto [name, player]: players) {  // I'll do it again
-        player->unarm_self();  // la sangre derramada por este doble loop pesara en la consciencia
-                               // de facu
+    for (auto [name, player]: players) {  // primero tuve que mandar todos los nombres
+        player->unarm_self();
     }
 }
 

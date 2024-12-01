@@ -59,7 +59,7 @@ void WeaponSpawnPoint::update() {
     }
     counter++;
     // el counter es despues de cuantas iteraciones va a tirar un arma de nuevo
-    if (counter == 300) {
+    if (counter == 30) {
         spawn_weapon();
         counter = 0;
         is_free = false;

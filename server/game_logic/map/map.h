@@ -29,7 +29,8 @@ private:
 public:
     Map(std::string new_map_name, int rows, int columns, std::vector<std::vector<int>> matrix,
         std::vector<Coordinate> players_spawn_sites,
-        std::vector<std::tuple<Coordinate, int>> items_spawn_sites, std::vector<Coordinate> boxes_spawn_sites, uint8_t theme):
+        std::vector<std::tuple<Coordinate, int>> items_spawn_sites,
+        std::vector<Coordinate> boxes_spawn_sites, uint8_t theme):
             name(new_map_name),
             rows(rows),
             columns(columns),
@@ -37,8 +38,7 @@ public:
             players_spawn_sites(players_spawn_sites),
             items_spawn_sites(items_spawn_sites),
             boxes_spawn_sites(boxes_spawn_sites),
-            theme(theme) {
-            }
+            theme(theme) {}
 
 
     /**

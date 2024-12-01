@@ -86,7 +86,6 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
             despawned = true;
             return;
         }
-        stage.break_box(next_position);
         if (!trail.empty()) {
             trail.pop_back();
         }

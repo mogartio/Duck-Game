@@ -5,9 +5,10 @@ MysteryBox::MysteryBox(Stage& stage, Coordinate position): stage(stage), pos(pos
     item = 0;
 }
 
-void MysteryBox::destroy_box() {
-    broken = true;
-
+std::shared_ptr<ProjectileDroppedWeapon> MysteryBox::destroy_box() {
+    if (broken) {
+        return nullptr;
+    }
     std::list<uint> items = {BANANA,  COWBOY_PISTOL, MAGNUM,        DUEL_PISTOL, AK_47,
                              SHOTGUN, SNIPER,        PEW_PEW_LASER, LASER_RIFLE, HELMET,
                              HELMET2, HELMET3,       CHEST,         EXPLOSION};
@@ -16,10 +17,12 @@ void MysteryBox::destroy_box() {
     std::advance(it, rand() % items.size());
     item = *it;
 
+    broken = true;
     if (item == EXPLOSION) {
         explode();
+        return nullptr;
     } else {
-        drop_weapon();
+        return drop_weapon();
     }
 }
 
@@ -30,7 +33,7 @@ void MysteryBox::explode() {
 }
 
 
-void MysteryBox::drop_weapon() {
+std::shared_ptr<ProjectileDroppedWeapon> MysteryBox::drop_weapon() {
     std::shared_ptr<Weapon> weapon;
     switch (item) {
         case BANANA:
@@ -73,6 +76,5 @@ void MysteryBox::drop_weapon() {
             break;
     }
 
-    stage.add_projectile(
-            std::make_unique<ProjectileDroppedWeapon>(weapon, pos, 4, 4000, item, nullptr));
+    return std::make_unique<ProjectileDroppedWeapon>(weapon, pos, 4, 4000, item, nullptr);
 }

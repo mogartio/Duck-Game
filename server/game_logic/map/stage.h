@@ -21,6 +21,7 @@ private:
     Map map;
     void printStage();
     std::vector<std::shared_ptr<Projectile>> projectiles;
+    std::vector<std::shared_ptr<Projectile>> new_weapons;
     std::vector<std::tuple<Coordinate, int>> explosions;
     std::vector<Coordinate> coordinates_to_delete;
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
@@ -31,6 +32,7 @@ private:
                             bool& keep_going_horizontally);
     std::shared_ptr<Projectile> find_projectile_in(Coordinate init_position, int size);
     std::shared_ptr<MysteryBox> find_box_in(Coordinate init_position, int size);
+    void remove_box(std::shared_ptr<MysteryBox>& box);
 
 public:
     // Son es para poder mockear la clase mas facilmente

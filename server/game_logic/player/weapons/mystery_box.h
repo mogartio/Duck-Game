@@ -38,7 +38,7 @@ public:
      * If the item is an explosion, it will set an explosion in the position.
      * If the item is a weapon, it will spawn the weapon.
      */
-    void destroy_box();
+    std::shared_ptr<ProjectileDroppedWeapon> destroy_box();
 
     Coordinate get_position() { return pos; }
 
@@ -46,7 +46,7 @@ public:
      * This method is called when the mystery box drops a weapon.
      * It will spawn the weapon in the position of the mystery box.
      */
-    void drop_weapon();
+    std::shared_ptr<ProjectileDroppedWeapon> drop_weapon();
 
     /*
      * This method is called when the mystery box drops an explosion.
