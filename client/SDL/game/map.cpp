@@ -174,7 +174,7 @@ void Map::makeBoxes() {
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
-        box->defineSize(3 * tiles, 3 * tiles);
+        box->defineSize(4 * tiles, 4 * tiles);
         boxes.push_back(box);
     }
 }
