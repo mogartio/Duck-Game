@@ -43,10 +43,14 @@ void GameLoop::init_round(Stage& stage, Map& map) {
         stage.add_box(std::make_shared<MysteryBox>(stage, box_position));
     }
 
+    std::vector<Coordinate> player_spawns = map.get_players_spawn_sites();
+    int i = 0;
     for (auto [name, player]: players) {
-        player->init_for_stage(&stage);
+        Coordinate spawn = player_spawns[i]; 
+        player->init_for_stage(&stage, spawn);
         alive_players.insert(name);
         stage.add_player(player, player->get_id());
+        i++;
     }
     for (auto [name, player]: players) {  // primero tuve que mandar todos los nombres
         player->unarm_self();
