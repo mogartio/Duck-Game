@@ -456,9 +456,9 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
 float Map::animationZoom(float targetZoom) {
     float deltaTime = getDeltaTime();
     float difference = targetZoom - currentZoom;
-if (difference > 0) {  // Zoom out
-    difference *= 1.5f;  // Factor adicional para alejar más rápido
-}
+    if (difference > 0) {  // Zoom out
+        difference *= 1.5f;  // Factor adicional para alejar más rápido
+    }
 
     // Ajusta el factor dinámico con una interpolación más lenta
     float smoothFactor = std::clamp(static_cast<float>(std::abs(difference) * VELOCIDAD_DE_REACCION_ZOOM), 0.05f, 20.0f);
@@ -504,9 +504,9 @@ SDL_Rect Map::adjustMapZoom() {
 }
 
 float Map::getDeltaTime() {
-    static Uint32 lastTime = SDL_GetTicks();
-    Uint32 currentTime = SDL_GetTicks();
-    float deltaTime = (currentTime - lastTime) / 1000.0f;
+    static Uint32 lastTime = SDL_GetPerformanceCounter();
+    Uint32 currentTime = SDL_GetPerformanceCounter();
+    float deltaTime = static_cast<float>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
     lastTime = currentTime;
     return deltaTime;
 }
