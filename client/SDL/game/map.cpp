@@ -1,11 +1,12 @@
 #include "map.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
-#define PROPORCION_AÑADIDA 1.5
-#define VELOCIDAD_DE_REACCION_ZOOM 3.0
-#define MIN_ZOOM 0.5
+#define PROPORCION_AÑADIDA 1.8
+#define VELOCIDAD_DE_REACCION_ZOOM 5.0
+#define MIN_ZOOM 0.75
 #define TILES_PATIÑOS 6
 
 
@@ -173,7 +174,7 @@ void Map::makeBoxes() {
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
-        box->defineSize(3 * tiles, 3 * tiles);
+        box->defineSize(4 * tiles, 4 * tiles);
         boxes.push_back(box);
     }
 }
@@ -451,72 +452,63 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
 
 // ----------------- Pre-fill -----------------
 
+// Ajusta el zoom de manera más conservadora
 float Map::animationZoom(float targetZoom) {
-    float deltaTime = 0.0333f;  // Aproximadamente para simular 30 FPS
-    // diferencia entre el zoom actual y el zoom objetivo
+    float deltaTime = getDeltaTime();
     float difference = targetZoom - currentZoom;
+    if (difference > 0) {  // Zoom out
+        difference *= 1.5f;  // Factor adicional para alejar más rápido
+    }
 
-    // Responsiveness adapta la velocidad del zoom según el cambio
-    float dynamicFactor = std::min(std::abs(difference) * (float)VELOCIDAD_DE_REACCION_ZOOM, 10.0f);
-    float newZoom = currentZoom + difference * dynamicFactor * deltaTime;
+    // Ajusta el factor dinámico con una interpolación más lenta
+    float smoothFactor = std::clamp(static_cast<float>(std::abs(difference) * VELOCIDAD_DE_REACCION_ZOOM), 0.05f, 20.0f);
+    float newZoom = currentZoom + difference * smoothFactor * deltaTime;
 
-    // Limitar el valor del zoom entre minZoom y maxZoom
-    return std::clamp(newZoom, (float)MIN_ZOOM, 1.0f);
+    // Limitar el valor del zoom entre el nuevo mínimo y 1.0f
+    return std::clamp(static_cast<double>(newZoom), MIN_ZOOM, 1.0);
 }
-
 
 SDL_Rect Map::adjustMapZoom() {
     SDL_Rect zoomRect;
-    int max_x = 0;
-    int max_y = 0;
-    int min_x = 0;
-    int min_y = 0;
-    for (const auto& pair: players) {
-        std::pair<int, int> position = pair.second->getPosition();
-        // seteamos los valores maximos de x e y
-        max_x < position.first ? max_x = position.first + TILES_PATIÑOS * tiles : max_x;
-        max_y < position.second ? max_y = position.second + TILES_PATIÑOS * tiles : max_y;
+    int max_x = 0, max_y = 0, min_x = 0, min_y = 0;
 
-        // seteamos los valores minimos de x e y
-        if (position.first < min_x || min_x == 0) {
-            min_x = position.first;
-        }
-        if (position.second < min_y || min_y == 0) {
-            min_y = position.second;
-        }
+    for (const auto& pair : players) {
+        auto position = pair.second->getPosition();
+        max_x = std::max(max_x, static_cast<int>(position.first + TILES_PATIÑOS * tiles));
+        max_y = std::max(max_y, static_cast<int>(position.second + TILES_PATIÑOS * tiles));
+        min_x = (min_x == 0 || position.first < min_x) ? position.first : min_x;
+        min_y = (min_y == 0 || position.second < min_y) ? position.second : min_y;
     }
 
-    int new_width = ((max_x - min_x) * PROPORCION_AÑADIDA);
-    int new_height = ((max_y - min_y) * PROPORCION_AÑADIDA);
+    int new_width = static_cast<int>((max_x - min_x) * PROPORCION_AÑADIDA);
+    int new_height = static_cast<int>((max_y - min_y) * PROPORCION_AÑADIDA);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
-    float proportion_width = float(new_width) / float(width_window);
-    float proportion_height = float(new_height) / float(height_window);
-    float proportion = std::max(proportion_width, proportion_height);
-    proportion = animationZoom(proportion);
-    currentZoom = proportion;
+    // Ajustar la proporción del zoom
+    float proportion_width = static_cast<float>(new_width) / width_window;
+    float proportion_height = static_cast<float>(new_height) / height_window;
+    float targetProportion = std::max(proportion_width, proportion_height);
+    currentZoom = animationZoom(targetProportion);
 
-    new_width = proportion * width_window;
-    new_height = proportion * height_window;
+    // Calcular las dimensiones finales
+    new_width = static_cast<int>(currentZoom * width_window);
+    new_height = static_cast<int>(currentZoom * height_window);
 
-    if ((centro_x - new_width / 2) < 0) {
-        centro_x = new_width / 2;
-    } else if ((centro_x + new_width / 2) > (int)width_window) {
-        centro_x = width_window - new_width / 2;
-    }
+    // Centrar el área, evitando movimientos bruscos
+    centro_x = std::clamp(centro_x, new_width / 2, static_cast<int>(width_window) - new_width / 2);
+    centro_y = std::clamp(centro_y, new_height / 2, static_cast<int>(height_window) - new_height / 2);
 
-    if ((centro_y - new_height / 2) < 0) {
-        centro_y = new_height / 2;
-    } else if ((centro_y + new_height / 2) > (int)height_window) {
-        centro_y = height_window - new_height / 2;
-    }
-
-    min_x = centro_x - new_width / 2;
-    min_y = centro_y - new_height / 2;
-
-    zoomRect = {min_x, min_y, new_width, new_height};
+    zoomRect = {centro_x - new_width / 2, centro_y - new_height / 2, new_width, new_height};
     return zoomRect;
+}
+
+float Map::getDeltaTime() {
+    static Uint32 lastTime = SDL_GetPerformanceCounter();
+    Uint32 currentTime = SDL_GetPerformanceCounter();
+    float deltaTime = static_cast<float>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
+    lastTime = currentTime;
+    return deltaTime;
 }
 
 // ----------------- Fill -----------------

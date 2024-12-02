@@ -13,7 +13,7 @@
 #define FLOOR 1
 #define BACKGROUND 0
 #define PLAYER_SIZE 6
-#define BOX_SIZE 2
+#define BOX_SIZE 4
 #define LEFT "a"
 #define RIGHT "d"
 #define UP "w"
