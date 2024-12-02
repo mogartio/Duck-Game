@@ -98,7 +98,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
                 if (cellValue == Id::MYSTERY_BOX) {
-                    boxes_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding);
+                    boxes_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding+2);
                 } else {
                     weapon_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding, cellValue);
                 }

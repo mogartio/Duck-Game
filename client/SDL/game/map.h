@@ -93,7 +93,7 @@ private:
     void makeBoxes();
 
     float animationZoom(float targetZoom);
-
+    float getDeltaTime();
     SDL_Rect adjustMapZoom();
 
 
