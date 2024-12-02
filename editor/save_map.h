@@ -97,10 +97,11 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
 
             } else if (Id::weapons.find(cellValue) != Id::weapons.end()) {
                 // Weapon or armor spawn site
-                weapon_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding, cellValue);
-            } else if (cellValue == Id::MYSTERY_BOX) {
-                // Mystery box spawn site
-                boxes_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding);
+                if (cellValue == Id::MYSTERY_BOX) {
+                    boxes_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding);
+                } else {
+                    weapon_spawn_sites.emplace_back(j * 6 + x_padding, i * 6 + y_padding, cellValue);
+                }
             }
             for (int x = 0; x < 6; ++x) {
                 for (int y = 0; y < 6; ++y) {
@@ -138,6 +139,7 @@ inline void saveMap(const std::vector<std::vector<int>>& editor_matrix, const st
     out << YAML::EndSeq;
     out << YAML::Key << "map_boxes_spawn_sites" << YAML::Value << YAML::BeginSeq;
     for (const auto& spawn : boxes_spawn_sites) {
+        std::cout << std::get<0>(spawn) << " " << std::get<1>(spawn) << std::endl;
         out << YAML::Flow << YAML::BeginSeq << std::get<0>(spawn) << std::get<1>(spawn) << YAML::EndSeq;
     }
     out << YAML::EndSeq;
