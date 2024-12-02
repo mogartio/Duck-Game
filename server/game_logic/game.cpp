@@ -48,7 +48,7 @@ void Game::run() {
             delete current_stage;
         }
         for (auto& [name, points]: player_points) {
-            if (points >= 5) {
+            if (points >= 7) {
                 game_over = true;
             }
         }

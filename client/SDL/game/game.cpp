@@ -9,7 +9,8 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
         running(true),
         event_handler(queueSend, playerName1, running, playerName2),
         musicHandler(nullptr),
-        winnerScreen(nullptr) {
+        winnerScreen(nullptr),
+        pointsScreen(nullptr) {
 
     // Inicializo SDL con todo (no recomendado, se puede cambiar para lo que se necesite)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
@@ -55,6 +56,9 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     // Creo la pantalla de carga
     loadingScreen =
             std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+
+    // Creo la pantalla de puntos
+    pointsScreen = std::make_unique<PointsScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 
         // Creo la pantalla de fin
     winnerScreen = std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
@@ -124,6 +128,8 @@ void Game::play() {
     std::string player_name;
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
+
+    int round = 0;
 
     // musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
     // musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
@@ -205,7 +211,9 @@ void Game::play() {
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                        round++;
                         loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
+
                         newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
                         if (newMap) {
                             mapa = newMap->get_map();
@@ -219,8 +227,14 @@ void Game::play() {
                             map.makeMap(columnas, filas, mapa);
                             map.fill();
                         }
-                        loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
-                                                    // vea tan feo el cambio de mapa
+
+                        if (round % 5 == 0) {
+                            pointsScreen->show(6000, map.getPoints());
+                        } else {
+                            loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
+                                                        // vea tan feo el cambio de mapa
+                        }
+
                         loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
                         break;
 
