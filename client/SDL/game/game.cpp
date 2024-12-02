@@ -129,139 +129,152 @@ void Game::play() {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
 
-        std::shared_ptr<GenericMsg> msj;
+        int frames_to_process = elapsed_time / frame_rate;
 
-        for (int i = 0; i < 15; i++) {
-            if (queueRecive.try_pop(msj)) {
-                std::shared_ptr<UpdatedPlayerInfoMsg> player = nullptr;
-                uint8_t state = 0;
+        while (frames_to_process > 0) {
+            frames_to_process--;
+            std::shared_ptr<GenericMsg> msj;
 
-                std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
-                std::shared_ptr<NotProyectileInfo> not_projectile = nullptr;
-                std::pair<uint8_t, uint8_t> position_x_y;
-                uint8_t pos_x, pos_y, item = 0;
-                std::vector<std::pair<uint8_t, uint8_t>> trail;
+            for (int i = 0; i < 50; i++) {
+                if (queueRecive.try_pop(msj)) {
+                    std::shared_ptr<UpdatedPlayerInfoMsg> player = nullptr;
+                    uint8_t state = 0;
 
-                std::shared_ptr<PickupDropMsg> pickup_drop = nullptr;
-                uint8_t item_id = 0;
+                    std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
+                    std::shared_ptr<NotProyectileInfo> not_projectile = nullptr;
+                    std::pair<uint8_t, uint8_t> position_x_y;
+                    uint8_t pos_x, pos_y, item = 0;
+                    std::vector<std::pair<uint8_t, uint8_t>> trail;
 
-                std::shared_ptr<SendMapMsg> newMap = nullptr;
-                std::vector<uint16_t> mapa;
-                uint16_t filas;
-                uint16_t columnas;
-                uint theme;
+                    std::shared_ptr<PickupDropMsg> pickup_drop = nullptr;
+                    uint8_t item_id = 0;
 
-                switch (msj->get_header()) {
-                    case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
-                        player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
-                        if (player) {
-                            player_name = player->get_player_name();
-                            position = player->get_position();
-                            state = player->get_state();
-                            facing_direction = player->get_facing_direction();
-                            map.update(player_name, position.first, position.second,
-                                       DuckState(state), Side(facing_direction - 1));
-                            stated_palying = true;
-                            if (DuckState(state) == DuckState::PLAY_DEAD) {
-                                players_updated[player_name] = true;
-                            } else {
-                                players_updated[player_name] = false;
+                    std::shared_ptr<SendMapMsg> newMap = nullptr;
+                    std::vector<uint16_t> mapa;
+                    uint16_t filas;
+                    uint16_t columnas;
+                    uint theme;
+
+                    switch (msj->get_header()) {
+                        case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
+                            player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
+                            if (player) {
+                                player_name = player->get_player_name();
+                                position = player->get_position();
+                                state = player->get_state();
+                                facing_direction = player->get_facing_direction();
+                                map.update(player_name, position.first, position.second,
+                                        DuckState(state), Side(facing_direction - 1));
+                                stated_palying = true;
+                                if (DuckState(state) == DuckState::PLAY_DEAD) {
+                                    players_updated[player_name] = true;
+                                } else {
+                                    players_updated[player_name] = false;
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
-                        pickup_drop = std::dynamic_pointer_cast<PickupDropMsg>(msj);
-                        if (pickup_drop) {
-                            player_name = pickup_drop->get_player_name();
-                            item_id = pickup_drop->get_item_id();
-                            map.weaponPlayer(ProjectilesId::ProjectileId(item_id), player_name);
-                        }
-                        break;
+                        case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
+                            pickup_drop = std::dynamic_pointer_cast<PickupDropMsg>(msj);
+                            if (pickup_drop) {
+                                player_name = pickup_drop->get_player_name();
+                                item_id = pickup_drop->get_item_id();
+                                map.weaponPlayer(ProjectilesId::ProjectileId(item_id), player_name);
+                            }
+                            break;
 
-                    case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
-                        projectile = std::dynamic_pointer_cast<ProjectileInfoMsg>(msj);
-                        if (projectile) {
-                            pos_x = projectile->get_pos_x();
-                            pos_y = projectile->get_pos_y();
-                            item = projectile->get_item();
-                            trail = projectile->get_trail();  // para el laser
-                            // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                            //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
-                            //     trail);
-                            // } else {
-                            map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
-                            // }
-                        }
-                        break;
-                    case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
-                        not_projectile = std::dynamic_pointer_cast<NotProyectileInfo>(msj);
-                        if (not_projectile) {
-                            position_x_y = not_projectile->get_position_x_y();
-                            item = not_projectile->get_item();
-                            map.removeWeapon(position_x_y.first, position_x_y.second,
-                                             ProjectilesId::ProjectileId(item));
-                        }
-                        break;
+                        case GenericMsg::MsgTypeHeader::PROJECTILE_INFO_MSG:
+                            projectile = std::dynamic_pointer_cast<ProjectileInfoMsg>(msj);
+                            if (projectile) {
+                                pos_x = projectile->get_pos_x();
+                                pos_y = projectile->get_pos_y();
+                                item = projectile->get_item();
+                                trail = projectile->get_trail();  // para el laser
+                                // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
+                                //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                                //     trail);
+                                // } else {
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
+                                // }
+                            }
+                            break;
+                        case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
+                            not_projectile = std::dynamic_pointer_cast<NotProyectileInfo>(msj);
+                            if (not_projectile) {
+                                position_x_y = not_projectile->get_position_x_y();
+                                item = not_projectile->get_item();
+                                map.removeWeapon(position_x_y.first, position_x_y.second,
+                                                ProjectilesId::ProjectileId(item));
+                            }
+                            break;
 
-                    case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
-                        event_handler.block();
-                        loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
-                        newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
-                        if (newMap) {
-                            mapa = newMap->get_map();
-                            filas = newMap->get_filas();
-                            columnas = newMap->get_columnas();
-                            theme = newMap->get_theme();
+                        case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                            event_handler.block();
+                            loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
+                            newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
+                            if (newMap) {
+                                mapa = newMap->get_map();
+                                filas = newMap->get_filas();
+                                columnas = newMap->get_columnas();
+                                theme = newMap->get_theme();
 
-                            tiles_w = displayBounds.w / columnas;
-                            tiles_h = displayBounds.h / filas;
-                            tiles = std::min(tiles_w, tiles_h);
-                            map.setTheme(theme);
-                            map.makeMap(columnas, filas, mapa);
-                            map.fill();
-                        }
-                        loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
-                                                    // vea tan feo el cambio de mapa
-                        loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
-                        event_handler.unblock();
-                        break;
+                                tiles_w = displayBounds.w / columnas;
+                                tiles_h = displayBounds.h / filas;
+                                tiles = std::min(tiles_w, tiles_h);
+                                map.setTheme(theme);
+                                map.makeMap(columnas, filas, mapa);
+                                map.fill();
+                            }
+                            loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
+                                                        // vea tan feo el cambio de mapa
+                            loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
+                            event_handler.unblock();
+                            break;
 
-                    /*
-                    case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
-                        player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
-                        if (player) {
-                            player_name = player->get_player_name();
-                            map.remove(player_name);
-                        }
-                        break;
-                    */
-                    case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
-                        // directa de que termino la partida y de q hay que mostrar la pantalla de
-                        // fin
-                        running = false;
-                        return;
+                        /*
+                        case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
+                            player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
+                            if (player) {
+                                player_name = player->get_player_name();
+                                map.remove(player_name);
+                            }
+                            break;
+                        */
+                        case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
+                            // directa de que termino la partida y de q hay que mostrar la pantalla de
+                            // fin
+                            running = false;
+                            return;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             }
+
+
+
+            // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
+            if (frames_to_process == 0) {
+                win->clear();
+                map.fill();
+                win->fill();
+            }
+
+            if (stated_palying) {
+                map.standing(players_updated);
+            }
+
+            last_frame_time += frame_rate;  // Ajusta el tiempo del último frame
         }
 
-        // Renderiza los objetos en la ventana
-        if (elapsed_time >= frame_rate) {
-            win->clear();
-            map.fill();
-            win->fill();
-            last_frame_time = current_time;
-        }
+        // Controla el tiempo para alcanzar los 30 FPS
+        Uint32 frame_end_time = SDL_GetTicks();
+        int delay_time = frame_rate - (frame_end_time - current_time);
 
-        if (stated_palying) {
-            map.standing(players_updated);
+        if (delay_time > 0) {
+            SDL_Delay(delay_time);
         }
-
-        // Controla la frecuencia de cuadros por segundo (FPS)
-        SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
     }
 }
 
