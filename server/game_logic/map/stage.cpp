@@ -265,7 +265,7 @@ void Stage::add_box(std::shared_ptr<MysteryBox> box) {
     boxes.push_back(box);
 }
 void Stage::break_box(Coordinate position) {
-    std::shared_ptr<MysteryBox> box = find_box_in(position, 3);
+    std::shared_ptr<MysteryBox> box = find_box_in(position, BOX_SIZE);
     if (box) {
         Coordinate box_position = box->get_position();
         std::shared_ptr<ProjectileDroppedWeapon> new_weapon = box->destroy_box();
