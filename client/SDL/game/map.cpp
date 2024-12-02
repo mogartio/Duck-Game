@@ -167,10 +167,7 @@ void Map::makeTile(TileType tileType) {
 void Map::makeBoxes() {
     // Creo cajas
     for (int i = 1; i <= 8; i++) {
-        std::string path = "assets/game_assets/box/";
-        path += std::to_string(i);
-        path += ".png";
-
+        std::string path = "assets/game_assets/box/1.png";
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
