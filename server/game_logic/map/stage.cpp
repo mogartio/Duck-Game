@@ -157,6 +157,18 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     return true;
 }
 
+bool Stage::should_fall(Coordinate init_position, int size) {
+    Coordinate bottom_pos(init_position.x, init_position.y + size);
+    for (int i = 0; i < size; i++) {
+        Coordinate aux(bottom_pos.x + i, bottom_pos.y);
+        if (map.get(aux) != Config::get_instance()->mapsId["background"] && map.get(aux) != -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 std::set<int> Stage::things_projectile_hits(Coordinate position, int size) {
     std::set<int>* things_it_hits = new std::set<int>();
     for (int i = 0; i < size; i++) {

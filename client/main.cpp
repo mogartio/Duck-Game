@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
     // inicializadores
     Queue<std::shared_ptr<GenericMsg>> send_queue(100);
     Queue<std::shared_ptr<GenericMsg>> recv_queue(100);
-    std::string first_player = "Pepio";
-    std::string second_player = "Madre mia";
+    std::string first_player = "Jugador0";
+    std::string second_player = "Player1";
     Client* client = nullptr;
     std::list<std::string>* local_players = new std::list<std::string>();
 
