@@ -47,7 +47,7 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
         } else if (direction == JUMP) {
             air_state->jump(*this);
 
-        } else if (direction == PLAY_DEAD) {
+        } else if (direction == PLAY_DEAD && state == GROUNDED) {
             set_state(std::make_unique<PlayingDead>(), PLAYING_DEAD);
             let_movment = false;
 
