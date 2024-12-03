@@ -15,9 +15,6 @@ void Weapon::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapo
     if (x_direction == 1) {
         gun_position.x = player_position.x + 6;
     }
-    if (thrown_up) {
-        gun_position.y = player_position.y - 1;
-    }
     throw_started = false;
     int speed = Config::get_instance()->throw_speed;
     throw_reach = 0;
