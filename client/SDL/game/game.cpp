@@ -133,9 +133,11 @@ void Game::play() {
     uint8_t facing_direction = 1;
 
     int round = 0;
-  
-    musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
-    musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
+    musicHandler->playThatMusic(MusicHandler::Music::PAUSE,
+                                -1);  // Reproduce la musica de fondo en bucle infinito
+    musicHandler->setThatVolume(MusicHandler::Music::PAUSE,
+                                10);  // Setea el volumen de la musica de fondo
+
     event_handler.unblock();
     while (running) {
         Uint32 current_time = SDL_GetTicks();
@@ -155,7 +157,7 @@ void Game::play() {
                     std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
                     std::shared_ptr<NotProyectileInfo> not_projectile = nullptr;
                     std::pair<uint8_t, uint8_t> position_x_y;
-                    uint8_t pos_x, pos_y, item = 0;
+                    uint8_t pos_x, pos_y, item, facing_direction_first, facing_direction_second = 0;
                     std::vector<std::pair<uint8_t, uint8_t>> trail;
 
                     std::shared_ptr<PickupDropMsg> pickup_drop = nullptr;
@@ -178,7 +180,7 @@ void Game::play() {
                                 state = player->get_state();
                                 facing_direction = player->get_facing_direction();
                                 map.update(player_name, position.first, position.second,
-                                        DuckState(state), Side(facing_direction - 1));
+                                           DuckState(state), Side(facing_direction - 1));
                                 stated_palying = true;
                                 if (DuckState(state) == DuckState::PLAY_DEAD) {
                                     players_updated[player_name] = true;
@@ -203,12 +205,11 @@ void Game::play() {
                                 pos_y = projectile->get_pos_y();
                                 item = projectile->get_item();
                                 trail = projectile->get_trail();  // para el laser
-                                // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                                //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
-                                //     trail);
-                                // } else {
-                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
-                                // }
+                                facing_direction_first = projectile->get_facing_direction_first();
+                                facing_direction_second = projectile->get_facing_direction_second();
+
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                                              facing_direction_first, facing_direction_second);
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
@@ -217,7 +218,7 @@ void Game::play() {
                                 position_x_y = not_projectile->get_position_x_y();
                                 item = not_projectile->get_item();
                                 map.removeWeapon(position_x_y.first, position_x_y.second,
-                                                ProjectilesId::ProjectileId(item));
+                                                 ProjectilesId::ProjectileId(item));
                             }
                             break;
 
@@ -259,8 +260,8 @@ void Game::play() {
                             break;
 
                         case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
-                            // directa de que termino la partida y de q hay que mostrar la pantalla de
-                            // fin
+                            // directa de que termino la partida y de q hay que mostrar la pantalla
+                            // de fin
                             running = false;
 
                         default:
@@ -270,7 +271,8 @@ void Game::play() {
                 }
 
             }
-            // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
+
+          // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
             if (frames_to_process == 0) {
                 win->clear();
                 map.fill();

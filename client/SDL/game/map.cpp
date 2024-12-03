@@ -167,11 +167,14 @@ void Map::makeTile(TileType tileType) {
 void Map::makeBoxes() {
     // Creo cajas
     for (int i = 1; i <= 8; i++) {
-        std::string path = "assets/game_assets/box/1.png";
+        std::string path = "assets/game_assets/box/";
+        path += std::to_string(i);
+        path += ".png";
+
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
-        box->defineSize(4 * tiles, 4 * tiles);
+        box->defineSize(3 * tiles, 3 * tiles);
         boxes.push_back(box);
     }
 }
@@ -360,7 +363,9 @@ std::unordered_map<std::string, int> Map::getPoints() { return playersPoints; }
 
 // ----------------- Weapon -----------------
 
-void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
+void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, int facing_direction_first,
+                    int facing_direction_second) {
+    
     if (id == ProjectilesId::ProjectileId::EXPLOSION) {
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
@@ -370,7 +375,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         newHelmet(x, y, id);
     } else {
-        weaponsMap[id].push_back(std::pair(x, y));
+        weaponsMap[id] = WeaponData(x, y, facing_direction_first, facing_direction_second);
     }
 }
 
@@ -426,30 +431,47 @@ void Map::explosion(int x, int y) {
 
 // ----------------- Box -----------------
 
-void Map::newBox(int x, int y) { boxesPos.push_back(std::pair(x, y)); }
+void Map::newBox(int x, int y) { 
+    // Color de caja al azar
+    int box = rand() % 8;
+    boxesPos.push_back(std::pair(box, std::pair(x, y)));
+}
 
 // ----------------- Remove -----------------
 
 void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
+
+    std::pair<int, int> position = std::pair(x, y);
+
     if (id == ProjectilesId::ProjectileId::CHEST) {
-        armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)),
+        armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), position),
                        armorMap.end());
 
     } else if (id == ProjectilesId::ProjectileId::MYSTERY_BOX) {
-        boxesPos.erase(std::remove(boxesPos.begin(), boxesPos.end(), std::pair(x, y)),
-                       boxesPos.end());
+        boxesPos.erase(
+            std::remove_if(
+                boxesPos.begin(),
+                boxesPos.end(),
+                [&position](const std::pair<int, std::pair<int, int>>& box) {
+                    return box.second == position; // Compara con el segundo pair
+                }),
+            boxesPos.end());
 
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         helmetsPos[id].erase(
-                std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), std::pair(x, y)),
+                std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), position),
                 helmetsPos[id].end());
 
     } else {
-        weaponsMap[id].erase(
-                std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)),
-                weaponsMap[id].end());
+        for (auto it = weaponsMap.begin(); it != weaponsMap.end(); ++it) {
+            if (it->second.pos_x == x && it->second.pos_y == y) {
+                weaponsMap.erase(it);
+                return;
+            }
+        }
     }
 }
+
 
 // ----------------- Pre-fill -----------------
 
@@ -514,6 +536,34 @@ float Map::getDeltaTime() {
 
 // ----------------- Fill -----------------
 
+int condicionAnguloBalas(int facing_direction_first, int facing_direction_second) {
+    if (facing_direction_first == 0) {
+        if (facing_direction_second == 1) {
+            return 90;
+        } else if (facing_direction_second == 2) {
+            return 270;
+        }
+    } else if (facing_direction_first == 1) {
+        if (facing_direction_second == 0) {
+            return 0;
+        } else if (facing_direction_second == 1) {
+            return 45;
+        } else if (facing_direction_second == 2) {
+            return 315;
+        }
+    } else if (facing_direction_first == 2) {
+        if (facing_direction_second == 0) {
+            return 180;
+        } else if (facing_direction_second == 1) {
+            return 135;
+        } else if (facing_direction_second == 2) {
+            return 225;
+        }
+    }
+
+    return 0;
+}
+
 void Map::fill() {  // Dibuja de atras para adelante
 
     // Cambiamos el render target al parentTexture
@@ -577,19 +627,20 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     // Weapons
     for (const auto& pair: weaponsMap) {
-        for (const auto& weapon: pair.second) {
-            weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
-            weapons[pair.first]->fill(SDL_FLIP_NONE);
-        }
+        const WeaponData& weaponData = pair.second;
+
+        weapons[pair.first]->position(weaponData.pos_x * tiles, weaponData.pos_y * tiles);
+
+        int angle = condicionAnguloBalas(weaponData.facing_direction_first,
+                                         weaponData.facing_direction_second);
+
+        weapons[pair.first]->fill(angle, SDL_FLIP_NONE);
     }
 
     // Boxes
     for (std::pair boxPos: boxesPos) {
-        // Elegimos una caja al azar
-        int box = rand() % 8;
-
-        boxes[box]->position(boxPos.first * tiles, boxPos.second * tiles);
-        boxes[box]->fill();
+        boxes[boxPos.first]->position(boxPos.second.first * tiles, boxPos.second.second * tiles);
+        boxes[boxPos.first]->fill();
     }
 
     // Players
