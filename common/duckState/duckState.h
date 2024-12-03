@@ -6,7 +6,7 @@ namespace statesId {
     enum { STANDING, WALK, JUMP, FALL, SLOW_FALL, PLAY_DEAD };
 }
 
-enum class DuckState { STANDING, WALK, JUMP, FALL, SLOW_FALL, PLAY_DEAD };
+enum class DuckState { STANDING, WALK, JUMP, FALL, SLOW_FALL, PLAY_DEAD, DEAD };
 
 std::string duckState_to_string(DuckState state);  // Declaración
 

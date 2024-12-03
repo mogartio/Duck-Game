@@ -345,6 +345,10 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
 void Map::remove(std::string playerName) { playersNamesAlive.remove(playerName); }
 
 void Map::update(std::string player, int x, int y, DuckState state, Side side) {
+    if (state == DuckState::DEAD) {
+        playersNamesAlive.remove(player);
+        return;
+    }
     players[player]->update(x * tiles, y * tiles, state, side);
 }
 
@@ -514,8 +518,8 @@ SDL_Rect Map::adjustMapZoom() {
     SDL_Rect zoomRect;
     int max_x = 0, max_y = 0, min_x = 0, min_y = 0;
 
-    for (const auto& pair : players) {
-        auto position = pair.second->getPosition();
+    for (std::string name : playersNamesAlive) {
+        auto position = players[name]->getPosition();
         max_x = std::max(max_x, static_cast<int>(position.first + TILES_PATIÑOS * tiles));
         max_y = std::max(max_y, static_cast<int>(position.second + TILES_PATIÑOS * tiles));
         min_x = (min_x == 0 || position.first < min_x) ? position.first : min_x;
