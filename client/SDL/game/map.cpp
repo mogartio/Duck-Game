@@ -4,9 +4,9 @@
 #include <cmath>
 #include <iostream>
 
-#define PROPORCION_AÑADIDA 1.8
+#define PROPORCION_AÑADIDA 1.3
 #define VELOCIDAD_DE_REACCION_ZOOM 5.0
-#define MIN_ZOOM 0.75
+#define MIN_ZOOM 0.5
 #define TILES_PATIÑOS 6
 
 
