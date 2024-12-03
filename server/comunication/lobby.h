@@ -60,6 +60,7 @@ public:
                    std::string& player_name, std::string& lobby_name, uint8_t max_players,
                    Client* first_player, uint& id_lobby, bool is_testing);
 
+    
     /*
      * Metodo que agrega un jugador al lobby
      */

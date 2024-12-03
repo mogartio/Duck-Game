@@ -170,14 +170,14 @@ bool Stage::should_fall(Coordinate init_position, int size) {
 
 
 std::set<int> Stage::things_projectile_hits(Coordinate position, int size) {
-    std::set<int>* things_it_hits = new std::set<int>();
+    std::set<int> things_it_hits;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             Coordinate aux(position.x + j, position.y + i);
-            things_it_hits->insert(map.get(aux));
+            things_it_hits.insert(map.get(aux));
         }
     }
-    return *things_it_hits;
+    return things_it_hits;
 }
 
 // color seria el id del personaje

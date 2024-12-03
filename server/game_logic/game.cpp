@@ -23,6 +23,7 @@ std::map<std::string, Player*> Game::generate_players(const std::vector<std::str
 }
 
 void Game::run() {
+    const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
     
     while (!game_over) {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
@@ -31,7 +32,6 @@ void Game::run() {
             current_stage = new Stage(map, senders, ids);
             send_map(map);
 
-            const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
             if (!players_created) {
                 generate_players(player_names, *player_obs, map);
                 players_created = true;
@@ -47,6 +47,7 @@ void Game::run() {
             }
 
             delete current_stage;
+            current_stage = nullptr;
         }
         for (auto& [name, points]: player_points) {
             if (points >= 3) {
@@ -59,7 +60,12 @@ void Game::run() {
     for (auto id: *ids) {
         senders.send_to_client(msg, id);
     }
+    for (auto& player : players) {
+        delete player.second;
+    }
     players.clear();
+
+    delete player_obs;
 }
 
 void Game::send_map(Map& map) {
@@ -69,4 +75,11 @@ void Game::send_map(Map& map) {
     for (auto id: *ids) {
         senders.send_to_client(msg, id);
     }
+}
+ 
+Game::~Game() {
+    for (auto& player : players) {
+        delete player.second;
+    }
+    players.clear();
 }
