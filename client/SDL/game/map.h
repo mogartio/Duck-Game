@@ -14,6 +14,21 @@
 
 #include "player.h"
 
+struct WeaponData {
+
+    int pos_x;
+    int pos_y;
+    int facing_direction_first;
+    int facing_direction_second;
+
+    WeaponData()
+        : pos_x(0), pos_y(0), facing_direction_first(0), facing_direction_second(0) {}
+        
+    // Constructor
+    WeaponData(int x, int y, int fd1, int fd2)
+        : pos_x(x), pos_y(y), facing_direction_first(fd1), facing_direction_second(fd2) {}
+};
+
 class Map {
 private:
     SDL_Renderer* rend;
@@ -49,7 +64,7 @@ private:
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
     // Posiciones de las armas
-    std::unordered_map<ProjectilesId::ProjectileId, std::vector<std::pair<int, int>>> weaponsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, WeaponData> weaponsMap;
 
     // Imagenes de los cascos usables
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmets;
@@ -79,7 +94,7 @@ private:
 
     // Imagenes de las cajas
     std::vector<std::shared_ptr<Image>> boxes;
-    std::vector<std::pair<int, int>> boxesPos;
+    std::vector<std::pair<int, std::pair<int, int>>> boxesPos;
 
     // zoom del mapa
     float currentZoom;
@@ -114,7 +129,8 @@ public:
     void standing(std::unordered_map<std::string, bool> players_updated);
 
     // Agrega un nuevo arma al mapa
-    void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
+    void newWeapon(int x, int y, ProjectilesId::ProjectileId id, int facing_direction_first,
+                   int facing_direction_second);
     // Asignar arma a un jugador
     void weaponPlayer(ProjectilesId::ProjectileId id,
                       std::string playerName);  // si ya tiene arma tonces dispara

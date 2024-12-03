@@ -26,6 +26,7 @@ private:
     std::vector<Coordinate> coordinates_to_delete;
     SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders;
     std::vector<std::shared_ptr<MysteryBox>> boxes;
+    std::vector<std::shared_ptr<MysteryBox>> new_boxes;
     ProjectileObserver obs;
     std::map<int, Player*> players;
     void explode_vertically(Coordinate starting_position, int radius, int vertical_direction,
@@ -57,6 +58,7 @@ public:
     void draw(int object, int size, Coordinate init_position);
     void add_box(std::shared_ptr<MysteryBox> box);
     bool should_fall(Coordinate init_position, int size);
+    void add_new_box(std::shared_ptr<MysteryBox> box);
 
     // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);

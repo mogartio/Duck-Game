@@ -155,7 +155,7 @@ void Game::play() {
                     std::shared_ptr<ProjectileInfoMsg> projectile = nullptr;
                     std::shared_ptr<NotProyectileInfo> not_projectile = nullptr;
                     std::pair<uint8_t, uint8_t> position_x_y;
-                    uint8_t pos_x, pos_y, item = 0;
+                    uint8_t pos_x, pos_y, item, facing_direction_first, facing_direction_second = 0;
                     std::vector<std::pair<uint8_t, uint8_t>> trail;
 
                     std::shared_ptr<PickupDropMsg> pickup_drop = nullptr;
@@ -203,12 +203,11 @@ void Game::play() {
                                 pos_y = projectile->get_pos_y();
                                 item = projectile->get_item();
                                 trail = projectile->get_trail();  // para el laser
-                                // if (trail != std::vector<std::pair<uint8_t, uint8_t>>()) {
-                                //     map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
-                                //     trail);
-                                // } else {
-                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item));
-                                // }
+                                facing_direction_first = projectile->get_facing_direction_first();
+                                facing_direction_second = projectile->get_facing_direction_second();
+
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), facing_direction_first,
+                                            facing_direction_second);
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
