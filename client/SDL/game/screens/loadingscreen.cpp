@@ -3,13 +3,13 @@
 #include <iostream>
 
 
-#define RADIUS 70
+#define RADIUS 15
 
 LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height,
                              Queue<std::shared_ptr<GenericMsg>>& send_queue):
         renderer(renderer), send_queue(send_queue) {
     // Crear la fuente y la textura
-    TTF_Font* font = TTF_OpenFont("assets/game_assets/font/Bokor-Regular.ttf", 56);
+    TTF_Font* font = TTF_OpenFont("assets/menu_assets/HomeVideo-Regular.ttf", 56);
 
     // Si no se pudo cargar la fuente, lanzar una excepción
     if (!font) {
@@ -17,13 +17,13 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height,
     }
 
     // Crear la superficie con el mensaje "Cargando..."
-    SDL_Surface* surface = TTF_RenderText_Solid(font, "Cargando...", {255, 255, 255, 255});
+    SDL_Surface* surface = TTF_RenderText_Solid(font, "Next round...", {255, 255, 255, 255});
     // Si no se pudo crear la superficie, lanzar una excepción
     if (!surface) {
         throw std::runtime_error("Error al crear la superficie: " + std::string(TTF_GetError()));
     }
     int position_x = width / 2 - surface->w / 2;
-    int position_y = (height / 2 - RADIUS) - surface->h;
+    int position_y = (height / 2 - RADIUS) - surface->h - 200;
     ubication = {position_x, position_y, surface->w, surface->h};
 
     // Crear la textura a partir de la superficie
@@ -37,7 +37,7 @@ LoadingScreen::LoadingScreen(SDL_Renderer* renderer, int width, int height,
     }
 
     // Cargar la imagen de la pantalla de carga
-    surface = IMG_Load("assets/game_assets/background/99bf80c0-14b1-4b73-ba9f-065bc5046a51.png");
+    surface = IMG_Load("assets/game_assets/background/wallpaperflare.com_wallpaper.jpg");
     if (!surface) {
         throw std::runtime_error("Error al cargar la imagen: " + std::string(IMG_GetError()));
     }
@@ -63,8 +63,8 @@ void LoadingScreen::renderText() {
 void LoadingScreen::renderLoadingCircle(float startAngle, float sweepAngle, int grosorminimo,
                                         int grosormaximo) {
     int radius = RADIUS;                         // Radio del círculo
-    int x = ubication.x + ubication.w / 2;       // Posición x del centro del círculo
-    int y = ubication.y + RADIUS + ubication.h;  // Posición y del centro del círculo
+    int x = ubication.x + ubication.w / 2 - 30;       // Posición x del centro del círculo
+    int y = ubication.y + RADIUS + ubication.h + 15;  // Posición y del centro del círculo
     const int segments = 200;                    // Número de líneas para aproximar el arco
     float angleStep = sweepAngle / segments;
 
