@@ -17,69 +17,107 @@ MusicHandler::MusicHandler() {
             std::cerr << e.what() << '\n';
         }
     }
+
+    for (const auto& path: paths_sounds) {
+        try {
+            list_of_sounds.push_back(std::make_unique<SoundPlayer>(path));
+        } catch (const std::runtime_error& e) {
+            std::cerr << e.what() << '\n';
+        }
+    }
 }
 
-void MusicHandler::playThatMusic(uint number, int loop) {
-    if (!outOfRangeError(number)) {
+void MusicHandler::playThatMusic(Music number, int loop) {
+    int numberint = static_cast<int>(number);
+    if (!outOfRangeError(numberint)) {
         return;
     }
     try {
-        list_of_musics[number]->playMusic(loop);
+        list_of_musics[numberint]->playMusic(loop);
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
-void MusicHandler::pauseThatMusic(uint number) {
-    if (!outOfRangeError(number)) {
+void MusicHandler::pauseThatMusic(Music number) {
+    int numberint = static_cast<int>(number);
+    if (!outOfRangeError(numberint)) {
         return;
     }
     try {
-        list_of_musics[number]->pauseMusic();
+        list_of_musics[numberint]->pauseMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
-void MusicHandler::resumeThatMusic(uint number) {
-    if (!outOfRangeError(number)) {
+void MusicHandler::resumeThatMusic(Music number) {
+    int numberint = static_cast<int>(number);
+    if (!outOfRangeError(numberint)) {
         return;
     }
     try {
-        list_of_musics[number]->resumeMusic();
+        list_of_musics[numberint]->resumeMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
-void MusicHandler::stopThatMusic(uint number) {
-    if (!outOfRangeError(number)) {
+void MusicHandler::stopThatMusic(Music number) {
+    int numberint = static_cast<int>(number);
+    if (!outOfRangeError(numberint)) {
         return;
     }
     try {
-        list_of_musics[number]->stopMusic();
+        list_of_musics[numberint]->stopMusic();
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
-void MusicHandler::setThatVolume(uint number, int volume) {
-    if (!outOfRangeError(number)) {
+void MusicHandler::setThatVolume(Music number, int volume) {
+    int numberint = static_cast<int>(number);
+    if (!outOfRangeError(numberint)) {
         return;
     }
     try {
-        list_of_musics[number]->setVolume(volume);
+        list_of_musics[numberint]->setVolume(volume);
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void MusicHandler::playThatSound(Sound number) {
+    int numberint = static_cast<int>(number);
+    if (numberint < 0 || list_of_sounds.size() <= numberint) {
+        std::cerr << "No existe el sonido en la lista" << '\n';
+        return;
+    }
+    try {
+        list_of_sounds[numberint]->playSound();
+    } catch (const std::runtime_error& e) {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void MusicHandler::setSoundVolume(Sound number, int volume) {
+    int numberint = static_cast<int>(number);
+    if (numberint < 0 || list_of_sounds.size() <= numberint) {
+        std::cerr << "No existe el sonido en la lista" << '\n';
+        return;
+    }
+    try {
+        list_of_sounds[numberint]->setVolume(volume);
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << '\n';
     }
 }
 
 MusicHandler::~MusicHandler() {
-    if (Mix_QuerySpec(NULL, NULL, NULL)) { // Check if SDL_mixer is initialized
-        Mix_HaltChannel(-1);  // Stop all channels
+    if (Mix_QuerySpec(NULL, NULL, NULL)) {  // Check if SDL_mixer is initialized
+        Mix_HaltChannel(-1);                // Stop all channels
     }
     list_of_musics.clear();  // Free resources
     Mix_CloseAudio();        // Shutdown audio
     Mix_Quit();              // Quit SDL_mixer
 }
-

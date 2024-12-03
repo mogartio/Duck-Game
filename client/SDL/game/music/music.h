@@ -1,7 +1,5 @@
 #ifndef MUSIC_H
 #define MUSIC_H
-
-#define MUSIC_H
 #include <iostream>
 #include <string>
 

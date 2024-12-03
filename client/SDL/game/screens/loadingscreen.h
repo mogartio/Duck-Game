@@ -1,6 +1,7 @@
 #ifndef LOADING_H
 #define LOADING_H
 #include <cmath>
+#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -8,8 +9,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../../../common/messages/generic_msg.h"
-#include "../../../common/queue.h"
+#include "../../../../common/messages/generic_msg.h"
+#include "../../../../common/queue.h"
 
 // Clase para la pantalla de carga
 class LoadingScreen {

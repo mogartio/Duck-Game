@@ -129,8 +129,10 @@ void Game::play() {
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
 
-    musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
-    musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
+    musicHandler->playThatMusic(MusicHandler::Music::PAUSE,
+                                -1);  // Reproduce la musica de fondo en bucle infinito
+    musicHandler->setThatVolume(MusicHandler::Music::PAUSE,
+                                10);  // Setea el volumen de la musica de fondo
     event_handler.unblock();
     while (running) {
         Uint32 current_time = SDL_GetTicks();
@@ -171,7 +173,7 @@ void Game::play() {
                                 state = player->get_state();
                                 facing_direction = player->get_facing_direction();
                                 map.update(player_name, position.first, position.second,
-                                        DuckState(state), Side(facing_direction - 1));
+                                           DuckState(state), Side(facing_direction - 1));
                                 stated_palying = true;
                                 if (DuckState(state) == DuckState::PLAY_DEAD) {
                                     players_updated[player_name] = true;
@@ -200,8 +202,8 @@ void Game::play() {
                                 facing_direction_first = projectile->get_facing_direction_first();
                                 facing_direction_second = projectile->get_facing_direction_second();
 
-                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), facing_direction_first,
-                                            facing_direction_second);
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                                              facing_direction_first, facing_direction_second);
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
@@ -210,7 +212,7 @@ void Game::play() {
                                 position_x_y = not_projectile->get_position_x_y();
                                 item = not_projectile->get_item();
                                 map.removeWeapon(position_x_y.first, position_x_y.second,
-                                                ProjectilesId::ProjectileId(item));
+                                                 ProjectilesId::ProjectileId(item));
                             }
                             break;
 
@@ -231,8 +233,8 @@ void Game::play() {
                                 map.makeMap(columnas, filas, mapa);
                                 map.fill();
                             }
-                            loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
-                                                        // vea tan feo el cambio de mapa
+                            loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no
+                                                        // se vea tan feo el cambio de mapa
                             loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
                             event_handler.unblock();
                             break;
@@ -247,8 +249,8 @@ void Game::play() {
                             break;
                         */
                         case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
-                            // directa de que termino la partida y de q hay que mostrar la pantalla de
-                            // fin
+                            // directa de que termino la partida y de q hay que mostrar la pantalla
+                            // de fin
                             running = false;
                             return;
 
@@ -257,7 +259,6 @@ void Game::play() {
                     }
                 }
             }
-
 
 
             // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
