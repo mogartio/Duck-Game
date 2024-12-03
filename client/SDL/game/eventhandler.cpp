@@ -128,6 +128,10 @@ EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::s
     }
 }
 
+void EventHandler::setMusicHandler(std::shared_ptr<MusicHandler> musicHandler) {
+    this->musicHandler = musicHandler;
+}
+
 bool EventHandler::corroboraciones(SDL_Event& event) {
     return (event.type != SDL_KEYDOWN && event.type != SDL_KEYUP) ||
            (pressed_keys_state[event.key.keysym.scancode] && event.type == SDL_KEYDOWN);
@@ -152,6 +156,16 @@ void EventHandler::run() {
             if (corroboraciones(event)) {
                 continue;
             }
+
+            if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_Q) {
+                musicHandler != nullptr ?
+                        musicHandler->setSoundVolume(MusicHandler::Sound::QUACK, 40) :
+                        void();
+                musicHandler != nullptr ? musicHandler->playThatSound(MusicHandler::Sound::QUACK) :
+                                          void();
+                continue;
+            }
+
 
             // si es un evento de tecla presionada o soltada
             pressed_keys_state[event.key.keysym.scancode] =

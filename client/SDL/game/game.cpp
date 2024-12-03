@@ -43,7 +43,10 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     }
 
     // Creo el manejador de musica
-    musicHandler = std::make_unique<MusicHandler>();
+    musicHandler = std::make_shared<MusicHandler>();
+
+    // al event handler le seteo el manejador de musica
+    event_handler.setMusicHandler(musicHandler);
 
 
     // Despues de todas las corroboraciones, starteo el event handler
@@ -249,7 +252,6 @@ void Game::play() {
                                     (id_shoot != ProjectilesId::ProjectileId::LIVE_BANANA)) {
                                     musicHandler->playThatSound(musicHandler->getSound(id_shoot));
                                 }
-
                             }
                             break;
 

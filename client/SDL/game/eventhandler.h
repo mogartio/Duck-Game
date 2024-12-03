@@ -1,5 +1,6 @@
 #include <functional>
 #include <map>
+#include <memory>
 #include <string>
 #include <tuple>
 
@@ -8,6 +9,7 @@
 #include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
 #include "../../../common/thread.h"
+#include "music/musichandler.h"
 
 class EventHandler: public Thread {
 private:
@@ -16,6 +18,7 @@ private:
     std::atomic<bool>& running;
     std::string playerName2;
     bool is_blocked;
+    std::shared_ptr<MusicHandler> musicHandler;
 
     std::map<std::tuple<Uint32, SDL_Scancode>, std::function<std::shared_ptr<GenericMsg>(void)>>
             key_accion_map;
@@ -30,6 +33,7 @@ public:
 
     void block();
     void unblock();
+    void setMusicHandler(std::shared_ptr<MusicHandler> musicHandler);
 
     void run() override;
 };
