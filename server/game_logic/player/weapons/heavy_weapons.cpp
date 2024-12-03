@@ -18,7 +18,7 @@ void Ak47::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_pressing_since_picked || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     stage.add_projectile(std::move(std::make_unique<Ak47Bullet>(
             gun_position, x_direction, -1, is_aiming_up, reach, bullets_shot, player->get_name())));
     ammo--;
@@ -57,7 +57,7 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
         stopped_holding_trigger = false;
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     for (int i = 0; i < bullets_per_shot; i++) {
         srand(static_cast<unsigned int>(time(nullptr)));  // seed del rand()
         int bullet_reach = reach + rand() % 3;            // el reach es variable entre 3 numeros
@@ -94,7 +94,7 @@ void Sniper::shoot(int x_direction, bool is_aiming_up) {
         is_loaded = true;
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     stage.add_projectile(std::move(std::make_unique<SniperBullet>(
             gun_position, x_direction, -1, is_aiming_up, reach, player->get_name())));
     ammo--;

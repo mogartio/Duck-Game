@@ -9,7 +9,7 @@ void PewLaser::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     gun_position.y -= 2;  // se ve mejor en el render cuando esta un poco mas arriba
     int deviation = WeaponConfig::get_instance()->weapons["pewpew"]["deviation"];
     Coordinate position_below(gun_position.x, gun_position.y + 2);
@@ -48,7 +48,7 @@ void LaserRifle::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_pressing_since_picked || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     stage.add_projectile(std::move(std::make_unique<LaserBullet>(
             gun_position, x_direction, 1, is_aiming_up, reach, player->get_name())));
     ammo--;

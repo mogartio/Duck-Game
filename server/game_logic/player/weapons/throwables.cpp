@@ -33,8 +33,8 @@ void Grenade::update() {
     }
     if (counter == Config::get_instance()->explosion_counter) {
         stage.set_explosion(
-                get_gun_position(player->get_facing_direction()),
-                Config::get_instance()->explosion_range);  // TODO: tambien borrar el arma
+                get_gun_position(player->get_facing_direction(), false),  // no apunta para arriba1
+                Config::get_instance()->explosion_range);
         player->unarm_self();
         dead = true;
     }

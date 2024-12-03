@@ -28,7 +28,7 @@ public:
             id(id) {}
     virtual ~Weapon() = default;
     virtual void shoot(int, bool) {}
-    virtual Coordinate get_gun_position(int facing_direction);
+    virtual Coordinate get_gun_position(int offset, bool is_aiming_up);
     virtual void stop_shooting() { stopped_holding_trigger = true; }
     virtual void start_throw();
     virtual void finish_throw(int, bool, std::shared_ptr<Weapon>);
@@ -45,7 +45,7 @@ class Unarmed: public Weapon {
 public:
     explicit Unarmed(Stage&);
     virtual void shoot(int, bool) override;
-    virtual Coordinate get_gun_position(int) override;
+    virtual Coordinate get_gun_position(int offset, bool is_aiming_up) override;
     virtual bool is_unarmed() override { return true; }
 };
 
