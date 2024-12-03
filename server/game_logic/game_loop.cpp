@@ -41,6 +41,7 @@ void GameLoop::init_round(Stage& stage, Map& map) {
     std::vector<Coordinate> box_positions = map.get_boxes_spawn_sites();
     for (auto& box_position: box_positions) {
         stage.add_box(std::make_shared<MysteryBox>(stage, box_position));
+        stage.add_new_box(std::make_shared<MysteryBox>(stage, box_position));
     }
 
     for (auto [name, player]: players) {

@@ -85,13 +85,14 @@ void Stage::update() {
         }
         iterator++;
     }
-    for (const auto& box: boxes) {
+    for (const auto& box: new_boxes) {
         Coordinate position = box->get_position();
         obs.update({}, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
                    static_cast<uint8_t>(MYSTERY_BOX), 1,
                    1);  // por conveniencia la caja se manda por mensaje como si fuera un proyectil
                         // para que la dibuje el render.
     }
+    new_boxes.clear();
     for (const auto& [center_position, radius]: explosions) {
         explode(center_position, radius);
     }
@@ -252,6 +253,9 @@ void Stage::add_box(std::shared_ptr<MysteryBox> box) {
     }
     boxes.push_back(box);
 }
+
+void Stage::add_new_box(std::shared_ptr<MysteryBox> box) { new_boxes.push_back(box); }
+
 void Stage::break_box(Coordinate position) {
     std::shared_ptr<MysteryBox> box = find_box_in(position, 3);
     if (box) {
