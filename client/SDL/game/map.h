@@ -96,7 +96,6 @@ private:
     std::vector<std::shared_ptr<Image>> boxes;
     std::vector<std::pair<int, std::pair<int, int>>> boxesPos;
 
-
     // zoom del mapa
     float currentZoom;
 

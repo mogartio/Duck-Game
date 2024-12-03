@@ -208,8 +208,8 @@ void Game::play() {
                                 facing_direction_first = projectile->get_facing_direction_first();
                                 facing_direction_second = projectile->get_facing_direction_second();
 
-                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
-                                              facing_direction_first, facing_direction_second);
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), facing_direction_first,
+                                            facing_direction_second);
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:

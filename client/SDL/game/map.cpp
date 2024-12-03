@@ -170,7 +170,6 @@ void Map::makeBoxes() {
         std::string path = "assets/game_assets/box/";
         path += std::to_string(i);
         path += ".png";
-
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
@@ -380,6 +379,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, int facing_dir
         newHelmet(x, y, id);
     } else {
         weaponsMap[id] = WeaponData(x, y, facing_direction_first, facing_direction_second);
+        std::cout << "fd_first: " << facing_direction_first << " fd_second: " << facing_direction_second << std::endl;
     }
 }
 
@@ -444,7 +444,6 @@ void Map::newBox(int x, int y) {
 // ----------------- Remove -----------------
 
 void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
-
     std::pair<int, int> position = std::pair(x, y);
 
     if (id == ProjectilesId::ProjectileId::CHEST) {
