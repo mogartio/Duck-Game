@@ -35,8 +35,9 @@ void GameLoop::init_round(Stage& stage, Map& map) {
     std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites = map.get_items_spawn_sites();
 
     for (auto& weapon: weapon_spawn_sites) {
-        WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
-        weapon_spawns.push_back(&spawn);
+        std::shared_ptr<WeaponSpawnPoint> spawn =
+                std::make_shared<WeaponSpawnPoint>(std::get<0>(weapon), stage, std::get<1>(weapon));
+        weapon_spawns.push_back(spawn);
     }
 
     std::vector<Coordinate> box_positions = map.get_boxes_spawn_sites();
