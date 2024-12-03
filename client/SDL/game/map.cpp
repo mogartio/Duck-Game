@@ -454,7 +454,7 @@ float Map::animationZoom(float targetZoom) {
     float deltaTime = getDeltaTime();
     float difference = targetZoom - currentZoom;
     if (difference > 0) {  // Zoom out
-        difference *= 1.5f;  // Factor adicional para alejar más rápido
+        difference *= 2.5f;  // Factor adicional para alejar más rápido
     }
 
     // Ajusta el factor dinámico con una interpolación más lenta
