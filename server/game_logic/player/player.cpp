@@ -10,6 +10,7 @@
 #include "weapons/pistols.h"
 #include "weapons/throwables.h"
 #include "weapons/weapon.h"
+#define DEAD 6
 
 using namespace ActionsId;
 Player::Player(Coordinate& initial_position, int id, const std::string& name,
@@ -234,6 +235,7 @@ void Player::take_damage() {
     is_alive = true;
 }
 
+// no hubo tiempo para hacer un factory de armas
 void Player::cheat(int weapon_id) {
     std::shared_ptr<Weapon> new_weapon;
     switch (weapon_id) {
@@ -284,4 +286,11 @@ void Player::cheat(int weapon_id) {
     }
 }
 
-void Player::die() { is_alive = false; }
+void Player::die() {
+    Coordinate current_position = position->get_position();
+    for (const PlayerObserver* obs: observers) {
+        obs->update(name, current_position.x, current_position.y, DEAD,
+                    position->get_facing_direction());
+    }
+    is_alive = false;
+}
