@@ -213,6 +213,8 @@ void Lobby::kill() {
     if (is_dead) {
         return;
     }
+    receiver_q->close();
+    delete receiver_q;
     // se pone en estado de muerto
     is_dead = true;
     // se detiene el juego y se lo joinea

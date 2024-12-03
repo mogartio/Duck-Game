@@ -30,43 +30,22 @@ public:
             deviations_index(-1),
             weapon(std::move(weapon)),
             time_in_air(0) {
-        if (thrown_up) {
-            deviation = 10000;
-            y_direction = -1;
-        } else {
-            deviations.push_back(1);
-            deviations_direction.push_back(UP_DIRECTION);
-            deviations.push_back(1);
-            deviations_direction.push_back(UP_DIRECTION);
-            for (int i = 0; i < speed; i++) {
-                if (i < speed / 2) {
-                    deviations.push_back(2);
-                    deviations_direction.push_back(UP_DIRECTION);
-                } else {
-                    deviations.push_back(6);
-                    deviations_direction.push_back(DOWN_DIRECTION);
-                }
+        for (int i = 0; i < speed; i++) {
+            if (i < speed / 2) {
+                deviations.push_back(1);
+                deviations_direction.push_back(UP_DIRECTION);
+            } else {
+                deviations.push_back(speed);
+                deviations_direction.push_back(DOWN_DIRECTION);
             }
-            deviations.push_back(2);
-            deviations_direction.push_back(DOWN_DIRECTION);
         }
+        deviations.push_back(1);
+        deviations_direction.push_back(DOWN_DIRECTION);
     }
 
     virtual std::shared_ptr<Weapon> get_weapon() { return std::move(weapon); }
 
     bool update() override {
-        if (moving_vertically) {
-            if (y_direction == -1) {
-                if (time_in_air % 40 == 0) {
-                    speed -= 2;
-                }
-                time_in_air++;
-            }
-            if (speed <= 1 && time_in_air > 0 && y_direction == -1) {
-                y_direction = 1;
-                speed = 3;
-            }
-        }
         if (weapon->get_id() == GRENADE) {
             if (weapon->is_dead()) {
                 updateNotPosition(position.x, position.y);

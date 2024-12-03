@@ -4,6 +4,9 @@
 #include "../../../map/stage.h"
 #define FLOOR 1
 #define BACKGROUND 0
+#define BULLET_UP 1
+#define BULLET_RIGHT 1
+#define BULLET_LEFT 2
 
 // devuelve true si fue eliminado
 bool Projectile::ray_trace(Stage& stage) {
@@ -11,6 +14,7 @@ bool Projectile::ray_trace(Stage& stage) {
         stage.draw(id, Config::get_instance()->bullet_size, position);
     }
     int bullet_size = Config::get_instance()->bullet_size;
+    update();
     for (int i = 0; i < speed; i++) {
         if (distance_covered >= reach) {
             return true;
@@ -48,7 +52,6 @@ bool Projectile::ray_trace(Stage& stage) {
         updateNotPosition(position.x, position.y);
         position = bullet_position;
         distance_covered++;
-        update();
 
         if (speed == 0) {
             notify();
@@ -97,11 +100,16 @@ void Projectile::check_if_player_killed(std::set<int>& hit, bool& despawned, Sta
 void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage,
                                   Coordinate next_position) {
     if ((hit.find(Config::get_instance()->mapsId["wall"])) != hit.end() ||
-        (hit.find(Config::get_instance()->mapsId["floor"])) != hit.end()) {
-        if (next_position.x == position.x) {
+        (hit.find(Config::get_instance()->mapsId["floor"])) != hit.end() ||
+        (hit.find(MYSTERY_BOX) != hit.end() && !is_lethal)) {
+        if (!stage.should_fall(position, Config::get_instance()->bullet_size)) {
             speed = 0;
-        } else {
-            moving_vertically = true;
+            despawned = true;
+            if (stage.get(position) == Config::get_instance()->mapsId["wall"] ||
+                stage.get(position) == Config::get_instance()->mapsId["floor"]) {
+                despawns_on_contact = true;
+                return;
+            }
         }
         moving_vertically = true;
         stage.draw(id, Config::get_instance()->bullet_size, position);
@@ -115,13 +123,19 @@ void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& st
 }
 
 void Projectile::notify() {
-    int going_up = -1;
-    if (deviation == 1) {
-        going_up = 1;
+    int going_up = 0;
+    int hor_direction = 0;
+    if (x_direction == AIM_RIGHT) {
+        hor_direction = BULLET_RIGHT;
+    } else {
+        hor_direction = BULLET_LEFT;
+    }
+    if (y_direction == AIM_UP) {
+        going_up = BULLET_UP;
     }
     for (const Observer* obs: observers) {
         obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                    static_cast<uint8_t>(id), x_direction, going_up);
+                    static_cast<uint8_t>(id), hor_direction, going_up);
     }
     trail.clear();
 }
@@ -203,7 +217,6 @@ bool LaserBullet::ray_trace(Stage& stage) {
             notify();
             return false;
         }
-        // trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
         updateNotPosition(position.x, position.y);
         position = bullet_position;
         distance_covered++;
@@ -212,6 +225,12 @@ bool LaserBullet::ray_trace(Stage& stage) {
     return false;
 }
 
+
+void Projectile::updateShot() {
+    for (const Observer* obs: observers) {
+        obs->updateShot(player_name, position);
+    }
+}
 void Projectile::updateNotPosition(uint8_t pos_x, uint8_t pos_y) {
     for (const Observer* obs: observers) {
         obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));

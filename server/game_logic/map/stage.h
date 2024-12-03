@@ -58,7 +58,7 @@ public:
     void draw(int object, int size, Coordinate init_position);
     void add_box(std::shared_ptr<MysteryBox> box);
     void add_new_box(std::shared_ptr<MysteryBox> box);
-
+    bool should_fall(Coordinate init_position, int size);
 
     // las cosas que un objeto en position de tamanio size esta tocando en un momento
     std::set<int> things_projectile_hits(Coordinate position, int size);

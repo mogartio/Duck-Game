@@ -9,7 +9,8 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
         running(true),
         event_handler(queueSend, playerName1, running, playerName2),
         musicHandler(nullptr),
-        winnerScreen(nullptr) {
+        winnerScreen(nullptr),
+        pointsScreen(nullptr) {
 
     // Inicializo SDL con todo (no recomendado, se puede cambiar para lo que se necesite)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0) {
@@ -55,9 +56,11 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     loadingScreen = std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w,
                                                     displayBounds.h, queueSend);
 
-    // Creo la pantalla de fin
-    winnerScreen =
-            std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    // Creo la pantalla de puntos
+    pointsScreen = std::make_unique<PointsScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+
+        // Creo la pantalla de fin
+    winnerScreen = std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 }
 
 void Game::play() {
@@ -129,10 +132,12 @@ void Game::play() {
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
 
+    int round = 0;
     musicHandler->playThatMusic(MusicHandler::Music::PAUSE,
                                 -1);  // Reproduce la musica de fondo en bucle infinito
     musicHandler->setThatVolume(MusicHandler::Music::PAUSE,
                                 10);  // Setea el volumen de la musica de fondo
+
     event_handler.unblock();
     while (running) {
         Uint32 current_time = SDL_GetTicks();
@@ -162,7 +167,9 @@ void Game::play() {
                     std::vector<uint16_t> mapa;
                     uint16_t filas;
                     uint16_t columnas;
-                    uint theme;
+                    
+                    std::shared_ptr<WinnerMsg> winnerMsg = nullptr;
+                    std::string winner;
 
                     switch (msj->get_header()) {
                         case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
@@ -179,8 +186,7 @@ void Game::play() {
                                     players_updated[player_name] = true;
                                 } else {
                                     players_updated[player_name] = false;
-                                }
-                            }
+                                }                            }
                             break;
 
                         case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
@@ -218,50 +224,55 @@ void Game::play() {
 
                         case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
                             event_handler.block();
+                            round++;
                             loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
+
                             newMap = std::dynamic_pointer_cast<SendMapMsg>(msj);
                             if (newMap) {
                                 mapa = newMap->get_map();
                                 filas = newMap->get_filas();
                                 columnas = newMap->get_columnas();
-                                theme = newMap->get_theme();
 
                                 tiles_w = displayBounds.w / columnas;
                                 tiles_h = displayBounds.h / filas;
                                 tiles = std::min(tiles_w, tiles_h);
-                                map.setTheme(theme);
+
                                 map.makeMap(columnas, filas, mapa);
                                 map.fill();
                             }
-                            loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no
-                                                        // se vea tan feo el cambio de mapa
+
+                            if (round % 5 == 0) {
+                                pointsScreen->show(6000, map.getPoints());
+                            } else {
+                                loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
+                                                            // vea tan feo el cambio de mapa
+                            }
+
                             loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
                             event_handler.unblock();
                             break;
 
-                        /*
-                        case GenericMsg::MsgTypeHeader::PLAYER_DEAD_MSG:
-                            player = std::dynamic_pointer_cast<UpdatedPlayerInfoMsg>(msj);
-                            if (player) {
-                                player_name = player->get_player_name();
-                                map.remove(player_name);
-                            }
+                        case GenericMsg::MsgTypeHeader::WINNER_MSG:
+                            // suma puntos al ganador de la ronda
+                            winnerMsg = std::dynamic_pointer_cast<WinnerMsg>(msj);
+                            winner = winnerMsg->get_winner_name();
+                            map.addPoints(winner);
                             break;
-                        */
+
                         case GenericMsg::MsgTypeHeader::GAME_ENDED_MSG:
                             // directa de que termino la partida y de q hay que mostrar la pantalla
                             // de fin
                             running = false;
-                            return;
 
                         default:
                             break;
+
                     }
                 }
+
             }
 
-
-            // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
+          // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
             if (frames_to_process == 0) {
                 win->clear();
                 map.fill();
@@ -284,7 +295,7 @@ void Game::play() {
         }
     }
 
-    // event_handler.pause();
+    event_handler.block();
     // musicHandler->winner_music();  // Musica de ganador
 
     std::pair<std::string, std::string> winner = map.get_winner();

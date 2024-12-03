@@ -12,13 +12,15 @@
 #include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
 #include "../../../common/thread.h"
-#include "music/musichandler.h"
-#include "screens/loadingscreen.h"
-#include "screens/window.h"
-#include "screens/winnerscreen.h"
 
 #include "eventhandler.h"
+#include "screens/loadingscreen.h"
+#include "screens/pointsscreen.h"
+#include "music/musichandler.h"
+#include "screens/window.h"
+#include "screens/winnerscreen.h"
 #include "map.h"
+
 class Game {
 private:
     Queue<std::shared_ptr<GenericMsg>>& queueRecive;
@@ -29,6 +31,7 @@ private:
     std::unique_ptr<Window> win;
     std::unique_ptr<LoadingScreen> loadingScreen;
     std::unique_ptr<WinnerScreen> winnerScreen;
+    std::unique_ptr<PointsScreen> pointsScreen;
 
 public:
     Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,

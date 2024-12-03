@@ -9,18 +9,19 @@ void PewLaser::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     gun_position.y -= 2;  // se ve mejor en el render cuando esta un poco mas arriba
     int deviation = WeaponConfig::get_instance()->weapons["pewpew"]["deviation"];
     Coordinate position_below(gun_position.x, gun_position.y + 2);
+    std::string player_name = player->get_name();
 
-    stage.add_projectile(std::move(
-            std::make_unique<PewLaserBullet>(gun_position, x_direction, -1, is_aiming_up, reach,
-                                             reach + 1, 1)));  // reach + 1 para que no desvie
     stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
-            gun_position, x_direction, -1, is_aiming_up, reach, deviation, -1)));
+            gun_position, x_direction, -1, is_aiming_up, reach, reach + 1, 1,
+            player_name)));  // reach + 1 para que no desvie
     stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
-            position_below, x_direction, -1, is_aiming_up, reach, deviation, 1)));
+            gun_position, x_direction, -1, is_aiming_up, reach, deviation, -1, player_name)));
+    stage.add_projectile(std::move(std::make_unique<PewLaserBullet>(
+            position_below, x_direction, -1, is_aiming_up, reach, deviation, 1, player_name)));
 
     ammo--;
     if (ammo == 0) {
@@ -47,9 +48,9 @@ void LaserRifle::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_pressing_since_picked || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
-    stage.add_projectile(std::move(
-            std::make_unique<LaserBullet>(gun_position, x_direction, 1, is_aiming_up, reach)));
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
+    stage.add_projectile(std::move(std::make_unique<LaserBullet>(
+            gun_position, x_direction, 1, is_aiming_up, reach, player->get_name())));
     ammo--;
     if (ammo == 0) {
         player->pick_weapon(std::make_unique<Unarmed>(stage));

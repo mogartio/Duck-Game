@@ -30,11 +30,14 @@ private:
     std::map<std::string, Player*> generate_players(const std::vector<std::string>& names,
                                                 const PlayerObserver&, Map& map);
 
+
 public:
     Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
          bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
          std::shared_ptr<std::set<uint>> ids);
     void run() override;
+    ~Game();
+
 };
 
 #endif

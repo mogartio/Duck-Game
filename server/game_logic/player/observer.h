@@ -48,6 +48,7 @@ public:
             senders.send_to_client(msg, id);
         }
     }
+    virtual void updateShot(std::string& player_name, Coordinate& position) const {};
     virtual ~Observer() = default;
 };
 
@@ -83,21 +84,7 @@ public:
 
         std::shared_ptr<GenericMsg> msg =
                 std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
-
         broadcast(msg);
-
-        // Para debuggear:
-        // std::stringstream ss;
-        // if (trail.size() > 0) {
-
-        //     for (auto& coor: trail) {
-        //         ss << std::to_string(std::get<0>(coor)) << " , "
-        //            << std::to_string(std::get<1>(coor)) << std::endl;
-        //     }
-        //     std::cout << "se esta broadcasteando la posicion de un proyectil que es:"
-        //               << std::to_string(current_pos_x) << " , " << std::to_string(current_pos_y)
-        //               << " con trail: " << ss.str() << std::endl;
-        // }
     }
 
     virtual void updateOldPos(uint8_t pos_x, uint8_t pos_y, uint8_t id) const override {
@@ -109,13 +96,12 @@ public:
     explicit ProjectileObserver(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& queues,
                                 std::shared_ptr<std::set<uint>> ids):
             Observer(queues, ids) {}
-    // virtual void update(uint8_t pos_x, uint8_t pos_y, uint8_t id) override {
-    //     ProjectileInfoMsg* msg = new ProjectileInfoMsg(pos_x, pos_y, id);
-    //     std::list<std::shared_ptr<GenericMsg>>
-    //             porquenecesitounalist;  // Preferiria poder broadcastear un mensaje a la vez
-    //     porquenecesitounalist.push_back(msg);
-    //     senders.broadcast(porquenecesitounalist);
-    // }
+
+    virtual void updateShot(std::string& player_name, Coordinate& position) const override {
+        std::shared_ptr<GenericMsg> msg =
+                std::make_shared<ShootMsg>(player_name, std::pair<uint8_t, uint8_t>(19, 54));
+        broadcast(msg);
+    }
 };
 
 #endif

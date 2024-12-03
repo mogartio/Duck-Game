@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
@@ -57,6 +58,8 @@ private:
 
     // Puntos de los jugadores
     std::unordered_map<std::string, int> playersPoints;
+    // Textura de los nombres de los jugadores
+    std::vector<std::pair<std::shared_ptr<SDL_Texture>, SDL_Rect>> textura_texto;
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
@@ -158,9 +161,10 @@ public:
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();
 
-    // Winner
+    // Points
     void addPoints(std::string winner);
     std::pair<std::string, std::string> get_winner();
+    std::unordered_map<std::string, int> getPoints();
 
     SDL_Texture* getTextureMapWithAll() const;
 

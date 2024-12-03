@@ -158,15 +158,27 @@ bool Stage::should_fall(PlayerPosition& player_position) {
     return true;
 }
 
+bool Stage::should_fall(Coordinate init_position, int size) {
+    Coordinate bottom_pos(init_position.x, init_position.y + size);
+    for (int i = 0; i < size; i++) {
+        Coordinate aux(bottom_pos.x + i, bottom_pos.y);
+        if (map.get(aux) != Config::get_instance()->mapsId["background"] && map.get(aux) != -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 std::set<int> Stage::things_projectile_hits(Coordinate position, int size) {
-    std::set<int>* things_it_hits = new std::set<int>();
+    std::set<int> things_it_hits;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             Coordinate aux(position.x + j, position.y + i);
-            things_it_hits->insert(map.get(aux));
+            things_it_hits.insert(map.get(aux));
         }
     }
-    return *things_it_hits;
+    return things_it_hits;
 }
 
 // color seria el id del personaje
@@ -257,7 +269,7 @@ void Stage::add_box(std::shared_ptr<MysteryBox> box) {
 void Stage::add_new_box(std::shared_ptr<MysteryBox> box) { new_boxes.push_back(box); }
 
 void Stage::break_box(Coordinate position) {
-    std::shared_ptr<MysteryBox> box = find_box_in(position, 3);
+    std::shared_ptr<MysteryBox> box = find_box_in(position, BOX_SIZE);
     if (box) {
         Coordinate box_position = box->get_position();
         std::shared_ptr<ProjectileDroppedWeapon> new_weapon = box->destroy_box();
