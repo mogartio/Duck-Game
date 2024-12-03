@@ -26,6 +26,15 @@ MusicHandler::MusicHandler() {
             std::cerr << e.what() << '\n';
         }
     }
+
+    for (const auto& path: paths_duck_sounds) {
+        try {
+            list_duck_sounds.push_back(std::make_unique<SoundPlayer>(path));
+            list_duck_sounds.back()->setVolume(40);
+        } catch (const std::runtime_error& e) {
+            std::cerr << e.what() << '\n';
+        }
+    }
 }
 
 void MusicHandler::playThatMusic(Music number, int loop) {
@@ -90,6 +99,14 @@ void MusicHandler::setThatVolume(Music number, int volume) {
 
 void MusicHandler::playThatSound(Sound number) {
     int numberint = static_cast<int>(number);
+    if (number == Sound::QUACK) {
+        try {
+            list_duck_sounds[rand() % list_duck_sounds.size()]->playSound();
+        } catch (const std::runtime_error& e) {
+            std::cerr << e.what() << '\n';
+        }
+        return;
+    }
     if (numberint < 0 || static_cast<int>(list_of_sounds.size()) <= numberint) {
         std::cerr << "No existe el sonido en la lista" << '\n';
         return;

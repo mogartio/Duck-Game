@@ -158,9 +158,6 @@ void EventHandler::run() {
             }
 
             if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_Q) {
-                musicHandler != nullptr ?
-                        musicHandler->setSoundVolume(MusicHandler::Sound::QUACK, 40) :
-                        void();
                 musicHandler != nullptr ? musicHandler->playThatSound(MusicHandler::Sound::QUACK) :
                                           void();
                 continue;

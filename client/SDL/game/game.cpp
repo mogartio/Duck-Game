@@ -23,6 +23,7 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
         IMG_Quit();  // Cierra SDL_image
         throw std::runtime_error("Error initializing SDL_mixer" + std::string(Mix_GetError()));
     }
+    Mix_AllocateChannels(40);
 
     // Inicializa TTF
     if (TTF_Init() < 0) {

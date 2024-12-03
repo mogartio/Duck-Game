@@ -20,19 +20,31 @@ private:
     std::vector<std::unique_ptr<MusicPlayer>> list_of_musics;
 
     const std::vector<std::string> paths_sounds = {
-            "assets/game_assets/sounds/sonidopatiño/cutOffQuack.wav",  // Quack
-            "assets/game_assets/sounds/equip.wav",                     // Equipa el arma
-            "assets/game_assets/sounds/disarm.wav",                    // Suelta el arma
-            "assets/game_assets/sounds/dacBang.wav",                   // Cowboy
-            "assets/game_assets/sounds/magnum.wav",                    // Magnum
-            "assets/game_assets/sounds/explode.wav",                   // Explosion
-            "assets/game_assets/sounds/jump.wav",                      // Salto
-            "assets/game_assets/sounds/laserRifle.wav",                // Rifle laser
-            "assets/game_assets/sounds/laserBlast.wav",                // Pew Pew Laser
-            "assets/game_assets/sounds/pistol.wav",                    // Duel pistol
-            "assets/game_assets/sounds/sniper.wav",                    // Sniper
-            "assets/game_assets/sounds/shotgun.wav",                   // Shotgun
+            "assets/game_assets/sounds/equip.wav",       // Equipa el arma
+            "assets/game_assets/sounds/disarm.wav",      // Suelta el arma
+            "assets/game_assets/sounds/dacBang.wav",     // Cowboy
+            "assets/game_assets/sounds/magnum.wav",      // Magnum
+            "assets/game_assets/sounds/explode.wav",     // Explosion
+            "assets/game_assets/sounds/jump.wav",        // Salto
+            "assets/game_assets/sounds/laserRifle.wav",  // Rifle laser
+            "assets/game_assets/sounds/laserBlast.wav",  // Pew Pew Laser
+            "assets/game_assets/sounds/pistol.wav",      // Duel pistol
+            "assets/game_assets/sounds/sniper.wav",      // Sniper
+            "assets/game_assets/sounds/shotgun.wav",     // Shotgun
     };
+
+    const std::vector<std::string> paths_duck_sounds = {
+            "assets/game_assets/sounds/sonidopatiño/cutOffQuack.wav",  // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach0.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach1.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach2.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach3.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach4.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/preach5.wav",      // Quack
+            "assets/game_assets/sounds/sonidopatiño/quack.wav",        // Quack
+    };
+
+    std::vector<std::unique_ptr<SoundPlayer>> list_duck_sounds;
 
     std::vector<std::unique_ptr<SoundPlayer>> list_of_sounds;
 
@@ -44,8 +56,8 @@ public:
     };
 
     enum class Sound : int {
-        QUACK = 0,
-        EQUIP,
+        QUACK = -1,
+        EQUIP = 0,
         DISARM,
         DACBANG,
         MAGNUM,
