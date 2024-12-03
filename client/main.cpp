@@ -19,6 +19,8 @@ int main(int argc, char* argv[]) {
     Client* client = nullptr;
     std::list<std::string>* local_players = new std::list<std::string>();
 
+    bool modo_test = false;
+
     if (argc == 1) {
         QApplication app(argc, argv);
 
@@ -50,6 +52,7 @@ int main(int argc, char* argv[]) {
         second_player = local_players->front();
     } else {
         std::cout << "Test mode activado" << std::endl;
+        modo_test = true;
 
         // conecta con el server
         Socket skt("localhost", "8080");
@@ -173,6 +176,9 @@ int main(int argc, char* argv[]) {
     game.play();
 
     recv_queue.close();
+    if (!modo_test) {
+        send_queue.close();
+    }
 
     if (client) {
         client->stop();
