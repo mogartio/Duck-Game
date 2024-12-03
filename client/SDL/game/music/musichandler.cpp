@@ -21,6 +21,7 @@ MusicHandler::MusicHandler() {
     for (const auto& path: paths_sounds) {
         try {
             list_of_sounds.push_back(std::make_unique<SoundPlayer>(path));
+            list_of_sounds.back()->setVolume(7);
         } catch (const std::runtime_error& e) {
             std::cerr << e.what() << '\n';
         }

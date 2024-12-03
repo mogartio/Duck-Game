@@ -14,6 +14,7 @@ PointsScreen::PointsScreen(SDL_Renderer* renderer, int width, int height): rende
 }
 
 void PointsScreen::makeText(std::unordered_map<std::string, int> playersPoints) {
+    lines.clear();
     lines.push_back("Puntos");
 
     for (const auto& player : playersPoints) {

@@ -193,6 +193,11 @@ void Game::play() {
                                 } else {
                                     players_updated[player_name] = false;
                                 }
+
+                                if (DuckState(state) == DuckState::JUMP) {
+                                    musicHandler->setSoundVolume(MusicHandler::Sound::JUMP, 5);
+                                    musicHandler->playThatSound(MusicHandler::Sound::JUMP);
+                                }
                             }
                             break;
 
@@ -239,8 +244,12 @@ void Game::play() {
                                 player_shot = shoot->get_player_name();
 
                                 id_shoot = map.shoot(player_name);
-                                // musicHandler->shoot_sound(ProjectilesId::ProjectileId id_shoot);
-                                std::cout << id_shoot << " shooted" << std::endl;
+
+                                if ((id_shoot != ProjectilesId::ProjectileId::GRENADE) &&
+                                    (id_shoot != ProjectilesId::ProjectileId::LIVE_BANANA)) {
+                                    musicHandler->playThatSound(musicHandler->getSound(id_shoot));
+                                }
+
                             }
                             break;
 

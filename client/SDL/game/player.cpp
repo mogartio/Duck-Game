@@ -286,11 +286,12 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
             _weapon->position(wx, wy);
             _weapon->fill(weaponAngle, flip);
 
-            if (!shooted) {
+            if (weaponId != ProjectilesId::ProjectileId::LASER && weaponId != ProjectilesId::ProjectileId::PEW_PEW_LASER && !shooted) {
                 _shootEfect->position(shx, shy);
                 _shootEfect->fill(weaponAngle, flip);
                 shooted = true;
             }
+
         }
     
         // Dibujo el ala del pato

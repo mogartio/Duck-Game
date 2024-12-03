@@ -390,7 +390,6 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, int facing_dir
         newHelmet(x, y, id);
     } else {
         weaponsMap[id] = WeaponData(x, y, facing_direction_first, facing_direction_second);
-        std::cout << "fd_first: " << facing_direction_first << " fd_second: " << facing_direction_second << std::endl;
     }
 }
 
@@ -557,6 +556,10 @@ float Map::getDeltaTime() {
 // ----------------- Fill -----------------
 
 int condicionAnguloBalas(int facing_direction_first, int facing_direction_second) {
+
+    if (facing_direction_second == 1) {
+        return 270;
+    }
     if (facing_direction_first == 0) {
         if (facing_direction_second == 1) {
             return 90;
@@ -653,6 +656,13 @@ void Map::fill() {  // Dibuja de atras para adelante
 
         int angle = condicionAnguloBalas(weaponData.facing_direction_first,
                                          weaponData.facing_direction_second);
+        
+        if (pair.first != ProjectilesId::ProjectileId::BULLET_PISTOL && 
+            pair.first != ProjectilesId::ProjectileId::BULLET_SHOTGUN && 
+            pair.first != ProjectilesId::ProjectileId::LASER) {
+
+            angle = 0;
+        }
 
         weapons[pair.first]->fill(angle, SDL_FLIP_NONE);
     }
@@ -681,7 +691,7 @@ void Map::fill() {  // Dibuja de atras para adelante
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionIndex]->position((pos.first - 3) * tiles, (pos.second - 3) * tiles);
+        explosions[explosionIndex]->position((pos.first - 2) * tiles, (pos.second - 2) * tiles);
         explosions[explosionIndex]->fill();
         explosionCounter[i]++;
         if (explosionCounter[i] > 26) {
