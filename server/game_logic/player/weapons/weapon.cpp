@@ -30,14 +30,20 @@ void Weapon::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapo
 Coordinate Weapon::get_gun_position(int facing_direction, bool aiming_up) {
     Coordinate gun_position = player->get_position();
     if (facing_direction == 1) {
-        gun_position.x = gun_position.x + 7;
-    } else {
-        gun_position.x = gun_position.x - 3;
-    }
-    if (aiming_up) {
-        gun_position.y--;
-    } else {
-        gun_position.y = gun_position.y + 3;
+        if (aiming_up) {
+            gun_position.y -= 3;
+            gun_position.x = gun_position.x + 3;
+        } else {
+            gun_position.x = gun_position.x + 7;
+            gun_position.y = gun_position.y + 3;
+        }
+    } else {  // mirando izquierda
+        if (aiming_up) {
+            gun_position.y -= 3;
+        } else {
+            gun_position.x = gun_position.x - 3;
+            gun_position.y = gun_position.y + 3;
+        }
     }
     return gun_position;
 }

@@ -1,49 +1,49 @@
 weapons:
   magnum:
     reach: 40
-    speed: 3
+    speed: 4
     deviation: 40
     ammo: 6
   ak47:
     reach: 26
-    speed: 3
+    speed: 4
     deviation: 12
     ammo: 30
   duel:
     reach: 12
-    speed: 3
+    speed: 4
     deviation: 3
     ammo: 1
   cowboy:
     reach: 40
-    speed: 3
+    speed: 4
     deviation: 24
     ammo: 6
   shotgun:
     reach: 14
-    speed: 3
+    speed: 4
     deviation: 1
     ammo: 2
     bullets_per_shot: 6
   sniper:
     reach: 128
-    speed: 5
+    speed: 4
     ammo: 3
     deviation: 128
   pewpew:
     reach: 70
-    speed: 3
+    speed: 4
     ammo: 12
     deviation: 12
   laser_rifle:
     reach: 42
-    speed: 3
+    speed: 4
     ammo: 50
   banana:
     reach: 30
-    speed: 3
+    speed: 4
     ammo: 1
   grenade:
     reach: 30
-    speed: 3
+    speed: 4
     ammo: 1
