@@ -4,6 +4,9 @@
 #include "../../../map/stage.h"
 #define FLOOR 1
 #define BACKGROUND 0
+#define BULLET_UP 1
+#define BULLET_RIGHT 1
+#define BULLET_LEFT 2
 
 // devuelve true si fue eliminado
 bool Projectile::ray_trace(Stage& stage) {
@@ -120,13 +123,19 @@ void Projectile::check_if_stopped(std::set<int>& hit, bool& despawned, Stage& st
 }
 
 void Projectile::notify() {
-    int going_up = -1;
-    if (deviation == 1) {
-        going_up = 1;
+    int going_up = 0;
+    int hor_direction = 0;
+    if (x_direction == AIM_RIGHT) {
+        hor_direction = BULLET_RIGHT;
+    } else {
+        hor_direction = BULLET_LEFT;
+    }
+    if (y_direction == AIM_UP) {
+        going_up = BULLET_UP;
     }
     for (const Observer* obs: observers) {
         obs->update(trail, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                    static_cast<uint8_t>(id), x_direction, going_up);
+                    static_cast<uint8_t>(id), hor_direction, going_up);
     }
     trail.clear();
 }

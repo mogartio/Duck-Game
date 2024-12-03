@@ -12,7 +12,7 @@ weapons:
   duel:
     reach: 12
     speed: 3
-    deviation: 12
+    deviation: 3
     ammo: 1
   cowboy:
     reach: 40
