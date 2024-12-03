@@ -4,9 +4,9 @@
 #include <cmath>
 #include <iostream>
 
-#define PROPORCION_AÑADIDA 1.8
+#define PROPORCION_AÑADIDA 1.3
 #define VELOCIDAD_DE_REACCION_ZOOM 5.0
-#define MIN_ZOOM 0.75
+#define MIN_ZOOM 0.5
 #define TILES_PATIÑOS 6
 
 
@@ -111,7 +111,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
-    mapHelmet->defineSize(2 * tiles, 2 * tiles);
+    mapHelmet->defineSize(3 * tiles, 3 * tiles);
 
     helmetsMap[helmet] = mapHelmet;
     helmetsPos[helmet] = std::vector<std::pair<int, int>>();
@@ -617,14 +617,15 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Helmets
     for (const auto& helmet: helmetsPos) {
         for (const auto& pos: helmet.second) {
-            helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles);
+            helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles - tiles);
             helmetsMap[helmet.first]->fill();
         }
     }
 
     // Armor
     for (std::pair armorPos: armorMap) {
-        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
+        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles - tiles*1.5);
+        armorOnMap->defineSize(4 * tiles, 4 * tiles);
         armorOnMap->fill();
     }
 
