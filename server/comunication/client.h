@@ -26,13 +26,14 @@ private:
     LobbysMonitor& lobbys;
     uint lobby_unido_id;
     bool is_testing;
+    bool is_cheating;
 
     void start_client();
 
 public:
     Client(Socket&& client_skt, uint id,
            SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, LobbysMonitor& lobbys,
-           bool is_testing);
+           bool is_testing, bool is_cheating);
     bool operator==(const Client* other) const;
 
     void stop();

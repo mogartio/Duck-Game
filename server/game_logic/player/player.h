@@ -67,6 +67,7 @@ public:
 
     void take_damage();
     void die();
+    void cheat(int weapon_id);
 };
 
 #endif

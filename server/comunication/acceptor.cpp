@@ -1,11 +1,12 @@
 #include "acceptor.h"
 
 
-Acceptor::Acceptor(const char* port, bool is_testing): srv(port), lobbys(is_testing) {}
+Acceptor::Acceptor(const char* port, bool is_testing, bool is_cheating):
+        srv(port), lobbys(is_testing, is_cheating), is_cheating(is_cheating) {}
 
 void Acceptor::acceptClient(uint& id) {
     Socket new_skt = srv.accept();
-    clients.emplace_back(std::move(new_skt), id, send_queues, lobbys, is_testing);
+    clients.emplace_back(std::move(new_skt), id, send_queues, lobbys, is_testing, is_cheating);
 }
 
 void Acceptor::run() {

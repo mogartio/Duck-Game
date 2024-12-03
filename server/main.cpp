@@ -9,10 +9,16 @@ int main(int argc, char* argv[]) {
     }
     try {
         bool is_testing = false;
+        bool is_cheating = false;
         if (argc == 3) {
-            is_testing = true;
+            if (std::string(argv[2]) == "test") {
+                is_testing = true;
+            }
+            if (std::string(argv[2]) == "cheat") {
+                is_cheating = true;
+            }
         }
-        Server server(argv[1], is_testing);
+        Server server(argv[1], is_testing, is_cheating);
         server.run();
         return 0;
     } catch (const std::exception& e) {

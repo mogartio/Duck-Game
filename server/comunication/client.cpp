@@ -2,7 +2,7 @@
 
 Client::Client(Socket&& client_skt, uint id,
                SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, LobbysMonitor& lobbys,
-               bool is_testing):
+               bool is_testing, bool is_cheating):
         client_skt(std::move(client_skt)),
         send_queue(100),
         recv_queue(),
@@ -12,7 +12,8 @@ Client::Client(Socket&& client_skt, uint id,
         receiver(recv_queue, &protocol, this),
         sender(&send_queue, &protocol, this),
         lobbys(lobbys),
-        is_testing(is_testing) {
+        is_testing(is_testing),
+        is_cheating(is_cheating) {
     send_queues.add(&send_queue, id);
     start_client();
 }

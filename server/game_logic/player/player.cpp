@@ -4,7 +4,11 @@
 #include <memory>
 
 #include "../../../common/messages/generic_msg.h"
+#include "weapons/armor.h"
+#include "weapons/heavy_weapons.h"
+#include "weapons/lasers.h"
 #include "weapons/pistols.h"
+#include "weapons/throwables.h"
 #include "weapons/weapon.h"
 
 using namespace ActionsId;
@@ -228,6 +232,56 @@ void Player::take_damage() {
         chest->shoot(1, false);
     }
     is_alive = true;
+}
+
+void Player::cheat(int weapon_id) {
+    std::shared_ptr<Weapon> new_weapon;
+    switch (weapon_id) {
+        case GRENADE:
+            new_weapon = std::make_shared<Grenade>(*stage);
+            break;
+        case BANANA:
+            new_weapon = std::make_shared<Banana>(*stage);
+            break;
+        case COWBOY_PISTOL:
+            new_weapon = std::make_shared<CowboyGun>(*stage);
+            break;
+        case MAGNUM:
+            new_weapon = std::make_shared<Magnum>(*stage);
+            break;
+        case DUEL_PISTOL:
+            new_weapon = std::make_shared<DuelPistol>(*stage);
+            break;
+        case AK_47:
+            new_weapon = std::make_shared<Ak47>(*stage);
+            break;
+        case SHOTGUN:
+            new_weapon = std::make_shared<Shotgun>(*stage);
+            break;
+        case SNIPER:
+            new_weapon = std::make_shared<Sniper>(*stage);
+            break;
+        case PEW_PEW_LASER:
+            new_weapon = std::make_shared<PewLaser>(*stage);
+            break;
+        case LASER_RIFLE:
+            new_weapon = std::make_shared<LaserRifle>(*stage);
+            break;
+        case HELMET:
+        case HELMET2:
+        case HELMET3:
+            new_weapon = std::make_shared<Helmet>(*stage, weapon_id);
+            break;
+        case CHEST:
+            new_weapon = std::make_shared<Chest>(*stage);
+            break;
+        default:
+            new_weapon = std::make_shared<CowboyGun>(*stage);
+            break;
+    }
+    if (new_weapon) {
+        pick_weapon(new_weapon);
+    }
 }
 
 void Player::die() { is_alive = false; }

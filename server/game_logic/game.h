@@ -25,19 +25,19 @@ private:
     bool players_created;
 
     MapManager map_manager;
+    bool is_cheating;
 
     void send_map(Map& map);
     std::map<std::string, Player*> generate_players(const std::vector<std::string>& names,
-                                                const PlayerObserver&, Map& map);
+                                                    const PlayerObserver&, Map& map);
 
 
 public:
     Game(Queue<std::shared_ptr<GenericMsg>>& recv, const std::vector<std::string>& player_names,
-         bool is_testing, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
+         bool is_testing, bool is_cheating, SendQueuesMonitor<std::shared_ptr<GenericMsg>>& senders,
          std::shared_ptr<std::set<uint>> ids);
     void run() override;
     ~Game();
-
 };
 
 #endif

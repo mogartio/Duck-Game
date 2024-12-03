@@ -32,6 +32,9 @@ EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::s
     key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_D)] = [this]() {
         return std::make_shared<StartActionMsg>(ActionsId::MOVE_RIGHT, playerName1);
     };
+    key_accion_map[std::make_tuple(SDL_KEYDOWN, SDL_SCANCODE_C)] = [this]() {
+        return std::make_shared<StartActionMsg>(ActionsId::CHEAT, playerName1);
+    };
 
     // Key up actions
     key_accion_map[std::make_tuple(SDL_KEYUP, SDL_SCANCODE_S)] = [this]() {
@@ -64,6 +67,7 @@ EventHandler::EventHandler(Queue<std::shared_ptr<GenericMsg>>& queueSend, std::s
     pressed_keys_state[SDL_SCANCODE_S] = false;
     pressed_keys_state[SDL_SCANCODE_A] = false;
     pressed_keys_state[SDL_SCANCODE_D] = false;
+    pressed_keys_state[SDL_SCANCODE_C] = false;
 
     // Si hay un segundo jugador, se agregan las teclas correspondientes
     if (playerName2 != "") {

@@ -49,6 +49,7 @@ private:
     void lobby_empty();
     bool is_testing;
     bool is_dead;
+    bool is_cheating;
 
     std::list<DescripcionPlayer> get_players_description();
 
@@ -58,9 +59,9 @@ public:
      */
     explicit Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues,
                    std::string& player_name, std::string& lobby_name, uint8_t max_players,
-                   Client* first_player, uint& id_lobby, bool is_testing);
+                   Client* first_player, uint& id_lobby, bool is_testing, bool is_cheating);
 
-    
+
     /*
      * Metodo que agrega un jugador al lobby
      */

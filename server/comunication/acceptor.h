@@ -16,6 +16,7 @@ private:
     SendQueuesMonitor<std::shared_ptr<GenericMsg>> send_queues;
     LobbysMonitor lobbys;
     bool is_testing;
+    bool is_cheating;
 
     void run() override;
 
@@ -28,7 +29,7 @@ private:
     const int Q_MAX_SIZE = 100;
 
 public:
-    explicit Acceptor(const char* port, bool);
+    explicit Acceptor(const char* port, bool is_testing, bool is_cheating);
 
     void stop() override;
 

@@ -1,5 +1,6 @@
 #include "game_loop.h"
 
+#include <regex>
 #include <tuple>
 #include <vector>
 
@@ -11,8 +12,8 @@ using namespace std::chrono;
 #include "game.h"
 
 GameLoop::GameLoop(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
-                   bool is_testing):
-        receiver_q(q), is_testing(is_testing), players(players) {}
+                   bool is_testing, bool is_cheating):
+        receiver_q(q), is_testing(is_testing), players(players), is_cheating(is_cheating) {}
 
 // Recibe el stage del round, devuelve el nombre del pato ganador
 std::string GameLoop::play_round(Stage& stage, Map& map) {
@@ -47,7 +48,7 @@ void GameLoop::init_round(Stage& stage, Map& map) {
     std::vector<Coordinate> player_spawns = map.get_players_spawn_sites();
     int i = 0;
     for (auto [name, player]: players) {
-        Coordinate spawn = player_spawns[i]; 
+        Coordinate spawn = player_spawns[i];
         player->init_for_stage(&stage, spawn);
         alive_players.insert(name);
         stage.add_player(player, player->get_id());
@@ -125,8 +126,39 @@ void GameLoop::sleep_for_round(steady_clock::time_point t0, steady_clock::time_p
     std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
 }
 
+void GameLoop::cheat() {
+    std::cout << "INGRESA EL CHEAT CHEATER" << std::endl;
+    std::string command;
+    std::getline(std::cin, command);
+    std::istringstream iss(command);
+    std::string action, player_name, weapon_id;
+    if (iss >> action >> player_name >> weapon_id) {
+        if (action == "spawn") {
+            std::string extra;
+            if (!(iss >> extra)) {
+                if (players[player_name]) {
+                    try {
+                        int id = stoi(weapon_id);
+                        players[player_name]->cheat(id);
+                    } catch (...) {
+                        std::cout << "Weapon_id no fue ingresado como numero o el nombre es "
+                                     "incorrecto "
+                                  << std::endl;
+                    }
+                }
+            }
+        }
+    }
+}
 void GameLoop::handle_read(const StartActionMsg& msg) {
     int action = msg.get_action_id();
+    std::cout << "recibi un action id que es " << std::to_string(action) << std::endl;
+    if (action == 0x08) {  // codigo de CHEAT
+        if (is_cheating) {
+            cheat();
+        }
+        return;
+    }
     players[msg.get_player_name()]->add_action(action);
 }
 

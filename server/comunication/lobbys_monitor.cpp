@@ -1,8 +1,12 @@
 #include "lobbys_monitor.h"
 
 
-LobbysMonitor::LobbysMonitor(bool is_testing):
-        m(), lobbys_disponibles(), contador_id_lobbys(0), is_testing(is_testing) {}
+LobbysMonitor::LobbysMonitor(bool is_testing, bool is_cheating):
+        m(),
+        lobbys_disponibles(),
+        contador_id_lobbys(0),
+        is_testing(is_testing),
+        is_cheating(is_cheating) {}
 
 std::vector<DescripcionLobby> LobbysMonitor::get_lobbys() {
     std::lock_guard<std::mutex> lock(m);
@@ -21,7 +25,7 @@ uint LobbysMonitor::create(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_
     lobbys_disponibles.emplace(
             contador_id_lobbys,
             std::make_shared<Lobby>(send_queues, player_name, lobby_name, max_players, first_player,
-                                    contador_id_lobbys, is_testing));
+                                    contador_id_lobbys, is_testing, is_cheating));
     return contador_id_lobbys;
 }
 

@@ -24,12 +24,13 @@ std::list<DescripcionPlayer> Lobby::get_players_description() {
 
 Lobby::Lobby(SendQueuesMonitor<std::shared_ptr<GenericMsg>>& send_queues, std::string& player_name,
              std::string& lobby_name, uint8_t max_players, Client* first_player, uint& id_lobby,
-             bool is_testing):
+             bool is_testing, bool is_cheating):
         send_queues(send_queues),
         receiver_q(new Queue<std::shared_ptr<GenericMsg>>(200)),
         id_lobby(id_lobby),
         is_testing(is_testing),
-        is_dead(false) {
+        is_dead(false),
+        is_cheating(is_cheating) {
     host_id = first_player->get_id();
     host_name = player_name;
     players_map[player_name] = first_player;
@@ -159,7 +160,8 @@ void Lobby::startGame() {
         }
         names.push_back(pair.first);
     }
-    game = std::make_shared<Game>(*receiver_q, names, is_testing, send_queues, players_ids);
+    game = std::make_shared<Game>(*receiver_q, names, is_testing, is_cheating, send_queues,
+                                  players_ids);
     game->start();
 }
 
