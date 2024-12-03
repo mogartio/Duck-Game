@@ -23,8 +23,7 @@ class ProjectileInfoMsg;
 class PlayerInfoMsg;
 class NotProyectileInfo;
 class ShootMsg;
-// TODO: esto se puede mejorar lanzando mensajes de errores si no se implementan los metodos
-// TODO: en las clases hijas ya que hasta ahora solo haciamos (void)msg
+class StartRoundMsg;
 
 class HandlerReceiver {
 public:
@@ -42,6 +41,7 @@ public:
     virtual void handle_recv(PickupDropMsg& msg);
     virtual void handle_recv(StartActionMsg& msg);
     virtual void handle_recv(StopActionMsg& msg);
+    virtual void handle_recv(StartRoundMsg& msg);
     // from server
     virtual void handle_recv(SendLobbiesListMsg& msg);
     virtual void handle_recv(EverythingOkMsg& msg);

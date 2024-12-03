@@ -166,6 +166,8 @@ void ClientProtocol::handle_recv(WinnerMsg& msg) {
 }
 
 void ClientProtocol::handle_recv(SendMapMsg& msg) {
+    uint8_t theme = recv_u_int8_t();
+    msg.set_theme(theme);
     uint16_t filas = recv_u_int16_t();
     msg.set_filas(filas);
     uint16_t columnas = recv_u_int16_t();
@@ -235,4 +237,10 @@ void ClientProtocol::handle_recv(NotProyectileInfo& msg) {
 void ClientProtocol::handle_recv(ShootMsg& msg) {
     std::string player_name = recv_string();
     msg.set_player_name(player_name);
+}
+
+void ClientProtocol::handle_send(const StartRoundMsg& msg) {
+    uint8_t header = msg.get_header();
+    send_u_int8_t(header);
+    std::cout << "se esta mandando el StarRound" << std::endl;
 }

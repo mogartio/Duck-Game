@@ -6,6 +6,7 @@
 
 #include "../../../../common/messages/generic_msg.h"
 #include "../../config/weapon_config.h"
+#include "../player.h"
 #include "projectiles/projectile.h"
 using namespace ProjectilesId;
 
@@ -17,10 +18,14 @@ void CowboyGun::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
-    stage.add_projectile(std::move(
-            std::make_unique<CowboyBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
+    stage.add_projectile(std::move(std::make_unique<CowboyBullet>(
+            gun_position, x_direction, -1, is_aiming_up, reach, player->get_name())));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
     stopped_holding_trigger = false;
 }
 
@@ -32,24 +37,32 @@ void Magnum::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
-    stage.add_projectile(std::move(
-            std::make_unique<MagnumBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
+    stage.add_projectile(std::move(std::make_unique<MagnumBullet>(
+            gun_position, x_direction, -1, is_aiming_up, reach, player->get_name())));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
     stopped_holding_trigger = false;
 }
 
 DuelPistol::DuelPistol(Stage& stage):
-        Weapon(stage, WeaponConfig::get_instance()->weapons["magnum"]["ammo"],
-               WeaponConfig::get_instance()->weapons["magnum"]["reach"], DUEL_PISTOL) {}
+        Weapon(stage, WeaponConfig::get_instance()->weapons["duel"]["ammo"],
+               WeaponConfig::get_instance()->weapons["duel"]["reach"], DUEL_PISTOL) {}
 
 void DuelPistol::shoot(int x_direction, bool is_aiming_up) {
     if (ammo == 0 || !stopped_holding_trigger || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
-    stage.add_projectile(std::move(
-            std::make_unique<DuelBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
+    stage.add_projectile(std::move(std::make_unique<DuelBullet>(
+            gun_position, x_direction, -1, is_aiming_up, reach, player->get_name())));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
     stopped_holding_trigger = false;
 }

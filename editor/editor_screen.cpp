@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps)
+EditorScreen::EditorScreen(int columns, int rows, std::string theme, std::map<std::string, std::map<std::string, std::shared_ptr<QPixmap>>> map_of_maps)
     : map_of_maps(map_of_maps), columns(columns), rows(rows), scale(1.0), isDragging(false), offsetX(0), offsetY(0) {
     setFocusPolicy(Qt::StrongFocus);
     setFixedSize(1920, 1080); // Ensure the editor screen is fixed to 1920x1080
@@ -20,6 +20,13 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     customFont = new QFont(fontFamily);
     // Load button sound
     buttonSound = new QSound("assets/menu_assets/Retro3.wav");
+
+    if (theme == "light") {
+        this->theme = static_cast<int>(GenericMsg::Theme::DAY);
+    } else {
+        this->theme = static_cast<int>(GenericMsg::Theme::NIGHT);
+    }
+
 
     // Extract the background tile from the map of maps
     background_tile = map_of_maps["tiles"]["background"];
@@ -115,6 +122,9 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     weaponsMenu->addAction(laserRifle);
     QAction *pewpewlaser = new QAction(QIcon("assets/game_assets/weapons/pewpewlaser.png"), "pew pew laser", this);
     weaponsMenu->addAction(pewpewlaser);
+    QAction *mysteryBox = new QAction(QIcon("assets/game_assets/box/1.png"), "mystery box", this);
+    weaponsMenu->addAction(mysteryBox);
+
 
     connect(weaponsMenuButton, &QPushButton::clicked, [this](){
         buttonSound->play();
@@ -131,6 +141,7 @@ EditorScreen::EditorScreen(int columns, int rows, std::map<std::string, std::map
     connect(sniper, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(laserRifle, &QAction::triggered, this, [this]() { startDrag("weapons"); });
     connect(pewpewlaser, &QAction::triggered, this, [this]() { startDrag("weapons"); });
+    connect(mysteryBox, &QAction::triggered, this, [this]() { startDrag("weapons"); });
 
     // add players button
     players_set = std::set<std::string>();
@@ -417,6 +428,7 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                 case Id::HELMET2: category = "armor"; itemName = "normal"; break;
                 case Id::HELMET3: category = "armor"; itemName = "tinfoil"; break;
                 case Id::CHEST: category = "armor"; itemName = "chest"; break;
+                case Id::MYSTERY_BOX: category = "box"; itemName = "mystery box"; break;
                 default: break;
             }
 
@@ -456,13 +468,17 @@ void EditorScreen::paintEvent(QPaintEvent* event) {
                     scaleTile(1.0, 1.0, 1.0);
                 } else if (category == "tiles") {
                     painter.drawPixmap(cellRect, *tile);
+                } else if (category == "box") {
+                    scaleTile(1.0, 1.0, 1.0);
                 }
 
                 painter.drawPixmap(itemRect, scaledTile);
             }
 
-            if (gridVisible) {
+            if (gridVisible && theme == static_cast<int>(GenericMsg::Theme::DAY)) {
                 painter.setPen(QPen(Qt::black, 1));
+            } else if (gridVisible && theme == static_cast<int>(GenericMsg::Theme::NIGHT)) {
+                painter.setPen(QPen(QColor("#707070"), 1));
             } else {
                 painter.setPen(QPen(Qt::transparent, 1));
             }
@@ -549,6 +565,9 @@ void EditorScreen::startDrag(std::string menu) {
 
     // Get the tile image associated with the action
     QString tileName = action->text();
+    if (tileName == "mystery box") {
+        menu = "box";
+    }
     auto tile = map_of_maps[menu][tileName.toStdString()];
     if (!tile || tile->isNull()) {
         std::cout << "Tile: " << tileName.toStdString() << " not found." << std::endl;
@@ -632,6 +651,7 @@ void EditorScreen::placeTileAtPosition(const QPoint& pos) {
             else if (currentTile == "knight") placeTile(Id::HELMET);
             else if (currentTile == "normal") placeTile(Id::HELMET2);
             else if (currentTile == "tinfoil") placeTile(Id::HELMET3);
+            else if (currentTile == "mystery box") placeTile(Id::MYSTERY_BOX);
         } else if (isErasing) {
             eraseTile();
         }
@@ -706,6 +726,6 @@ void EditorScreen::onSaveMap() {
     bool ok = inputDialog.exec() == QDialog::Accepted;
     QString filename = inputDialog.textValue();
     if (ok && !filename.isEmpty()) {
-        saveMap(editor_matrix, filename.toStdString());
+        saveMap(editor_matrix, filename.toStdString(), theme);
     }
 }

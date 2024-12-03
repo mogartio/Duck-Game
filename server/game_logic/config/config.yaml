@@ -1,12 +1,13 @@
 player_falling_speed: 2
-player_jumping_height: 6
+player_jumping_height: 7
 armor_strength: 1
 
 explosion_counter: 120
 explosion_range: 2
 stun_duration: 10
-rounds_per_cycle: 5
+rounds_per_cycle: 2
 bullet_size: 2
+throw_speed: 4
 mapId:
   - background # 0
   - playerA # 1

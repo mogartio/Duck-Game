@@ -21,46 +21,25 @@ protected:
     std::vector<int> deviations_direction;
     int deviations_index;
     std::shared_ptr<Weapon> weapon;
+    int time_in_air;
 
 public:
     ProjectileThrownWeapon(std::shared_ptr<Weapon> weapon, Coordinate initial_position, int speed,
-                           int x_direction, int reach, int id):
-            Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
+                           int x_direction, int reach, int id, bool thrown_up):
+            Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, thrown_up),
             deviations_index(-1),
-            weapon(std::move(weapon)) {  // Initialize deviations_index
-        deviations.push_back(1);
-        deviations_direction.push_back(UP_DIRECTION);
-        deviations.push_back(1);
-        deviations_direction.push_back(UP_DIRECTION);
+            weapon(std::move(weapon)),
+            time_in_air(0) {
         for (int i = 0; i < speed; i++) {
             if (i < speed / 2) {
-                deviations.push_back(2);
+                deviations.push_back(1);
                 deviations_direction.push_back(UP_DIRECTION);
             } else {
-                deviations.push_back(6);
+                deviations.push_back(speed);
                 deviations_direction.push_back(DOWN_DIRECTION);
             }
         }
-        deviations.push_back(2);
-        deviations_direction.push_back(DOWN_DIRECTION);
-    }
-
-    ProjectileThrownWeapon(std::shared_ptr<Grenade> weapon, Coordinate initial_position, int speed,
-                           int x_direction, int reach, int id):
-            Projectile(initial_position, x_direction, 1, reach, speed, id, false, false, false),
-            deviations_index(-1),
-            weapon(std::move(weapon)) {  // Initialize deviations_index
-        for (int i = 0; i < speed; i++) {
-            deviations.push_back(3);
-            deviations_direction.push_back(UP_DIRECTION);
-            deviations.push_back(5);
-            if (i < speed / 2) {
-                deviations_direction.push_back(UP_DIRECTION);
-            } else {
-                deviations_direction.push_back(DOWN_DIRECTION);
-            }
-        }
-        deviations.push_back(3);
+        deviations.push_back(1);
         deviations_direction.push_back(DOWN_DIRECTION);
     }
 
@@ -74,15 +53,16 @@ public:
             }
             weapon->update(position);
         }
-        if (static_cast<size_t>(deviations_index) == deviations.size() - 1) {
-            return false;
+        if (!moving_vertically) {
+            if (static_cast<size_t>(deviations_index) == deviations.size() - 1) {
+                return false;
+            }
+            deviations_index++;
+            deviation = deviations[deviations_index];
+            deviation_direction = deviations_direction[deviations_index];
         }
-        deviations_index++;
-        deviation = deviations[deviations_index];
-        deviation_direction = deviations_direction[deviations_index];
         return false;
     }
-
 
     void notify() override {
         for (const Observer* obs: observers) {
@@ -113,7 +93,9 @@ public:
         }
     }
     virtual std::shared_ptr<Weapon> get_weapon() {
-        spawn->free();
+        if (spawn) {
+            spawn->free();
+        }
         return std::move(weapon);
     }
 };

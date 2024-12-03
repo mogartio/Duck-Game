@@ -23,8 +23,7 @@ class ProjectileInfoMsg;
 class PlayerInfoMsg;
 class NotProyectileInfo;
 class ShootMsg;
-// TODO: esto se puede mejorar lanzando mensajes de errores si no se implementan los metodos
-// TODO: en las clases hijas ya que hasta ahora solo haciamos (void)msg
+class StartRoundMsg;
 
 class HandlerReader {
 public:
@@ -54,6 +53,7 @@ public:
     virtual void handle_read(const ProjectileInfoMsg& msg);
     virtual void handle_read(const NotProyectileInfo& msg);
     virtual void handle_read(const ShootMsg& msg);
+    virtual void handle_read(const StartRoundMsg& msg);
 
     virtual ~HandlerReader() = default;
 };

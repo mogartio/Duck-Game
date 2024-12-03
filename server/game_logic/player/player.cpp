@@ -18,9 +18,9 @@ Player::Player(Coordinate& initial_position, int id, const std::string& name,
     attach(obs);
 }
 
-void Player::init_for_stage(Stage* stage) {
+void Player::init_for_stage(Stage* stage, Coordinate initial_pos) {
     this->stage = stage;
-    this->position = std::make_unique<PlayerPosition>(initial_position, *this, *stage);
+    this->position = std::make_unique<PlayerPosition>(initial_pos, *this, *stage);
     is_alive = true;
     current_actions.clear();
     notify_moved();  // los notify hacen que se broadcasteen mensajes

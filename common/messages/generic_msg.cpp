@@ -179,13 +179,13 @@ void StartGameMsg::accept_read(HandlerReader& handler) { handler.handle_read(*th
 
 PickupDropMsg::PickupDropMsg():
         GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
-        item_id(0),
-        player_name("") {}
+        player_name(""),
+        item_id(0) {}
 
-PickupDropMsg::PickupDropMsg(std::string player_name, uint8_t item_id):
+PickupDropMsg::PickupDropMsg(std::string player_name, uint16_t item_id):
         GenericMsg(GenericMsg::PICKUP_DROP_MSG, GenericMsg::GAME_MSG),
-        item_id(item_id),
-        player_name(player_name) {}
+        player_name(player_name),
+        item_id(item_id) {}
 
 void PickupDropMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -193,11 +193,11 @@ void PickupDropMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(
 
 void PickupDropMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }
 
-void PickupDropMsg::set_item_id(uint8_t item_id) { this->item_id = item_id; }
+void PickupDropMsg::set_item_id(uint16_t item_id) { this->item_id = item_id; }
 
 void PickupDropMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
-uint8_t PickupDropMsg::get_item_id() const { return item_id; }
+uint16_t PickupDropMsg::get_item_id() const { return item_id; }
 
 std::string PickupDropMsg::get_player_name() const { return player_name; }
 
@@ -292,13 +292,17 @@ void ErrorMsg::set_error_msg(std::string error_msg) { this->error_msg = error_ms
 std::string ErrorMsg::get_error_msg() const { return error_msg; }
 
 SendMapMsg::SendMapMsg():
-        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG), filas(0), columnas(0) {}
+        GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
+        filas(0),
+        columnas(0),
+        theme(Theme::DAY) {}
 
-SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas):
+SendMapMsg::SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas, uint8_t theme):
         GenericMsg(GenericMsg::SEND_MAP_MSG, GenericMsg::GAME_MSG),
         map(map),
         filas(filas),
-        columnas(columnas) {}
+        columnas(columnas),
+        theme(theme) {}
 
 void SendMapMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
 
@@ -314,9 +318,13 @@ void SendMapMsg::set_filas(uint16_t filas) { this->filas = filas; }
 
 void SendMapMsg::set_columnas(uint16_t columnas) { this->columnas = columnas; }
 
+void SendMapMsg::set_theme(uint8_t theme) { this->theme = theme; }
+
 uint16_t SendMapMsg::get_filas() const { return filas; }
 
 uint16_t SendMapMsg::get_columnas() const { return columnas; }
+
+uint8_t SendMapMsg::get_theme() const { return theme; }
 
 GameEndedMsg::GameEndedMsg(): GenericMsg(GenericMsg::GAME_ENDED_MSG, GenericMsg::GAME_MSG) {}
 
@@ -509,3 +517,12 @@ void ShootMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this);
 void ShootMsg::set_player_name(std::string player_name) { this->player_name = player_name; }
 
 std::string ShootMsg::get_player_name() const { return player_name; }
+
+
+StartRoundMsg::StartRoundMsg(): GenericMsg(GenericMsg::START_ROUND_MSG, GenericMsg::GAME_MSG) {}
+
+void StartRoundMsg::accept_send(HandlerSender& handler) { handler.handle_send(*this); }
+
+void StartRoundMsg::accept_recv(HandlerReceiver& handler) { handler.handle_recv(*this); }
+
+void StartRoundMsg::accept_read(HandlerReader& handler) { handler.handle_read(*this); }

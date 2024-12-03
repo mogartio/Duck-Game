@@ -12,8 +12,13 @@ public:
     virtual void stop_shooting() override;
 };
 class LaserRifle: public Weapon {
+private:
+    bool stopped_pressing_since_picked;
+
 public:
     explicit LaserRifle(Stage&);
     virtual void shoot(int, bool) override;
+    virtual void stop_shooting() override;
+    virtual void finish_throw(int x_direction, bool, std::shared_ptr<Weapon> weapon) override;
 };
 #endif

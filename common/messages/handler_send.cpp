@@ -22,3 +22,4 @@ void HandlerSender::handle_send(const UpdatedPlayerInfoMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const ProjectileInfoMsg& msg) { (void)msg; }
 void HandlerSender::handle_send(const NotProyectileInfo& msg) { (void)msg; }
 void HandlerSender::handle_send(const ShootMsg& msg) { (void)msg; }
+void HandlerSender::handle_send(const StartRoundMsg& msg) { (void)msg; }

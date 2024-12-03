@@ -5,8 +5,10 @@
 
 #include "config/config.h"
 #include "map/spawn_point.h"
+#include "player/weapons/mystery_box.h"
 #define TARGET_TIME 35
 using namespace std::chrono;
+#include "game.h"
 
 GameLoop::GameLoop(Queue<std::shared_ptr<GenericMsg>>& q, std::map<std::string, Player*> players,
                    bool is_testing):
@@ -29,22 +31,29 @@ std::string GameLoop::play_round(Stage& stage, Map& map) {
 }
 
 void GameLoop::init_round(Stage& stage, Map& map) {
-    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites =
-            map.get_items_spawn_sites();
+    std::vector<std::tuple<Coordinate, int>> weapon_spawn_sites = map.get_items_spawn_sites();
 
     for (auto& weapon: weapon_spawn_sites) {
         WeaponSpawnPoint spawn(std::get<0>(weapon), stage, std::get<1>(weapon));
         weapon_spawns.push_back(&spawn);
     }
 
+    std::vector<Coordinate> box_positions = map.get_boxes_spawn_sites();
+    for (auto& box_position: box_positions) {
+        stage.add_box(std::make_shared<MysteryBox>(stage, box_position));
+    }
+
+    std::vector<Coordinate> player_spawns = map.get_players_spawn_sites();
+    int i = 0;
     for (auto [name, player]: players) {
-        player->init_for_stage(&stage);
+        Coordinate spawn = player_spawns[i]; 
+        player->init_for_stage(&stage, spawn);
         alive_players.insert(name);
         stage.add_player(player, player->get_id());
+        i++;
     }
-    for (auto [name, player]: players) {  // I'll do it again
-        player->unarm_self();  // la sangre derramada por este doble loop pesara en la consciencia
-                               // de facu
+    for (auto [name, player]: players) {  // primero tuve que mandar todos los nombres
+        player->unarm_self();
     }
 }
 
@@ -97,7 +106,6 @@ std::string GameLoop::look_for_dead_people_and_do_what_you_must(Stage& stage, bo
     }
     if (alive_players.size() == 1) {
         round_over = true;
-        std::cout << "SE TERMINO LA RONDA Y LA GANO: " << *alive_players.begin() << std::endl;
         stage.delete_player_from_stage(*players[*alive_players.begin()]);  // Borro su dibujo viejo
         return *alive_players.begin();
     }
@@ -124,6 +132,10 @@ void GameLoop::handle_read(const StartActionMsg& msg) {
 void GameLoop::handle_read(const StopActionMsg& msg) {
     int action = msg.get_action_id();
     players[msg.get_player_name()]->remove_action(action);
+}
+
+void GameLoop::handle_read(const StartRoundMsg& msg) {
+    // nada
 }
 
 // podes ignorar todo lo que esta abajo

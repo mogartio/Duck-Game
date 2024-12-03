@@ -1,5 +1,4 @@
 #include <list>
-
 #include <memory>
 #include <set>
 #include <string>
@@ -10,6 +9,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "../../../common/messages/generic_msg.h"
 #include "../../../common/queue.h"
 
 #include "player.h"
@@ -29,9 +29,11 @@ private:
     uint height_window;
     uint columnas;
     uint filas;
+    uint theme;
 
     // Imagenes de los tiles dia/noche
-    std::vector<std::shared_ptr<Image>> tilesImages;
+    std::vector<std::shared_ptr<Image>> tilesImagesDay;
+    std::vector<std::shared_ptr<Image>> tilesImagesNight;
     // Posiciones de los tiles
     std::unordered_map<TileType, std::vector<std::pair<int, int>>> tilesPlace;
 
@@ -75,6 +77,13 @@ private:
     // Contador de las explosiones
     std::vector<int> explosionCounter;
 
+    // Imagenes de las cajas
+    std::vector<std::shared_ptr<Image>> boxes;
+    std::vector<std::pair<int, int>> boxesPos;
+
+    // zoom del mapa
+    float currentZoom;
+
     bool canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual);
 
     void redifine_sizes();
@@ -84,13 +93,15 @@ private:
     void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
+    void makeBoxes();
 
+    float animationZoom(float targetZoom);
+    float getDeltaTime();
     SDL_Rect adjustMapZoom();
 
 
 public:
-    Map(SDL_Renderer* rend, uint tiles, uint width_window,
-        uint height_window);
+    Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window);
 
     void makeMap(int w, int h, std::vector<uint16_t> mapa);
 
@@ -105,9 +116,8 @@ public:
     // Agrega un nuevo arma al mapa
     void newWeapon(int x, int y, ProjectilesId::ProjectileId id);
     // Asignar arma a un jugador
-    void weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName);  // si ya tiene arma tonces dispara
-    // Remover arma del jugador
-    void dropWeapon(std::string playerName);
+    void weaponPlayer(ProjectilesId::ProjectileId id,
+                      std::string playerName);  // si ya tiene arma tonces dispara
 
     // Agrega un nuevo casco al mapa
     void newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet);
@@ -122,8 +132,14 @@ public:
     // Agregar explosion
     void explosion(int x, int y);
 
+    // Agregar caja
+    void newBox(int x, int y);
+
     // Remover del mapa
     void removeWeapon(int x, int y, ProjectilesId::ProjectileId id);
+
+    void setTheme(uint theme);
+
 
     // Dibujar mapa, jugadores, armas, armaduras y cascos
     void fill();

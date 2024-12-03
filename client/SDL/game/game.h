@@ -36,6 +36,7 @@ public:
          Queue<std::shared_ptr<GenericMsg>>& queueRecive, std::string playerName1,
          std::string playerName2 = "");
 
+
     void play();
 
     ~Game();

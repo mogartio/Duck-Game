@@ -10,10 +10,14 @@ ConnectionScreen::ConnectionScreen(Queue<std::shared_ptr<GenericMsg>>* send_queu
 
     // Create ParallaxBackground layers
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layer0 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_1.png", 0.5f);
-    layer1 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_2.png", 0.75f);
-    layer2 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_3.png", 1.0f);
-    layer3 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_4.png", 1.25f);
+    // layer0 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_1.png", 0.5f);
+    // layer1 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_2.png", 0.75f);
+    // layer2 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_3.png", 1.0f);
+    // layer3 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_4.png", 1.25f);
+    layer0 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_1.png", 0.0f);
+    layer1 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_2.png", 0.0f);
+    layer2 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_3.png", 0.0f);
+    layer3 = std::make_unique<ParallaxBackground>(this, "assets/menu_assets/parallax_background_layer_4.png", 0.0f);
 
     layer0->start();
     layer1->start();

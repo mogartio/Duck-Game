@@ -134,6 +134,10 @@ void EventHandler::run() {
     std::shared_ptr<GenericMsg> msg;
     bool mensajeEnviado = false;
     while (running) {
+        if (is_blocked) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(35));
+            continue;
+        }
         SDL_Event event;
         // Procesa los eventos encolados
         if (SDL_WaitEvent(&event)) {  // esperamos un evento exitoso
@@ -167,3 +171,7 @@ void EventHandler::run() {
         }
     }
 }
+
+
+void EventHandler::block() { is_blocked = true; }
+void EventHandler::unblock() { is_blocked = false; }

@@ -32,10 +32,30 @@ protected:
     bool is_lethal;
     std::vector<std::pair<uint8_t, uint8_t>> trail;
     bool moving_vertically;
+    std::string player_name;
 
     Coordinate get_bullet_position(int offset);
 
 public:
+    Projectile(Coordinate& initial_position, int x_direction, int y_direction, int reach, int speed,
+               int id, bool despawns_on_contact, bool is_lethal, bool moving_vertically,
+               std::string& player_name):
+            speed(speed),
+            x_direction(x_direction),
+            y_direction(y_direction),
+            position(initial_position),
+            reach(reach),
+            distance_covered(0),
+            id(id),
+            despawns_on_contact(despawns_on_contact),
+            is_lethal(is_lethal),
+            trail(),
+            moving_vertically(moving_vertically),
+            player_name(player_name) {
+        if (id == LASER || id == BULLET_PISTOL || id == BULLET_SHOTGUN) {
+            updateShot();
+        }
+    }
     Projectile(Coordinate& initial_position, int x_direction, int y_direction, int reach, int speed,
                int id, bool despawns_on_contact, bool is_lethal, bool moving_vertically):
             speed(speed),
@@ -48,7 +68,11 @@ public:
             despawns_on_contact(despawns_on_contact),
             is_lethal(is_lethal),
             trail(),
-            moving_vertically(moving_vertically) {}
+            moving_vertically(moving_vertically) {
+        if (id == LASER || id == BULLET_PISTOL || id == BULLET_SHOTGUN) {
+            updateShot();
+        }
+    }
     virtual void move(Coordinate new_position) { position = new_position; }
     virtual Coordinate get_position() { return position; }
     virtual ~Projectile() = default;
@@ -57,18 +81,20 @@ public:
     virtual void updateNotPosition(uint8_t, uint8_t);
     virtual bool ray_trace(Stage& stage);
     virtual void notify() override;
-    virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage);
-    virtual void check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage);
+    virtual void check_if_stopped(std::set<int>& hit, bool& despawned, Stage& stage,
+                                  Coordinate next_position);
+    virtual void check_if_player_killed(std::set<int>& hit, bool& despawned, Stage& stage,
+                                        Coordinate next_position);
+    virtual void updateShot();
 };
-
 
 class CowboyBullet: public Projectile {
 public:
     CowboyBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-                 int reach):
+                 int reach, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["cowboy"]["speed"], BULLET_PISTOL,
-                       true, true, is_aiming_up) {
+                       true, true, is_aiming_up, player_name) {
         deviation = WeaponConfig::get_instance()->weapons["cowboy"]["deviation"];
     }
 
@@ -82,10 +108,10 @@ public:
 class MagnumBullet: public Projectile {
 public:
     MagnumBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-                 int reach):
+                 int reach, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["magnum"]["speed"], BULLET_PISTOL,
-                       true, true, is_aiming_up) {
+                       true, true, is_aiming_up, player_name) {
         deviation = WeaponConfig::get_instance()->weapons["magnum"]["deviation"];
         deviation_direction = -1;
     }
@@ -93,10 +119,10 @@ public:
 class DuelBullet: public Projectile {
 public:
     DuelBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-               int reach):
+               int reach, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["duel"]["speed"], BULLET_PISTOL, true,
-                       true, is_aiming_up) {
+                       true, is_aiming_up, player_name) {
         deviation = WeaponConfig::get_instance()->weapons["duel"]["deviation"];
     }
 };
@@ -104,10 +130,10 @@ public:
 class Ak47Bullet: public Projectile {
 public:
     Ak47Bullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-               int reach, int bullet_number):
+               int reach, int bullet_number, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["ak47"]["speed"], BULLET_PISTOL, true,
-                       true, is_aiming_up) {
+                       true, is_aiming_up, player_name) {
 
         int init_deviation = WeaponConfig::get_instance()->weapons["ak47"]["deviation"];
         deviation = std::max(3, init_deviation - 2 * bullet_number);  // la desviacion a lo sumo 3
@@ -118,10 +144,11 @@ public:
 class ShotgunBullet: public Projectile {
 public:
     ShotgunBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-                  int reach, int new_deviation, int new_deviation_direction):
+                  int reach, int new_deviation, int new_deviation_direction,
+                  std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["shotgun"]["speed"], BULLET_SHOTGUN,
-                       true, true, is_aiming_up) {
+                       true, true, is_aiming_up, player_name) {
         deviation = new_deviation;
         deviation_direction = new_deviation_direction;
     }
@@ -130,19 +157,20 @@ public:
 class SniperBullet: public Projectile {
 public:
     SniperBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-                 int reach):
+                 int reach, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["sniper"]["speed"], BULLET_PISTOL,
-                       true, true, is_aiming_up) {}
+                       true, true, is_aiming_up, player_name) {}
 };
 
 class PewLaserBullet: public Projectile {
 public:
     PewLaserBullet(Coordinate& initial_position, int x_direction, int y_direction,
-                   bool is_aiming_up, int reach, int new_deviation, int new_deviation_direction):
+                   bool is_aiming_up, int reach, int new_deviation, int new_deviation_direction,
+                   std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["pewpew"]["speed"], LASER, true, true,
-                       is_aiming_up) {
+                       is_aiming_up, player_name) {
         deviation = new_deviation;
         deviation_direction = new_deviation_direction;
     }
@@ -151,10 +179,10 @@ public:
 class LaserBullet: public Projectile {
 public:
     LaserBullet(Coordinate& initial_position, int x_direction, int y_direction, bool is_aiming_up,
-                int reach):
+                int reach, std::string& player_name):
             Projectile(initial_position, x_direction, y_direction, reach,
                        WeaponConfig::get_instance()->weapons["laser_rifle"]["speed"], LASER, true,
-                       true, is_aiming_up) {}
+                       true, is_aiming_up, player_name) {}
     bool ray_trace(Stage& stage) override;
 };
 #endif

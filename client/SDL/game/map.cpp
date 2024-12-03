@@ -1,10 +1,12 @@
 #include "map.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 
-#define OFFSET_MIN_ZOOM 2
-#define VELOCIDAD_ZOOM 1.5
+#define PROPORCION_AÑADIDA 1.8
+#define VELOCIDAD_DE_REACCION_ZOOM 5.0
+#define MIN_ZOOM 0.75
 #define TILES_PATIÑOS 6
 
 
@@ -15,7 +17,9 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         tiles(tiles),
         width_window(width_window),
         height_window(height_window),
-        tilesImages(3, nullptr) {
+        tilesImagesDay(3, nullptr),
+        tilesImagesNight(3, nullptr),
+        currentZoom(1.0f) {
 
     // inicializo las imagenes
     armor = std::make_shared<Image>();
@@ -25,7 +29,7 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
     prueba = std::make_shared<Image>();
 
     // Deberia llegarme la info del fondo
-    background->initialize(rend, "assets/game_assets/background/day.png");
+    setTheme(theme);
 
     for (int i = int(ProjectilesId::ProjectileId::AK_47);
          i <= int(ProjectilesId::ProjectileId::BULLET_SHOTGUN); i++) {
@@ -48,11 +52,26 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
         makeTile(tileType);
     }
 
+    makeBoxes();
+
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
 }
 
 // ----------------- Initialize Images -----------------
+
+void Map::setTheme(uint theme) {
+    // clean shared_ptr
+    this->theme = theme;
+    background.reset();
+    background = std::make_shared<Image>();
+
+    if (theme == GenericMsg::Theme::DAY) {
+        background->initialize(rend, "assets/game_assets/background/day.png");
+    } else if (theme == GenericMsg::Theme::NIGHT) {
+        background->initialize(rend, "assets/game_assets/background/night.png");
+    }
+}
 
 void Map::makeWeapon(ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::UNARMED) {
@@ -124,16 +143,37 @@ void Map::makeArmor() {
 }
 
 void Map::makeTile(TileType tileType) {
-    std::shared_ptr<Image> tile = std::make_shared<Image>();
+    std::shared_ptr<Image> dayTile = std::make_shared<Image>();
+    std::shared_ptr<Image> nightTile = std::make_shared<Image>();
     std::string path =
-            "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
-                                                   // me mande el server (dia, noche)
+            "assets/game_assets/tiles/nightTiles/";  // esto dsp se cambia a aceptar el tipo de tile
+                                                     // q me mande el server (dia, noche)
     path += tileType_to_string(tileType);
-    tile->initialize(rend, path);
-    tile->queryTexture();
-    tile->defineSize(6 * tiles, 6 * tiles);
-    tile->position(0, 0);
-    tilesImages[int(tileType)] = tile;
+    nightTile->initialize(rend, path);
+    nightTile->queryTexture();
+    nightTile->defineSize(6 * tiles, 6 * tiles);
+    nightTile->position(0, 0);
+    tilesImagesNight[int(tileType)] = nightTile;
+    path = "assets/game_assets/tiles/dayTiles/";  // esto dsp se cambia a aceptar el tipo de tile q
+                                                  // me mande el server (dia, noche)
+    path += tileType_to_string(tileType);
+    dayTile->initialize(rend, path);
+    dayTile->queryTexture();
+    dayTile->defineSize(6 * tiles, 6 * tiles);
+    dayTile->position(0, 0);
+    tilesImagesDay[int(tileType)] = dayTile;
+}
+
+void Map::makeBoxes() {
+    // Creo cajas
+    for (int i = 1; i <= 8; i++) {
+        std::string path = "assets/game_assets/box/1.png";
+        std::shared_ptr<Image> box = std::make_shared<Image>();
+        box->initialize(rend, path);
+        box->queryTexture();
+        box->defineSize(4 * tiles, 4 * tiles);
+        boxes.push_back(box);
+    }
 }
 
 bool Map::canAddTile(std::vector<std::vector<int>> matriz, int filaActual, int columnaActual) {
@@ -180,7 +220,13 @@ void Map::redifine_sizes() {
     hombro->defineSize(6 * tiles, 6 * tiles);
     armorOnMap->defineSize(2 * tiles, 2 * tiles);
 
-    for (const auto& pair: tilesImages) {
+    for (const auto& pair: tilesImagesDay) {
+        if (pair != nullptr) {
+            pair->defineSize(6 * tiles, 6 * tiles);
+        }
+    }
+
+    for (const auto& pair: tilesImagesNight) {
         if (pair != nullptr) {
             pair->defineSize(6 * tiles, 6 * tiles);
         }
@@ -199,11 +245,13 @@ void Map::makeMap(int columnas, int filas, std::vector<uint16_t> mapa) {
     explosionsPos.clear();
     helmetsPos.clear();
     armorMap.clear();
+    boxesPos.clear();
     playersNamesAlive.clear();
     if (mapTexture != nullptr) {
         SDL_DestroyTexture(mapTexture);
     }
     mapTexture = nullptr;
+    currentZoom = 1.0f;
 
     // Limpiar jugadores
     for (const auto& pair: players) {
@@ -314,10 +362,11 @@ std::unordered_map<std::string, int> Map::getPoints() { return playersPoints; }
 
 void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::EXPLOSION) {
-        std::cout << "Explosion" << std::endl;
         explosion(x, y);
     } else if (id == ProjectilesId::ProjectileId::CHEST) {
         newArmor(x, y);
+    } else if (id == ProjectilesId::ProjectileId::MYSTERY_BOX) {
+        newBox(x, y);
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         newHelmet(x, y, id);
     } else {
@@ -352,8 +401,6 @@ void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
     players[playerName]->weapon(weapons[id]);
 }
 
-void Map::dropWeapon(std::string playerName) { players[playerName]->dropWeapon(); }
-
 // ----------------- Helmet -----------------
 
 void Map::newHelmet(int x, int y, ProjectilesId::ProjectileId newHelmet) {
@@ -377,16 +424,26 @@ void Map::explosion(int x, int y) {
     explosionCounter.push_back(0);
 }
 
+// ----------------- Box -----------------
+
+void Map::newBox(int x, int y) { boxesPos.push_back(std::pair(x, y)); }
+
 // ----------------- Remove -----------------
 
 void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
     if (id == ProjectilesId::ProjectileId::CHEST) {
         armorMap.erase(std::remove(armorMap.begin(), armorMap.end(), std::pair(x, y)),
                        armorMap.end());
+
+    } else if (id == ProjectilesId::ProjectileId::MYSTERY_BOX) {
+        boxesPos.erase(std::remove(boxesPos.begin(), boxesPos.end(), std::pair(x, y)),
+                       boxesPos.end());
+
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         helmetsPos[id].erase(
                 std::remove(helmetsPos[id].begin(), helmetsPos[id].end(), std::pair(x, y)),
                 helmetsPos[id].end());
+
     } else {
         weaponsMap[id].erase(
                 std::remove(weaponsMap[id].begin(), weaponsMap[id].end(), std::pair(x, y)),
@@ -396,59 +453,63 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
 
 // ----------------- Pre-fill -----------------
 
-SDL_Rect Map::adjustMapZoom() {
-    SDL_Rect zoomRect;
-    int max_x = 0;
-    int max_y = 0;
-    int min_x = 0;
-    int min_y = 0;
-    for (const auto& pair: players) {
-        std::pair<int, int> position = pair.second->getPosition();
-        // seteamos los valores maximos de x e y
-        max_x < position.first ? max_x = position.first + TILES_PATIÑOS * tiles : max_x;
-        max_y < position.second ? max_y = position.second + TILES_PATIÑOS * tiles : max_y;
-
-        // seteamos los valores minimos de x e y
-        if (position.first < min_x || min_x == 0) {
-            min_x = position.first;
-        }
-        if (position.second < min_y || min_y == 0) {
-            min_y = position.second;
-        }
+// Ajusta el zoom de manera más conservadora
+float Map::animationZoom(float targetZoom) {
+    float deltaTime = getDeltaTime();
+    float difference = targetZoom - currentZoom;
+    if (difference > 0) {  // Zoom out
+        difference *= 2.5f;  // Factor adicional para alejar más rápido
     }
 
-    int MinZoomWhith = (int)(tiles * columnas / OFFSET_MIN_ZOOM);
-    int MinZoomHeight = (int)(tiles * filas / OFFSET_MIN_ZOOM);
+    // Ajusta el factor dinámico con una interpolación más lenta
+    float smoothFactor = std::clamp(static_cast<float>(std::abs(difference) * VELOCIDAD_DE_REACCION_ZOOM), 0.05f, 20.0f);
+    float newZoom = currentZoom + difference * smoothFactor * deltaTime;
 
-    int new_width = std::max((int)((max_x - min_x) * VELOCIDAD_ZOOM), MinZoomWhith);
-    int new_height = std::max((int)((max_y - min_y) * VELOCIDAD_ZOOM), MinZoomHeight);
+    // Limitar el valor del zoom entre el nuevo mínimo y 1.0f
+    return std::clamp(static_cast<double>(newZoom), MIN_ZOOM, 1.0);
+}
+
+SDL_Rect Map::adjustMapZoom() {
+    SDL_Rect zoomRect;
+    int max_x = 0, max_y = 0, min_x = 0, min_y = 0;
+
+    for (const auto& pair : players) {
+        auto position = pair.second->getPosition();
+        max_x = std::max(max_x, static_cast<int>(position.first + TILES_PATIÑOS * tiles));
+        max_y = std::max(max_y, static_cast<int>(position.second + TILES_PATIÑOS * tiles));
+        min_x = (min_x == 0 || position.first < min_x) ? position.first : min_x;
+        min_y = (min_y == 0 || position.second < min_y) ? position.second : min_y;
+    }
+
+    int new_width = static_cast<int>((max_x - min_x) * PROPORCION_AÑADIDA);
+    int new_height = static_cast<int>((max_y - min_y) * PROPORCION_AÑADIDA);
     int centro_x = (min_x + max_x) / 2;
     int centro_y = (min_y + max_y) / 2;
 
-    float proportion_width = float(new_width) / float(width_window);
-    float proportion_height = float(new_height) / float(height_window);
-    float proportion = std::max(proportion_width, proportion_height);
+    // Ajustar la proporción del zoom
+    float proportion_width = static_cast<float>(new_width) / width_window;
+    float proportion_height = static_cast<float>(new_height) / height_window;
+    float targetProportion = std::max(proportion_width, proportion_height);
+    currentZoom = animationZoom(targetProportion);
 
-    new_width = proportion * width_window;
-    new_height = proportion * height_window;
+    // Calcular las dimensiones finales
+    new_width = static_cast<int>(currentZoom * width_window);
+    new_height = static_cast<int>(currentZoom * height_window);
 
-    if ((centro_x - new_width / 2) < 0) {
-        centro_x = new_width / 2;
-    } else if ((centro_x + new_width / 2) > (int)width_window) {
-        centro_x = width_window - new_width / 2;
-    }
+    // Centrar el área, evitando movimientos bruscos
+    centro_x = std::clamp(centro_x, new_width / 2, static_cast<int>(width_window) - new_width / 2);
+    centro_y = std::clamp(centro_y, new_height / 2, static_cast<int>(height_window) - new_height / 2);
 
-    if ((centro_y - new_height / 2) < 0) {
-        centro_y = new_height / 2;
-    } else if ((centro_y + new_height / 2) > (int)height_window) {
-        centro_y = height_window - new_height / 2;
-    }
-
-    min_x = centro_x - new_width / 2;
-    min_y = centro_y - new_height / 2;
-
-    zoomRect = {min_x, min_y, new_width, new_height};
+    zoomRect = {centro_x - new_width / 2, centro_y - new_height / 2, new_width, new_height};
     return zoomRect;
+}
+
+float Map::getDeltaTime() {
+    static Uint32 lastTime = SDL_GetPerformanceCounter();
+    Uint32 currentTime = SDL_GetPerformanceCounter();
+    float deltaTime = static_cast<float>(currentTime - lastTime) / SDL_GetPerformanceFrequency();
+    lastTime = currentTime;
+    return deltaTime;
 }
 
 // ----------------- Fill -----------------
@@ -475,11 +536,21 @@ void Map::fill() {  // Dibuja de atras para adelante
 
         // Dibujamos el mapa
         for (const auto& tilePair: tilesPlace) {
-            if (tilesImages[int(tilePair.first)] != nullptr) {
-                for (const auto& pair: tilePair.second) {
-                    tilesImages[int(tilePair.first)]->position(pair.first * tiles,
-                                                               pair.second * tiles);
-                    tilesImages[int(tilePair.first)]->fill();
+            if (theme == GenericMsg::Theme::DAY) {
+                if (tilesImagesDay[int(tilePair.first)] != nullptr) {
+                    for (const auto& pair: tilePair.second) {
+                        tilesImagesDay[int(tilePair.first)]->position(pair.first * tiles,
+                                                                      pair.second * tiles);
+                        tilesImagesDay[int(tilePair.first)]->fill();
+                    }
+                }
+            } else {
+                if (tilesImagesNight[int(tilePair.first)] != nullptr) {
+                    for (const auto& pair: tilePair.second) {
+                        tilesImagesNight[int(tilePair.first)]->position(pair.first * tiles,
+                                                                        pair.second * tiles);
+                        tilesImagesNight[int(tilePair.first)]->fill();
+                    }
                 }
             }
         }
@@ -510,6 +581,15 @@ void Map::fill() {  // Dibuja de atras para adelante
             weapons[pair.first]->position(weapon.first * tiles, weapon.second * tiles);
             weapons[pair.first]->fill(SDL_FLIP_NONE);
         }
+    }
+
+    // Boxes
+    for (std::pair boxPos: boxesPos) {
+        // Elegimos una caja al azar
+        int box = rand() % 8;
+
+        boxes[box]->position(boxPos.first * tiles, boxPos.second * tiles);
+        boxes[box]->fill();
     }
 
     // Players

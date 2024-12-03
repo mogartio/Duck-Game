@@ -23,6 +23,8 @@ std::map<std::string, Player*> Game::generate_players(const std::vector<std::str
 }
 
 void Game::run() {
+    const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
+    
     while (!game_over) {
         for (int i = 0; i < Config::get_instance()->rounds_per_cycle; i++) {
 
@@ -30,15 +32,14 @@ void Game::run() {
             current_stage = new Stage(map, senders, ids);
             send_map(map);
 
-            const PlayerObserver* player_obs = new PlayerObserver(senders, ids);
             if (!players_created) {
-                players = generate_players(player_names, *player_obs, map);
+                generate_players(player_names, *player_obs, map);
                 players_created = true;
             }
             game_loop = std::make_shared<GameLoop>(recv, players, is_testing);
 
             std::string winner = game_loop->play_round(*current_stage, map);
-            player_points[winner]++;
+            player_points[winner] = player_points[winner] + 1;
 
             std::shared_ptr<GenericMsg> msg = std::make_shared<WinnerMsg>(winner);
             for (auto id: *ids) {
@@ -46,23 +47,39 @@ void Game::run() {
             }
 
             delete current_stage;
+            current_stage = nullptr;
         }
         for (auto& [name, points]: player_points) {
             if (points >= 7) {
+                std::cout << "Player " << name << " won the game!" << std::endl;
                 game_over = true;
             }
         }
     }
     std::shared_ptr<GenericMsg> msg = std::make_shared<GameEndedMsg>();
-    senders.broadcast(msg);
+    for (auto id: *ids) {
+        senders.send_to_client(msg, id);
+    }
+    for (auto& player : players) {
+        delete player.second;
+    }
     players.clear();
+
+    delete player_obs;
 }
 
 void Game::send_map(Map& map) {
     std::vector<uint16_t> map_vector = current_stage->get_vector_representation();
-    std::shared_ptr<SendMapMsg> map_msg =
-            std::make_shared<SendMapMsg>(map_vector, map.get_rows(), map.get_columns());
-    std::list<std::shared_ptr<GenericMsg>> dejenmepasarleunmensajedirectoporfavor;
-    dejenmepasarleunmensajedirectoporfavor.push_back(map_msg);
-    senders.broadcast(dejenmepasarleunmensajedirectoporfavor);
+    std::shared_ptr<SendMapMsg> msg =
+            std::make_shared<SendMapMsg>(map_vector, map.get_rows(), map.get_columns(), map.get_theme());
+    for (auto id: *ids) {
+        senders.send_to_client(msg, id);
+    }
+}
+ 
+Game::~Game() {
+    for (auto& player : players) {
+        delete player.second;
+    }
+    players.clear();
 }

@@ -46,7 +46,6 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     musicHandler = std::make_unique<MusicHandler>();
 
 
-
     // Despues de todas las corroboraciones, starteo el event handler
     event_handler.start();
 
@@ -54,8 +53,8 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
     win = std::make_unique<Window>(displayBounds.w, displayBounds.h);
 
     // Creo la pantalla de carga
-    loadingScreen =
-            std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    loadingScreen = std::make_unique<LoadingScreen>(win->get_rend(), displayBounds.w,
+                                                    displayBounds.h, queueSend);
 
     // Creo la pantalla de puntos
     pointsScreen = std::make_unique<PointsScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
@@ -71,10 +70,12 @@ void Game::play() {
         throw("Estoy recibiendo un mensaje que no es de info lobby");
     }
 
+
     std::shared_ptr<GenericMsg> matriz = queueRecive.pop();
     std::vector<uint16_t> mapa;
     uint16_t filas;
     uint16_t columnas;
+    uint theme;
     std::shared_ptr<SendMapMsg> newMap;
     if (matriz->get_header() == GenericMsg::MsgTypeHeader::SEND_MAP_MSG) {
         std::shared_ptr<GenericMsg> shared_matriz = std::move(matriz);
@@ -83,6 +84,7 @@ void Game::play() {
             mapa = newMap->get_map();
             filas = newMap->get_filas();
             columnas = newMap->get_columnas();
+            theme = newMap->get_theme();
         } else {
             throw std::runtime_error("Failed to cast GenericMsg to SendMapMsg");
         }
@@ -96,6 +98,7 @@ void Game::play() {
 
     // Creo el mapa
     Map map(win->get_rend(), tiles, displayBounds.w, displayBounds.h);
+    map.setTheme(theme);
     map.makeMap(columnas, filas, mapa);
 
     // Recibo toda la informacion de los jugadores y sus skins de parte del lobby
@@ -130,9 +133,10 @@ void Game::play() {
     uint8_t facing_direction = 1;
 
     int round = 0;
-
-    // musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
-    // musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
+  
+    musicHandler->playThatMusic(0, -1);  // Reproduce la musica de fondo en bucle infinito
+    musicHandler->setThatVolume(0, 10);  // Setea el volumen de la musica de fondo
+    event_handler.unblock();
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         Uint32 elapsed_time = current_time - last_frame_time;
@@ -211,6 +215,7 @@ void Game::play() {
                         break;
 
                     case GenericMsg::MsgTypeHeader::SEND_MAP_MSG:
+                        event_handler.block();
                         round++;
                         loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
 
@@ -236,6 +241,7 @@ void Game::play() {
                         }
 
                         loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
+                        event_handler.unblock();
                         break;
 
                     case GenericMsg::MsgTypeHeader::WINNER_MSG:
@@ -252,27 +258,32 @@ void Game::play() {
 
                     default:
                         break;
+
                 }
             }
-        }
 
-        // Renderiza los objetos en la ventana
-        if (elapsed_time >= frame_rate) {
-            win->clear();
-            map.fill();
-            win->fill();
-            last_frame_time = current_time;
-        }
 
-        if (stated_palying) {
-            map.standing(players_updated);
-            for (auto& player: players_updated) {
-                player.second = false;
+            // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
+            if (frames_to_process == 0) {
+                win->clear();
+                map.fill();
+                win->fill();
             }
+
+            if (stated_palying) {
+                map.standing(players_updated);
+            }
+
+            last_frame_time += frame_rate;  // Ajusta el tiempo del último frame
         }
 
-        // Controla la frecuencia de cuadros por segundo (FPS)
-        SDL_Delay(std::max(0, static_cast<int>(frame_rate - (SDL_GetTicks() - current_time))));
+        // Controla el tiempo para alcanzar los 30 FPS
+        Uint32 frame_end_time = SDL_GetTicks();
+        int delay_time = frame_rate - (frame_end_time - current_time);
+
+        if (delay_time > 0) {
+            SDL_Delay(delay_time);
+        }
     }
 
     // event_handler.pause();

@@ -1,10 +1,12 @@
+#ifndef WINNER_SCREEN_H
+#define WINNER_SCREEN_H
 #include <cmath>
 #include <stdexcept>
 #include <string>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 class WinnerScreen {
 private:
@@ -35,4 +37,4 @@ public:
 
     ~WinnerScreen();
 };
-
+#endif

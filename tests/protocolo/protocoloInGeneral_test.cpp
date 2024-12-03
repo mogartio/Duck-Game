@@ -172,7 +172,7 @@ TEST(SendMapMsg, CallsItInComunicationSystem) {
         std::vector<uint16_t> map = {1, 2, 3, 4, 5, 6};
         uint16_t filas = 2;
         uint16_t columnas = 3;
-        SendMapMsg msg(map, filas, columnas);
+        SendMapMsg msg(map, filas, columnas, GenericMsg::Theme::DAY);
         msg.accept_send(server);
     };
 

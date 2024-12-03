@@ -60,6 +60,8 @@ enum ProjectileId : uint8_t {
 
 
     EXPLOSION = 0x30,
+
+    MYSTERY_BOX = 0x40,
 };
 }
 
@@ -88,6 +90,7 @@ public:
         PLAYER_INFO_MSG = 0x13,  // mensaje para enviar info de un jugador especifico
         NOT_PROJECTILE_INFO = 0x14,
         SHOOT_MSG = 0x15,
+        START_ROUND_MSG = 0x16,
     };
 
     enum Type : uint8_t {
@@ -119,6 +122,11 @@ public:
     enum LobbyState : uint8_t {
         NOT_STARTING = 0x00,
         STARTING = 0x01,
+    };
+
+    enum Theme : uint8_t {
+        DAY = 0x00,
+        NIGHT = 0x01,
     };
 
 private:
@@ -330,8 +338,8 @@ public:
 
 class PickupDropMsg: public GenericMsg {
 private:
-    uint8_t item_id;
     std::string player_name;
+    uint16_t item_id;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -342,13 +350,13 @@ public:
 
     PickupDropMsg();
 
-    explicit PickupDropMsg(std::string player_name, uint8_t item_id);
+    explicit PickupDropMsg(std::string player_name, uint16_t item_id);
 
-    void set_item_id(uint8_t item_id);
+    void set_item_id(uint16_t item_id);
 
     void set_player_name(std::string player_name);
 
-    uint8_t get_item_id() const;
+    uint16_t get_item_id() const;
 
     std::string get_player_name() const;
 };
@@ -461,6 +469,7 @@ private:
     std::vector<uint16_t> map;  // le puse string pero no se que va
     uint16_t filas;
     uint16_t columnas;
+    uint8_t theme;
 
 public:
     void accept_send(HandlerSender& handler) override;
@@ -471,7 +480,8 @@ public:
 
     SendMapMsg();
 
-    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas);
+    explicit SendMapMsg(std::vector<uint16_t> map, uint16_t filas, uint16_t columnas,
+                        uint8_t theme);
 
     void set_map(std::vector<uint16_t> map);
 
@@ -481,9 +491,13 @@ public:
 
     void set_columnas(uint16_t columnas);
 
+    void set_theme(uint8_t theme);
+
     uint16_t get_filas() const;
 
     uint16_t get_columnas() const;
+
+    uint8_t get_theme() const;
 };
 
 class GameEndedMsg: public GenericMsg {
@@ -678,4 +692,18 @@ public:
 
     void set_player_name(std::string player_name);
 };
+
+class StartRoundMsg: public GenericMsg {
+
+public:
+    StartRoundMsg();
+
+    void accept_send(HandlerSender& handler) override;
+
+    void accept_recv(HandlerReceiver& handler) override;
+
+    void accept_read(HandlerReader& handler) override;
+};
+
+
 #endif

@@ -11,23 +11,35 @@
 #define SHOTGUN_KNOCKBACK 2
 Ak47::Ak47(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["ak47"]["ammo"],
-               WeaponConfig::get_instance()->weapons["ak47"]["reach"], AK_47) {}
+               WeaponConfig::get_instance()->weapons["ak47"]["reach"], AK_47),
+        stopped_pressing_since_picked(false) {}
 
 void Ak47::shoot(int x_direction, bool is_aiming_up) {
-    if (ammo == 0 || throw_started) {
+    if (ammo == 0 || !stopped_pressing_since_picked || throw_started) {
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     stage.add_projectile(std::move(std::make_unique<Ak47Bullet>(
-            gun_position, x_direction, -1, is_aiming_up, reach, bullets_shot)));
+            gun_position, x_direction, -1, is_aiming_up, reach, bullets_shot, player->get_name())));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
     if (bullets_shot % 4 == 0) {
         player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
     }
     bullets_shot++;
 }
 
-void Ak47::stop_shooting() { bullets_shot = 0; }
+void Ak47::stop_shooting() {
+    bullets_shot = 0;
+    stopped_pressing_since_picked = true;
+}
+void Ak47::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapon> weapon) {
+    Weapon::finish_throw(x_direction, thrown_up, weapon);
+    stopped_pressing_since_picked = false;
+}
 
 Shotgun::Shotgun(Stage& stage):
         Weapon(stage, WeaponConfig::get_instance()->weapons["shotgun"]["ammo"],
@@ -45,18 +57,22 @@ void Shotgun::shoot(int x_direction, bool is_aiming_up) {
         stopped_holding_trigger = false;
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
     for (int i = 0; i < bullets_per_shot; i++) {
         srand(static_cast<unsigned int>(time(nullptr)));  // seed del rand()
         int bullet_reach = reach + rand() % 3;            // el reach es variable entre 3 numeros
         int deviation_direction = -1 + 2 * (i % 2);
         stage.add_projectile(std::move(std::make_unique<ShotgunBullet>(
                 gun_position, x_direction, -1, is_aiming_up, bullet_reach, init_deviation + 2,
-                deviation_direction)));
+                deviation_direction, player->get_name())));
     }
-    ammo--;
     for (int i = 0; i < SHOTGUN_KNOCKBACK; i++) {
         player->move(-x_direction);  // tiene retroceso, se mueve al jugador para atras
+    }
+    ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
     }
     is_loaded = false;
     stopped_holding_trigger = false;
@@ -78,10 +94,14 @@ void Sniper::shoot(int x_direction, bool is_aiming_up) {
         is_loaded = true;
         return;
     }
-    Coordinate gun_position = get_gun_position(x_direction);
-    stage.add_projectile(std::move(
-            std::make_unique<SniperBullet>(gun_position, x_direction, -1, is_aiming_up, reach)));
+    Coordinate gun_position = get_gun_position(x_direction, is_aiming_up);
+    stage.add_projectile(std::move(std::make_unique<SniperBullet>(
+            gun_position, x_direction, -1, is_aiming_up, reach, player->get_name())));
     ammo--;
+    if (ammo == 0) {
+        player->pick_weapon(std::make_unique<Unarmed>(stage));
+        return;
+    }
     is_loaded = false;
     stopped_holding_trigger = false;
 }
