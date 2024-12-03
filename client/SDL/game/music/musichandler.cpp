@@ -113,6 +113,31 @@ void MusicHandler::setSoundVolume(Sound number, int volume) {
     }
 }
 
+MusicHandler::Sound MusicHandler::getSound(ProjectilesId::ProjectileId projectileId) {
+    switch (projectileId) {
+        case ProjectilesId::ProjectileId::AK_47:
+            return Sound::PISTOL;
+        case ProjectilesId::ProjectileId::DUEL_PISTOL:
+            return Sound::PISTOL;
+        case ProjectilesId::ProjectileId::COWBOY_PISTOL:
+            return Sound::PISTOL;
+        case ProjectilesId::ProjectileId::MAGNUM:
+            return Sound::MAGNUM;
+        case ProjectilesId::ProjectileId::SNIPER:
+            return Sound::SNIPER;
+        case ProjectilesId::ProjectileId::SHOTGUN:
+            return Sound::SHOTGUN;
+        case ProjectilesId::ProjectileId::PEW_PEW_LASER:
+            return Sound::LASERBLAST;
+        case ProjectilesId::ProjectileId::LASER_RIFLE:
+            return Sound::LASERRIFLE;
+        case ProjectilesId::ProjectileId::BANANA:
+            return Sound::DACBANG;
+        default:
+            return Sound::QUACK;
+    }
+}
+
 MusicHandler::~MusicHandler() {
     if (Mix_QuerySpec(NULL, NULL, NULL)) {  // Check if SDL_mixer is initialized
         Mix_HaltChannel(-1);                // Stop all channels

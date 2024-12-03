@@ -217,6 +217,10 @@ void Game::play() {
 
                                 map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
                                               facing_direction_first, facing_direction_second);
+                                if (ProjectilesId::ProjectileId(item) ==
+                                    ProjectilesId::ProjectileId::EXPLOSION) {
+                                    musicHandler->playThatSound(MusicHandler::Sound::EXPLODE);
+                                }
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
@@ -233,9 +237,9 @@ void Game::play() {
                             shoot = std::dynamic_pointer_cast<ShootMsg>(msj);
                             if (shoot) {
                                 player_shot = shoot->get_player_name();
-                                
+
                                 id_shoot = map.shoot(player_name);
-                                //musicHandler->shoot_sound(ProjectilesId::ProjectileId id_shoot);
+                                // musicHandler->shoot_sound(ProjectilesId::ProjectileId id_shoot);
                                 std::cout << id_shoot << " shooted" << std::endl;
                             }
                             break;

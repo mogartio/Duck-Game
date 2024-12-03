@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "../../../../common/messages/generic_msg.h"
+
 #include "music.h"
 #include "sound.h"
 
@@ -73,6 +75,8 @@ public:
                                        // que se le paso al constructor
 
     void setSoundVolume(Sound number, int volume);
+
+    Sound getSound(ProjectilesId::ProjectileId projectileId);
 
     ~MusicHandler();
 };
