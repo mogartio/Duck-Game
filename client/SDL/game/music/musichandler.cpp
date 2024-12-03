@@ -89,7 +89,7 @@ void MusicHandler::setThatVolume(Music number, int volume) {
 
 void MusicHandler::playThatSound(Sound number) {
     int numberint = static_cast<int>(number);
-    if (numberint < 0 || list_of_sounds.size() <= numberint) {
+    if (numberint < 0 || static_cast<int>(list_of_sounds.size()) <= numberint) {
         std::cerr << "No existe el sonido en la lista" << '\n';
         return;
     }
@@ -102,7 +102,7 @@ void MusicHandler::playThatSound(Sound number) {
 
 void MusicHandler::setSoundVolume(Sound number, int volume) {
     int numberint = static_cast<int>(number);
-    if (numberint < 0 || list_of_sounds.size() <= numberint) {
+    if (numberint < 0 || static_cast<int>(list_of_sounds.size()) <= numberint) {
         std::cerr << "No existe el sonido en la lista" << '\n';
         return;
     }

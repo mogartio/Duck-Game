@@ -174,7 +174,7 @@ void Map::makeBoxes() {
         std::shared_ptr<Image> box = std::make_shared<Image>();
         box->initialize(rend, path);
         box->queryTexture();
-        box->defineSize(3 * tiles, 3 * tiles);
+        box->defineSize(4 * tiles, 4 * tiles);
         boxes.push_back(box);
     }
 }
@@ -237,6 +237,10 @@ void Map::redifine_sizes() {
 
     for (const auto& pair: explosions) {
         pair->defineSize(6 * tiles, 6 * tiles);
+    }
+
+    for (int i = 0; i < int(boxes.size()); i++) {
+        boxes[i]->defineSize(4 * tiles, 4 * tiles);
     }
 }
 
