@@ -54,6 +54,8 @@ Map::Map(SDL_Renderer* rend, uint tiles, uint width_window, uint height_window):
 
     makeBoxes();
 
+    makeShootImage();
+
     parentTexture = SDL_CreateTexture(rend, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,
                                       width_window, height_window);
 }
@@ -104,6 +106,13 @@ void Map::makeExplosion() {
     }
 }
 
+void Map::makeShootImage() {
+    shootImage = std::make_shared<Image>();
+    shootImage->initialize(rend, "assets/game_assets/weapons/bullets/shoot.png");
+    shootImage->queryTexture();
+    shootImage->defineSize(2 * tiles, 2 * tiles);
+}
+
 void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     // Creo casco de mapa
     std::shared_ptr<Image> mapHelmet = std::make_shared<Image>();
@@ -111,7 +120,7 @@ void Map::makeHelmet(ProjectilesId::ProjectileId helmet) {
     mapPath += helmet_to_string(helmet);
     mapHelmet->initialize(rend, mapPath);
     mapHelmet->queryTexture();
-    mapHelmet->defineSize(3 * tiles, 3 * tiles);
+    mapHelmet->defineSize(2 * tiles, 2 * tiles);
 
     helmetsMap[helmet] = mapHelmet;
     helmetsPos[helmet] = std::vector<std::pair<int, int>>();
@@ -221,6 +230,8 @@ void Map::redifine_sizes() {
     armor->defineSize(6 * tiles, 6 * tiles);
     hombro->defineSize(6 * tiles, 6 * tiles);
     armorOnMap->defineSize(2 * tiles, 2 * tiles);
+
+    shootImage->defineSize(2 * tiles, 2 * tiles);
 
     for (const auto& pair: tilesImagesDay) {
         if (pair != nullptr) {
@@ -353,7 +364,7 @@ std::pair<std::string, std::string> Map::get_winner() {
     int maxPoints = 0;
     std::string winner;
     for (const auto& pair: playersPoints) {
-        if (pair.second > maxPoints) {
+        if (pair.second >= maxPoints) {
             maxPoints = pair.second;
             winner = pair.first;
         }
@@ -407,7 +418,7 @@ void Map::weaponPlayer(ProjectilesId::ProjectileId id, std::string playerName) {
         return;
     }
 
-    players[playerName]->weapon(weapons[id]);
+    players[playerName]->weapon(weapons[id], id);
 }
 
 // ----------------- Helmet -----------------
@@ -431,6 +442,12 @@ void Map::armorPlayer(std::string playerName) { players[playerName]->armor(armor
 void Map::explosion(int x, int y) {
     explosionsPos.push_back(std::pair(x, y));
     explosionCounter.push_back(0);
+}
+
+// ----------------- Shoot -----------------
+
+ProjectilesId::ProjectileId Map::shoot(std::string playerName) {
+    return players[playerName]->shoot(shootImage);
 }
 
 // ----------------- Box -----------------
@@ -617,15 +634,14 @@ void Map::fill() {  // Dibuja de atras para adelante
     // Helmets
     for (const auto& helmet: helmetsPos) {
         for (const auto& pos: helmet.second) {
-            helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles - tiles);
+            helmetsMap[helmet.first]->position(pos.first * tiles, pos.second * tiles);
             helmetsMap[helmet.first]->fill();
         }
     }
 
     // Armor
     for (std::pair armorPos: armorMap) {
-        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles - tiles*1.5);
-        armorOnMap->defineSize(4 * tiles, 4 * tiles);
+        armorOnMap->position(armorPos.first * tiles, armorPos.second * tiles);
         armorOnMap->fill();
     }
 

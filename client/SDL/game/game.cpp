@@ -134,11 +134,13 @@ void Game::play() {
     std::pair<uint16_t, uint16_t> position;
     uint8_t facing_direction = 1;
 
+    ProjectilesId::ProjectileId id_shoot;
+
     int round = 0;
     musicHandler->playThatMusic(MusicHandler::Music::PAUSE,
                                 -1);  // Reproduce la musica de fondo en bucle infinito
     musicHandler->setThatVolume(MusicHandler::Music::PAUSE,
-                                10);  // Setea el volumen de la musica de fondo
+                                7);  // Setea el volumen de la musica de fondo
 
     event_handler.unblock();
     while (running) {
@@ -228,12 +230,13 @@ void Game::play() {
                             break;
 
                         case GenericMsg::MsgTypeHeader::SHOOT_MSG:
-                            musicHandler->playThatSound(MusicHandler::Sound::PISTOL);
                             shoot = std::dynamic_pointer_cast<ShootMsg>(msj);
                             if (shoot) {
                                 player_shot = shoot->get_player_name();
-                                std::cout << "Player " << player_shot << " shooted" << std::endl;
-                                // map.shoot(player_name, position);
+                                
+                                id_shoot = map.shoot(player_name);
+                                //musicHandler->shoot_sound(ProjectilesId::ProjectileId id_shoot);
+                                std::cout << id_shoot << " shooted" << std::endl;
                             }
                             break;
 
@@ -312,6 +315,7 @@ void Game::play() {
     // musicHandler->winner_music();  // Musica de ganador
 
     std::pair<std::string, std::string> winner = map.get_winner();
+    loadingScreen->fadeOut(map.getTextureMapWithAll(), 1000);
     winnerScreen->show(winner);  // Pantalla de ganador
 }
 

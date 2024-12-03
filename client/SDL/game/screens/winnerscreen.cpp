@@ -112,7 +112,7 @@ void WinnerScreen::show(std::pair<std::string, std::string> winner) {
     makeText(winner.first);
     makeWinner(winner.second);
 
-    Uint32 durationMs = 3000;
+    Uint32 durationMs = 1000;
 
     Uint32 startTime = SDL_GetTicks();  // Registrar el inicio
 

@@ -24,7 +24,9 @@ private:
 
     Side side;
 
-    bool weaponON;
+    ProjectilesId::ProjectileId weaponId;
+
+    bool shooted;
     bool armorOn;
     bool helmetOn;
     int walk;
@@ -42,6 +44,7 @@ private:
     std::shared_ptr<Image> _hombro;
     std::shared_ptr<Image> _helmet;
     std::shared_ptr<Image> _weapon;
+    std::shared_ptr<Image> _shootEfect;
 
     void initializeWingImage(WingState wingState);
     void updateWing(int x, int y);
@@ -61,11 +64,11 @@ public:
     void dropEverithing();
 
     // Agarrar un arma
-    void weapon(std::shared_ptr<Image> weapon);
+    void weapon(std::shared_ptr<Image> weapon, ProjectilesId::ProjectileId weaponId);
     // Devolver el arma
     bool dropWeapon();
     // Disparar arma
-    void shoot();
+    ProjectilesId::ProjectileId shoot(std::shared_ptr<Image> shootEfect);
 
     // Agarrar armadura
     void armor(std::shared_ptr<Image> armor, std::shared_ptr<Image> hombro);

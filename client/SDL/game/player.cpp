@@ -37,7 +37,7 @@ void Player::initialiceDuckImages(DuckState state) {
 // ----------------- Constructor -----------------
 
 Player::Player(SDL_Renderer* rend, Color color):
-        rend(rend), flip(SDL_FLIP_NONE), file("assets/game_assets/ducks/"), weaponON(false), armorOn(false), helmetOn(false) {
+        rend(rend), flip(SDL_FLIP_NONE), file("assets/game_assets/ducks/"), weaponId(ProjectilesId::ProjectileId::UNARMED), shooted(true), armorOn(false), helmetOn(false) {
 
     walk = 0;
     file += color_to_string(color);
@@ -90,7 +90,7 @@ void Player::updateWing(int x, int y) {
             flapup = true;
         }
     } else {
-        if (weaponON) {
+        if (weaponId != ProjectilesId::ProjectileId::UNARMED) {
             wing = wings[int(WingState::HOLD)];
         } else {
             wing = wings[int(WingState::NORMAL)];
@@ -144,7 +144,7 @@ void Player::update(int x, int y, DuckState state, Side side) {
     }
 
     // Actualizo posicion del arma
-    if(weaponON) { // Falta agregar offsets (perdon facu)
+    if(weaponId != ProjectilesId::ProjectileId::UNARMED) {
         _weapon->position(x, y);
     }
 
@@ -162,23 +162,29 @@ void Player::standing() {
 }
 
 void Player::dropEverithing() {
-    weaponON = false;
+    weaponId = ProjectilesId::ProjectileId::UNARMED;
     armorOn = false;
     helmetOn = false;
 }
 
 // ----------------- Weapon -----------------
 
-void Player::weapon(std::shared_ptr<Image> weapon) {
+void Player::weapon(std::shared_ptr<Image> weapon, ProjectilesId::ProjectileId weaponId) {
     _weapon = weapon;
-    weaponON = true;
+    this->weaponId = weaponId;
     weaponAngle = 0.0;
 }
 
 bool Player::dropWeapon() {
-    bool originalWeaponstate = weaponON;
-    weaponON = false;
+    bool originalWeaponstate = (weaponId != ProjectilesId::ProjectileId::UNARMED);
+    weaponId = ProjectilesId::ProjectileId::UNARMED;
     return originalWeaponstate;
+}
+
+ProjectilesId::ProjectileId Player::shoot(std::shared_ptr<Image> shootEfect) {
+    _shootEfect = shootEfect;
+    shooted = false;
+    return weaponId;
 }
 
 // ----------------- Armor -----------------
@@ -236,9 +242,11 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
         }
 
         // Dibujo el arma que tiene el pato
-        if (weaponON && (state != DuckState::SLOW_FALL)) {
+        if ((weaponId != ProjectilesId::ProjectileId::UNARMED) && (state != DuckState::SLOW_FALL)) {
             int wx = position.first;
+            int shx = position.first;
             int wy = position.second + (tiles*5/2);
+            int shy = position.second;
 
             // Mira hacia la Izquierda
             if (flip == SDL_FLIP_HORIZONTAL) {
@@ -247,6 +255,11 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
                 if (weaponAngle != 0.0) {
                     wx += (tiles*7/10);
                     wy -= tiles;
+                    shx += (tiles * 6/4);
+                    shy -= (tiles);
+                } else {
+                    shx -= tiles * 2;
+                    shy += (tiles * 9/4);
                 }
 
                 // Me fijo si el arma es un cuadrado para cambiar el offset
@@ -263,10 +276,21 @@ void Player::fill() { // Esta todo en el orden en el que debe ser dibujado
                 if (weaponAngle != 0.0) {
                     wx -= (tiles*7/10);
                     wy -= (tiles);
+                    shx += tiles * 7/3;
+                    shy -= (tiles);
+                } else {
+                    shx += tiles * 6;
+                    shy += (tiles * 9/4);
                 }
             }
             _weapon->position(wx, wy);
             _weapon->fill(weaponAngle, flip);
+
+            if (!shooted) {
+                _shootEfect->position(shx, shy);
+                _shootEfect->fill(weaponAngle, flip);
+                shooted = true;
+            }
         }
     
         // Dibujo el ala del pato

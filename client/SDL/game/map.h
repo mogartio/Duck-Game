@@ -58,8 +58,6 @@ private:
 
     // Puntos de los jugadores
     std::unordered_map<std::string, int> playersPoints;
-    // Textura de los nombres de los jugadores
-    std::vector<std::pair<std::shared_ptr<SDL_Texture>, SDL_Rect>> textura_texto;
 
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
@@ -92,6 +90,9 @@ private:
     // Contador de las explosiones
     std::vector<int> explosionCounter;
 
+    // Imagen efecto especial disparo
+    std::shared_ptr<Image> shootImage;
+
     // Imagenes de las cajas
     std::vector<std::shared_ptr<Image>> boxes;
     std::vector<std::pair<int, std::pair<int, int>>> boxesPos;
@@ -105,6 +106,7 @@ private:
 
     void makeWeapon(ProjectilesId::ProjectileId id);
     void makeExplosion();
+    void makeShootImage();
     void makeHelmet(ProjectilesId::ProjectileId helmet);
     void makeArmor();
     void makeTile(TileType tileType);
@@ -147,6 +149,9 @@ public:
 
     // Agregar explosion
     void explosion(int x, int y);
+
+    // Efectos especiales disparos
+    ProjectilesId::ProjectileId shoot(std::string player_name);
 
     // Agregar caja
     void newBox(int x, int y);
