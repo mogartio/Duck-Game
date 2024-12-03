@@ -228,6 +228,7 @@ void Game::play() {
                             break;
 
                         case GenericMsg::MsgTypeHeader::SHOOT_MSG:
+                            musicHandler->playThatSound(MusicHandler::Sound::PISTOL);
                             shoot = std::dynamic_pointer_cast<ShootMsg>(msj);
                             if (shoot) {
                                 player_shot = shoot->get_player_name();
