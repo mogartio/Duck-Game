@@ -397,7 +397,7 @@ void Map::newWeapon(int x, int y, ProjectilesId::ProjectileId id, int facing_dir
     } else if (int(id) >= int(ProjectilesId::ProjectileId::HELMET)) {
         newHelmet(x, y, id);
     } else {
-        weaponsMap[id] = WeaponData(x, y, facing_direction_first, facing_direction_second);
+        weaponsMap[id].push_back(WeaponData(x, y, facing_direction_first, facing_direction_second));
     }
 }
 
@@ -490,10 +490,10 @@ void Map::removeWeapon(int x, int y, ProjectilesId::ProjectileId id) {
                 helmetsPos[id].end());
 
     } else {
-        for (auto it = weaponsMap.begin(); it != weaponsMap.end(); ++it) {
-            if (it->second.pos_x == x && it->second.pos_y == y) {
-                weaponsMap.erase(it);
-                return;
+        for (auto it = weaponsMap[id].begin(); it != weaponsMap[id].end(); ++it) {
+            if (it->pos_x == x && it->pos_y == y) {
+                weaponsMap[id].erase(it);
+                break;
             }
         }
     }
@@ -658,21 +658,22 @@ void Map::fill() {  // Dibuja de atras para adelante
 
     // Weapons
     for (const auto& pair: weaponsMap) {
-        const WeaponData& weaponData = pair.second;
+        for (WeaponData weaponData: pair.second) {
+            weapons[pair.first]->position(weaponData.pos_x * tiles, weaponData.pos_y * tiles);
 
-        weapons[pair.first]->position(weaponData.pos_x * tiles, weaponData.pos_y * tiles);
+            int angle = condicionAnguloBalas(weaponData.facing_direction_first,
+                                            weaponData.facing_direction_second);
+            
+            if (pair.first != ProjectilesId::ProjectileId::BULLET_PISTOL && 
+                pair.first != ProjectilesId::ProjectileId::BULLET_SHOTGUN && 
+                pair.first != ProjectilesId::ProjectileId::LASER) {
 
-        int angle = condicionAnguloBalas(weaponData.facing_direction_first,
-                                         weaponData.facing_direction_second);
-        
-        if (pair.first != ProjectilesId::ProjectileId::BULLET_PISTOL && 
-            pair.first != ProjectilesId::ProjectileId::BULLET_SHOTGUN && 
-            pair.first != ProjectilesId::ProjectileId::LASER) {
+                angle = 0;
+            }
 
-            angle = 0;
+            weapons[pair.first]->fill(angle, SDL_FLIP_NONE);
         }
 
-        weapons[pair.first]->fill(angle, SDL_FLIP_NONE);
     }
 
     // Boxes

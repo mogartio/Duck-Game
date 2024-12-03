@@ -62,7 +62,7 @@ private:
     // Imagenes de las armas
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> weapons;
     // Posiciones de las armas
-    std::unordered_map<ProjectilesId::ProjectileId, WeaponData> weaponsMap;
+    std::unordered_map<ProjectilesId::ProjectileId, std::vector<WeaponData>> weaponsMap;
 
     // Imagenes de los cascos usables
     std::unordered_map<ProjectilesId::ProjectileId, std::shared_ptr<Image>> helmets;
