@@ -82,8 +82,8 @@ public:
                         uint8_t current_pos_y, uint8_t id, uint8_t x_direction,
                         uint8_t y_direction) const override {
 
-        std::shared_ptr<GenericMsg> msg =
-                std::make_shared<ProjectileInfoMsg>(trail, current_pos_x, current_pos_y, id);
+        std::shared_ptr<GenericMsg> msg = std::make_shared<ProjectileInfoMsg>(
+                trail, current_pos_x, current_pos_y, id, x_direction, y_direction);
         broadcast(msg);
     }
 
@@ -98,8 +98,8 @@ public:
             Observer(queues, ids) {}
 
     virtual void updateShot(std::string& player_name, Coordinate& position) const override {
-        std::shared_ptr<GenericMsg> msg =
-                std::make_shared<ShootMsg>(player_name, std::pair<uint8_t, uint8_t>(19, 54));
+        std::shared_ptr<GenericMsg> msg = std::make_shared<ShootMsg>(
+                player_name, std::pair<uint8_t, uint8_t>(position.x, position.y));
         broadcast(msg);
     }
 };

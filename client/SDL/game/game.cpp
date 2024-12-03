@@ -57,10 +57,12 @@ Game::Game(Queue<std::shared_ptr<GenericMsg>>& queueSend,
                                                     displayBounds.h, queueSend);
 
     // Creo la pantalla de puntos
-    pointsScreen = std::make_unique<PointsScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    pointsScreen =
+            std::make_unique<PointsScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 
-        // Creo la pantalla de fin
-    winnerScreen = std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
+    // Creo la pantalla de fin
+    winnerScreen =
+            std::make_unique<WinnerScreen>(win->get_rend(), displayBounds.w, displayBounds.h);
 }
 
 void Game::play() {
@@ -167,9 +169,11 @@ void Game::play() {
                     std::vector<uint16_t> mapa;
                     uint16_t filas;
                     uint16_t columnas;
-                    
+
                     std::shared_ptr<WinnerMsg> winnerMsg = nullptr;
                     std::string winner;
+                    std::shared_ptr<ShootMsg> shoot = nullptr;
+                    std::string player_shot;
 
                     switch (msj->get_header()) {
                         case GenericMsg::MsgTypeHeader::UPDATED_PLAYER_INFO_MSG:
@@ -186,7 +190,8 @@ void Game::play() {
                                     players_updated[player_name] = true;
                                 } else {
                                     players_updated[player_name] = false;
-                                }                            }
+                                }
+                            }
                             break;
 
                         case GenericMsg::MsgTypeHeader::PICKUP_DROP_MSG:
@@ -208,8 +213,8 @@ void Game::play() {
                                 facing_direction_first = projectile->get_facing_direction_first();
                                 facing_direction_second = projectile->get_facing_direction_second();
 
-                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item), facing_direction_first,
-                                            facing_direction_second);
+                                map.newWeapon(pos_x, pos_y, ProjectilesId::ProjectileId(item),
+                                              facing_direction_first, facing_direction_second);
                             }
                             break;
                         case GenericMsg::MsgTypeHeader::NOT_PROJECTILE_INFO:
@@ -219,6 +224,15 @@ void Game::play() {
                                 item = not_projectile->get_item();
                                 map.removeWeapon(position_x_y.first, position_x_y.second,
                                                  ProjectilesId::ProjectileId(item));
+                            }
+                            break;
+
+                        case GenericMsg::MsgTypeHeader::SHOOT_MSG:
+                            shoot = std::dynamic_pointer_cast<ShootMsg>(msj);
+                            if (shoot) {
+                                player_shot = shoot->get_player_name();
+                                std::cout << "Player " << player_shot << " shooted" << std::endl;
+                                // map.shoot(player_name, position);
                             }
                             break;
 
@@ -244,8 +258,8 @@ void Game::play() {
                             if (round % 5 == 0) {
                                 pointsScreen->show(6000, map.getPoints());
                             } else {
-                                loadingScreen->show(2000);  // pantalla de carga de 500 ms para que no se
-                                                            // vea tan feo el cambio de mapa
+                                loadingScreen->show(2000);  // pantalla de carga de 500 ms para que
+                                                            // no se vea tan feo el cambio de mapa
                             }
 
                             loadingScreen->fadeIn(map.getTextureMapWithoutAnything(), 1000);
@@ -266,13 +280,11 @@ void Game::play() {
 
                         default:
                             break;
-
                     }
                 }
-
             }
 
-          // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
+            // Renderiza si ha pasado el tiempo suficiente para el siguiente frame
             if (frames_to_process == 0) {
                 win->clear();
                 map.fill();

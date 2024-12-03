@@ -130,7 +130,7 @@ void Projectile::notify() {
     } else {
         hor_direction = BULLET_LEFT;
     }
-    if (y_direction == AIM_UP) {
+    if (moving_vertically) {
         going_up = BULLET_UP;
     }
     for (const Observer* obs: observers) {
@@ -227,8 +227,10 @@ bool LaserBullet::ray_trace(Stage& stage) {
 
 
 void Projectile::updateShot() {
-    for (const Observer* obs: observers) {
-        obs->updateShot(player_name, position);
+    if (id == LASER || id == BULLET_PISTOL || id == BULLET_SHOTGUN) {
+        for (const Observer* obs: observers) {
+            obs->updateShot(player_name, position);
+        }
     }
 }
 void Projectile::updateNotPosition(uint8_t pos_x, uint8_t pos_y) {

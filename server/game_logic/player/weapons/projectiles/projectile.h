@@ -51,11 +51,7 @@ public:
             is_lethal(is_lethal),
             trail(),
             moving_vertically(moving_vertically),
-            player_name(player_name) {
-        if (id == LASER || id == BULLET_PISTOL || id == BULLET_SHOTGUN) {
-            updateShot();
-        }
-    }
+            player_name(player_name) {}
     Projectile(Coordinate& initial_position, int x_direction, int y_direction, int reach, int speed,
                int id, bool despawns_on_contact, bool is_lethal, bool moving_vertically):
             speed(speed),

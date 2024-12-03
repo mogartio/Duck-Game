@@ -30,6 +30,7 @@ void Stage::print() { map.print(); }
 
 void Stage::add_projectile(std::shared_ptr<Projectile>&& projectile) {
     projectile.get()->attach(obs);
+    projectile->updateShot();
     projectiles.push_back(std::move(projectile));
 }
 
@@ -88,8 +89,8 @@ void Stage::update() {
     for (const auto& box: new_boxes) {
         Coordinate position = box->get_position();
         obs.update({}, static_cast<uint8_t>(position.x), static_cast<uint8_t>(position.y),
-                   static_cast<uint8_t>(MYSTERY_BOX), 1,
-                   1);  // por conveniencia la caja se manda por mensaje como si fuera un proyectil
+                   static_cast<uint8_t>(MYSTERY_BOX), 0,
+                   0);  // por conveniencia la caja se manda por mensaje como si fuera un proyectil
                         // para que la dibuje el render.
     }
     new_boxes.clear();
