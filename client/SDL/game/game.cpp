@@ -196,11 +196,6 @@ void Game::play() {
                                 } else {
                                     players_updated[player_name] = false;
                                 }
-
-                                if (DuckState(state) == DuckState::JUMP) {
-                                    musicHandler->setSoundVolume(MusicHandler::Sound::JUMP, 5);
-                                    musicHandler->playThatSound(MusicHandler::Sound::JUMP);
-                                }
                             }
                             break;
 

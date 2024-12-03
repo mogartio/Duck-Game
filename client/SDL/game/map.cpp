@@ -227,6 +227,10 @@ void Map::redifine_sizes() {
         pair.second->defineSize(6 * tiles, 6 * tiles);
     }
 
+    for (const auto& pair: helmetsMap) {
+        pair.second->defineSize(2 * tiles, 2 * tiles);
+    }
+
     armor->defineSize(6 * tiles, 6 * tiles);
     hombro->defineSize(6 * tiles, 6 * tiles);
     armorOnMap->defineSize(2 * tiles, 2 * tiles);
@@ -695,7 +699,7 @@ void Map::fill() {  // Dibuja de atras para adelante
             continue;
         }
         std::pair pos = explosionsPos[i];
-        explosions[explosionIndex]->position((pos.first - 2) * tiles, (pos.second - 2) * tiles);
+        explosions[explosionIndex]->position((pos.first - 1) * tiles, (pos.second - 3) * tiles);
         explosions[explosionIndex]->fill();
         explosionCounter[i]++;
         if (explosionCounter[i] > 26) {
