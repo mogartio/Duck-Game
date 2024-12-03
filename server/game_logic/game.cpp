@@ -50,7 +50,7 @@ void Game::run() {
             current_stage = nullptr;
         }
         for (auto& [name, points]: player_points) {
-            if (points >= 3) {
+            if (points >= 7) {
                 std::cout << "Player " << name << " won the game!" << std::endl;
                 game_over = true;
             }

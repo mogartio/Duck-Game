@@ -321,6 +321,8 @@ void Map::addPlayer(int columnaActual, int filaActual, int color, std::string na
     player->update(columnaActual * tiles, filaActual * tiles, DuckState::STANDING, RIGHT);
     players[name] = player;
     playersNamesAlive.push_back(name);
+
+    playersPoints[name] = 0;
 }
 
 void Map::remove(std::string playerName) { playersNamesAlive.remove(playerName); }
@@ -353,6 +355,8 @@ std::pair<std::string, std::string> Map::get_winner() {
     std::string color_path = players[winner]->get_file();
     return std::pair(winner, color_path);
 }
+
+std::unordered_map<std::string, int> Map::getPoints() { return playersPoints; }
 
 // ----------------- Weapon -----------------
 
