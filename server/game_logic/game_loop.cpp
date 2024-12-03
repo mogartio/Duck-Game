@@ -127,7 +127,8 @@ void GameLoop::sleep_for_round(steady_clock::time_point t0, steady_clock::time_p
 }
 
 void GameLoop::cheat() {
-    std::cout << "INGRESA EL CHEAT CHEATER" << std::endl;
+    std::cout << "Ingresar el cheat con el siguiente formato: spawn {player_name} {weapon_id}"
+              << std::endl;
     std::string command;
     std::getline(std::cin, command);
     std::istringstream iss(command);
@@ -152,7 +153,6 @@ void GameLoop::cheat() {
 }
 void GameLoop::handle_read(const StartActionMsg& msg) {
     int action = msg.get_action_id();
-    std::cout << "recibi un action id que es " << std::to_string(action) << std::endl;
     if (action == 0x08) {  // codigo de CHEAT
         if (is_cheating) {
             cheat();
