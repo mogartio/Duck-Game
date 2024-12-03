@@ -54,6 +54,7 @@ public:
     bool lives() { return is_alive; }
 
     uint8_t get_state() { return position->get_state(); }
+    std::string& get_name() { return name; }
 
     void pick_weapon(std::shared_ptr<Weapon> new_weapon);
     void pick_chest(std::shared_ptr<Weapon> new_chest);

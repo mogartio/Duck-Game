@@ -8,12 +8,7 @@
 #include "projectiles/projectile.h"
 #include "projectiles/projectile_dropped_weapon.h"
 #define PLAYER_SIZE 6
-void Weapon::start_throw() {
-    throw_started = true;
-    // if (throw_reach < 100) {
-    //     throw_reach += 3;
-    // }
-}
+void Weapon::start_throw() { throw_started = true; }
 void Weapon::finish_throw(int x_direction, bool thrown_up, std::shared_ptr<Weapon> weapon) {
     Coordinate player_position = player->get_position();
     Coordinate gun_position(player_position.x - 3, player_position.y + 3);

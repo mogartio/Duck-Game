@@ -208,7 +208,6 @@ bool LaserBullet::ray_trace(Stage& stage) {
             notify();
             return false;
         }
-        // trail.push_back(std::pair<uint8_t, uint8_t>(bullet_position.x, bullet_position.y));
         updateNotPosition(position.x, position.y);
         position = bullet_position;
         distance_covered++;
@@ -217,6 +216,12 @@ bool LaserBullet::ray_trace(Stage& stage) {
     return false;
 }
 
+
+void Projectile::updateShot() {
+    for (const Observer* obs: observers) {
+        obs->updateShot(player_name, position);
+    }
+}
 void Projectile::updateNotPosition(uint8_t pos_x, uint8_t pos_y) {
     for (const Observer* obs: observers) {
         obs->updateOldPos(pos_x, pos_y, static_cast<uint8_t>(id));
