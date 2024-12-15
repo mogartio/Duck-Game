@@ -25,6 +25,7 @@ void PlayerPosition::move(const std::set<int>& directions, bool should_change_fa
     if (state == TRIPPING) {
         free_occupied();
         move_horizontally(air_state->get_x_offset());
+        move_horizontally(air_state->get_x_offset());
         move_vertically(air_state->get_offset());
         air_state->update(stage.should_fall(*this), *this);
         return;
